@@ -495,9 +495,16 @@ async function init() {
 
         episodes.forEach(ep => { epMap[ep.show_id] = ep; });
 
-        comicCounts = {};
+        const comicEpisodes = {};
         comics.forEach(m => {
-            if (m.comic) comicCounts[m.comic] = (comicCounts[m.comic] || 0) + 1;
+            if (m.comic) {
+                if (!comicEpisodes[m.comic]) comicEpisodes[m.comic] = new Set();
+                comicEpisodes[m.comic].add(m.show_id);
+            }
+        });
+        comicCounts = {};
+        Object.entries(comicEpisodes).forEach(([comic, ids]) => {
+            comicCounts[comic] = ids.size;
         });
         topComics = Object.entries(comicCounts)
             .sort((a, b) => b[1] - a[1])
@@ -643,7 +650,6 @@ function renderComicCard(mention) {
         <div class="card-meta">
             ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
             ${mention.segment ? `<span class="pill pill-red">${esc(mention.segment)}</span>` : ""}
-            ${(() => { const c = comicCounts[mention.comic] || 1; return c > 1 ? `<span class="pill pill-blue">${c} eps</span>` : ""; })()}
         </div>
         ${action}
     </div>`;
@@ -700,7 +706,7 @@ function emptyState() {
         </div>`;
     }
     const chips = topComics.map(({ name, count }) =>
-        `<button class="trending-chip" onclick="setSearch(${JSON.stringify(name)})">
+        `<button class="trending-chip" onclick="setSearch(${esc(JSON.stringify(name))})">
             <span class="tc-name">${esc(name)}</span>
             <span class="tc-count">${count} eps</span>
         </button>`
