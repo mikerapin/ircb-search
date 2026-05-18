@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""
+Export IRCB data from sshugars/ircb to JSON for the search UI.
+Run this whenever the source data is updated.
+
+Requirements: pip install pandas openpyxl requests
+"""
+
+import json
+import sys
+from pathlib import Path
+
+try:
+    import pandas as pd
+except ImportError:
+    sys.exit("Missing dependency: pip install pandas openpyxl requests")
+
+DATA_DIR = Path(__file__).parent / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
+COMICS_URL = "https://github.com/sshugars/ircb/raw/main/tables/public_feed_comics.xlsx"
+EPISODES_URL = "https://github.com/sshugars/ircb/raw/main/tables/all_episodes.xlsx"
+
+COMIC_COLS = ["comic", "show_id", "episode_title", "segment", "timestamp", "direct_url"]
+EPISODE_COLS = ["show_id", "title", "date", "people", "keywords", "simplecast_url", "episode_number"]
+
+
+def export_comics():
+    print("Fetching comics data from GitHub...")
+    df = pd.read_excel(COMICS_URL, engine="openpyxl")
+    df = df[[c for c in COMIC_COLS if c in df.columns]]
+    df = df.dropna(subset=["comic"])
+    df["comic"] = df["comic"].astype(str).str.strip()
+    records = df.to_dict(orient="records")
+    out = DATA_DIR / "comics.json"
+    with open(out, "w") as f:
+        json.dump(records, f, default=str, indent=2)
+    print(f"  → {len(records)} comic mentions → {out}")
+
+
+def export_episodes():
+    print("Fetching episodes data from GitHub...")
+    df = pd.read_excel(EPISODES_URL, engine="openpyxl")
+    df = df[[c for c in EPISODE_COLS if c in df.columns]]
+    records = df.to_dict(orient="records")
+    out = DATA_DIR / "episodes.json"
+    with open(out, "w") as f:
+        json.dump(records, f, default=str, indent=2)
+    print(f"  → {len(records)} episodes → {out}")
+
+
+if __name__ == "__main__":
+    export_comics()
+    export_episodes()
+    print("\nDone. Commit data/comics.json and data/episodes.json.")

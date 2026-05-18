@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Read Comic Books — Episode Search</title>
+    <meta name="description" content="Search 559+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:           #0d0d1b;
+            --bg-card:      #13132a;
+            --bg-card-hover:#1a1a35;
+            --border:       rgba(255,255,255,0.07);
+            --border-hover: rgba(255,255,255,0.14);
+            --red:          #e63946;
+            --red-dim:      rgba(230,57,70,0.15);
+            --red-border:   rgba(230,57,70,0.35);
+            --yellow:       #f5c518;
+            --yellow-dim:   rgba(245,197,24,0.12);
+            --yellow-border:rgba(245,197,24,0.3);
+            --blue:         #4cc9f0;
+            --blue-dim:     rgba(76,201,240,0.1);
+            --blue-border:  rgba(76,201,240,0.25);
+            --text:         #f0f0f8;
+            --text-muted:   #9090b8;
+            --text-dim:     #5a5a80;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ── Header / Hero ───────────────────────────────── */
+        header {
+            padding: 3rem 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(230,57,70,0.05) 0%, transparent 100%);
+        }
+
+        .header-inner {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .logo-art {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--border-hover);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.9rem, 5vw, 3rem);
+            letter-spacing: 0.05em;
+            line-height: 1;
+            color: var(--text);
+        }
+
+        h1 em {
+            font-style: normal;
+            color: var(--red);
+        }
+
+        .tagline {
+            color: var(--text-dim);
+            font-size: 0.88rem;
+            margin-top: 0.6rem;
+            margin-bottom: 1.75rem;
+        }
+
+        /* ── Search input ────────────────────────────────── */
+        .search-box {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-hover);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+        }
+
+        #search-input:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px var(--red-dim);
+        }
+
+        #search-input::placeholder { color: var(--text-dim); }
+
+        /* hide browser clear button */
+        #search-input::-webkit-search-cancel-button { display: none; }
+
+        /* ── Mode tabs ───────────────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.875rem;
+        }
+
+        .tab {
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-hover);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .tab:hover { border-color: var(--red); color: var(--text); }
+
+        .tab.active {
+            background: var(--red);
+            border-color: var(--red);
+            color: #fff;
+        }
+
+        /* ── Main content ────────────────────────────────── */
+        main {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 5rem;
+        }
+
+        /* ── Section divider ─────────────────────────────── */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2rem 0 0.875rem;
+            font-family: 'Bangers', cursive;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .result-count {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--text-dim);
+        }
+
+        /* ── Cards ───────────────────────────────────────── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.1rem 1.25rem;
+            margin-bottom: 0.6rem;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        /* top row: title + date */
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .comic-name {
+            font-family: 'Bangers', cursive;
+            font-size: 1.25rem;
+            letter-spacing: 0.04em;
+            color: var(--yellow);
+            line-height: 1.2;
+        }
+
+        .episode-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.35;
+            margin-top: 0.2rem;
+        }
+
+        .card-date {
+            font-size: 0.76rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            flex-shrink: 0;
+            padding-top: 0.1rem;
+        }
+
+        /* meta row: people + segment pill */
+        .card-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .meta-people {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.15rem 0.55rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        .pill-red    { background: var(--red-dim);    border: 1px solid var(--red-border);    color: var(--red);    }
+        .pill-yellow { background: var(--yellow-dim); border: 1px solid var(--yellow-border); color: var(--yellow); }
+        .pill-blue   { background: var(--blue-dim);   border: 1px solid var(--blue-border);   color: var(--blue);   }
+
+        /* keyword tags */
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-top: 0.55rem;
+        }
+
+        .kw {
+            font-size: 0.71rem;
+            color: var(--text-dim);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            padding: 0.12rem 0.45rem;
+            border-radius: 4px;
+        }
+
+        .kw.match {
+            color: var(--blue);
+            background: var(--blue-dim);
+            border-color: var(--blue-border);
+        }
+
+        /* action links */
+        .card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .card-action.timestamp {
+            color: var(--red);
+        }
+        .card-action.timestamp:hover { color: #ff6b77; }
+
+        .card-action.listen {
+            color: var(--blue);
+        }
+        .card-action.listen:hover { color: #7de0ff; }
+
+        .ts-badge {
+            font-family: 'Inter', monospace;
+            font-size: 0.75rem;
+            background: var(--red-dim);
+            border: 1px solid var(--red-border);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── Empty / status states ───────────────────────── */
+        .state-box {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+        .state-box .icon { font-size: 2.75rem; margin-bottom: 0.875rem; }
+
+        .state-box h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 1.75rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .state-box p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        .state-box.loading .icon { animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .state-box.error h2 { color: var(--red); }
+
+        .state-box code {
+            display: inline-block;
+            margin-top: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-hover);
+            border-radius: 6px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.82rem;
+            color: var(--yellow);
+            font-family: monospace;
+        }
+
+        /* ── Footer ──────────────────────────────────────── */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.78rem;
+        }
+
+        footer a { color: var(--text-muted); text-decoration: none; }
+        footer a:hover { color: var(--red); }
+
+        /* ── Responsive ──────────────────────────────────── */
+        @media (max-width: 480px) {
+            header { padding: 2rem 1rem 1.75rem; }
+            main { padding: 1.5rem 1rem 4rem; }
+            .tabs { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo-row">
+            <img class="logo-art"
+                 src="https://image.simplecastcdn.com/images/a038770a-a3bd-4472-9c81-71d8fde87cb9/a69b3e53-c1d6-4a76-8c13-0eae79ce46fa/3000x3000/podcast-cover-rgb-final-30001.png"
+                 alt="IRCB"
+                 onerror="this.style.display='none'">
+            <h1>I Read Comic <em>Books</em></h1>
+        </div>
+        <p class="tagline">Search every comic and topic discussed across 559+ episodes.</p>
+
+        <div class="search-box">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="17" height="17"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="search" id="search-input"
+                   placeholder="Spider-Man, Saga, X-Men, horror, creator-owned…"
+                   autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-mode="all">All</button>
+            <button class="tab" data-mode="comics">Comics Only</button>
+            <button class="tab" data-mode="topics">Topics Only</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div id="results"></div>
+</main>
+
+<footer>
+    Data from <a href="https://github.com/sshugars/ircb" target="_blank" rel="noopener">sshugars/ircb</a>
+    &nbsp;·&nbsp;
+    Listen at <a href="https://ircbpodcast.simplecast.com" target="_blank" rel="noopener">ircbpodcast.simplecast.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://patreon.com/ircbpodcast" target="_blank" rel="noopener">Patreon</a>
+</footer>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+let comics   = [];
+let episodes = [];
+let epMap    = {};   // show_id → episode
+let fuseComics   = null;
+let fuseEpisodes = null;
+let mode  = "all";
+let query = "";
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+async function init() {
+    setResults(loadingState());
+    try {
+        const [cr, er] = await Promise.all([
+            fetch("data/comics.json"),
+            fetch("data/episodes.json")
+        ]);
+        if (!cr.ok || !er.ok) throw new Error("not-found");
+        [comics, episodes] = await Promise.all([cr.json(), er.json()]);
+
+        episodes.forEach(ep => { epMap[ep.show_id] = ep; });
+
+        fuseComics = new Fuse(comics, {
+            keys: ["comic"],
+            threshold: 0.3,
+            minMatchCharLength: 2,
+            includeScore: true
+        });
+
+        fuseEpisodes = new Fuse(episodes, {
+            keys: ["keywords", "title"],
+            threshold: 0.3,
+            minMatchCharLength: 2,
+            includeScore: true
+        });
+
+        setResults(emptyState());
+    } catch (e) {
+        setResults(errorState(e.message === "not-found"));
+    }
+}
+
+// ─── Search ───────────────────────────────────────────────────────────────────
+function runSearch() {
+    if (!fuseComics) return;
+    if (!query.trim()) { setResults(emptyState()); return; }
+
+    let comicHits   = [];
+    let episodeHits = [];
+
+    if (mode !== "topics") {
+        comicHits = fuseComics.search(query).map(r => r.item);
+    }
+
+    if (mode !== "comics") {
+        const seen = new Set();
+        episodeHits = fuseEpisodes.search(query)
+            .map(r => r.item)
+            .filter(ep => {
+                if (seen.has(ep.show_id)) return false;
+                seen.add(ep.show_id);
+                return true;
+            });
+    }
+
+    if (!comicHits.length && !episodeHits.length) {
+        setResults(noResultsState());
+        return;
+    }
+
+    let html = "";
+
+    if (comicHits.length) {
+        html += sectionLabel("Comic Mentions", comicHits.length);
+        html += comicHits.map(renderComicCard).join("");
+    }
+
+    if (episodeHits.length) {
+        html += sectionLabel("Episodes by Topic", episodeHits.length);
+        html += episodeHits.map(renderEpisodeCard).join("");
+    }
+
+    setResults(html);
+}
+
+// ─── Render helpers ───────────────────────────────────────────────────────────
+function setResults(html) {
+    document.getElementById("results").innerHTML = html;
+}
+
+function sectionLabel(label, count) {
+    return `<div class="section-label">${label} <span class="result-count">${count} result${count !== 1 ? "s" : ""}</span></div>`;
+}
+
+function fmtDate(raw) {
+    if (!raw) return "";
+    try {
+        return new Date(raw).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+    } catch { return String(raw).slice(0, 10); }
+}
+
+function fmtTs(ts) {
+    // Return null if timestamp is zero / missing
+    if (!ts || /^0*:?00:00$/.test(String(ts).trim())) return null;
+    return String(ts).replace(/^00:/, ""); // trim leading hours if zero
+}
+
+function esc(s) {
+    if (!s) return "";
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function renderComicCard(mention) {
+    const ep    = epMap[mention.show_id] || {};
+    const ts    = fmtTs(mention.timestamp);
+    const date  = fmtDate(ep.date);
+    const people = ep.people
+        ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
+        : "";
+
+    let action = "";
+    const url = mention.direct_url || ep.simplecast_url;
+    if (url) {
+        if (ts) {
+            action = `<a class="card-action timestamp" href="${esc(url)}" target="_blank" rel="noopener">
+                <span class="ts-badge">⏱ ${esc(ts)}</span> Jump to mention →
+            </a>`;
+        } else {
+            action = `<a class="card-action listen" href="${esc(url)}" target="_blank" rel="noopener">
+                ▶ Listen to episode →
+            </a>`;
+        }
+    }
+
+    return `<div class="card">
+        <div class="card-top">
+            <div>
+                <div class="comic-name">${esc(mention.comic)}</div>
+                <div class="episode-title">${esc(ep.title || mention.episode_title || "")}</div>
+            </div>
+            ${date ? `<span class="card-date">${date}</span>` : ""}
+        </div>
+        <div class="card-meta">
+            ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
+            ${mention.segment ? `<span class="pill pill-red">${esc(mention.segment)}</span>` : ""}
+        </div>
+        ${action}
+    </div>`;
+}
+
+function renderEpisodeCard(ep) {
+    const date   = fmtDate(ep.date);
+    const people = ep.people
+        ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
+        : "";
+    const kwList = ep.keywords
+        ? String(ep.keywords).split(",").map(s => s.trim()).filter(Boolean)
+        : [];
+    const qLow = query.toLowerCase();
+
+    const kwHtml = kwList.length
+        ? `<div class="keywords">${kwList.map(k => {
+                const hit = k.toLowerCase().includes(qLow) || qLow.includes(k.toLowerCase());
+                return `<span class="kw${hit ? " match" : ""}">${esc(k)}</span>`;
+            }).join("")}</div>`
+        : "";
+
+    const action = ep.simplecast_url
+        ? `<a class="card-action listen" href="${esc(ep.simplecast_url)}" target="_blank" rel="noopener">▶ Listen →</a>`
+        : "";
+
+    return `<div class="card">
+        <div class="card-top">
+            <div class="episode-title">${esc(ep.title || "")}</div>
+            ${date ? `<span class="card-date">${date}</span>` : ""}
+        </div>
+        <div class="card-meta">
+            ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
+        </div>
+        ${kwHtml}
+        ${action}
+    </div>`;
+}
+
+// ─── State templates ──────────────────────────────────────────────────────────
+function emptyState() {
+    return `<div class="state-box">
+        <div class="icon">🦸</div>
+        <h2>Find Your Comics</h2>
+        <p>Type a comic title, publisher, creator, or topic to find every episode that covers it.</p>
+    </div>`;
+}
+
+function noResultsState() {
+    return `<div class="state-box">
+        <div class="icon">🔍</div>
+        <h2>No Results</h2>
+        <p>Nothing found for "<strong>${esc(query)}</strong>". Try a broader term or check the spelling.</p>
+    </div>`;
+}
+
+function loadingState() {
+    return `<div class="state-box loading">
+        <div class="icon">⚙️</div>
+        <h2>Loading…</h2>
+        <p>Fetching episode data.</p>
+    </div>`;
+}
+
+function errorState(notFound) {
+    return notFound
+        ? `<div class="state-box error">
+            <div class="icon">📂</div>
+            <h2>Data Not Found</h2>
+            <p>Run the export script to generate the data files, then refresh.</p>
+            <code>python export_data.py</code>
+        </div>`
+        : `<div class="state-box error">
+            <div class="icon">⚠️</div>
+            <h2>Something Went Wrong</h2>
+            <p>Could not load episode data. Check the console for details.</p>
+        </div>`;
+}
+
+// ─── Event wiring ─────────────────────────────────────────────────────────────
+document.getElementById("search-input").addEventListener("input", function () {
+    query = this.value;
+    runSearch();
+});
+
+document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", function () {
+        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        mode = this.dataset.mode;
+        runSearch();
+    });
+});
+
+init();
+</script>
+</body>
+</html>
