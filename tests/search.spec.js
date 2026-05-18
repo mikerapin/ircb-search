@@ -104,4 +104,56 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.state-box h2')).toContainText('No Results');
     });
 
+    test('clear button appears on type and clears on click', async ({ page }) => {
+        await page.goto('/');
+        const clearBtn = page.locator('#clear-btn');
+        await expect(clearBtn).not.toBeVisible();
+        await page.locator('#search-input').fill('Saga');
+        await expect(clearBtn).toBeVisible();
+        await clearBtn.click();
+        await expect(page.locator('#search-input')).toHaveValue('');
+        await expect(clearBtn).not.toBeVisible();
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('clicking logo clears search and shows trending chips', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await page.locator('.logo-row').click();
+        await expect(page.locator('#search-input')).toHaveValue('');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('panelist filter chips visible on empty state', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.panelist-chip').first()).toBeVisible({ timeout: 10000 });
+        const count = await page.locator('.panelist-chip').count();
+        expect(count).toBeGreaterThan(0);
+    });
+
+    test('panelist filter narrows results', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        const totalBefore = await page.locator('.card').count();
+        await page.locator('.panelist-chip').first().click();
+        await page.waitForTimeout(300);
+        const totalAfter = await page.locator('.card').count();
+        expect(totalAfter).toBeLessThanOrEqual(totalBefore);
+    });
+
+    test('play button exists on comic cards', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.play-btn').first()).toBeVisible();
+    });
+
+    test('guest episodes show orange pill', async ({ page }) => {
+        await page.goto('/?q=ft.');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.pill-orange').first()).toBeVisible();
+    });
+
 });

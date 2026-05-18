@@ -13,14 +13,17 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:           #0d0d1b;
-            --bg-card:      #13132a;
-            --bg-card-hover:#1a1a35;
-            --border:       rgba(255,255,255,0.07);
-            --border-hover: rgba(255,255,255,0.14);
+            --bg:           #120d08;
+            --bg-card:      #1c1510;
+            --bg-card-hover:#261d14;
+            --border:       rgba(255,220,180,0.07);
+            --border-hover: rgba(255,220,180,0.15);
             --red:          #e63946;
             --red-dim:      rgba(230,57,70,0.15);
             --red-border:   rgba(230,57,70,0.35);
+            --orange:       #e8611a;
+            --orange-dim:   rgba(232,97,26,0.15);
+            --orange-border:rgba(232,97,26,0.35);
             --yellow:       #f5c518;
             --yellow-dim:   rgba(245,197,24,0.12);
             --yellow-border:rgba(245,197,24,0.3);
@@ -28,8 +31,8 @@
             --blue-dim:     rgba(76,201,240,0.1);
             --blue-border:  rgba(76,201,240,0.25);
             --text:         #f0f0f8;
-            --text-muted:   #9090b8;
-            --text-dim:     #5a5a80;
+            --text-muted:   #a09080;
+            --text-dim:     #6a5248;
         }
 
         html { scroll-behavior: smooth; }
@@ -299,8 +302,12 @@
         }
 
         .pill-red    { background: var(--red-dim);    border: 1px solid var(--red-border);    color: var(--red);    }
+        .pill-orange { background: var(--orange-dim); border: 1px solid var(--orange-border); color: var(--orange); }
         .pill-yellow { background: var(--yellow-dim); border: 1px solid var(--yellow-border); color: var(--yellow); }
         .pill-blue   { background: var(--blue-dim);   border: 1px solid var(--blue-border);   color: var(--blue);   }
+
+        /* truncate long pill text */
+        .pill { max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* keyword tags */
         .keywords {
@@ -408,6 +415,66 @@
         footer a { color: var(--text-muted); text-decoration: none; }
         footer a:hover { color: var(--red); }
 
+        /* ── Clear button ───────────────────────────────── */
+        .clear-btn {
+            position: absolute;
+            right: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.2rem 0.3rem;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .clear-btn:hover { color: var(--text); }
+
+        /* ── Panelist filter ─────────────────────────────── */
+        .panelist-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .panelist-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .panelist-chip {
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-hover);
+            background: transparent;
+            color: var(--text-dim);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .panelist-chip:hover { color: var(--text); border-color: var(--yellow-border); }
+
+        .panelist-chip.active {
+            background: var(--yellow-dim);
+            border-color: var(--yellow-border);
+            color: var(--yellow);
+        }
+
+        /* ── Embed player ────────────────────────────────── */
+        .play-btn {
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+        }
+
         /* ── Trending comics ─────────────────────────────── */
         .trending-header {
             font-size: 0.8rem;
@@ -465,7 +532,7 @@
 
 <header>
     <div class="header-inner">
-        <div class="logo-row">
+        <div class="logo-row" style="cursor:pointer" onclick="clearSearch()">
             <img class="logo-art"
                  src="https://image.simplecastcdn.com/images/a038770a-a3bd-4472-9c81-71d8fde87cb9/a69b3e53-c1d6-4a76-8c13-0eae79ce46fa/3000x3000/podcast-cover-rgb-final-30001.png"
                  alt="IRCB"
@@ -482,7 +549,9 @@
             </svg>
             <input type="search" id="search-input"
                    placeholder="Spider-Man, Saga, X-Men, horror, creator-owned…"
-                   autocomplete="off" spellcheck="false">
+                   autocomplete="off" spellcheck="false"
+                   style="padding-right:2.5rem">
+            <button id="clear-btn" class="clear-btn" style="display:none" aria-label="Clear search">✕</button>
         </div>
 
         <div class="tabs">
@@ -521,9 +590,12 @@ let fuseComics   = null;
 let fuseEpisodes = null;
 let comicCounts  = {};
 let topComics    = [];
-let mode  = "all";
-let sort  = "relevance";
-let query = "";
+let panelists    = [];
+let mode      = "all";
+let sort      = "relevance";
+let query     = "";
+let panelist  = null;
+let openEmbed = null;
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 async function init() {
@@ -553,6 +625,17 @@ async function init() {
             .sort((a, b) => b[1] - a[1])
             .slice(0, 10)
             .map(([name, count]) => ({ name, count }));
+
+        const panelistCounts = {};
+        episodes.forEach(ep => {
+            if (ep.people) ep.people.split(",").map(s => s.trim()).filter(Boolean).forEach(name => {
+                panelistCounts[name] = (panelistCounts[name] || 0) + 1;
+            });
+        });
+        panelists = Object.entries(panelistCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 15)
+            .map(([name]) => name);
 
         fuseComics = new Fuse(comics, {
             keys: ["comic"],
@@ -585,9 +668,12 @@ async function init() {
                 b.classList.toggle("active", b.dataset.sort === urlSort);
             });
         }
+        const urlPanelist = params.get("panelist");
+        if (urlPanelist) panelist = urlPanelist;
         if (urlQ) {
             query = urlQ;
             document.getElementById("search-input").value = urlQ;
+            document.getElementById("clear-btn").style.display = "block";
             runSearch();
         } else {
             setResults(emptyState());
@@ -620,6 +706,17 @@ function runSearch() {
             });
     }
 
+    // Apply panelist filter
+    if (panelist) {
+        comicHits = comicHits.filter(m => {
+            const ep = epMap[m.show_id] || {};
+            return (ep.people || "").split(",").map(s => s.trim()).includes(panelist);
+        });
+        episodeHits = episodeHits.filter(ep =>
+            (ep.people || "").split(",").map(s => s.trim()).includes(panelist)
+        );
+    }
+
     if (!comicHits.length && !episodeHits.length) {
         setResults(noResultsState());
         return;
@@ -634,7 +731,7 @@ function runSearch() {
         episodeHits.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     }
 
-    let html = "";
+    let html = panelistFilterHtml();
 
     if (comicHits.length) {
         html += sectionLabel("Comic Mentions", comicHits.length);
@@ -656,6 +753,20 @@ function setResults(html) {
 
 function sectionLabel(label, count) {
     return `<div class="section-label">${label} <span class="result-count">${count} result${count !== 1 ? "s" : ""}</span></div>`;
+}
+
+function simplecastSlug(url) {
+    if (!url) return null;
+    const m = url.match(/\/episodes\/([^/?#]+)/);
+    return m ? m[1] : null;
+}
+
+function tsToSeconds(ts) {
+    if (!ts) return 0;
+    const parts = String(ts).split(":").map(Number);
+    if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+    if (parts.length === 2) return parts[0]*60 + parts[1];
+    return 0;
 }
 
 function fmtDate(raw) {
@@ -683,6 +794,7 @@ function renderComicCard(mention) {
     const people = ep.people
         ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
         : "";
+    const isGuest = (ep.title || "").includes("(ft.");
 
     let action = "";
     const url = mention.direct_url || ep.simplecast_url;
@@ -698,6 +810,13 @@ function renderComicCard(mention) {
         }
     }
 
+    const slug = simplecastSlug(ep.simplecast_url);
+    const secs = tsToSeconds(mention.timestamp);
+    const key  = mention.show_id + ":" + (mention.timestamp || "");
+    const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
+        onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},${secs})">▶ Play</button>
+        <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
+
     return `<div class="card">
         <div class="card-top">
             <div>
@@ -709,8 +828,10 @@ function renderComicCard(mention) {
         <div class="card-meta">
             ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
             ${mention.segment ? `<span class="pill pill-red">${esc(mention.segment)}</span>` : ""}
+            ${isGuest ? `<span class="pill pill-orange">Guest</span>` : ""}
         </div>
         ${action}
+        ${playBtn}
     </div>`;
 }
 
@@ -719,6 +840,7 @@ function renderEpisodeCard(ep) {
     const people = ep.people
         ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
         : "";
+    const isGuest = (ep.title || "").includes("(ft.");
     const kwList = ep.keywords
         ? String(ep.keywords).split(",").map(s => s.trim()).filter(Boolean)
         : [];
@@ -735,6 +857,12 @@ function renderEpisodeCard(ep) {
         ? `<a class="card-action listen" href="${esc(ep.simplecast_url)}" target="_blank" rel="noopener">▶ Listen →</a>`
         : "";
 
+    const slug = simplecastSlug(ep.simplecast_url);
+    const key  = ep.show_id + ":";
+    const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
+        onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>
+        <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
+
     return `<div class="card">
         <div class="card-top">
             <div class="episode-title">${esc(ep.title || "")}</div>
@@ -742,18 +870,71 @@ function renderEpisodeCard(ep) {
         </div>
         <div class="card-meta">
             ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
+            ${isGuest ? `<span class="pill pill-orange">Guest</span>` : ""}
         </div>
         ${kwHtml}
         ${action}
+        ${playBtn}
     </div>`;
 }
 
 // ─── State templates ──────────────────────────────────────────────────────────
+function clearSearch() {
+    query = "";
+    document.getElementById("search-input").value = "";
+    document.getElementById("clear-btn").style.display = "none";
+    history.replaceState(null, "", location.pathname);
+    setResults(emptyState());
+}
+
 function setSearch(val) {
     query = val;
     document.getElementById("search-input").value = val;
+    document.getElementById("clear-btn").style.display = "block";
     history.replaceState(null, "", "?q=" + encodeURIComponent(val));
     runSearch();
+}
+
+function setPanelist(name) {
+    panelist = panelist === name ? null : name;
+    const params = new URLSearchParams(location.search);
+    panelist ? params.set("panelist", panelist) : params.delete("panelist");
+    history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
+    runSearch();
+}
+
+function toggleEmbed(key, slug, startSecs) {
+    if (openEmbed === key) {
+        openEmbed = null;
+        document.querySelectorAll(".embed-wrap").forEach(el => el.innerHTML = "");
+        document.querySelectorAll(".play-btn").forEach(b => b.textContent = "▶ Play");
+        return;
+    }
+    document.querySelectorAll(".embed-wrap").forEach(el => el.innerHTML = "");
+    document.querySelectorAll(".play-btn").forEach(b => b.textContent = "▶ Play");
+    openEmbed = key;
+    const wrap = document.querySelector(`.embed-wrap[data-key="${CSS.escape(key)}"]`);
+    if (!wrap) return;
+    const src = `https://player.simplecast.com/${slug}?dark=true${startSecs ? "&t=" + startSecs : ""}`;
+    wrap.innerHTML = `<iframe src="${esc(src)}" frameborder="0" scrolling="no"
+        allow="autoplay *; encrypted-media *; fullscreen *"
+        style="width:100%;height:152px;border-radius:8px;margin-top:0.75rem;display:block;"></iframe>`;
+    const btn = document.querySelector(`.play-btn[data-key="${CSS.escape(key)}"]`);
+    if (btn) btn.textContent = "■ Stop";
+}
+
+function panelistFilterHtml() {
+    if (!panelists.length) return "";
+    const chips = panelists.map(name =>
+        `<button class="panelist-chip${panelist === name ? " active" : ""}"
+            onclick="setPanelist(${esc(JSON.stringify(name))})">
+            ${esc(name.split(" ")[0])}
+        </button>`
+    ).join("");
+    return `<div class="panelist-row">
+        <span class="sort-label">Panelist:</span>
+        <div class="panelist-chips">${chips}</div>
+    </div>`;
 }
 
 function emptyState() {
@@ -773,6 +954,7 @@ function emptyState() {
     return `<div>
         <p class="trending-header">Most discussed comics</p>
         <div class="trending-grid">${chips}</div>
+        ${panelistFilterHtml()}
     </div>`;
 }
 
@@ -810,11 +992,14 @@ function errorState(notFound) {
 // ─── Event wiring ─────────────────────────────────────────────────────────────
 document.getElementById("search-input").addEventListener("input", function () {
     query = this.value;
+    document.getElementById("clear-btn").style.display = query ? "block" : "none";
     const params = new URLSearchParams(location.search);
     query ? params.set("q", query) : params.delete("q");
     history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
     runSearch();
 });
+
+document.getElementById("clear-btn").addEventListener("click", clearSearch);
 
 document.querySelectorAll(".tab").forEach(btn => {
     btn.addEventListener("click", function () {
