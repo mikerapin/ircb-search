@@ -11,5 +11,17 @@ test-results/
 playwright-report/
 playwright/.auth/
 
+# Claude Code / OMC
+.claude/*.local.json
+.claude/*.local.md
+.omc/
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+
 # OS
 .DS_Store
