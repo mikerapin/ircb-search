@@ -373,6 +373,51 @@
         footer a { color: var(--text-muted); text-decoration: none; }
         footer a:hover { color: var(--red); }
 
+        /* ── Trending comics ─────────────────────────────── */
+        .trending-header {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        .trending-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .trending-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-hover);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .trending-chip:hover {
+            border-color: var(--yellow-border);
+            background: var(--yellow-dim);
+        }
+
+        .tc-name {
+            font-size: 0.85rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .tc-count {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
         /* ── Responsive ──────────────────────────────────── */
         @media (max-width: 480px) {
             header { padding: 2rem 1rem 1.75rem; }
@@ -432,6 +477,8 @@ let episodes = [];
 let epMap    = {};   // show_id → episode
 let fuseComics   = null;
 let fuseEpisodes = null;
+let comicCounts  = {};
+let topComics    = [];
 let mode  = "all";
 let query = "";
 
@@ -448,6 +495,15 @@ async function init() {
 
         episodes.forEach(ep => { epMap[ep.show_id] = ep; });
 
+        comicCounts = {};
+        comics.forEach(m => {
+            if (m.comic) comicCounts[m.comic] = (comicCounts[m.comic] || 0) + 1;
+        });
+        topComics = Object.entries(comicCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([name, count]) => ({ name, count }));
+
         fuseComics = new Fuse(comics, {
             keys: ["comic"],
             threshold: 0.3,
@@ -462,7 +518,23 @@ async function init() {
             includeScore: true
         });
 
-        setResults(emptyState());
+        // Restore search state from URL
+        const params = new URLSearchParams(location.search);
+        const urlMode = params.get("mode");
+        const urlQ    = params.get("q");
+        if (urlMode && ["all","comics","topics"].includes(urlMode)) {
+            mode = urlMode;
+            document.querySelectorAll(".tab").forEach(b => {
+                b.classList.toggle("active", b.dataset.mode === urlMode);
+            });
+        }
+        if (urlQ) {
+            query = urlQ;
+            document.getElementById("search-input").value = urlQ;
+            runSearch();
+        } else {
+            setResults(emptyState());
+        }
     } catch (e) {
         setResults(errorState(e.message === "not-found"));
     }
@@ -571,6 +643,7 @@ function renderComicCard(mention) {
         <div class="card-meta">
             ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
             ${mention.segment ? `<span class="pill pill-red">${esc(mention.segment)}</span>` : ""}
+            ${(() => { const c = comicCounts[mention.comic] || 1; return c > 1 ? `<span class="pill pill-blue">${c} eps</span>` : ""; })()}
         </div>
         ${action}
     </div>`;
@@ -611,11 +684,30 @@ function renderEpisodeCard(ep) {
 }
 
 // ─── State templates ──────────────────────────────────────────────────────────
+function setSearch(val) {
+    query = val;
+    document.getElementById("search-input").value = val;
+    history.replaceState(null, "", "?q=" + encodeURIComponent(val));
+    runSearch();
+}
+
 function emptyState() {
-    return `<div class="state-box">
-        <div class="icon">🦸</div>
-        <h2>Find Your Comics</h2>
-        <p>Type a comic title, publisher, creator, or topic to find every episode that covers it.</p>
+    if (!topComics.length) {
+        return `<div class="state-box">
+            <div class="icon">🦸</div>
+            <h2>Find Your Comics</h2>
+            <p>Type a comic title, publisher, creator, or topic to find every episode that covers it.</p>
+        </div>`;
+    }
+    const chips = topComics.map(({ name, count }) =>
+        `<button class="trending-chip" onclick="setSearch(${JSON.stringify(name)})">
+            <span class="tc-name">${esc(name)}</span>
+            <span class="tc-count">${count} eps</span>
+        </button>`
+    ).join("");
+    return `<div>
+        <p class="trending-header">Most discussed comics</p>
+        <div class="trending-grid">${chips}</div>
     </div>`;
 }
 
@@ -653,6 +745,9 @@ function errorState(notFound) {
 // ─── Event wiring ─────────────────────────────────────────────────────────────
 document.getElementById("search-input").addEventListener("input", function () {
     query = this.value;
+    const params = new URLSearchParams(location.search);
+    query ? params.set("q", query) : params.delete("q");
+    history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
     runSearch();
 });
 
@@ -661,6 +756,9 @@ document.querySelectorAll(".tab").forEach(btn => {
         document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
         this.classList.add("active");
         mode = this.dataset.mode;
+        const params = new URLSearchParams(location.search);
+        mode !== "all" ? params.set("mode", mode) : params.delete("mode");
+        history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
         runSearch();
     });
 });
