@@ -31,22 +31,18 @@ def export_comics():
     df = df[[c for c in COMIC_COLS if c in df.columns]]
     df = df.dropna(subset=["comic"])
     df["comic"] = df["comic"].astype(str).str.strip()
-    records = df.to_dict(orient="records")
     out = DATA_DIR / "comics.json"
-    with open(out, "w") as f:
-        json.dump(records, f, default=str, indent=2)
-    print(f"  → {len(records)} comic mentions → {out}")
+    df.to_json(out, orient="records", force_ascii=False)
+    print(f"  → {len(df)} comic mentions → {out}")
 
 
 def export_episodes():
     print("Fetching episodes data from GitHub...")
     df = pd.read_excel(EPISODES_URL, engine="openpyxl")
     df = df[[c for c in EPISODE_COLS if c in df.columns]]
-    records = df.to_dict(orient="records")
     out = DATA_DIR / "episodes.json"
-    with open(out, "w") as f:
-        json.dump(records, f, default=str, indent=2)
-    print(f"  → {len(records)} episodes → {out}")
+    df.to_json(out, orient="records", force_ascii=False)
+    print(f"  → {len(df)} episodes → {out}")
 
 
 if __name__ == "__main__":
