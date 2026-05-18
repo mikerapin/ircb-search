@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>I Read Comic Books — Episode Search</title>
-    <meta name="description" content="Search 559+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
+    <meta name="description" id="meta-description" content="Search 500+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -467,6 +467,10 @@
             color: var(--yellow);
         }
 
+        .guest-chip { border-color: var(--orange-border); }
+        .guest-chip:hover { color: var(--orange); border-color: var(--orange-border); }
+        .guest-chip.active { background: var(--orange-dim); border-color: var(--orange-border); color: var(--orange); }
+
         /* ── Embed player ────────────────────────────────── */
         .play-btn {
             background: none;
@@ -537,9 +541,9 @@
                  src="https://image.simplecastcdn.com/images/a038770a-a3bd-4472-9c81-71d8fde87cb9/a69b3e53-c1d6-4a76-8c13-0eae79ce46fa/3000x3000/podcast-cover-rgb-final-30001.png"
                  alt="IRCB"
                  onerror="this.style.display='none'">
-            <h1>I Read Comic <em>Books</em></h1>
+            <h1>I Read <em>Comic Books</em></h1>
         </div>
-        <p class="tagline">Search every comic and topic discussed across 559+ episodes.</p>
+        <p class="tagline" id="tagline">Search every comic and topic discussed across 500+ episodes.</p>
 
         <div class="search-box">
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="17" height="17"
@@ -560,10 +564,9 @@
             <button class="tab" data-mode="topics">Topics Only</button>
         </div>
 
-        <div class="sort-row">
+        <div class="sort-row" id="sort-row" style="display:none">
             <span class="sort-label">Sort:</span>
             <button class="sort-btn active" data-sort="relevance">Relevance</button>
-            <button class="sort-btn" data-sort="discussed">Most Discussed</button>
             <button class="sort-btn" data-sort="recent">Most Recent</button>
         </div>
     </div>
@@ -589,12 +592,14 @@ let epMap    = {};   // show_id → episode
 let fuseComics   = null;
 let fuseEpisodes = null;
 let comicCounts  = {};
-let topComics    = [];
+let topComics       = [];
+let topRecentComics = [];
 let panelists    = [];
 let mode      = "all";
 let sort      = "relevance";
 let query     = "";
 let panelist  = null;
+let guestOnly = false;
 let openEmbed = null;
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
@@ -609,6 +614,12 @@ async function init() {
         [comics, episodes] = await Promise.all([cr.json(), er.json()]);
 
         episodes.forEach(ep => { epMap[ep.show_id] = ep; });
+
+        const epCount = episodes.length;
+        document.getElementById("tagline").textContent =
+            `Search every comic and topic discussed across ${epCount}+ episodes.`;
+        document.getElementById("meta-description").setAttribute("content",
+            `Search ${epCount}+ episodes of I Read Comic Books to find every time a comic or topic was discussed.`);
 
         const comicEpisodes = {};
         comics.forEach(m => {
@@ -625,6 +636,22 @@ async function init() {
             .sort((a, b) => b[1] - a[1])
             .slice(0, 10)
             .map(([name, count]) => ({ name, count }));
+
+        const twelveMonthsAgo = new Date();
+        twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
+        const recentEps = {};
+        comics.forEach(m => {
+            if (!m.comic) return;
+            const ep = epMap[m.show_id];
+            if (ep && ep.date && new Date(ep.date) >= twelveMonthsAgo) {
+                if (!recentEps[m.comic]) recentEps[m.comic] = new Set();
+                recentEps[m.comic].add(m.show_id);
+            }
+        });
+        topRecentComics = Object.entries(recentEps)
+            .map(([name, ids]) => ({ name, count: ids.size }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 10);
 
         const panelistCounts = {};
         episodes.forEach(ep => {
@@ -662,7 +689,7 @@ async function init() {
                 b.classList.toggle("active", b.dataset.mode === urlMode);
             });
         }
-        if (urlSort && ["relevance","discussed","recent"].includes(urlSort)) {
+        if (urlSort && ["relevance","recent"].includes(urlSort)) {
             sort = urlSort;
             document.querySelectorAll(".sort-btn").forEach(b => {
                 b.classList.toggle("active", b.dataset.sort === urlSort);
@@ -670,14 +697,13 @@ async function init() {
         }
         const urlPanelist = params.get("panelist");
         if (urlPanelist) panelist = urlPanelist;
+        if (params.get("guest") === "1") guestOnly = true;
         if (urlQ) {
             query = urlQ;
             document.getElementById("search-input").value = urlQ;
             document.getElementById("clear-btn").style.display = "block";
-            runSearch();
-        } else {
-            setResults(emptyState());
         }
+        runSearch();
     } catch (e) {
         setResults(errorState(e.message === "not-found"));
     }
@@ -717,16 +743,22 @@ function runSearch() {
         );
     }
 
+    // Apply guest filter
+    if (guestOnly) {
+        comicHits   = comicHits.filter(m => ((epMap[m.show_id] || {}).title || "").includes("(ft."));
+        episodeHits = episodeHits.filter(ep => (ep.title || "").includes("(ft."));
+    }
+
     if (!comicHits.length && !episodeHits.length) {
+        document.getElementById("sort-row").style.display = "none";
         setResults(noResultsState());
         return;
     }
 
+    document.getElementById("sort-row").style.display = "";
+
     // Apply sort
-    if (sort === "discussed") {
-        comicHits.sort((a, b) => (comicCounts[b.comic] || 0) - (comicCounts[a.comic] || 0));
-        episodeHits.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    } else if (sort === "recent") {
+    if (sort === "recent") {
         comicHits.sort((a, b) => new Date((epMap[b.show_id] || {}).date || 0) - new Date((epMap[a.show_id] || {}).date || 0));
         episodeHits.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     }
@@ -755,11 +787,6 @@ function sectionLabel(label, count) {
     return `<div class="section-label">${label} <span class="result-count">${count} result${count !== 1 ? "s" : ""}</span></div>`;
 }
 
-function simplecastSlug(url) {
-    if (!url) return null;
-    const m = url.match(/\/episodes\/([^/?#]+)/);
-    return m ? m[1] : null;
-}
 
 function tsToSeconds(ts) {
     if (!ts) return 0;
@@ -810,7 +837,7 @@ function renderComicCard(mention) {
         }
     }
 
-    const slug = simplecastSlug(ep.simplecast_url);
+    const slug = ep.show_id || null;
     const secs = tsToSeconds(mention.timestamp);
     const key  = mention.show_id + ":" + (mention.timestamp || "");
     const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
@@ -857,7 +884,7 @@ function renderEpisodeCard(ep) {
         ? `<a class="card-action listen" href="${esc(ep.simplecast_url)}" target="_blank" rel="noopener">▶ Listen →</a>`
         : "";
 
-    const slug = simplecastSlug(ep.simplecast_url);
+    const slug = ep.show_id || null;
     const key  = ep.show_id + ":";
     const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
         onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>
@@ -881,8 +908,15 @@ function renderEpisodeCard(ep) {
 // ─── State templates ──────────────────────────────────────────────────────────
 function clearSearch() {
     query = "";
+    panelist = null;
+    guestOnly = false;
+    sort = "relevance";
     document.getElementById("search-input").value = "";
     document.getElementById("clear-btn").style.display = "none";
+    document.getElementById("sort-row").style.display = "none";
+    document.querySelectorAll(".sort-btn").forEach(b =>
+        b.classList.toggle("active", b.dataset.sort === "relevance")
+    );
     history.replaceState(null, "", location.pathname);
     setResults(emptyState());
 }
@@ -891,7 +925,9 @@ function setSearch(val) {
     query = val;
     document.getElementById("search-input").value = val;
     document.getElementById("clear-btn").style.display = "block";
-    history.replaceState(null, "", "?q=" + encodeURIComponent(val));
+    const params = new URLSearchParams(location.search);
+    params.set("q", val);
+    history.replaceState(null, "", "?" + params);
     runSearch();
 }
 
@@ -899,6 +935,14 @@ function setPanelist(name) {
     panelist = panelist === name ? null : name;
     const params = new URLSearchParams(location.search);
     panelist ? params.set("panelist", panelist) : params.delete("panelist");
+    history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
+    runSearch();
+}
+
+function toggleGuestOnly() {
+    guestOnly = !guestOnly;
+    const params = new URLSearchParams(location.search);
+    guestOnly ? params.set("guest", "1") : params.delete("guest");
     history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
     runSearch();
 }
@@ -931,9 +975,11 @@ function panelistFilterHtml() {
             ${esc(name.split(" ")[0])}
         </button>`
     ).join("");
+    const guestChip = `<button class="panelist-chip guest-chip${guestOnly ? " active" : ""}"
+        onclick="toggleGuestOnly()">Guest Episodes</button>`;
     return `<div class="panelist-row">
-        <span class="sort-label">Panelist:</span>
-        <div class="panelist-chips">${chips}</div>
+        <span class="sort-label">Filter:</span>
+        <div class="panelist-chips">${chips}${guestChip}</div>
     </div>`;
 }
 
@@ -945,24 +991,31 @@ function emptyState() {
             <p>Type a comic title, publisher, creator, or topic to find every episode that covers it.</p>
         </div>`;
     }
-    const chips = topComics.map(({ name, count }) =>
+    const renderChips = arr => arr.map(({ name, count }) =>
         `<button class="trending-chip" onclick="setSearch(${esc(JSON.stringify(name))})">
             <span class="tc-name">${esc(name)}</span>
             <span class="tc-count">${count} eps</span>
         </button>`
     ).join("");
+    const recentSection = topRecentComics.length
+        ? `<p class="trending-header" style="margin-top:1.5rem">Last 12 Months</p>
+           <div class="trending-grid">${renderChips(topRecentComics)}</div>`
+        : "";
     return `<div>
-        <p class="trending-header">Most discussed comics</p>
-        <div class="trending-grid">${chips}</div>
-        ${panelistFilterHtml()}
+        <p class="trending-header">All Time</p>
+        <div class="trending-grid">${renderChips(topComics)}</div>
+        ${recentSection}
     </div>`;
 }
 
 function noResultsState() {
-    return `<div class="state-box">
-        <div class="icon">🔍</div>
-        <h2>No Results</h2>
-        <p>Nothing found for "<strong>${esc(query)}</strong>". Try a broader term or check the spelling.</p>
+    return `<div>
+        ${(panelist || guestOnly) ? panelistFilterHtml() : ""}
+        <div class="state-box">
+            <div class="icon">🔍</div>
+            <h2>No Results</h2>
+            <p>Nothing found for "<strong>${esc(query)}</strong>". Try a broader term or check the spelling.</p>
+        </div>
     </div>`;
 }
 

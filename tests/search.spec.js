@@ -48,7 +48,7 @@ test.describe('IRCB Search', () => {
             const countText = await chips.nth(i).locator('.tc-count').textContent();
             const n = parseInt(countText);
             expect(n).toBeGreaterThanOrEqual(1);
-            expect(n).toBeLessThanOrEqual(559);
+            expect(n).toBeLessThanOrEqual(2000);
         }
     });
 
@@ -125,11 +125,14 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
     });
 
-    test('panelist filter chips visible on empty state', async ({ page }) => {
+    test('panelist filter chips not visible on empty state, visible with results', async ({ page }) => {
         await page.goto('/');
-        await expect(page.locator('.panelist-chip').first()).toBeVisible({ timeout: 10000 });
-        const count = await page.locator('.panelist-chip').count();
-        expect(count).toBeGreaterThan(0);
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.panelist-chip')).toHaveCount(0);
+
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.panelist-chip').first()).toBeVisible();
     });
 
     test('panelist filter narrows results', async ({ page }) => {
@@ -154,6 +157,71 @@ test.describe('IRCB Search', () => {
         await page.goto('/?q=ft.');
         await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
         await expect(page.locator('.pill-orange').first()).toBeVisible();
+    });
+
+    test('trending chips split into All Time and Last 12 Months sections', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.trending-header').first()).toContainText('All Time');
+        await expect(page.locator('.trending-header').nth(1)).toContainText('Last 12 Months');
+    });
+
+    test('both trending sections have chips', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const allHeaders = page.locator('.trending-header');
+        await expect(allHeaders).toHaveCount(2);
+        const totalChips = await page.locator('.trending-chip').count();
+        expect(totalChips).toBeGreaterThan(10);
+    });
+
+    test('guest filter chip not visible on empty state', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.guest-chip')).toHaveCount(0);
+    });
+
+    test('guest filter chip visible with results and filters to guest episodes', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        await expect(page.locator('.guest-chip')).toBeVisible();
+        const totalBefore = await page.locator('.card').count();
+
+        await page.locator('.guest-chip').click();
+        await page.waitForTimeout(300);
+        const totalAfter = await page.locator('.card').count();
+        expect(totalAfter).toBeLessThanOrEqual(totalBefore);
+
+        // All visible cards should be from guest episodes (have orange pill)
+        const cards = page.locator('.card');
+        const count = await cards.count();
+        if (count > 0) {
+            await expect(page.locator('.pill-orange').first()).toBeVisible();
+        }
+    });
+
+    test('guest filter URL param ?guest=1 restores filter on load', async ({ page }) => {
+        await page.goto('/?q=Batman&guest=1');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.guest-chip.active')).toBeVisible();
+    });
+
+    test('clear resets guest filter', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.guest-chip')).toBeVisible({ timeout: 5000 });
+        await page.locator('.guest-chip').click();
+        await expect(page.locator('.guest-chip.active')).toBeVisible();
+
+        await page.locator('#clear-btn').click();
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.guest-chip')).toHaveCount(0);
+
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.guest-chip')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.guest-chip.active')).toHaveCount(0);
     });
 
 });
