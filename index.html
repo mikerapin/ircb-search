@@ -800,7 +800,7 @@ function fmtDate(raw) {
     if (!raw) return "";
     try {
         return new Date(raw).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-    } catch { return String(raw).slice(0, 10); }
+    } catch { return ""; }
 }
 
 function fmtTs(ts) {
