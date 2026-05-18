@@ -157,6 +157,41 @@
             color: #fff;
         }
 
+        /* ── Sort row ────────────────────────────────────── */
+        .sort-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .sort-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+        }
+
+        .sort-btn {
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .sort-btn:hover { color: var(--text); }
+
+        .sort-btn.active {
+            border-color: var(--border-hover);
+            color: var(--text);
+            background: rgba(255,255,255,0.05);
+        }
+
         /* ── Main content ────────────────────────────────── */
         main {
             max-width: 680px;
@@ -455,6 +490,13 @@
             <button class="tab" data-mode="comics">Comics Only</button>
             <button class="tab" data-mode="topics">Topics Only</button>
         </div>
+
+        <div class="sort-row">
+            <span class="sort-label">Sort:</span>
+            <button class="sort-btn active" data-sort="relevance">Relevance</button>
+            <button class="sort-btn" data-sort="discussed">Most Discussed</button>
+            <button class="sort-btn" data-sort="recent">Most Recent</button>
+        </div>
     </div>
 </header>
 
@@ -480,6 +522,7 @@ let fuseEpisodes = null;
 let comicCounts  = {};
 let topComics    = [];
 let mode  = "all";
+let sort  = "relevance";
 let query = "";
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
@@ -528,11 +571,18 @@ async function init() {
         // Restore search state from URL
         const params = new URLSearchParams(location.search);
         const urlMode = params.get("mode");
+        const urlSort = params.get("sort");
         const urlQ    = params.get("q");
         if (urlMode && ["all","comics","topics"].includes(urlMode)) {
             mode = urlMode;
             document.querySelectorAll(".tab").forEach(b => {
                 b.classList.toggle("active", b.dataset.mode === urlMode);
+            });
+        }
+        if (urlSort && ["relevance","discussed","recent"].includes(urlSort)) {
+            sort = urlSort;
+            document.querySelectorAll(".sort-btn").forEach(b => {
+                b.classList.toggle("active", b.dataset.sort === urlSort);
             });
         }
         if (urlQ) {
@@ -573,6 +623,15 @@ function runSearch() {
     if (!comicHits.length && !episodeHits.length) {
         setResults(noResultsState());
         return;
+    }
+
+    // Apply sort
+    if (sort === "discussed") {
+        comicHits.sort((a, b) => (comicCounts[b.comic] || 0) - (comicCounts[a.comic] || 0));
+        episodeHits.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    } else if (sort === "recent") {
+        comicHits.sort((a, b) => new Date((epMap[b.show_id] || {}).date || 0) - new Date((epMap[a.show_id] || {}).date || 0));
+        episodeHits.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     }
 
     let html = "";
@@ -764,6 +823,18 @@ document.querySelectorAll(".tab").forEach(btn => {
         mode = this.dataset.mode;
         const params = new URLSearchParams(location.search);
         mode !== "all" ? params.set("mode", mode) : params.delete("mode");
+        history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
+        runSearch();
+    });
+});
+
+document.querySelectorAll(".sort-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        sort = this.dataset.sort;
+        const params = new URLSearchParams(location.search);
+        sort !== "relevance" ? params.set("sort", sort) : params.delete("sort");
         history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
         runSearch();
     });
