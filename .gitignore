@@ -1,4 +1,15 @@
+# Python
 .venv/
 __pycache__/
 *.pyc
+
+# Node
+node_modules/
+
+# Playwright output
+test-results/
+playwright-report/
+playwright/.auth/
+
+# OS
 .DS_Store
