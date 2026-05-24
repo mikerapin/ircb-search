@@ -224,6 +224,29 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.guest-chip.active')).toHaveCount(0);
     });
 
+    test('safeUrl rejects non-https and unknown hosts', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const results = await page.evaluate(() => {
+            return [
+                safeUrl('javascript:alert(1)'),
+                safeUrl('http://simplecast.com/ep'),
+                safeUrl('https://evil.com/xss'),
+                safeUrl('https://player.simplecast.com/abc-123'),
+                safeUrl('https://patreon.com/ircbpodcast'),
+                safeUrl(''),
+                safeUrl(null),
+            ];
+        });
+        expect(results[0]).toBe('#');                                         // javascript: blocked
+        expect(results[1]).toBe('#');                                         // http: blocked
+        expect(results[2]).toBe('#');                                         // unknown host blocked
+        expect(results[3]).toBe('https://player.simplecast.com/abc-123');    // allowed
+        expect(results[4]).toBe('https://patreon.com/ircbpodcast');          // allowed
+        expect(results[5]).toBe('#');                                         // empty blocked
+        expect(results[6]).toBe('#');                                         // null blocked
+    });
+
     test('denylist terms do not appear as trending chip names', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });

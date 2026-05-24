@@ -812,6 +812,22 @@ function fmtTs(ts) {
     return String(ts).replace(/^00:/, ""); // trim leading hours if zero
 }
 
+const SAFE_HOSTS = new Set([
+    "simplecast.com", "ircbpodcast.simplecast.com", "player.simplecast.com",
+    "patreon.com", "github.com"
+]);
+
+function safeUrl(url) {
+    if (!url) return "#";
+    try {
+        const u = new URL(url);
+        if (u.protocol !== "https:") return "#";
+        const host = u.hostname.toLowerCase();
+        if (SAFE_HOSTS.has(host) || [...SAFE_HOSTS].some(h => host.endsWith("." + h))) return url;
+    } catch { /* invalid URL */ }
+    return "#";
+}
+
 function esc(s) {
     if (!s) return "";
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -831,11 +847,11 @@ function renderComicCard(mention) {
     const url = mention.direct_url || ep.simplecast_url;
     if (url) {
         if (ts) {
-            action = `<a class="card-action timestamp" href="${esc(url)}" target="_blank" rel="noopener">
+            action = `<a class="card-action timestamp" href="${esc(safeUrl(url))}" target="_blank" rel="noopener">
                 <span class="ts-badge">⏱ ${esc(ts)}</span> Jump to mention →
             </a>`;
         } else {
-            action = `<a class="card-action listen" href="${esc(url)}" target="_blank" rel="noopener">
+            action = `<a class="card-action listen" href="${esc(safeUrl(url))}" target="_blank" rel="noopener">
                 ▶ Listen to episode →
             </a>`;
         }
@@ -886,7 +902,7 @@ function renderEpisodeCard(ep) {
         : "";
 
     const action = ep.simplecast_url
-        ? `<a class="card-action listen" href="${esc(ep.simplecast_url)}" target="_blank" rel="noopener">▶ Listen →</a>`
+        ? `<a class="card-action listen" href="${esc(safeUrl(ep.simplecast_url))}" target="_blank" rel="noopener">▶ Listen →</a>`
         : "";
 
     const slug = ep.show_id || null;
@@ -965,7 +981,7 @@ function toggleEmbed(key, slug, startSecs) {
     const wrap = document.querySelector(`.embed-wrap[data-key="${CSS.escape(key)}"]`);
     if (!wrap) return;
     const src = `https://player.simplecast.com/${slug}?dark=true${startSecs ? "&t=" + startSecs : ""}`;
-    wrap.innerHTML = `<iframe src="${esc(src)}" frameborder="0" scrolling="no"
+    wrap.innerHTML = `<iframe src="${esc(safeUrl(src))}" frameborder="0" scrolling="no"
         allow="autoplay *; encrypted-media *; fullscreen *"
         style="width:100%;height:152px;border-radius:8px;margin-top:0.75rem;display:block;"></iframe>`;
     const btn = document.querySelector(`.play-btn[data-key="${CSS.escape(key)}"]`);
