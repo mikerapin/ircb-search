@@ -791,6 +791,7 @@ function sectionLabel(label, count) {
 function tsToSeconds(ts) {
     if (!ts) return 0;
     const parts = String(ts).split(":").map(Number);
+    if (parts.some(isNaN)) return 0;
     if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
     if (parts.length === 2) return parts[0]*60 + parts[1];
     return 0;
@@ -799,7 +800,9 @@ function tsToSeconds(ts) {
 function fmtDate(raw) {
     if (!raw) return "";
     try {
-        return new Date(raw).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        const d = new Date(raw);
+        if (isNaN(d.getTime())) return "";
+        return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
     } catch { return ""; }
 }
 
@@ -821,6 +824,7 @@ function renderComicCard(mention) {
     const people = ep.people
         ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
         : "";
+    // pre-2024 episodes use different guest formats; "(ft." detection covers Era 2 only
     const isGuest = (ep.title || "").includes("(ft.");
 
     let action = "";
@@ -867,6 +871,7 @@ function renderEpisodeCard(ep) {
     const people = ep.people
         ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
         : "";
+    // pre-2024 episodes use different guest formats; "(ft." detection covers Era 2 only
     const isGuest = (ep.title || "").includes("(ft.");
     const kwList = ep.keywords
         ? String(ep.keywords).split(",").map(s => s.trim()).filter(Boolean)

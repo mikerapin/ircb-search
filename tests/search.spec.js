@@ -236,4 +236,36 @@ test.describe('IRCB Search', () => {
         }
     });
 
+    test('fmtDate handles valid dates correctly', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        // After data loads, cards with valid dates should show formatted dates
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        // At least some cards should have a date badge (non-empty)
+        const dateBadges = page.locator('.card-date');
+        const count = await dateBadges.count();
+        expect(count).toBeGreaterThan(0);
+        const firstDate = await dateBadges.first().textContent();
+        expect(firstDate.trim()).toMatch(/\w+ \d+, \d{4}/);
+    });
+
+    test('tsToSeconds returns 0 for missing or malformed timestamps', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const result = await page.evaluate(() => {
+            // Test the function directly — it's in global scope
+            return [
+                tsToSeconds(null),
+                tsToSeconds(''),
+                tsToSeconds('abc:xyz'),
+                tsToSeconds('00:00:00'),
+            ];
+        });
+        expect(result[0]).toBe(0); // null
+        expect(result[1]).toBe(0); // empty
+        expect(result[2]).toBe(0); // NaN parts
+        expect(result[3]).toBe(0); // zero timestamp
+    });
+
 });
