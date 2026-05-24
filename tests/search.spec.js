@@ -318,4 +318,17 @@ test.describe('IRCB Search', () => {
         }
     });
 
+    test('CSP meta tag is present with expected directives', async ({ page }) => {
+        await page.goto('/');
+        const csp = await page.evaluate(() => {
+            const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            return meta ? meta.getAttribute('content') : null;
+        });
+        expect(csp).not.toBeNull();
+        expect(csp).toContain('default-src');
+        expect(csp).toContain('frame-src https://player.simplecast.com');
+        expect(csp).toContain('img-src');
+        expect(csp).toContain('font-src https://fonts.gstatic.com');
+    });
+
 });
