@@ -3,7 +3,7 @@
 Export IRCB data from sshugars/ircb to JSON for the search UI.
 Run this whenever the source data is updated.
 
-Requirements: pip install pandas openpyxl requests
+Requirements: pip install pandas openpyxl
 """
 
 import json
@@ -13,7 +13,7 @@ from pathlib import Path
 try:
     import pandas as pd
 except ImportError:
-    sys.exit("Missing dependency: pip install pandas openpyxl requests")
+    sys.exit("Missing dependency: pip install pandas openpyxl")
 
 DATA_DIR = Path(__file__).parent / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -22,7 +22,7 @@ COMICS_URL = "https://github.com/sshugars/ircb/raw/main/tables/public_feed_comic
 EPISODES_URL = "https://github.com/sshugars/ircb/raw/main/tables/all_episodes.xlsx"
 
 COMIC_COLS = ["comic", "show_id", "episode_title", "segment", "timestamp", "direct_url"]
-EPISODE_COLS = ["show_id", "title", "date", "people", "keywords", "simplecast_url", "episode_number"]
+EPISODE_COLS = ["show_id", "title", "date", "people", "keywords", "simplecast_url"]
 
 
 def export_comics():

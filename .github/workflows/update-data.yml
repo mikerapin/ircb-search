@@ -17,7 +17,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install pandas openpyxl requests
+        run: pip install pandas openpyxl
 
       - name: Export data
         run: python export_data.py
