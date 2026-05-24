@@ -15,6 +15,8 @@ try:
 except ImportError:
     sys.exit("Missing dependency: pip install pandas openpyxl")
 
+COMIC_DENYLIST = {"comic books", "comics", "ircb", "i read comic books", "guest"}
+
 DATA_DIR = Path(__file__).parent / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
@@ -31,6 +33,7 @@ def export_comics():
     df = df[[c for c in COMIC_COLS if c in df.columns]]
     df = df.dropna(subset=["comic"])
     df["comic"] = df["comic"].astype(str).str.strip()
+    df = df[~df["comic"].str.lower().isin(COMIC_DENYLIST)]
     out = DATA_DIR / "comics.json"
     df.to_json(out, orient="records", force_ascii=False)
     print(f"  → {len(df)} comic mentions → {out}")

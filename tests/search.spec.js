@@ -224,4 +224,16 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.guest-chip.active')).toHaveCount(0);
     });
 
+    test('denylist terms do not appear as trending chip names', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const denylist = ['comic books', 'comics', 'ircb', 'i read comic books', 'guest'];
+        const chips = page.locator('.trending-chip .tc-name');
+        const count = await chips.count();
+        for (let i = 0; i < count; i++) {
+            const name = (await chips.nth(i).textContent()).trim().toLowerCase();
+            expect(denylist).not.toContain(name);
+        }
+    });
+
 });
