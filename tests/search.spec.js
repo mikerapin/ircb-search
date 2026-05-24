@@ -236,6 +236,7 @@ test.describe('IRCB Search', () => {
                 safeUrl('https://patreon.com/ircbpodcast'),
                 safeUrl(''),
                 safeUrl(null),
+                safeUrl('https://evil.simplecast.com/xss'),
             ];
         });
         expect(results[0]).toBe('#');                                         // javascript: blocked
@@ -245,6 +246,7 @@ test.describe('IRCB Search', () => {
         expect(results[4]).toBe('https://patreon.com/ircbpodcast');          // allowed
         expect(results[5]).toBe('#');                                         // empty blocked
         expect(results[6]).toBe('#');                                         // null blocked
+        expect(results[7]).toBe('#');                                         // adversarial subdomain blocked
     });
 
     test('denylist terms do not appear as trending chip names', async ({ page }) => {

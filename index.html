@@ -818,12 +818,11 @@ const SAFE_HOSTS = new Set([
 ]);
 
 function safeUrl(url) {
-    if (!url) return "#";
+    if (typeof url !== "string" || !url) return "#";
     try {
         const u = new URL(url);
         if (u.protocol !== "https:") return "#";
-        const host = u.hostname.toLowerCase();
-        if (SAFE_HOSTS.has(host) || [...SAFE_HOSTS].some(h => host.endsWith("." + h))) return url;
+        if (SAFE_HOSTS.has(u.hostname.toLowerCase())) return url;
     } catch { /* invalid URL */ }
     return "#";
 }
