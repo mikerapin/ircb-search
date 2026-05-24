@@ -303,4 +303,19 @@ test.describe('IRCB Search', () => {
         expect(result[3]).toBe(0); // zero timestamp
     });
 
+    test('all outbound links use rel="noopener noreferrer"', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        // Check all target=_blank links on the page
+        const links = page.locator('a[target="_blank"]');
+        const count = await links.count();
+        expect(count).toBeGreaterThan(0);
+        for (let i = 0; i < count; i++) {
+            const rel = await links.nth(i).getAttribute('rel');
+            expect(rel).toContain('noopener');
+            expect(rel).toContain('noreferrer');
+        }
+    });
+
 });

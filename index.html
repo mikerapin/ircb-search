@@ -577,11 +577,11 @@
 </main>
 
 <footer>
-    Data from <a href="https://github.com/sshugars/ircb" target="_blank" rel="noopener">sshugars/ircb</a>
+    Data from <a href="https://github.com/sshugars/ircb" target="_blank" rel="noopener noreferrer">sshugars/ircb</a>
     &nbsp;·&nbsp;
-    Listen at <a href="https://ircbpodcast.simplecast.com" target="_blank" rel="noopener">ircbpodcast.simplecast.com</a>
+    Listen at <a href="https://ircbpodcast.simplecast.com" target="_blank" rel="noopener noreferrer">ircbpodcast.simplecast.com</a>
     &nbsp;·&nbsp;
-    <a href="https://patreon.com/ircbpodcast" target="_blank" rel="noopener">Patreon</a>
+    <a href="https://patreon.com/ircbpodcast" target="_blank" rel="noopener noreferrer">Patreon</a>
 </footer>
 
 <script>
@@ -846,11 +846,11 @@ function renderComicCard(mention) {
     const url = mention.direct_url || ep.simplecast_url;
     if (url) {
         if (ts) {
-            action = `<a class="card-action timestamp" href="${esc(safeUrl(url))}" target="_blank" rel="noopener">
+            action = `<a class="card-action timestamp" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">
                 <span class="ts-badge">⏱ ${esc(ts)}</span> Jump to mention →
             </a>`;
         } else {
-            action = `<a class="card-action listen" href="${esc(safeUrl(url))}" target="_blank" rel="noopener">
+            action = `<a class="card-action listen" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">
                 ▶ Listen to episode →
             </a>`;
         }
@@ -901,7 +901,7 @@ function renderEpisodeCard(ep) {
         : "";
 
     const action = ep.simplecast_url
-        ? `<a class="card-action listen" href="${esc(safeUrl(ep.simplecast_url))}" target="_blank" rel="noopener">▶ Listen →</a>`
+        ? `<a class="card-action listen" href="${esc(safeUrl(ep.simplecast_url))}" target="_blank" rel="noopener noreferrer">▶ Listen →</a>`
         : "";
 
     const slug = ep.show_id || null;
