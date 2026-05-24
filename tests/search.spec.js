@@ -236,6 +236,16 @@ test.describe('IRCB Search', () => {
         }
     });
 
+    test('Fuse.js loads from vendor, not CDN', async ({ page }) => {
+        const cdnRequests = [];
+        page.on('request', req => {
+            if (req.url().includes('jsdelivr.net')) cdnRequests.push(req.url());
+        });
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        expect(cdnRequests).toHaveLength(0);
+    });
+
     test('fmtDate handles valid dates correctly', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
