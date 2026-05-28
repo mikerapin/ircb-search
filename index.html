@@ -758,7 +758,7 @@
 const PANELISTS = [
     { name: "Mike Rapin",       display: "Mike Rapin",       photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/fdeaa485-7fc3-465f-aaea-629a5711facf/mike.png" },
     { name: "Brian Murray",     display: "Brian Murray",     photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/b31a53a8-b6b2-4756-a3f7-8126c423516b/brian_transparent.png" },
-    { name: "Daniel Martinez",  display: "Daniel Martinez",  photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/4cd0101a-59fb-47d8-af40-2ecc960687a9/danny_icon_transparent_edit.png" },
+    { name: "Daniel Martinez",  display: "Daniel Martinez",  aliases: ["Danny Martinez"], photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/4cd0101a-59fb-47d8-af40-2ecc960687a9/danny_icon_transparent_edit.png" },
     { name: "Kait Lamphere",    display: "Kait Lamphere",    photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/bdf64a36-d529-48b3-908c-9ec19b6c96e2/kait_transparent.png" },
     { name: "Kara Szamborski",  display: "Kara Szamborski",  photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/0e212901-c372-4d83-a807-d2c958faa740/kara_reivison3_transparent.png" },
     { name: "Kate Skocelas",    display: "Kate Skocelas",    photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/6b6e747b-6467-4f78-96ea-2450f310c5d1/kate_transparent.png" },
@@ -966,8 +966,9 @@ function runSearch() {
 
     // Apply panelist filter
     if (panelist) {
-        comicHits   = comicHits.filter(m => parsePeople((epMap[m.show_id] || {}).people).includes(panelist));
-        episodeHits = episodeHits.filter(ep => parsePeople(ep.people).includes(panelist));
+        const pNames = panelistNames(panelist);
+        comicHits   = comicHits.filter(m => parsePeople((epMap[m.show_id] || {}).people).some(n => pNames.includes(n)));
+        episodeHits = episodeHits.filter(ep => parsePeople(ep.people).some(n => pNames.includes(n)));
     }
 
     // Apply guest filter
@@ -1069,6 +1070,11 @@ function esc(s) {
 function parsePeople(str) {
     if (!str) return [];
     return str.split(",").map(s => s.trim()).filter(Boolean);
+}
+
+function panelistNames(name) {
+    const p = PANELIST_MAP[name];
+    return p && p.aliases ? [name, ...p.aliases] : [name];
 }
 
 function isGuestEp(ep) {
@@ -1276,7 +1282,7 @@ function renderPanelistPage(name) {
     document.querySelector(".tabs").style.display = "none";
 
     const panelistEps = episodes
-        .filter(ep => parsePeople(ep.people).includes(name))
+        .filter(ep => parsePeople(ep.people).some(n => panelistNames(name).includes(n)))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (!panelistEps.length) {
