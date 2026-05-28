@@ -735,8 +735,8 @@ async function init() {
             fuseEpisodes.search(name).forEach(r => ids.add(r.item.show_id));
             return ids.size || 1;
         };
-        topComics       = topComics.map(c => ({ ...c, count: computeChipCount(c.name) }));
-        topRecentComics = topRecentComics.map(c => ({ ...c, count: computeChipCount(c.name) }));
+        topComics       = topComics.map(c => ({ ...c, count: computeChipCount(c.name) })).sort((a, b) => b.count - a.count);
+        topRecentComics = topRecentComics.map(c => ({ ...c, count: computeChipCount(c.name) })).sort((a, b) => b.count - a.count);
 
         // Restore search state from URL
         const params = new URLSearchParams(location.search);
