@@ -33,7 +33,7 @@
             --blue-border:  rgba(76,201,240,0.25);
             --text:         #f0f0f8;
             --text-muted:   #a09080;
-            --text-dim:     #6a5248;
+            --text-dim:     #8a7060;
         }
 
         html { scroll-behavior: smooth; }
@@ -63,6 +63,12 @@
             align-items: center;
             gap: 1rem;
             margin-bottom: 0.25rem;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
         }
 
         .logo-art {
@@ -531,21 +537,41 @@
             main { padding: 1.5rem 1rem 4rem; }
             .tabs { flex-wrap: wrap; }
         }
+
+        .sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .state-box.loading .icon { animation: none; }
+        }
+
+        @media (pointer: coarse) {
+            .panelist-chip, .trending-chip, .tab, .sort-btn { min-height: 44px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-inner">
-        <div class="logo-row" style="cursor:pointer" onclick="clearSearch()">
+        <button class="logo-row" aria-label="Clear search and return home">
             <img class="logo-art"
                  src="https://image.simplecastcdn.com/images/a038770a-a3bd-4472-9c81-71d8fde87cb9/a69b3e53-c1d6-4a76-8c13-0eae79ce46fa/3000x3000/podcast-cover-rgb-final-30001.png"
                  alt="IRCB"
                  onerror="this.style.display='none'">
             <h1>I Read <em>Comic Books</em></h1>
-        </div>
+        </button>
         <p class="tagline" id="tagline">Search every comic and topic discussed across 500+ episodes.</p>
 
+        <label for="search-input" class="sr-only">Search episodes and comics</label>
         <div class="search-box">
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="17" height="17"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -559,22 +585,22 @@
             <button id="clear-btn" class="clear-btn" style="display:none" aria-label="Clear search">✕</button>
         </div>
 
-        <div class="tabs">
-            <button class="tab active" data-mode="all">All</button>
-            <button class="tab" data-mode="comics">Comics Only</button>
-            <button class="tab" data-mode="topics">Topics Only</button>
+        <div class="tabs" role="tablist" aria-label="Search mode">
+            <button class="tab active" data-mode="all" role="tab" aria-selected="true">All</button>
+            <button class="tab" data-mode="comics" role="tab" aria-selected="false">Comics Only</button>
+            <button class="tab" data-mode="topics" role="tab" aria-selected="false">Topics Only</button>
         </div>
 
         <div class="sort-row" id="sort-row" style="display:none">
             <span class="sort-label">Sort:</span>
-            <button class="sort-btn active" data-sort="relevance">Relevance</button>
-            <button class="sort-btn" data-sort="recent">Most Recent</button>
+            <button class="sort-btn active" data-sort="relevance" aria-pressed="true">Relevance</button>
+            <button class="sort-btn" data-sort="recent" aria-pressed="false">Most Recent</button>
         </div>
     </div>
 </header>
 
 <main>
-    <div id="results"></div>
+    <div id="results" aria-live="polite" aria-busy="false"></div>
 </main>
 
 <footer>
@@ -605,6 +631,7 @@ let openEmbed = null;
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 async function init() {
+    document.getElementById("results").setAttribute("aria-busy", "true");
     setResults(loadingState());
     try {
         const [cr, er] = await Promise.all([
@@ -687,13 +714,17 @@ async function init() {
         if (urlMode && ["all","comics","topics"].includes(urlMode)) {
             mode = urlMode;
             document.querySelectorAll(".tab").forEach(b => {
-                b.classList.toggle("active", b.dataset.mode === urlMode);
+                const active = b.dataset.mode === urlMode;
+                b.classList.toggle("active", active);
+                b.setAttribute("aria-selected", String(active));
             });
         }
         if (urlSort && ["relevance","recent"].includes(urlSort)) {
             sort = urlSort;
             document.querySelectorAll(".sort-btn").forEach(b => {
-                b.classList.toggle("active", b.dataset.sort === urlSort);
+                const active = b.dataset.sort === urlSort;
+                b.classList.toggle("active", active);
+                b.setAttribute("aria-pressed", String(active));
             });
         }
         const urlPanelist = params.get("panelist");
@@ -704,8 +735,10 @@ async function init() {
             document.getElementById("search-input").value = urlQ;
             document.getElementById("clear-btn").style.display = "block";
         }
+        document.getElementById("results").setAttribute("aria-busy", "false");
         runSearch();
     } catch (e) {
+        document.getElementById("results").setAttribute("aria-busy", "false");
         setResults(errorState(e.message === "not-found"));
     }
 }
@@ -935,9 +968,11 @@ function clearSearch() {
     document.getElementById("search-input").value = "";
     document.getElementById("clear-btn").style.display = "none";
     document.getElementById("sort-row").style.display = "none";
-    document.querySelectorAll(".sort-btn").forEach(b =>
-        b.classList.toggle("active", b.dataset.sort === "relevance")
-    );
+    document.querySelectorAll(".sort-btn").forEach(b => {
+        const active = b.dataset.sort === "relevance";
+        b.classList.toggle("active", active);
+        b.setAttribute("aria-pressed", String(active));
+    });
     history.replaceState(null, "", location.pathname);
     setResults(emptyState());
 }
@@ -982,6 +1017,7 @@ function toggleEmbed(key, slug, startSecs) {
     if (!wrap) return;
     const src = `https://player.simplecast.com/${slug}?dark=true${startSecs ? "&t=" + startSecs : ""}`;
     wrap.innerHTML = `<iframe src="${esc(safeUrl(src))}" frameborder="0" scrolling="no"
+        title="Episode player"
         allow="autoplay *; encrypted-media *; fullscreen *"
         style="width:100%;height:152px;border-radius:8px;margin-top:0.75rem;display:block;"></iframe>`;
     const btn = document.querySelector(`.play-btn[data-key="${CSS.escape(key)}"]`);
@@ -998,9 +1034,14 @@ function panelistFilterHtml() {
     ).join("");
     const guestChip = `<button class="panelist-chip guest-chip${guestOnly ? " active" : ""}"
         onclick="toggleGuestOnly()">Guest Episodes</button>`;
+    const overflowChip = (panelist && !panelists.includes(panelist))
+        ? `<button class="panelist-chip active" onclick="setPanelist(${esc(JSON.stringify(panelist))})">
+            ${esc(panelist)} ✕
+          </button>`
+        : "";
     return `<div class="panelist-row">
         <span class="sort-label">Filter:</span>
-        <div class="panelist-chips">${chips}${guestChip}</div>
+        <div class="panelist-chips">${overflowChip}${chips}${guestChip}</div>
     </div>`;
 }
 
@@ -1074,11 +1115,16 @@ document.getElementById("search-input").addEventListener("input", function () {
 });
 
 document.getElementById("clear-btn").addEventListener("click", clearSearch);
+document.querySelector(".logo-row").addEventListener("click", clearSearch);
 
 document.querySelectorAll(".tab").forEach(btn => {
     btn.addEventListener("click", function () {
-        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab").forEach(b => {
+            b.classList.remove("active");
+            b.setAttribute("aria-selected", "false");
+        });
         this.classList.add("active");
+        this.setAttribute("aria-selected", "true");
         mode = this.dataset.mode;
         const params = new URLSearchParams(location.search);
         mode !== "all" ? params.set("mode", mode) : params.delete("mode");
@@ -1089,8 +1135,12 @@ document.querySelectorAll(".tab").forEach(btn => {
 
 document.querySelectorAll(".sort-btn").forEach(btn => {
     btn.addEventListener("click", function () {
-        document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".sort-btn").forEach(b => {
+            b.classList.remove("active");
+            b.setAttribute("aria-pressed", "false");
+        });
         this.classList.add("active");
+        this.setAttribute("aria-pressed", "true");
         sort = this.dataset.sort;
         const params = new URLSearchParams(location.search);
         sort !== "relevance" ? params.set("sort", sort) : params.delete("sort");
