@@ -118,7 +118,7 @@
 
         #search-input {
             width: 100%;
-            padding: 0.9rem 1rem 0.9rem 3rem;
+            padding: 0.9rem 2.5rem 0.9rem 3rem;
             background: var(--bg-card);
             border: 1px solid var(--border-hover);
             border-radius: 12px;
@@ -315,8 +315,6 @@
 
         .pill-red    { background: var(--red-dim);    border: 1px solid var(--red-border);    color: var(--red);    }
         .pill-orange { background: var(--orange-dim); border: 1px solid var(--orange-border); color: var(--orange); }
-        .pill-yellow { background: var(--yellow-dim); border: 1px solid var(--yellow-border); color: var(--yellow); }
-        .pill-blue   { background: var(--blue-dim);   border: 1px solid var(--blue-border);   color: var(--blue);   }
 
 
         /* keyword tags */
@@ -725,8 +723,7 @@
             </svg>
             <input type="search" id="search-input"
                    placeholder="Spider-Man, Saga, X-Men, horror, creator-owned…"
-                   autocomplete="off" spellcheck="false"
-                   style="padding-right:2.5rem">
+                   autocomplete="off" spellcheck="false">
             <button id="clear-btn" class="clear-btn" style="display:none" aria-label="Clear search">✕</button>
         </div>
 
@@ -781,7 +778,6 @@ let episodes = [];
 let epMap    = {};   // show_id → episode
 let fuseComics   = null;
 let fuseEpisodes = null;
-let comicCounts  = {};
 let topComics       = [];
 let topRecentComics = [];
 let panelists    = [];
@@ -823,7 +819,7 @@ async function init() {
                 comicEpisodes[m.comic].add(m.show_id);
             }
         });
-        comicCounts = {};
+        const comicCounts = {};
         Object.entries(comicEpisodes).forEach(([comic, ids]) => {
             comicCounts[comic] = ids.size;
         });
@@ -970,19 +966,14 @@ function runSearch() {
 
     // Apply panelist filter
     if (panelist) {
-        comicHits = comicHits.filter(m => {
-            const ep = epMap[m.show_id] || {};
-            return (ep.people || "").split(",").map(s => s.trim()).includes(panelist);
-        });
-        episodeHits = episodeHits.filter(ep =>
-            (ep.people || "").split(",").map(s => s.trim()).includes(panelist)
-        );
+        comicHits   = comicHits.filter(m => parsePeople((epMap[m.show_id] || {}).people).includes(panelist));
+        episodeHits = episodeHits.filter(ep => parsePeople(ep.people).includes(panelist));
     }
 
     // Apply guest filter
     if (guestOnly) {
-        comicHits   = comicHits.filter(m => ((epMap[m.show_id] || {}).title || "").includes("(ft."));
-        episodeHits = episodeHits.filter(ep => (ep.title || "").includes("(ft."));
+        comicHits   = comicHits.filter(m => isGuestEp(epMap[m.show_id] || {}));
+        episodeHits = episodeHits.filter(ep => isGuestEp(ep));
     }
 
     if (!comicHits.length && !episodeHits.length) {
@@ -1051,7 +1042,6 @@ function fmtDate(raw) {
 }
 
 function fmtTs(ts) {
-    // Return null if timestamp is zero / missing
     if (!ts || /^0*:?00:00$/.test(String(ts).trim())) return null;
     return String(ts).replace(/^00:/, ""); // trim leading hours if zero
 }
@@ -1076,15 +1066,21 @@ function esc(s) {
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+function parsePeople(str) {
+    if (!str) return [];
+    return str.split(",").map(s => s.trim()).filter(Boolean);
+}
+
+function isGuestEp(ep) {
+    return (ep.title || "").includes("(ft.");
+}
+
 function renderComicCard(mention) {
     const ep    = epMap[mention.show_id] || {};
     const ts    = fmtTs(mention.timestamp);
     const date  = fmtDate(ep.date);
-    const people = ep.people
-        ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
-        : "";
-    // pre-2024 episodes use different guest formats; "(ft." detection covers Era 2 only
-    const isGuest = (ep.title || "").includes("(ft.");
+    const people  = parsePeople(ep.people).join(", ");
+    const isGuest = isGuestEp(ep);
 
     const slug = ep.player_id || null;
     const secs = tsToSeconds(mention.timestamp);
@@ -1137,11 +1133,8 @@ function renderComicCard(mention) {
 
 function renderEpisodeCard(ep) {
     const date   = fmtDate(ep.date);
-    const people = ep.people
-        ? ep.people.split(",").map(s => s.trim()).filter(Boolean).join(", ")
-        : "";
-    // pre-2024 episodes use different guest formats; "(ft." detection covers Era 2 only
-    const isGuest = (ep.title || "").includes("(ft.");
+    const people  = parsePeople(ep.people).join(", ");
+    const isGuest = isGuestEp(ep);
     const kwList = ep.keywords
         ? String(ep.keywords).split(",").map(s => s.trim()).filter(Boolean)
         : [];
@@ -1283,7 +1276,7 @@ function renderPanelistPage(name) {
     document.querySelector(".tabs").style.display = "none";
 
     const panelistEps = episodes
-        .filter(ep => (ep.people || "").split(",").map(s => s.trim()).includes(name))
+        .filter(ep => parsePeople(ep.people).includes(name))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     if (!panelistEps.length) {
@@ -1323,9 +1316,9 @@ function renderPanelistPage(name) {
         ${photoHtml}
         <div class="panelist-hero">${esc(heroName)}</div>
         <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""} · ${dateRange}</div>
-        ${topPanelistComics ? `<p class="trending-header" style="margin-bottom:0.75rem">Most Discussed</p>
+        ${topPanelistComics ? `<p class="trending-header">Most Discussed</p>
         <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
-        <p class="trending-header" style="margin-bottom:0.75rem">Episodes</p>
+        <p class="trending-header">Episodes</p>
         ${panelistEps.map(ep => renderEpisodeCard(ep)).join("")}
     `;
     setResults(html);
@@ -1413,14 +1406,13 @@ function errorState(notFound) {
     return notFound
         ? `<div class="state-box error">
             <div class="icon">📂</div>
-            <h2>Data Not Found</h2>
-            <p>Run the export script to generate the data files, then refresh.</p>
-            <code>python export_data.py</code>
+            <h2>Episode Data Unavailable</h2>
+            <p>The episode data couldn't be loaded. Try refreshing the page.</p>
         </div>`
         : `<div class="state-box error">
             <div class="icon">⚠️</div>
             <h2>Something Went Wrong</h2>
-            <p>Could not load episode data. Check the console for details.</p>
+            <p>Couldn't load episode data. Try refreshing — if it keeps happening, <a href="https://github.com/mikerapin/ircb-search/issues" target="_blank" rel="noopener noreferrer">let us know</a>.</p>
         </div>`;
 }
 
