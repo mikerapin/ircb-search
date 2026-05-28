@@ -635,4 +635,74 @@ test.describe('IRCB Search', () => {
         expect(isAtLeast55vh).toBe(true);
     });
 
+    // ── E6: fuzzy chip count recomputation + sort ────────────────────────────
+
+    test('All Time trending chips are sorted descending by count', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+
+        const allTimeChips = page.locator('.trending-grid').nth(0).locator('.tc-count');
+        const count = await allTimeChips.count();
+        expect(count).toBeGreaterThan(0);
+
+        const counts = [];
+        for (let i = 0; i < count; i++) {
+            const text = await allTimeChips.nth(i).textContent();
+            counts.push(parseInt(text));
+        }
+
+        for (let i = 1; i < counts.length; i++) {
+            expect(counts[i]).toBeLessThanOrEqual(counts[i - 1]);
+        }
+    });
+
+    test('Last 12 Months trending chips are sorted descending by count', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+
+        const recentChips = page.locator('.trending-grid').nth(1).locator('.tc-count');
+        const count = await recentChips.count();
+        expect(count).toBeGreaterThan(0);
+
+        const counts = [];
+        for (let i = 0; i < count; i++) {
+            const text = await recentChips.nth(i).textContent();
+            counts.push(parseInt(text));
+        }
+
+        for (let i = 1; i < counts.length; i++) {
+            expect(counts[i]).toBeLessThanOrEqual(counts[i - 1]);
+        }
+    });
+
+    test('fuzzy chip counts are higher than old exact-match floor', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+
+        // Check if "Star Wars" is present in the top 10 chips (all sections combined)
+        const allChips = page.locator('.trending-chip');
+        const totalChips = await allChips.count();
+        let starWarsChip = null;
+        for (let i = 0; i < totalChips; i++) {
+            const name = await allChips.nth(i).locator('.tc-name').textContent();
+            if (name.trim() === 'Star Wars') {
+                starWarsChip = allChips.nth(i);
+                break;
+            }
+        }
+
+        if (starWarsChip) {
+            const countText = await starWarsChip.locator('.tc-count').textContent();
+            const chipCount = parseInt(countText);
+            // Old exact-match count was 14; fuzzy search should yield significantly more
+            expect(chipCount).toBeGreaterThan(14);
+        } else {
+            // "Star Wars" not in top chips — verify the highest-count chip exceeds a
+            // reasonable floor given the 559-episode dataset
+            const firstCountText = await page.locator('.trending-grid').nth(0).locator('.tc-count').first().textContent();
+            const highestCount = parseInt(firstCountText);
+            expect(highestCount).toBeGreaterThan(50);
+        }
+    });
+
 });
