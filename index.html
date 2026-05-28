@@ -481,6 +481,16 @@
         .guest-chip.active { background: var(--orange-dim); border-color: var(--orange-border); color: var(--orange); }
 
         /* ── Embed player ────────────────────────────────── */
+        .card-ext-link {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            transition: color 0.15s;
+        }
+        .card-ext-link:hover { color: var(--blue); }
+
         .play-btn {
             background: none;
             border: none;
@@ -838,6 +848,14 @@ function tsToSeconds(ts) {
     return 0;
 }
 
+function secsToSimplecastT(secs) {
+    if (!secs) return "";
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    return `${String(h).padStart(2,"0")}h${String(m).padStart(2,"0")}m${String(s).padStart(2,"0")}s`;
+}
+
 function fmtDate(raw) {
     if (!raw) return "";
     try {
@@ -873,12 +891,6 @@ function esc(s) {
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-function simplecastShortId(url) {
-    if (!url) return null;
-    const m = url.replace(/\?.*$/, "").match(/-([A-Za-z0-9_]{8})$/);
-    return m ? m[1] : null;
-}
-
 function renderComicCard(mention) {
     const ep    = epMap[mention.show_id] || {};
     const ts    = fmtTs(mention.timestamp);
@@ -889,9 +901,18 @@ function renderComicCard(mention) {
     // pre-2024 episodes use different guest formats; "(ft." detection covers Era 2 only
     const isGuest = (ep.title || "").includes("(ft.");
 
+    const slug = ep.player_id || null;
+    const secs = tsToSeconds(mention.timestamp);
+    const key  = mention.show_id + ":" + (mention.timestamp || "");
+    const url  = mention.direct_url || ep.simplecast_url;
+
     let action = "";
-    const url = mention.direct_url || ep.simplecast_url;
-    if (url) {
+    if (slug && ts) {
+        const inner = `<span class="ts-badge">⏱ ${esc(ts)}</span> Jump to mention →`;
+        const extLink = url ? `<a class="card-ext-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>` : "";
+        action = `<button class="play-btn card-action timestamp" data-key="${esc(key)}" data-orig="${esc(inner)}"
+            onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},${secs})">${inner}</button>${extLink ? " " + extLink : ""}`;
+    } else if (url && !slug) {
         if (ts) {
             action = `<a class="card-action timestamp" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">
                 <span class="ts-badge">⏱ ${esc(ts)}</span> Jump to mention →
@@ -903,12 +924,13 @@ function renderComicCard(mention) {
         }
     }
 
-    const slug = simplecastShortId(ep.simplecast_url);
-    const secs = tsToSeconds(mention.timestamp);
-    const key  = mention.show_id + ":" + (mention.timestamp || "");
-    const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
-        onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},${secs})">▶ Play</button>
-        <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
+    let playBtn = "";
+    if (slug && !ts) {
+        const extLink = url ? `<a class="card-ext-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>` : "";
+        playBtn = `<button class="play-btn card-action listen" data-key="${esc(key)}" data-orig="▶ Play"
+            onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>${extLink ? " " + extLink : ""}`;
+    }
+    if (slug) playBtn += `<div class="embed-wrap" data-key="${esc(key)}"></div>`;
 
     return `<div class="card">
         <div class="card-top">
@@ -947,14 +969,17 @@ function renderEpisodeCard(ep) {
             }).join("")}</div>`
         : "";
 
-    const action = ep.simplecast_url
-        ? `<a class="card-action listen" href="${esc(safeUrl(ep.simplecast_url))}" target="_blank" rel="noopener noreferrer">▶ Listen →</a>`
-        : "";
-
-    const slug = simplecastShortId(ep.simplecast_url);
+    const slug = ep.player_id || null;
     const key  = ep.show_id + ":";
-    const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
-        onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>
+    const extUrl = ep.simplecast_url ? safeUrl(ep.simplecast_url) : null;
+    const action = (!slug && extUrl)
+        ? `<a class="card-action listen" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">▶ Listen →</a>`
+        : "";
+    const extLink = (slug && extUrl)
+        ? `<a class="card-ext-link" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>`
+        : "";
+    const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}" data-orig="▶ Play"
+        onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>${extLink ? " " + extLink : ""}
         <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
 
     return `<div class="card">
@@ -978,6 +1003,7 @@ function clearSearch() {
     panelist = null;
     guestOnly = false;
     sort = "relevance";
+    openEmbed = null;
     document.getElementById("search-input").value = "";
     document.getElementById("clear-btn").style.display = "none";
     document.getElementById("sort-row").style.display = "none";
@@ -1016,25 +1042,30 @@ function toggleGuestOnly() {
     runSearch();
 }
 
+function resetEmbeds() {
+    document.querySelectorAll(".embed-wrap").forEach(el => el.innerHTML = "");
+    document.querySelectorAll(".play-btn").forEach(b => {
+        b.innerHTML = b.getAttribute("data-orig") || "▶ Play";
+    });
+}
+
 function toggleEmbed(key, slug, startSecs) {
     if (openEmbed === key) {
         openEmbed = null;
-        document.querySelectorAll(".embed-wrap").forEach(el => el.innerHTML = "");
-        document.querySelectorAll(".play-btn").forEach(b => b.textContent = "▶ Play");
+        resetEmbeds();
         return;
     }
-    document.querySelectorAll(".embed-wrap").forEach(el => el.innerHTML = "");
-    document.querySelectorAll(".play-btn").forEach(b => b.textContent = "▶ Play");
+    resetEmbeds();
     openEmbed = key;
     const wrap = document.querySelector(`.embed-wrap[data-key="${CSS.escape(key)}"]`);
     if (!wrap) return;
-    const src = `https://player.simplecast.com/${slug}?dark=true${startSecs ? "&t=" + startSecs : ""}`;
+    const src = `https://player.simplecast.com/${slug}?dark=true${startSecs ? "&t=" + secsToSimplecastT(startSecs) : ""}`;
     wrap.innerHTML = `<iframe src="${esc(safeUrl(src))}" frameborder="0" scrolling="no"
         title="Episode player"
         allow="autoplay *; encrypted-media *; fullscreen *"
         style="width:100%;height:152px;border-radius:8px;margin-top:0.75rem;display:block;"></iframe>`;
     const btn = document.querySelector(`.play-btn[data-key="${CSS.escape(key)}"]`);
-    if (btn) btn.textContent = "■ Stop";
+    if (btn) btn.innerHTML = "■ Stop";
 }
 
 function panelistFilterHtml() {

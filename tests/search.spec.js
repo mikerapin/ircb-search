@@ -362,18 +362,18 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.embed-wrap iframe').first()).toBeVisible();
         await expect(page.locator('.play-btn').first()).toContainText('■ Stop');
 
-        // Stop → iframe gone, button says Play
+        // Stop → iframe gone, button restores to original label (not "■ Stop")
         await page.locator('.play-btn').first().click();
         await expect(page.locator('.embed-wrap iframe')).toHaveCount(0);
-        await expect(page.locator('.play-btn').first()).toContainText('▶ Play');
+        await expect(page.locator('.play-btn').first()).not.toContainText('■ Stop');
 
-        // Click A then B → only B open
+        // Click A then B → only B open; A restores to original label
         const buttons = page.locator('.play-btn');
         if (await buttons.count() >= 2) {
             await buttons.first().click();
             await buttons.nth(1).click();
             await expect(page.locator('.embed-wrap iframe')).toHaveCount(1);
-            await expect(buttons.first()).toContainText('▶ Play');
+            await expect(buttons.first()).not.toContainText('■ Stop');
             await expect(buttons.nth(1)).toContainText('■ Stop');
         }
     });
@@ -465,6 +465,103 @@ test.describe('IRCB Search', () => {
             getComputedStyle(el).animationName
         );
         expect(animName).toBe('none');
+    });
+
+    // ── E4: timestamp formatter + embedded player ────────────────────────────
+
+    test('secsToSimplecastT formats seconds into 00h00m00s pattern', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const results = await page.evaluate(() => [
+            secsToSimplecastT(2990),
+            secsToSimplecastT(3661),
+            secsToSimplecastT(0),
+            secsToSimplecastT(null),
+            secsToSimplecastT(60),
+        ]);
+        expect(results[0]).toBe('00h49m50s');  // 2990s = 49m50s
+        expect(results[1]).toBe('01h01m01s');  // 3661s = 1h1m1s
+        expect(results[2]).toBe('');            // 0 returns empty string
+        expect(results[3]).toBe('');            // null returns empty string
+        expect(results[4]).toBe('00h01m00s');  // 60s = 1m
+    });
+
+    test('Jump to mention embed iframe src uses formatted t= timestamp not raw seconds', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('button.play-btn.timestamp').first()).toBeVisible({ timeout: 5000 });
+
+        await page.locator('button.play-btn.timestamp').first().click();
+
+        const iframe = page.locator('.embed-wrap iframe').first();
+        await expect(iframe).toBeVisible();
+
+        const src = await iframe.getAttribute('src');
+        expect(src).toContain('?');
+        expect(src).toMatch(/[?&]t=\d{2}h\d{2}m\d{2}s(?:&|$)/);
+        expect(src).not.toMatch(/[?&]t=\d+(?:&|$)/);
+    });
+
+    test('Jump to mention action is a button not an anchor tag', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        // Cards with player_id + valid timestamp render a button.play-btn, not an <a>
+        await expect(page.locator('button.play-btn.timestamp').first()).toBeVisible();
+        // There should be no <a> with timestamp class for those same cards
+        // (anchor timestamp links only appear when there is NO player_id)
+        const anchorTimestamps = page.locator('a.card-action.timestamp');
+        const btnTimestamps = page.locator('button.play-btn.timestamp');
+        const btnCount = await btnTimestamps.count();
+        expect(btnCount).toBeGreaterThan(0);
+        // Any anchor timestamp links present belong to episodes without a player_id;
+        // confirm none of those also have a sibling button.play-btn inside the same card
+        const anchorCount = await anchorTimestamps.count();
+        for (let i = 0; i < anchorCount; i++) {
+            const card = anchorTimestamps.nth(i).locator('xpath=ancestor::div[contains(@class,"card")]');
+            await expect(card.locator('button.play-btn')).toHaveCount(0);
+        }
+    });
+
+    test('no card shows both a listen link and a play button at the same time', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        const cards = page.locator('.card');
+        const count = await cards.count();
+        for (let i = 0; i < count; i++) {
+            const card = cards.nth(i);
+            const hasListenLink = await card.locator('a.card-action.listen').count();
+            const hasPlayBtn    = await card.locator('button.play-btn').count();
+            expect(hasListenLink > 0 && hasPlayBtn > 0).toBe(false);
+        }
+    });
+
+    test('cards with player_id show Simplecast external link', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        // At least one card should have a .card-ext-link with text "Simplecast ↗"
+        const extLinks = page.locator('.card-ext-link');
+        await expect(extLinks.first()).toBeVisible();
+        const texts = await extLinks.allTextContents();
+        expect(texts.some(t => t.trim() === 'Simplecast ↗')).toBe(true);
+    });
+
+    test('Topics mode episode cards with player_id show Play button', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.tab[data-mode="topics"]').click();
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        // Episode cards with player_id render a ▶ Play button
+        const playBtns = page.locator('button.play-btn');
+        await expect(playBtns.first()).toBeVisible();
+        const labels = await playBtns.allTextContents();
+        expect(labels.some(t => t.trim() === '▶ Play')).toBe(true);
     });
 
 });
