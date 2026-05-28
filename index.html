@@ -1329,9 +1329,13 @@ function renderPanelistPage(name) {
             <span class="tc-count">${count} eps</span>
         </button>`).join("");
 
-    const first = fmtDate(panelistEps[panelistEps.length - 1].date);
-    const last  = fmtDate(panelistEps[0].date);
-    const dateRange = (first && last && first !== last) ? `${first} – ${last}` : (first || last || "");
+    const datedEps   = panelistEps.filter(ep => fmtDate(ep.date));
+    const firstDate  = datedEps.length ? fmtDate(datedEps[datedEps.length - 1].date) : "";
+    const latestDate = datedEps.length ? fmtDate(datedEps[0].date) : "";
+    const dateRange  = (!firstDate && !latestDate) ? ""
+        : (firstDate && latestDate && firstDate !== latestDate)
+            ? `First: ${firstDate} · Latest: ${latestDate}`
+            : (firstDate || latestDate);
 
     const pInfo = PANELIST_MAP[name];
     const photoHtml = pInfo
@@ -1343,7 +1347,7 @@ function renderPanelistPage(name) {
         <button class="back-link" onclick="goHome()">← Back to search</button>
         ${photoHtml}
         <div class="panelist-hero">${esc(heroName)}</div>
-        <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""} · ${dateRange}</div>
+        <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""}${dateRange ? ` · ${dateRange}` : ""}</div>
         ${topPanelistComics ? `<p class="trending-header">Most Discussed</p>
         <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
         <p class="trending-header">Episodes</p>
