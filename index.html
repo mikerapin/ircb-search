@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://image.simplecastcdn.com; frame-src https://player.simplecast.com; connect-src 'self' https://raw.githubusercontent.com https://github.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://image.simplecastcdn.com https://images.squarespace-cdn.com; frame-src https://player.simplecast.com; connect-src 'self' https://raw.githubusercontent.com https://github.com;">
     <title>I Read Comic Books — Episode Search</title>
     <meta name="description" id="meta-description" content="Search 500+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -545,8 +545,89 @@
         .panelist-stats { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1.5rem; }
         .back-link      { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--text-dim); text-decoration: none; margin-bottom: 1.5rem; cursor: pointer; background: none; border: none; padding: 0; font-family: 'Inter', sans-serif; }
         .back-link:hover { color: var(--text); }
-        .panelist-page-link { font-size: 0.7rem; color: var(--text-dim); text-decoration: none; margin-left: 0.25rem; vertical-align: middle; }
-        .panelist-page-link:hover { color: var(--blue); }
+
+        .panelist-photo {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: var(--bg-card-hover);
+            border: 2px solid var(--border-hover);
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Panelist nav dropdown ───────────────────────── */
+        .panelist-nav { position: relative; margin-bottom: 1.25rem; }
+
+        .panelist-nav-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.35rem 0.875rem;
+            background: transparent;
+            border: 1px solid var(--border-hover);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .panelist-nav-btn:hover, .panelist-nav-btn[aria-expanded="true"] {
+            border-color: var(--red);
+            color: var(--text);
+        }
+
+        .panelist-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-hover);
+            border-radius: 12px;
+            padding: 1rem;
+            z-index: 200;
+            width: 360px;
+            max-width: calc(100vw - 3rem);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        .panelist-dropdown.open { display: block; }
+
+        .panelist-dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .panelist-dropdown-item {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 0.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.15s;
+        }
+        .panelist-dropdown-item:hover { background: var(--bg-card-hover); }
+
+        .panelist-avatar {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border);
+        }
+
+        .panelist-avatar-name {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.2;
+        }
 
         .trending-chip {
             display: inline-flex;
@@ -623,6 +704,18 @@
         </button>
         <p class="tagline" id="tagline">Search every comic and topic discussed across 500+ episodes.</p>
 
+        <div class="panelist-nav" id="panelist-nav">
+            <button class="panelist-nav-btn" id="panelist-nav-btn"
+                    aria-haspopup="true" aria-expanded="false"
+                    aria-controls="panelist-dropdown"
+                    onclick="togglePanelistMenu()">
+                Meet the Panelists ▾
+            </button>
+            <div class="panelist-dropdown" id="panelist-dropdown" role="menu">
+                <div class="panelist-dropdown-grid" id="panelist-dropdown-grid"></div>
+            </div>
+        </div>
+
         <label for="search-input" class="sr-only">Search episodes and comics</label>
         <div class="search-box">
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="17" height="17"
@@ -664,6 +757,22 @@
 </footer>
 
 <script>
+// ─── Canonical panelist roster ────────────────────────────────────────────────
+const PANELISTS = [
+    { name: "Brian Murray",     display: "Brian Murray",     photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/b31a53a8-b6b2-4756-a3f7-8126c423516b/brian_transparent.png" },
+    { name: "Daniel Martinez",  display: "Daniel Martinez",  photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/4cd0101a-59fb-47d8-af40-2ecc960687a9/danny_icon_transparent_edit.png" },
+    { name: "Kait Lamphere",    display: "Kait Lamphere",    photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/bdf64a36-d529-48b3-908c-9ec19b6c96e2/kait_transparent.png" },
+    { name: "Kara Szamborski",  display: "Kara Szamborski",  photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/0e212901-c372-4d83-a807-d2c958faa740/kara_reivison3_transparent.png" },
+    { name: "Kate Skocelas",    display: "Kate Skocelas",    photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/6b6e747b-6467-4f78-96ea-2450f310c5d1/kate_transparent.png" },
+    { name: "Nick White",       display: "Nick White",       photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/a133116d-3010-4d6b-8fbb-7df32bf729f2/nick_transparent.png" },
+    { name: "Paloma Deerfield", display: "Paloma",           photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/438cef1d-8fb3-425a-9ddc-4366b4e88357/paloma_transparent.png" },
+    { name: "Paul Jaissle",     display: "Paul Jaissle",     photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/2eb2279f-e64e-42c1-939f-824b11d51b07/paul_transparent.png" },
+    { name: "René Rodriguez",   display: "René Rodriguez",   photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/f48e440a-1e29-428c-b231-7e133ef77bf7/rene_transparent.png" },
+    { name: "Tia Vasiliou",     display: "Tia Vasiliou",     photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/8960ab9d-cb48-4460-b0a7-588054e1fca2/tia_revision_transparent.png" },
+    { name: "Zach McCrary",     display: "Zach McCrary",     photo: "https://images.squarespace-cdn.com/content/v1/64bab1448cbc203e853efeed/0f26d109-b34c-433d-b38b-69f8eae9df74/zach_transparent.png" },
+];
+const PANELIST_MAP = Object.fromEntries(PANELISTS.map(p => [p.name, p]));
+
 // ─── State ────────────────────────────────────────────────────────────────────
 let comics   = [];
 let episodes = [];
@@ -746,16 +855,23 @@ async function init() {
             if (set && set.size) { latestEpisodeComics = [...set]; latestEpisodeInfo = ep; break; }
         }
 
-        const panelistCounts = {};
+        const episodeNames = new Set();
         episodes.forEach(ep => {
-            if (ep.people) ep.people.split(",").map(s => s.trim()).filter(Boolean).forEach(name => {
-                panelistCounts[name] = (panelistCounts[name] || 0) + 1;
-            });
+            if (ep.people) ep.people.split(",").map(s => s.trim()).filter(Boolean).forEach(n => episodeNames.add(n));
         });
-        panelists = Object.entries(panelistCounts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 15)
-            .map(([name]) => name);
+        panelists = PANELISTS.filter(p => episodeNames.has(p.name)).map(p => p.name);
+
+        // Populate the panelist dropdown menu
+        const grid = document.getElementById("panelist-dropdown-grid");
+        if (grid) {
+            grid.innerHTML = PANELISTS.map(p =>
+                `<button class="panelist-dropdown-item" role="menuitem"
+                    onclick="closePanelistMenu(); location.href='?view=panelist&name=${esc(encodeURIComponent(p.name))}'">
+                    <img class="panelist-avatar" src="${esc(p.photo)}" alt="${esc(p.display)}" loading="lazy">
+                    <span class="panelist-avatar-name">${esc(p.display.split(" ")[0])}</span>
+                </button>`
+            ).join("");
+        }
 
         fuseComics = new Fuse(comics, {
             keys: ["comic"],
@@ -1137,12 +1253,14 @@ function toggleEmbed(key, slug, startSecs) {
 
 function panelistFilterHtml() {
     if (!panelists.length) return "";
-    const chips = panelists.map(name =>
-        `<button class="panelist-chip${panelist === name ? " active" : ""}"
+    const chips = panelists.map(name => {
+        const p = PANELIST_MAP[name];
+        const label = p ? p.display.split(" ")[0] : name.split(" ")[0];
+        return `<button class="panelist-chip${panelist === name ? " active" : ""}"
             onclick="setPanelist(${esc(JSON.stringify(name))})">
-            ${esc(name.split(" ")[0])}
-        </button><a href="?view=panelist&name=${esc(encodeURIComponent(name))}" class="panelist-page-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(name)} profile page">↗</a>`
-    ).join("");
+            ${esc(label)}
+        </button>`;
+    }).join("");
     const guestChip = `<button class="panelist-chip guest-chip${guestOnly ? " active" : ""}"
         onclick="toggleGuestOnly()">Guest Episodes</button>`;
     const overflowChip = (panelist && !panelists.includes(panelist))
@@ -1192,9 +1310,16 @@ function renderPanelistPage(name) {
 
     const dateRange = `${fmtDate(panelistEps[panelistEps.length - 1].date)} – ${fmtDate(panelistEps[0].date)}`;
 
+    const pInfo = PANELIST_MAP[name];
+    const photoHtml = pInfo
+        ? `<img class="panelist-photo" src="${esc(pInfo.photo)}" alt="${esc(pInfo.display)}">`
+        : "";
+    const heroName = pInfo ? pInfo.display : name;
+
     const html = `
         <button class="back-link" onclick="goHome()">← Back to search</button>
-        <div class="panelist-hero">${esc(name)}</div>
+        ${photoHtml}
+        <div class="panelist-hero">${esc(heroName)}</div>
         <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""} · ${dateRange}</div>
         ${topPanelistComics ? `<p class="trending-header" style="margin-bottom:0.75rem">Most Discussed</p>
         <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
@@ -1202,6 +1327,20 @@ function renderPanelistPage(name) {
         ${panelistEps.map(ep => renderEpisodeCard(ep)).join("")}
     `;
     setResults(html);
+}
+
+function togglePanelistMenu() {
+    const dropdown = document.getElementById("panelist-dropdown");
+    const btn = document.getElementById("panelist-nav-btn");
+    const isOpen = dropdown.classList.toggle("open");
+    btn.setAttribute("aria-expanded", isOpen);
+}
+
+function closePanelistMenu() {
+    const dropdown = document.getElementById("panelist-dropdown");
+    const btn = document.getElementById("panelist-nav-btn");
+    dropdown.classList.remove("open");
+    btn.setAttribute("aria-expanded", "false");
 }
 
 function goHome() {
@@ -1333,6 +1472,13 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
 
 init();
 window.addEventListener('popstate', () => location.reload());
+document.addEventListener('click', e => {
+    const nav = document.getElementById('panelist-nav');
+    if (nav && !nav.contains(e.target)) closePanelistMenu();
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanelistMenu();
+});
 </script>
 </body>
 </html>

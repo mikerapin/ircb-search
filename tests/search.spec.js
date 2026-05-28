@@ -764,11 +764,19 @@ test.describe('IRCB Search', () => {
         expect(page.url()).not.toContain('view=panelist');
     });
 
-    test('panelist page link (↗) exists on panelist chips after search', async ({ page }) => {
+    test('"Meet the Panelists" button is visible on empty state', async ({ page }) => {
         await page.goto('/');
-        await page.locator('#search-input').fill('Batman');
-        await expect(page.locator('.panelist-chip').first()).toBeVisible({ timeout: 5000 });
-        await expect(page.locator('.panelist-page-link').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#panelist-nav-btn')).toBeVisible();
+    });
+
+    test('"Meet the Panelists" dropdown opens and shows panelist cards', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await page.locator('#panelist-nav-btn').click();
+        await expect(page.locator('#panelist-dropdown')).toHaveClass(/open/);
+        const items = page.locator('.panelist-dropdown-item');
+        await expect(items).toHaveCount(11);
     });
 
     test('unknown panelist shows graceful empty state', async ({ page }) => {
