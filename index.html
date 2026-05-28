@@ -8,7 +8,7 @@
     <meta name="description" id="meta-description" content="Search 500+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="preload" href="data/comics.json" as="fetch" crossorigin>
     <link rel="preload" href="data/episodes.json" as="fetch" crossorigin>
     <script src="vendor/fuse.min.js"></script>
@@ -19,8 +19,8 @@
             --bg:           #120d08;
             --bg-card:      #1c1510;
             --bg-card-hover:#261d14;
-            --border:       rgba(255,220,180,0.07);
-            --border-hover: rgba(255,220,180,0.15);
+            --border:       rgba(255, 220, 180, 0.10);
+            --border-hover: rgba(255, 220, 180, 0.22);
             --red:          #e63946;
             --red-dim:      rgba(230,57,70,0.15);
             --red-border:   rgba(230,57,70,0.35);
@@ -30,7 +30,7 @@
             --yellow:       #f5c518;
             --yellow-dim:   rgba(245,197,24,0.12);
             --yellow-border:rgba(245,197,24,0.3);
-            --blue:         #4cc9f0;
+            --blue:         #5eb8ff;
             --blue-dim:     rgba(76,201,240,0.1);
             --blue-border:  rgba(76,201,240,0.25);
             --text:         #f0f0f8;
@@ -45,14 +45,14 @@
             color: var(--text);
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         /* ── Header / Hero ───────────────────────────────── */
         header {
             padding: 3rem 1.5rem 2.5rem;
             border-bottom: 1px solid var(--border);
-            background: linear-gradient(180deg, rgba(230,57,70,0.05) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(230,57,70,0.08) 0%, rgba(245,197,24,0.03) 60%, transparent 100%);
         }
 
         .header-inner {
@@ -84,7 +84,7 @@
 
         h1 {
             font-family: 'Bangers', cursive;
-            font-size: clamp(1.9rem, 5vw, 3rem);
+            font-size: clamp(2.1rem, 5.5vw, 3.2rem);
             letter-spacing: 0.05em;
             line-height: 1;
             color: var(--text);
@@ -124,15 +124,16 @@
             border-radius: 12px;
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 1.05rem;
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
             -webkit-appearance: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
         }
 
         #search-input:focus {
             border-color: var(--red);
-            box-shadow: 0 0 0 3px var(--red-dim);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4), 0 0 0 3px var(--red-dim);
         }
 
         #search-input::placeholder { color: var(--text-dim); }
@@ -218,7 +219,7 @@
             gap: 0.75rem;
             margin: 2rem 0 0.875rem;
             font-family: 'Bangers', cursive;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--text-muted);
@@ -244,15 +245,17 @@
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
+            border-left: 2px solid transparent;
             border-radius: 12px;
             padding: 1.1rem 1.25rem;
             margin-bottom: 0.6rem;
-            transition: border-color 0.15s, background 0.15s;
+            transition: border-color 0.15s, background 0.15s, border-left-color 0.15s;
         }
 
         .card:hover {
             border-color: var(--border-hover);
             background: var(--bg-card-hover);
+            border-left-color: var(--red);
         }
 
         /* top row: title + date */
@@ -272,7 +275,7 @@
         }
 
         .episode-title {
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text);
             line-height: 1.35;
@@ -315,8 +318,6 @@
         .pill-yellow { background: var(--yellow-dim); border: 1px solid var(--yellow-border); color: var(--yellow); }
         .pill-blue   { background: var(--blue-dim);   border: 1px solid var(--blue-border);   color: var(--blue);   }
 
-        /* truncate long pill text */
-        .pill { max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* keyword tags */
         .keywords {
@@ -365,10 +366,10 @@
 
         .ts-badge {
             font-family: 'Inter', monospace;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             background: var(--red-dim);
             border: 1px solid var(--red-border);
-            padding: 0.1rem 0.4rem;
+            padding: 0.15rem 0.5rem;
             border-radius: 4px;
             letter-spacing: 0.02em;
         }
@@ -504,12 +505,22 @@
 
         /* ── Trending comics ─────────────────────────────── */
         .trending-header {
-            font-size: 0.8rem;
+            font-family: 'Bangers', cursive;
+            font-size: 1.15rem;
             color: var(--text);
             margin-bottom: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-weight: 600;
+            letter-spacing: 0.12em;
+        }
+
+        .trending-header::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--red);
+            margin-right: 0.5rem;
+            vertical-align: middle;
         }
 
         .trending-grid {
@@ -530,7 +541,7 @@
             padding: 0.4rem 0.75rem;
             background: var(--bg-card);
             border: 1px solid var(--border-hover);
-            border-radius: 8px;
+            border-radius: 20px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             transition: border-color 0.15s, background 0.15s;
@@ -541,6 +552,10 @@
             background: var(--yellow-dim);
         }
 
+        .trending-chip:hover .tc-count {
+            color: var(--yellow);
+        }
+
         .tc-name {
             font-size: 0.85rem;
             color: var(--text);
@@ -549,7 +564,9 @@
 
         .tc-count {
             font-size: 0.72rem;
-            color: var(--text-dim);
+            color: var(--red);
+            opacity: 0.85;
+            transition: color 0.15s;
         }
 
         /* ── Responsive ──────────────────────────────────── */
