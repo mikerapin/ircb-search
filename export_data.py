@@ -35,25 +35,32 @@ _EPISODE_UUID_RE = re.compile(
 )
 
 
-def build_player_id_map():
-    """Return {simplecast_url_base → player_uuid} extracted from the RSS enclosure CDN paths."""
-    print("Fetching RSS feed for Simplecast player IDs...")
+_ITUNES_NS = "http://www.itunes.com/dtds/podcast-1.0.dtd"
+
+
+def build_rss_maps():
+    """Return ({url → player_uuid}, {url → summary}) extracted from the RSS feed."""
+    print("Fetching RSS feed for Simplecast player IDs and episode summaries...")
     with urllib.request.urlopen(RSS_URL) as resp:
         rss_bytes = resp.read()
     tree = ET.fromstring(rss_bytes)
     player_map = {}
+    summary_map = {}
     for item in tree.iter("item"):
         link_el = item.find("link")
-        enc_el = item.find("enclosure")
-        if link_el is None or enc_el is None:
+        if link_el is None:
             continue
         link = (link_el.text or "").split("?")[0].rstrip("/")
-        enc_url = enc_el.get("url", "")
-        m = _EPISODE_UUID_RE.search(enc_url)
-        if m and link:
-            player_map[link] = m.group(1)
-    print(f"  → {len(player_map)} player IDs extracted from RSS")
-    return player_map
+        enc_el = item.find("enclosure")
+        if enc_el is not None:
+            m = _EPISODE_UUID_RE.search(enc_el.get("url", ""))
+            if m and link:
+                player_map[link] = m.group(1)
+        summary_el = item.find(f"{{{_ITUNES_NS}}}summary")
+        if summary_el is not None and summary_el.text and link:
+            summary_map[link] = summary_el.text.strip()
+    print(f"  → {len(player_map)} player IDs, {len(summary_map)} summaries extracted from RSS")
+    return player_map, summary_map
 
 
 def export_comics():
@@ -75,14 +82,15 @@ def export_episodes():
     df = pd.read_excel(EPISODES_URL, engine="openpyxl")
     df = df[[c for c in EPISODE_COLS if c in df.columns]]
 
-    player_map = build_player_id_map()
+    player_map, summary_map = build_rss_maps()
 
-    def lookup_player_id(url):
-        if not url or (isinstance(url, float)):
+    def lookup_rss(url, rss_map):
+        if not url or isinstance(url, float):
             return None
-        return player_map.get(str(url).split("?")[0].rstrip("/"))
+        return rss_map.get(str(url).split("?")[0].rstrip("/"))
 
-    df["player_id"] = df["simplecast_url"].apply(lookup_player_id)
+    df["player_id"] = df["simplecast_url"].apply(lambda u: lookup_rss(u, player_map))
+    df["summary"]   = df["simplecast_url"].apply(lambda u: lookup_rss(u, summary_map))
     matched = df["player_id"].notna().sum()
     print(f"  → {matched}/{len(df)} episodes matched to a Simplecast player ID")
 

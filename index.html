@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>if(new URLSearchParams(location.search).get('view')==='panelist'){document.documentElement.dataset.view='panelist';}</script>
     <link rel="preload" href="data/comics.json" as="fetch" crossorigin>
     <link rel="preload" href="data/episodes.json" as="fetch" crossorigin>
     <script src="vendor/fuse.min.js"></script>
@@ -539,6 +540,22 @@
             font-style: italic;
         }
 
+        [data-view="panelist"] .search-box,
+        [data-view="panelist"] .tabs { display: none; }
+
+        .summary-toggle {
+            background: none; border: none; padding: 0;
+            font-size: 0.75rem; color: var(--text-dim); cursor: pointer;
+            margin-top: 0.5rem; font-family: 'Inter', sans-serif; display: block;
+            transition: color 0.15s;
+        }
+        .summary-toggle:hover { color: var(--text); }
+        .card-summary {
+            margin-top: 0.75rem; padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
+        }
+
         .panelist-hero  { font-family: 'Bangers', cursive; font-size: 2rem; letter-spacing: 0.06em; margin-bottom: 0.25rem; }
         .panelist-stats { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1.5rem; }
         .back-link      { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--text-dim); text-decoration: none; margin-bottom: 1.5rem; cursor: pointer; background: none; border: none; padding: 0; font-family: 'Inter', sans-serif; }
@@ -746,6 +763,8 @@
 </main>
 
 <footer>
+    <a href="https://ircbpodcast.com" target="_blank" rel="noopener noreferrer">ircbpodcast.com</a>
+    &nbsp;·&nbsp;
     Data from <a href="https://github.com/sshugars/ircb" target="_blank" rel="noopener noreferrer">sshugars/ircb</a>
     &nbsp;·&nbsp;
     Listen at <a href="https://ircbpodcast.simplecast.com" target="_blank" rel="noopener noreferrer">ircbpodcast.simplecast.com</a>
@@ -1157,7 +1176,7 @@ function renderEpisodeCard(ep) {
     const key  = ep.show_id + ":";
     const extUrl = ep.simplecast_url ? safeUrl(ep.simplecast_url) : null;
     const action = (!slug && extUrl)
-        ? `<a class="card-action listen" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">▶ Listen →</a>`
+        ? `<a class="play-btn card-action listen" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">▶ Play</a> <a class="card-ext-link" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>`
         : "";
     const extLink = (slug && extUrl)
         ? `<a class="card-ext-link" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>`
@@ -1178,6 +1197,7 @@ function renderEpisodeCard(ep) {
         ${kwHtml}
         ${action}
         ${playBtn}
+        ${ep.summary ? `<button class="summary-toggle" onclick="toggleCardSummary(${esc(JSON.stringify(ep.show_id))})">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden>${esc(ep.summary)}</div>` : ""}
     </div>`;
 }
 
@@ -1309,7 +1329,9 @@ function renderPanelistPage(name) {
             <span class="tc-count">${count} eps</span>
         </button>`).join("");
 
-    const dateRange = `${fmtDate(panelistEps[panelistEps.length - 1].date)} – ${fmtDate(panelistEps[0].date)}`;
+    const first = fmtDate(panelistEps[panelistEps.length - 1].date);
+    const last  = fmtDate(panelistEps[0].date);
+    const dateRange = (first && last && first !== last) ? `${first} – ${last}` : (first || last || "");
 
     const pInfo = PANELIST_MAP[name];
     const photoHtml = pInfo
@@ -1346,10 +1368,20 @@ function closePanelistMenu() {
 
 function goHome() {
     panelistView = null;
+    delete document.documentElement.dataset.view;
     document.getElementById("search-input").style.display = "";
     document.getElementById("clear-btn").style.display = "";
     document.querySelector(".tabs").style.display = "";
     clearSearch();
+}
+
+function toggleCardSummary(showId) {
+    const div = document.getElementById("card-summary-" + showId);
+    const btn = div && div.previousElementSibling;
+    if (!div) return;
+    const opening = div.hidden;
+    div.hidden = !opening;
+    if (btn) btn.textContent = opening ? "▴ Hide notes" : "▾ Show notes";
 }
 
 function emptyState() {
