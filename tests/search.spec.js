@@ -41,7 +41,9 @@ test.describe('IRCB Search', () => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
 
-        const chips = page.locator('.trending-chip');
+        // Only count chips that have a .tc-count badge (All Time + Last 12 Months chips).
+        // "New This Week" chips omit the count badge intentionally.
+        const chips = page.locator('.trending-chip:has(.tc-count)');
         const count = await chips.count();
         expect(count).toBeGreaterThan(0);
 
@@ -170,15 +172,20 @@ test.describe('IRCB Search', () => {
     test('trending chips split into All Time and Last 12 Months sections', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
-        await expect(page.locator('.trending-header').first()).toContainText('All Time');
-        await expect(page.locator('.trending-header').nth(1)).toContainText('Last 12 Months');
+        // "All Time" and "Last 12 Months" must both exist; "New This Week" may also be present
+        const headers = page.locator('.trending-header');
+        const texts = await headers.allTextContents();
+        expect(texts.some(t => t.includes('All Time'))).toBe(true);
+        expect(texts.some(t => t.includes('Last 12 Months'))).toBe(true);
     });
 
     test('both trending sections have chips', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
         const allHeaders = page.locator('.trending-header');
-        await expect(allHeaders).toHaveCount(2);
+        const headerCount = await allHeaders.count();
+        // "New This Week" may add a third header; at minimum All Time + Last 12 Months = 2
+        expect(headerCount).toBeGreaterThanOrEqual(2);
         const totalChips = await page.locator('.trending-chip').count();
         expect(totalChips).toBeGreaterThan(10);
     });
@@ -642,7 +649,11 @@ test.describe('IRCB Search', () => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
 
-        const allTimeChips = page.locator('.trending-grid').nth(0).locator('.tc-count');
+        // Locate the grid that follows the "All Time" header, not by index (which shifts
+        // when "New This Week" section is present).
+        const allTimeChips = page.locator(
+            '.trending-header:text("All Time") + .trending-grid .tc-count'
+        );
         const count = await allTimeChips.count();
         expect(count).toBeGreaterThan(0);
 
@@ -661,7 +672,9 @@ test.describe('IRCB Search', () => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
 
-        const recentChips = page.locator('.trending-grid').nth(1).locator('.tc-count');
+        const recentChips = page.locator(
+            '.trending-header:text("Last 12 Months") + .trending-grid .tc-count'
+        );
         const count = await recentChips.count();
         expect(count).toBeGreaterThan(0);
 
@@ -674,6 +687,100 @@ test.describe('IRCB Search', () => {
         for (let i = 1; i < counts.length; i++) {
             expect(counts[i]).toBeLessThanOrEqual(counts[i - 1]);
         }
+    });
+
+    // ── E7: "New This Week" panel ────────────────────────────────────────────
+
+    test('"New This Week" section appears on empty state', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const headers = page.locator('.trending-header');
+        const texts = await headers.allTextContents();
+        expect(texts.some(t => t.includes('New This Week'))).toBe(true);
+    });
+
+    test('"New This Week" shows episode title and date', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const ep = page.locator('.new-this-week-ep');
+        await expect(ep).toBeVisible({ timeout: 5000 });
+        const text = await ep.textContent();
+        expect(text.trim().length).toBeGreaterThan(0);
+    });
+
+    test('"New This Week" chips trigger a search when clicked', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const chip = page.locator('.new-this-week-ep + .trending-grid .trending-chip').first();
+        await expect(chip).toBeVisible({ timeout: 5000 });
+        await chip.click();
+        await expect(page.locator('#search-input')).not.toHaveValue('', { timeout: 5000 });
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('"New This Week" section not visible after search', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        const headers = page.locator('.trending-header');
+        const texts = await headers.allTextContents();
+        expect(texts.some(t => t.includes('New This Week'))).toBe(false);
+    });
+
+    // ── E7: Panelist pages ────────────────────────────────────────────────────
+
+    test('panelist page renders for valid panelist', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.panelist-hero')).toContainText('Mike Rapin');
+    });
+
+    test('panelist page shows episode cards', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('panelist page shows Most Discussed comics section', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+        const headers = page.locator('.trending-header');
+        const texts = await headers.allTextContents();
+        expect(texts.some(t => t.includes('Most Discussed'))).toBe(true);
+    });
+
+    test('panelist page hides search input', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#search-input')).not.toBeVisible({ timeout: 5000 });
+    });
+
+    test('back link returns to empty state', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+        await page.locator('button.back-link').click();
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+        expect(page.url()).not.toContain('view=panelist');
+    });
+
+    test('panelist page link (↗) exists on panelist chips after search', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.panelist-chip').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.panelist-page-link').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('unknown panelist shows graceful empty state', async ({ page }) => {
+        const jsErrors = [];
+        page.on('pageerror', err => jsErrors.push(err.message));
+        await page.goto('/?view=panelist&name=Zzz+Unknown+Person');
+        await page.waitForTimeout(3000);
+        // No uncaught JS errors
+        expect(jsErrors).toHaveLength(0);
+        // Page renders some content — either a "no episodes" message or back link
+        const hasContent = await page.locator('h2, button.back-link, .panelist-hero').count();
+        expect(hasContent).toBeGreaterThan(0);
     });
 
     test('fuzzy chip counts are higher than old exact-match floor', async ({ page }) => {

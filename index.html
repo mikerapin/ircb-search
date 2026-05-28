@@ -534,6 +534,20 @@
             min-height: 55vh;
         }
 
+        .new-this-week-ep {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            font-style: italic;
+        }
+
+        .panelist-hero  { font-family: 'Bangers', cursive; font-size: 2rem; letter-spacing: 0.06em; margin-bottom: 0.25rem; }
+        .panelist-stats { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1.5rem; }
+        .back-link      { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--text-dim); text-decoration: none; margin-bottom: 1.5rem; cursor: pointer; background: none; border: none; padding: 0; font-family: 'Inter', sans-serif; }
+        .back-link:hover { color: var(--text); }
+        .panelist-page-link { font-size: 0.7rem; color: var(--text-dim); text-decoration: none; margin-left: 0.25rem; vertical-align: middle; }
+        .panelist-page-link:hover { color: var(--blue); }
+
         .trending-chip {
             display: inline-flex;
             align-items: center;
@@ -667,6 +681,9 @@ let panelist  = null;
 let guestOnly = false;
 let openEmbed = null;
 let searchDebounceTimer = null;
+let latestEpisodeComics = [];
+let latestEpisodeInfo   = null;
+let panelistView = null;
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 async function init() {
@@ -719,6 +736,15 @@ async function init() {
             .map(([name, ids]) => ({ name, count: ids.size }))
             .sort((a, b) => b.count - a.count)
             .slice(0, 10);
+
+        // Find most recent episode with comic mentions
+        const sortedEps = [...episodes].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const comicsByEp = {};
+        comics.forEach(m => { if (m.comic) (comicsByEp[m.show_id] ||= new Set()).add(m.comic); });
+        for (const ep of sortedEps) {
+            const set = comicsByEp[ep.show_id];
+            if (set && set.size) { latestEpisodeComics = [...set]; latestEpisodeInfo = ep; break; }
+        }
 
         const panelistCounts = {};
         episodes.forEach(ep => {
@@ -784,7 +810,16 @@ async function init() {
             document.getElementById("search-input").value = urlQ;
             document.getElementById("clear-btn").style.display = "block";
         }
+        const urlView = params.get("view");
+        const urlName = params.get("name");
+        if (urlView === "panelist" && urlName) {
+            panelistView = urlName;
+        }
         document.getElementById("results").setAttribute("aria-busy", "false");
+        if (panelistView) {
+            renderPanelistPage(panelistView);
+            return;
+        }
         runSearch();
     } catch (e) {
         document.getElementById("results").setAttribute("aria-busy", "false");
@@ -1106,7 +1141,7 @@ function panelistFilterHtml() {
         `<button class="panelist-chip${panelist === name ? " active" : ""}"
             onclick="setPanelist(${esc(JSON.stringify(name))})">
             ${esc(name.split(" ")[0])}
-        </button>`
+        </button><a href="?view=panelist&name=${esc(encodeURIComponent(name))}" class="panelist-page-link" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(name)} profile page">↗</a>`
     ).join("");
     const guestChip = `<button class="panelist-chip guest-chip${guestOnly ? " active" : ""}"
         onclick="toggleGuestOnly()">Guest Episodes</button>`;
@@ -1119,6 +1154,62 @@ function panelistFilterHtml() {
         <span class="sort-label">Filter:</span>
         <div class="panelist-chips">${overflowChip}${chips}${guestChip}</div>
     </div>`;
+}
+
+function renderPanelistPage(name) {
+    // Hide search UI elements
+    document.getElementById("search-input").style.display = "none";
+    document.getElementById("clear-btn").style.display = "none";
+    document.querySelector(".tabs").style.display = "none";
+
+    const panelistEps = episodes
+        .filter(ep => (ep.people || "").split(",").map(s => s.trim()).includes(name))
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (!panelistEps.length) {
+        setResults(`<div class="state-box">
+            <button class="back-link" onclick="goHome()">← Back to search</button>
+            <h2>No episodes found for ${esc(name)}</h2>
+        </div>`);
+        return;
+    }
+
+    // Aggregate top comics for this panelist
+    const epIds = new Set(panelistEps.map(ep => ep.show_id));
+    const panelistComicCounts = {};
+    comics.forEach(m => {
+        if (m.comic && epIds.has(m.show_id)) {
+            panelistComicCounts[m.comic] = (panelistComicCounts[m.comic] || 0) + 1;
+        }
+    });
+    const topPanelistComics = Object.entries(panelistComicCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([comic, count]) => `<button class="trending-chip" onclick="goHome(); setSearch(${esc(JSON.stringify(comic))})">
+            <span class="tc-name">${esc(comic)}</span>
+            <span class="tc-count">${count} eps</span>
+        </button>`).join("");
+
+    const dateRange = `${fmtDate(panelistEps[panelistEps.length - 1].date)} – ${fmtDate(panelistEps[0].date)}`;
+
+    const html = `
+        <button class="back-link" onclick="goHome()">← Back to search</button>
+        <div class="panelist-hero">${esc(name)}</div>
+        <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""} · ${dateRange}</div>
+        ${topPanelistComics ? `<p class="trending-header" style="margin-bottom:0.75rem">Most Discussed</p>
+        <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
+        <p class="trending-header" style="margin-bottom:0.75rem">Episodes</p>
+        ${panelistEps.map(ep => renderEpisodeCard(ep)).join("")}
+    `;
+    setResults(html);
+}
+
+function goHome() {
+    panelistView = null;
+    document.getElementById("search-input").style.display = "";
+    document.getElementById("clear-btn").style.display = "";
+    document.querySelector(".tabs").style.display = "";
+    clearSearch();
 }
 
 function emptyState() {
@@ -1139,7 +1230,19 @@ function emptyState() {
         ? `<p class="trending-header" style="margin-top:1.5rem">Last 12 Months</p>
            <div class="trending-grid">${renderChips(topRecentComics)}</div>`
         : "";
+    const newThisWeek = (latestEpisodeInfo && latestEpisodeComics.length)
+        ? `<div style="margin-bottom:2rem">
+            <p class="trending-header">New This Week</p>
+            <p class="new-this-week-ep">${esc(latestEpisodeInfo.title)} — ${fmtDate(latestEpisodeInfo.date)}</p>
+            <div class="trending-grid">${latestEpisodeComics.map(name =>
+                `<button class="trending-chip" onclick="setSearch(${esc(JSON.stringify(name))})">
+                    <span class="tc-name">${esc(name)}</span>
+                </button>`
+            ).join("")}</div>
+          </div>`
+        : "";
     return `<div class="empty-state-wrap">
+        ${newThisWeek}
         <p class="trending-header">All Time</p>
         <div class="trending-grid">${renderChips(topComics)}</div>
         ${recentSection}
@@ -1229,6 +1332,7 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
 });
 
 init();
+window.addEventListener('popstate', () => location.reload());
 </script>
 </body>
 </html>
