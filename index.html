@@ -484,7 +484,11 @@
         .play-btn {
             background: none;
             border: none;
+            padding: 0;
             font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--blue);
             cursor: pointer;
         }
 
@@ -869,6 +873,12 @@ function esc(s) {
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+function simplecastShortId(url) {
+    if (!url) return null;
+    const m = url.replace(/\?.*$/, "").match(/-([A-Za-z0-9_]{8})$/);
+    return m ? m[1] : null;
+}
+
 function renderComicCard(mention) {
     const ep    = epMap[mention.show_id] || {};
     const ts    = fmtTs(mention.timestamp);
@@ -893,7 +903,7 @@ function renderComicCard(mention) {
         }
     }
 
-    const slug = ep.show_id || null;
+    const slug = simplecastShortId(ep.simplecast_url);
     const secs = tsToSeconds(mention.timestamp);
     const key  = mention.show_id + ":" + (mention.timestamp || "");
     const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
@@ -941,7 +951,7 @@ function renderEpisodeCard(ep) {
         ? `<a class="card-action listen" href="${esc(safeUrl(ep.simplecast_url))}" target="_blank" rel="noopener noreferrer">▶ Listen →</a>`
         : "";
 
-    const slug = ep.show_id || null;
+    const slug = simplecastShortId(ep.simplecast_url);
     const key  = ep.show_id + ":";
     const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}"
         onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>
