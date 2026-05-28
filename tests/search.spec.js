@@ -776,7 +776,7 @@ test.describe('IRCB Search', () => {
         await page.locator('#panelist-nav-btn').click();
         await expect(page.locator('#panelist-dropdown')).toHaveClass(/open/);
         const items = page.locator('.panelist-dropdown-item');
-        await expect(items).toHaveCount(11);
+        await expect(items).toHaveCount(13);
     });
 
     test('unknown panelist shows graceful empty state', async ({ page }) => {
