@@ -519,9 +519,7 @@
         }
 
         .empty-state-wrap {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding-top: 2rem;
             min-height: 55vh;
         }
 
@@ -729,6 +727,16 @@ async function init() {
             minMatchCharLength: 2,
             includeScore: true
         });
+
+        // Recompute chip counts using fuzzy search so they match what clicking the chip shows
+        const computeChipCount = name => {
+            const ids = new Set();
+            fuseComics.search(name).forEach(r => ids.add(r.item.show_id));
+            fuseEpisodes.search(name).forEach(r => ids.add(r.item.show_id));
+            return ids.size || 1;
+        };
+        topComics       = topComics.map(c => ({ ...c, count: computeChipCount(c.name) }));
+        topRecentComics = topRecentComics.map(c => ({ ...c, count: computeChipCount(c.name) }));
 
         // Restore search state from URL
         const params = new URLSearchParams(location.search);
