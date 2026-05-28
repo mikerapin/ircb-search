@@ -3,9 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "dev": "serve . -p 3000 -s",
+    "export": "python export_data.py"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.0"
+    "@axe-core/playwright": "^4.11.3",
+    "@playwright/test": "^1.44.0",
+    "serve": "^14.2.6"
   }
 }

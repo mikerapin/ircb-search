@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('IRCB Search', () => {
 
@@ -141,10 +142,16 @@ test.describe('IRCB Search', () => {
         await page.locator('#search-input').fill('Batman');
         await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
         const totalBefore = await page.locator('.card').count();
-        await page.locator('.panelist-chip').first().click();
+        const firstChip = page.locator('.panelist-chip').first();
+        const chipText = (await firstChip.textContent()).trim();
+        await firstChip.click();
         await page.waitForTimeout(300);
         const totalAfter = await page.locator('.card').count();
-        expect(totalAfter).toBeLessThanOrEqual(totalBefore);
+        expect(totalAfter).toBeLessThan(totalBefore);
+        if (totalAfter > 0) {
+            const peopleTexts = await page.locator('.meta-people').allTextContents();
+            expect(peopleTexts.some(t => t.includes(chipText))).toBe(true);
+        }
     });
 
     test('play button exists on comic cards', async ({ page }) => {
@@ -330,6 +337,134 @@ test.describe('IRCB Search', () => {
         expect(csp).toContain('frame-src https://player.simplecast.com');
         expect(csp).toContain('img-src');
         expect(csp).toContain('font-src https://fonts.gstatic.com');
+    });
+
+    // ── E2: new coverage ──────────────────────────────────────────────────────
+
+    test('XSS payload in search is escaped, not executed', async ({ page }) => {
+        let alertFired = false;
+        page.on('dialog', () => { alertFired = true; });
+        await page.goto('/');
+        await page.locator('#search-input').fill('<script>alert(1)</script>');
+        await page.waitForTimeout(200);
+        expect(alertFired).toBe(false);
+        const html = await page.locator('#results').innerHTML();
+        expect(html).not.toContain('<script>');
+    });
+
+    test('embed toggle: play shows iframe, stop hides it, switching closes previous', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.play-btn').first()).toBeVisible({ timeout: 5000 });
+
+        // Play → iframe appears, button says Stop
+        await page.locator('.play-btn').first().click();
+        await expect(page.locator('.embed-wrap iframe').first()).toBeVisible();
+        await expect(page.locator('.play-btn').first()).toContainText('■ Stop');
+
+        // Stop → iframe gone, button says Play
+        await page.locator('.play-btn').first().click();
+        await expect(page.locator('.embed-wrap iframe')).toHaveCount(0);
+        await expect(page.locator('.play-btn').first()).toContainText('▶ Play');
+
+        // Click A then B → only B open
+        const buttons = page.locator('.play-btn');
+        if (await buttons.count() >= 2) {
+            await buttons.first().click();
+            await buttons.nth(1).click();
+            await expect(page.locator('.embed-wrap iframe')).toHaveCount(1);
+            await expect(buttons.first()).toContainText('▶ Play');
+            await expect(buttons.nth(1)).toContainText('■ Stop');
+        }
+    });
+
+    test('?sort=recent URL param restores sort on load', async ({ page }) => {
+        await page.goto('/?q=Batman&sort=recent');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.sort-btn[data-sort="recent"]')).toHaveClass(/active/);
+        expect(new URL(page.url()).searchParams.get('sort')).toBe('recent');
+    });
+
+    test('?panelist= URL param restores panelist filter on load', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.panelist-chip').first()).toBeVisible({ timeout: 5000 });
+        await page.locator('.panelist-chip').first().click();
+        await page.waitForTimeout(200);
+        const savedUrl = page.url();
+        expect(new URL(savedUrl).searchParams.get('panelist')).not.toBeNull();
+
+        await page.goto(savedUrl);
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.panelist-chip.active')).toBeVisible();
+    });
+
+    test('Topics mode returns episode cards only, no Comic Mentions section', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.tab[data-mode="topics"]').click();
+        await page.locator('#search-input').fill('batman');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        const labelTexts = await page.locator('.section-label').allTextContents();
+        expect(labelTexts.some(t => t.includes('Episodes by Topic'))).toBe(true);
+        expect(labelTexts.some(t => t.includes('Comic Mentions'))).toBe(false);
+    });
+
+    test('logo clear resets query, panelist filter, and URL', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Batman');
+        await expect(page.locator('.panelist-chip').first()).toBeVisible({ timeout: 5000 });
+        await page.locator('.panelist-chip').first().click();
+        await page.locator('.sort-btn[data-sort="recent"]').click();
+        await page.waitForTimeout(200);
+
+        await page.locator('.logo-row').click();
+
+        await expect(page.locator('#search-input')).toHaveValue('');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+        expect(new URL(page.url()).search).toBe('');
+    });
+
+    // ── E3: axe accessibility scans ──────────────────────────────────────────
+
+    test('axe: empty state has no critical violations', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const results = await new AxeBuilder({ page }).analyze();
+        const critical = results.violations.filter(v => v.impact === 'critical');
+        expect(critical).toHaveLength(0);
+    });
+
+    test('axe: results state has no critical violations', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await page.waitForTimeout(200);
+        const results = await new AxeBuilder({ page }).analyze();
+        const critical = results.violations.filter(v => v.impact === 'critical');
+        expect(critical).toHaveLength(0);
+    });
+
+    test('axe: no-results state has no critical violations', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('xyzzy123noresults');
+        await page.waitForTimeout(200);
+        await expect(page.locator('.state-box')).toBeVisible({ timeout: 5000 });
+        const results = await new AxeBuilder({ page }).analyze();
+        const critical = results.violations.filter(v => v.impact === 'critical');
+        expect(critical).toHaveLength(0);
+    });
+
+    test('prefers-reduced-motion disables spinner animation', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await page.route('**/data/comics.json', route =>
+            new Promise(r => setTimeout(() => { r(); route.continue(); }, 500))
+        );
+        await page.goto('/');
+        await expect(page.locator('.state-box.loading')).toBeVisible();
+        const animName = await page.locator('.state-box.loading .icon').evaluate(el =>
+            getComputedStyle(el).animationName
+        );
+        expect(animName).toBe('none');
     });
 
 });
