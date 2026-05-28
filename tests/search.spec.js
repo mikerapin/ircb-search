@@ -564,4 +564,75 @@ test.describe('IRCB Search', () => {
         expect(labels.some(t => t.trim() === '▶ Play')).toBe(true);
     });
 
+    // ── E5: sort row visibility, trending header styles, empty-state-wrap ────────
+
+    test('sort row is hidden on initial page load', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#sort-row')).toBeHidden();
+    });
+
+    test('sort row is hidden when URL has ?sort=recent but no query', async ({ page }) => {
+        await page.goto('/?sort=recent');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#sort-row')).toBeHidden();
+    });
+
+    test('sort row is visible after a search returns results', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeVisible();
+    });
+
+    test('sort row is hidden when search returns no results', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('xyzzy123noresults');
+        await expect(page.locator('.state-box')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeHidden();
+    });
+
+    test('sort row is hidden after logo clear from results state', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeVisible();
+        await page.locator('.logo-row').click();
+        await expect(page.locator('#sort-row')).toBeHidden();
+    });
+
+    test('trending header has font-weight 600', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-header').first()).toBeVisible({ timeout: 10000 });
+        const fontWeight = await page.locator('.trending-header').first().evaluate(el =>
+            getComputedStyle(el).fontWeight
+        );
+        expect(fontWeight).toBe('600');
+    });
+
+    test('trending header color is var(--text) full brightness', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-header').first()).toBeVisible({ timeout: 10000 });
+        const color = await page.locator('.trending-header').first().evaluate(el =>
+            getComputedStyle(el).color
+        );
+        // --text resolves to #f0f0f8 = rgb(240, 240, 248)
+        expect(color).toBe('rgb(240, 240, 248)');
+    });
+
+    test('empty state wrapper has class empty-state-wrap', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.empty-state-wrap')).toBeVisible({ timeout: 10000 });
+    });
+
+    test('empty state wrapper has min-height of 55vh', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.empty-state-wrap')).toBeVisible({ timeout: 10000 });
+        const isAtLeast55vh = await page.locator('.empty-state-wrap').evaluate(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.height >= window.innerHeight * 0.5;
+        });
+        expect(isAtLeast55vh).toBe(true);
+    });
+
 });
