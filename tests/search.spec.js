@@ -764,6 +764,15 @@ test.describe('IRCB Search', () => {
         expect(page.url()).not.toContain('view=panelist');
     });
 
+    test('logo click from panelist page restores search input', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#search-input')).not.toBeVisible();
+        await page.locator('.logo-row').click();
+        await expect(page.locator('#search-input')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+    });
+
     test('"Meet the Panelists" button is visible on empty state', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
