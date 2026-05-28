@@ -8,7 +8,9 @@
     <meta name="description" id="meta-description" content="Search 500+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preload" href="data/comics.json" as="fetch" crossorigin>
+    <link rel="preload" href="data/episodes.json" as="fetch" crossorigin>
     <script src="vendor/fuse.min.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -153,7 +155,7 @@
             color: var(--text-muted);
             font-family: 'Inter', sans-serif;
             font-size: 0.82rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.15s;
             white-space: nowrap;
@@ -523,7 +525,7 @@
         .tc-name {
             font-size: 0.85rem;
             color: var(--text);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .tc-count {
@@ -628,6 +630,7 @@ let query     = "";
 let panelist  = null;
 let guestOnly = false;
 let openEmbed = null;
+let searchDebounceTimer = null;
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 async function init() {
@@ -752,12 +755,12 @@ function runSearch() {
     let episodeHits = [];
 
     if (mode !== "topics") {
-        comicHits = fuseComics.search(query).map(r => r.item);
+        comicHits = fuseComics.search(query, { limit: 100 }).map(r => r.item);
     }
 
     if (mode !== "comics") {
         const seen = new Set();
-        episodeHits = fuseEpisodes.search(query)
+        episodeHits = fuseEpisodes.search(query, { limit: 100 })
             .map(r => r.item)
             .filter(ep => {
                 if (seen.has(ep.show_id)) return false;
@@ -901,7 +904,7 @@ function renderComicCard(mention) {
         <div class="card-top">
             <div>
                 <div class="comic-name">${esc(mention.comic)}</div>
-                <div class="episode-title">${esc(ep.title || mention.episode_title || "")}</div>
+                <div class="episode-title">${esc(ep.title || "")}</div>
             </div>
             ${date ? `<span class="card-date">${date}</span>` : ""}
         </div>
@@ -1108,10 +1111,13 @@ function errorState(notFound) {
 document.getElementById("search-input").addEventListener("input", function () {
     query = this.value;
     document.getElementById("clear-btn").style.display = query ? "block" : "none";
-    const params = new URLSearchParams(location.search);
-    query ? params.set("q", query) : params.delete("q");
-    history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
-    runSearch();
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+        const params = new URLSearchParams(location.search);
+        query ? params.set("q", query) : params.delete("q");
+        history.replaceState(null, "", params.toString() ? "?" + params : location.pathname);
+        runSearch();
+    }, 150);
 });
 
 document.getElementById("clear-btn").addEventListener("click", clearSearch);

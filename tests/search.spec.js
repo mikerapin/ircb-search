@@ -71,6 +71,7 @@ test.describe('IRCB Search', () => {
     test('typing in search updates URL ?q= param', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('batman');
+        await page.waitForURL('**/?q=batman', { timeout: 1000 });
 
         const url = new URL(page.url());
         expect(url.searchParams.get('q')).toBe('batman');
