@@ -106,12 +106,12 @@ export function renderComicCard(mention) {
     }
     if (slug) playBtn += `<div class="embed-wrap" data-key="${esc(key)}"></div>`;
 
-    return `<div class="card">
+    return `<div class="card card-comic">
+        <div class="card-band">
+            <button class="comic-eyebrow" onclick="setSearch(${esc(JSON.stringify(mention.comic))})">${esc(mention.comic)} →</button>
+        </div>
         <div class="card-top">
-            <div>
-                <button class="comic-eyebrow" onclick="setSearch(${esc(JSON.stringify(mention.comic))})">${esc(mention.comic)} →</button>
-                <div class="episode-title">${esc(ep.title || "")}</div>
-            </div>
+            <div class="episode-title">${esc(ep.title || "")}</div>
             ${date ? `<span class="card-date">${date}</span>` : ""}
         </div>
         <div class="card-meta">
@@ -157,7 +157,7 @@ export function renderEpisodeCard(ep) {
         onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>${extLink ? " " + extLink : ""}
         <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
 
-    return `<div class="card">
+    return `<div class="card card-episode">
         <div class="card-top">
             <div class="episode-title">${esc(ep.title || "")}</div>
             ${date ? `<span class="card-date">${date}</span>` : ""}
@@ -201,7 +201,8 @@ export function panelistFilterHtml() {
             ${esc(state.panelist)} ✕
           </button>`
         : "";
-    return `<div class="panelist-row">
+    const filterActive = !!(state.panelist || state.guestOnly);
+    return `<div class="panelist-row${filterActive ? " filter-active" : ""}">
         <span class="sort-label">Filter:</span>
         <div class="panelist-chips">${overflowChip}${chips}${guestChip}</div>
     </div>`;
