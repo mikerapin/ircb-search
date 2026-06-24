@@ -23,7 +23,7 @@ export const state = {
     /** @type {string|null} */                    panelist: null,
     guestOnly: false,
     /** @type {string|null} */                    openEmbed: null,
-    /** @type {ReturnType<typeof setTimeout>|null} */ searchDebounceTimer: null,
+    /** @type {ReturnType<typeof setTimeout>|undefined} */ searchDebounceTimer: undefined,
     /** @type {string[]} */                       latestEpisodeComics: [],
     /** @type {Episode|null} */                   latestEpisodeInfo: null,
     /** @type {string|null} */                    panelistView: null,

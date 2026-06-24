@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://image.simplecastcdn.com https://images.squarespace-cdn.com; frame-src https://player.simplecast.com; connect-src 'self' https://raw.githubusercontent.com https://github.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vAeMWU27CrDHiqg8AB2Aqg31y/wBSckhmv+lBRaqeWE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://image.simplecastcdn.com https://images.squarespace-cdn.com; frame-src https://player.simplecast.com; connect-src 'self' https://raw.githubusercontent.com https://github.com;">
     <title>I Read Comic Books — Episode Search</title>
     <meta name="description" id="meta-description" content="Search 500+ episodes of I Read Comic Books to find every time a comic or topic was discussed.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -798,7 +798,7 @@
             <button class="panelist-nav-btn" id="panelist-nav-btn"
                     aria-haspopup="true" aria-expanded="false"
                     aria-controls="panelist-dropdown"
-                    onclick="togglePanelistMenu()">
+                    data-action="panelist-menu">
                 Meet the Panelists ▾
             </button>
             <div class="panelist-dropdown" id="panelist-dropdown" role="menu">

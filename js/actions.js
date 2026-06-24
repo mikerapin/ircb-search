@@ -1,6 +1,6 @@
 // @ts-check
 // Runtime behavior: running searches, toggling embeds, and the navigation /
-// filter handlers wired to UI controls and inline onclick="" attributes.
+// filter handlers wired to UI controls via data-action event delegation.
 
 import { state } from "./state.js";
 import { esc, safeUrl, secsToSimplecastT, parsePeople, isGuestEp } from "./format.js";
@@ -47,12 +47,12 @@ export function runSearch() {
     }
 
     if (!comicHits.length && !episodeHits.length) {
-        document.getElementById("sort-row").style.display = "none";
+        /** @type {HTMLElement} */ (document.getElementById("sort-row")).style.display = "none";
         setResults(noResultsState());
         return;
     }
 
-    document.getElementById("sort-row").style.display = "";
+    /** @type {HTMLElement} */ (document.getElementById("sort-row")).style.display = "";
 
     // Apply sort
     if (state.sort === "recent") {
@@ -83,8 +83,8 @@ export function clearSearch() {
     state.sort = "relevance";
     state.openEmbed = null;
     /** @type {HTMLInputElement} */ (document.getElementById("search-input")).value = "";
-    document.getElementById("clear-btn").style.display = "none";
-    document.getElementById("sort-row").style.display = "none";
+    /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = "none";
+    /** @type {HTMLElement} */ (document.getElementById("sort-row")).style.display = "none";
     document.querySelectorAll(".sort-btn").forEach(b => {
         const active = /** @type {HTMLElement} */ (b).dataset.sort === "relevance";
         b.classList.toggle("active", active);
@@ -98,7 +98,7 @@ export function clearSearch() {
 export function setSearch(val) {
     state.query = val;
     /** @type {HTMLInputElement} */ (document.getElementById("search-input")).value = val;
-    document.getElementById("clear-btn").style.display = "block";
+    /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = "block";
     const params = new URLSearchParams(location.search);
     params.set("q", val);
     history.replaceState(null, "", "?" + params);
@@ -166,15 +166,17 @@ export function toggleCardSummary(showId) {
 }
 
 export function togglePanelistMenu() {
-    const dropdown = document.getElementById("panelist-dropdown");
-    const btn = document.getElementById("panelist-nav-btn");
+    const dropdown = /** @type {HTMLElement} */ (document.getElementById("panelist-dropdown"));
+    const btn = /** @type {HTMLElement} */ (document.getElementById("panelist-nav-btn"));
+    if (!dropdown || !btn) return;
     const isOpen = dropdown.classList.toggle("open");
     btn.setAttribute("aria-expanded", String(isOpen));
 }
 
 export function closePanelistMenu() {
-    const dropdown = document.getElementById("panelist-dropdown");
-    const btn = document.getElementById("panelist-nav-btn");
+    const dropdown = /** @type {HTMLElement} */ (document.getElementById("panelist-dropdown"));
+    const btn = /** @type {HTMLElement} */ (document.getElementById("panelist-nav-btn"));
+    if (!dropdown || !btn) return;
     dropdown.classList.remove("open");
     btn.setAttribute("aria-expanded", "false");
 }
@@ -189,8 +191,8 @@ export function setPanelistSort(sort) {
 export function goHome() {
     state.panelistView = null;
     delete document.documentElement.dataset.view;
-    document.getElementById("search-input").style.display = "";
-    document.getElementById("clear-btn").style.display = "";
+    /** @type {HTMLElement} */ (document.getElementById("search-input")).style.display = "";
+    /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = "";
     /** @type {HTMLElement} */ (document.querySelector(".tabs")).style.display = "";
     clearSearch();
 }

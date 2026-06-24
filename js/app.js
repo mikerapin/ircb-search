@@ -1,7 +1,6 @@
 // @ts-check
 // Entry point: load data, compute derived indexes, restore URL state, wire up
-// events, and expose the inline-handler functions on window. Loaded as a
-// deferred ES module, so the DOM is parsed before this runs.
+// events. Loaded as a deferred ES module, so the DOM is parsed before this runs.
 
 import { state } from "./state.js";
 import { normalizeSeries, esc } from "./format.js";
@@ -12,15 +11,10 @@ import {
     toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu, setPanelistSort,
 } from "./actions.js";
 
-// Inline onclick="" attributes in generated markup call these as globals.
-Object.assign(window, {
-    setSearch, setPanelist, toggleGuestOnly, goHome,
-    toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu, setPanelistSort,
-});
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 async function init() {
-    document.getElementById("results").setAttribute("aria-busy", "true");
+    /** @type {HTMLElement} */ (document.getElementById("results")).setAttribute("aria-busy", "true");
     setResults(loadingState());
     try {
         const [cr, er] = await Promise.all([
@@ -33,9 +27,9 @@ async function init() {
         state.episodes.forEach(ep => { state.epMap[ep.show_id] = ep; });
 
         const epCount = state.episodes.length;
-        document.getElementById("tagline").textContent =
+        /** @type {HTMLElement} */ (document.getElementById("tagline")).textContent =
             `Search every comic and topic discussed across ${epCount}+ episodes.`;
-        document.getElementById("meta-description").setAttribute("content",
+        /** @type {HTMLElement} */ (document.getElementById("meta-description")).setAttribute("content",
             `Search ${epCount}+ episodes of I Read Comic Books to find every time a comic or topic was discussed.`);
 
         /** @type {Record<string, Set<string>>} */
@@ -76,7 +70,7 @@ async function init() {
             .slice(0, 10);
 
         // Find most recent episode with comic mentions
-        const sortedEps = [...state.episodes].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+        const sortedEps = [...state.episodes].sort((a, b) => +new Date(b.date ?? "") - +new Date(a.date ?? ""));
         state.comics.forEach(m => { if (m.comic) (state.comicsByEp[m.show_id] ||= new Set()).add(normalizeSeries(m.comic)); });
         for (const ep of sortedEps) {
             const set = state.comicsByEp[ep.show_id];
@@ -102,7 +96,7 @@ async function init() {
         if (grid) {
             grid.innerHTML = PANELISTS.map(p =>
                 `<button class="panelist-dropdown-item" role="menuitem"
-                    onclick="closePanelistMenu(); location.href='?view=panelist&name=${esc(encodeURIComponent(p.name))}'">
+                    data-action="open-panelist" data-href="?view=panelist&name=${esc(encodeURIComponent(p.name))}">
                     <img class="panelist-avatar" src="${esc(p.photo)}" alt="${esc(p.display)}" loading="lazy">
                     <span class="panelist-avatar-name">${esc(p.display.split(" ")[0])}</span>
                     ${p.tagline ? `<span class="panelist-avatar-tagline">${esc(p.tagline)}</span>` : ""}
@@ -166,29 +160,29 @@ async function init() {
         if (urlQ) {
             state.query = urlQ;
             /** @type {HTMLInputElement} */ (document.getElementById("search-input")).value = urlQ;
-            document.getElementById("clear-btn").style.display = "block";
+            /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = "block";
         }
         const urlView = params.get("view");
         const urlName = params.get("name");
         if (urlView === "panelist" && urlName) {
             state.panelistView = urlName;
         }
-        document.getElementById("results").setAttribute("aria-busy", "false");
+        /** @type {HTMLElement} */ (document.getElementById("results")).setAttribute("aria-busy", "false");
         if (state.panelistView) {
             renderPanelistPage(state.panelistView);
             return;
         }
         runSearch();
     } catch (e) {
-        document.getElementById("results").setAttribute("aria-busy", "false");
+        /** @type {HTMLElement} */ (document.getElementById("results")).setAttribute("aria-busy", "false");
         setResults(errorState(e.message === "not-found"));
     }
 }
 
 // ─── Event wiring ─────────────────────────────────────────────────────────────
-document.getElementById("search-input").addEventListener("input", function () {
+/** @type {HTMLElement} */ (document.getElementById("search-input")).addEventListener("input", function () {
     state.query = /** @type {HTMLInputElement} */ (this).value;
-    document.getElementById("clear-btn").style.display = state.query ? "block" : "none";
+    /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = state.query ? "block" : "none";
     clearTimeout(state.searchDebounceTimer);
     state.searchDebounceTimer = setTimeout(() => {
         const params = new URLSearchParams(location.search);
@@ -198,8 +192,8 @@ document.getElementById("search-input").addEventListener("input", function () {
     }, 150);
 });
 
-document.getElementById("clear-btn").addEventListener("click", clearSearch);
-document.querySelector(".logo-row").addEventListener("click", goHome);
+/** @type {HTMLElement} */ (document.getElementById("clear-btn")).addEventListener("click", clearSearch);
+/** @type {HTMLElement} */ (document.querySelector(".logo-row")).addEventListener("click", goHome);
 
 document.querySelectorAll(".tab").forEach(btn => {
     btn.addEventListener("click", function () {
@@ -235,10 +229,32 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
 
 init();
 window.addEventListener('popstate', () => location.reload());
+
+// Single delegated click handler for all data-action buttons.
 document.addEventListener('click', e => {
+    const el = /** @type {Element} */ (e.target);
+
+    // Close panelist menu on outside click
     const nav = document.getElementById('panelist-nav');
-    if (nav && !nav.contains(/** @type {Node} */ (e.target))) closePanelistMenu();
+    if (nav && !nav.contains(/** @type {Node} */ (el))) closePanelistMenu();
+
+    const btn = el.closest('[data-action]');
+    if (!btn) return;
+    const d = /** @type {HTMLElement} */ (btn).dataset;
+    switch (d.action) {
+        case 'search':        setSearch(d.q ?? ""); break;
+        case 'embed':         toggleEmbed(d.key ?? "", d.slug ?? "", Number(d.secs ?? 0)); break;
+        case 'set-panelist':  setPanelist(d.name ?? ""); break;
+        case 'toggle-guest':  toggleGuestOnly(); break;
+        case 'home':          goHome(); break;
+        case 'home-search':   goHome(); setSearch(d.q ?? ""); break;
+        case 'panelist-sort': setPanelistSort(/** @type {"newest"|"oldest"} */ (d.sort ?? "newest")); break;
+        case 'summary':       toggleCardSummary(d.id ?? ""); break;
+        case 'panelist-menu': togglePanelistMenu(); break;
+        case 'open-panelist': closePanelistMenu(); location.href = d.href ?? ""; break;
+    }
 });
+
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closePanelistMenu();
 });

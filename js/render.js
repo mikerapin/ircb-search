@@ -1,8 +1,7 @@
 // @ts-check
 // HTML builders, card renderers, and state templates. These produce markup and
 // write it to the DOM; runtime behavior (search, embeds, navigation) lives in
-// actions.js. Inline onclick="" handlers in the markup resolve to the functions
-// attached to window in app.js.
+// actions.js via data-action event delegation wired in app.js.
 
 /** @typedef {import("./types").Comic} Comic */
 /** @typedef {import("./types").Episode} Episode */
@@ -13,7 +12,7 @@ import { PANELIST_MAP, panelistNames } from "./panelists.js";
 
 /** @param {string} html */
 export function setResults(html) {
-    document.getElementById("results").innerHTML = html;
+    /** @type {HTMLElement} */ (document.getElementById("results")).innerHTML = html;
 }
 
 /** @type {Record<string, string>} */
@@ -85,7 +84,7 @@ export function renderComicCard(mention) {
         const inner = `<span class="ts-badge">⏱ ${esc(ts)}</span> Jump to mention →`;
         const extLink = url ? `<a class="card-ext-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>` : "";
         action = `<button class="play-btn card-action timestamp" data-key="${esc(key)}" data-orig="${esc(inner)}"
-            onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},${secs})">${inner}</button>${extLink ? " " + extLink : ""}`;
+            data-action="embed" data-slug="${esc(slug)}" data-secs="${secs}">${inner}</button>${extLink ? " " + extLink : ""}`;
     } else if (url && !slug) {
         if (ts) {
             action = `<a class="card-action timestamp" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">
@@ -102,13 +101,13 @@ export function renderComicCard(mention) {
     if (slug && !ts) {
         const extLink = url ? `<a class="card-ext-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>` : "";
         playBtn = `<button class="play-btn card-action listen" data-key="${esc(key)}" data-orig="▶ Play"
-            onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>${extLink ? " " + extLink : ""}`;
+            data-action="embed" data-slug="${esc(slug)}" data-secs="0">▶ Play</button>${extLink ? " " + extLink : ""}`;
     }
     if (slug) playBtn += `<div class="embed-wrap" data-key="${esc(key)}"></div>`;
 
     return `<div class="card card-comic">
         <div class="card-band">
-            <button class="comic-eyebrow" onclick="setSearch(${esc(JSON.stringify(mention.comic))})">${esc(mention.comic)} →</button>
+            <button class="comic-eyebrow" data-action="search" data-q="${esc(mention.comic)}">${esc(mention.comic)} →</button>
         </div>
         <div class="card-top">
             <div class="episode-title">${esc(ep.title || "")}</div>
@@ -154,7 +153,7 @@ export function renderEpisodeCard(ep) {
         ? `<a class="card-ext-link" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>`
         : "";
     const playBtn = slug ? `<button class="play-btn card-action listen" data-key="${esc(key)}" data-orig="▶ Play"
-        onclick="toggleEmbed(${esc(JSON.stringify(key))},${esc(JSON.stringify(slug))},0)">▶ Play</button>${extLink ? " " + extLink : ""}
+        data-action="embed" data-slug="${esc(slug)}" data-secs="0">▶ Play</button>${extLink ? " " + extLink : ""}
         <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
 
     return `<div class="card card-episode">
@@ -173,10 +172,10 @@ export function renderEpisodeCard(ep) {
             const related = findRelated(ep);
             const relatedHtml = related.length
                 ? `<div class="related-eps"><span class="related-label">Episodes you might also like</span>${
-                    related.map(r => `<button class="related-chip" onclick="setSearch(${esc(JSON.stringify(r.title))})">${esc(r.title)}</button>`).join("")
+                    related.map(r => `<button class="related-chip" data-action="search" data-q="${esc(r.title || "")}">${esc(r.title)}</button>`).join("")
                 }</div>`
                 : "";
-            return `<button class="summary-toggle" onclick="toggleCardSummary(${esc(JSON.stringify(ep.show_id))})">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden><p class="summary-text">${esc(ep.summary)}</p>${relatedHtml}</div>`;
+            return `<button class="summary-toggle" data-action="summary" data-id="${esc(ep.show_id)}">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden><p class="summary-text">${esc(ep.summary)}</p>${relatedHtml}</div>`;
         })() : ""}
     </div>`;
 }
@@ -188,16 +187,16 @@ export function panelistFilterHtml() {
         const p = PANELIST_MAP[name];
         const label = p ? p.display.split(" ")[0] : name.split(" ")[0];
         return `<button class="panelist-chip${state.panelist === name ? " active" : ""}"
-            onclick="setPanelist(${esc(JSON.stringify(name))})">
+            data-action="set-panelist" data-name="${esc(name)}">
             ${esc(label)}
         </button>`;
     }).join("");
     const guestDisabled = !!state.panelist;
     const guestChip = `<button class="panelist-chip guest-chip${state.guestOnly ? " active" : ""}${guestDisabled ? " disabled" : ""}"
         title="${guestDisabled ? "Clear the panelist filter to filter by outside guest episodes instead" : "Episodes featuring an outside guest (creator, industry guest, etc.)"}"
-        ${guestDisabled ? "disabled" : `onclick="toggleGuestOnly()"`}>Guest Episodes</button>`;
+        ${guestDisabled ? "disabled" : `data-action="toggle-guest"`}>Guest Episodes</button>`;
     const overflowChip = (state.panelist && !state.panelists.includes(state.panelist))
-        ? `<button class="panelist-chip active" onclick="setPanelist(${esc(JSON.stringify(state.panelist))})">
+        ? `<button class="panelist-chip active" data-action="set-panelist" data-name="${esc(state.panelist ?? "")}">
             ${esc(state.panelist)} ✕
           </button>`
         : "";
@@ -214,19 +213,19 @@ export function panelistFilterHtml() {
  */
 export function renderPanelistPage(name) {
     // Hide search UI elements
-    document.getElementById("search-input").style.display = "none";
-    document.getElementById("clear-btn").style.display = "none";
+    /** @type {HTMLElement} */ (document.getElementById("search-input")).style.display = "none";
+    /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = "none";
     /** @type {HTMLElement} */ (document.querySelector(".tabs")).style.display = "none";
 
     const panelistEps = state.episodes
         .filter(ep => parsePeople(ep.people).some(n => panelistNames(name).includes(n)))
         .sort((a, b) => state.panelistSort === "oldest"
-            ? +new Date(a.date) - +new Date(b.date)
-            : +new Date(b.date) - +new Date(a.date));
+            ? +new Date(a.date ?? "") - +new Date(b.date ?? "")
+            : +new Date(b.date ?? "") - +new Date(a.date ?? ""));
 
     if (!panelistEps.length) {
         setResults(`<div class="state-box">
-            <button class="back-link" onclick="goHome()">← Back to search</button>
+            <button class="back-link" data-action="home">← Back to search</button>
             <h2>No episodes found for ${esc(name)}</h2>
         </div>`);
         return;
@@ -244,7 +243,7 @@ export function renderPanelistPage(name) {
     const topPanelistComics = Object.entries(panelistComicCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
-        .map(([comic, count]) => `<button class="trending-chip" onclick="goHome(); setSearch(${esc(JSON.stringify(comic))})">
+        .map(([comic, count]) => `<button class="trending-chip" data-action="home-search" data-q="${esc(comic)}">
             <span class="tc-name">${esc(comic)}</span>
             <span class="tc-count">${count} eps</span>
         </button>`).join("");
@@ -265,7 +264,7 @@ export function renderPanelistPage(name) {
 
     const taglineHtml = pInfo?.tagline ? `<div class="panelist-tagline">${esc(pInfo.tagline)}</div>` : "";
     const html = `
-        <button class="back-link" onclick="goHome()">← Back to search</button>
+        <button class="back-link" data-action="home">← Back to search</button>
         ${photoHtml}
         <div class="panelist-hero">${esc(heroName)}</div>
         ${taglineHtml}
@@ -274,8 +273,8 @@ export function renderPanelistPage(name) {
         <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
         <div class="panelist-sort-row">
             <span class="sort-label">Sort:</span>
-            <button class="sort-btn${state.panelistSort === "newest" ? " active" : ""}" onclick="setPanelistSort('newest')">Newest First</button>
-            <button class="sort-btn${state.panelistSort === "oldest" ? " active" : ""}" onclick="setPanelistSort('oldest')">Oldest First</button>
+            <button class="sort-btn${state.panelistSort === "newest" ? " active" : ""}" data-action="panelist-sort" data-sort="newest">Newest First</button>
+            <button class="sort-btn${state.panelistSort === "oldest" ? " active" : ""}" data-action="panelist-sort" data-sort="oldest">Oldest First</button>
         </div>
         ${panelistEps.map(ep => renderEpisodeCard(ep)).join("")}
     `;
@@ -293,7 +292,7 @@ export function emptyState() {
     }
     /** @param {{name:string,count?:number}[]} arr */
     const renderChips = arr => arr.map(({ name, count }) =>
-        `<button class="trending-chip" onclick="setSearch(${esc(JSON.stringify(name))})">
+        `<button class="trending-chip" data-action="search" data-q="${esc(name)}">
             <span class="tc-name">${esc(name)}</span>
             <span class="tc-count">${count} eps</span>
         </button>`
@@ -307,7 +306,7 @@ export function emptyState() {
             <p class="trending-header">New This Week</p>
             <p class="new-this-week-ep">${esc(state.latestEpisodeInfo.title)} — ${fmtDate(state.latestEpisodeInfo.date)}</p>
             <div class="trending-grid">${state.latestEpisodeComics.map(name =>
-                `<button class="trending-chip" onclick="setSearch(${esc(JSON.stringify(name))})">
+                `<button class="trending-chip" data-action="search" data-q="${esc(name)}">
                     <span class="tc-name">${esc(name)}</span>
                 </button>`
             ).join("")}</div>
@@ -324,10 +323,12 @@ export function emptyState() {
 export function noResultsState() {
     const filterActive = state.panelist || state.guestOnly;
     const filterLabel = state.guestOnly ? "Guest Episodes" : state.panelist;
-    const clearAction = state.guestOnly ? `toggleGuestOnly()` : `setPanelist(${esc(JSON.stringify(state.panelist))})`;
+    const clearAttrs = state.guestOnly
+        ? `data-action="toggle-guest"`
+        : `data-action="set-panelist" data-name="${esc(state.panelist ?? "")}"`;
     const msg = filterActive
         ? `Nothing found for "<strong>${esc(state.query)}</strong>" with the <strong>${esc(filterLabel)}</strong> filter active.
-           <button class="clear-filter-btn" onclick="${clearAction}">Clear filter →</button>`
+           <button class="clear-filter-btn" ${clearAttrs}>Clear filter →</button>`
         : `Nothing found for "<strong>${esc(state.query)}</strong>". Try a broader term or check the spelling.`;
     return `<div>
         ${filterActive ? panelistFilterHtml() : ""}
