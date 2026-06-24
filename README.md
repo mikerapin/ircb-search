@@ -20,7 +20,25 @@ Live at **[mikerapin.github.io/ircb-search/](https://mikerapin.github.io/ircb-se
 npm install
 npm run dev        # serves at http://localhost:3000
 npm test           # Playwright tests (77 tests, Chromium)
+npm run check      # TypeScript type-check (tsc --noEmit, no build output)
 ```
+
+## Architecture
+
+The app is plain ES modules served as-is — no bundler, no transpile step. `index.html`
+loads `js/app.js` as `<script type="module">`; the modules split by responsibility:
+
+| File | Responsibility |
+|------|----------------|
+| `js/format.js`    | Pure formatting / escaping / parsing helpers |
+| `js/panelists.js` | Canonical panelist roster + name resolution |
+| `js/state.js`     | Single shared mutable `state` object |
+| `js/render.js`    | HTML builders, card renderers, state templates |
+| `js/actions.js`   | Search execution, embeds, navigation handlers |
+| `js/app.js`       | Boot/data load, derived indexes, event wiring |
+
+Type safety comes from `// @ts-check` + JSDoc against `js/types.d.ts` (verified with
+`npm run check`). Fuse.js (`vendor/fuse.min.js`) is loaded as a classic global script.
 
 ## Update data
 

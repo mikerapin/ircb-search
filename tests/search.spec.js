@@ -242,7 +242,8 @@ test.describe('IRCB Search', () => {
     test('safeUrl rejects non-https and unknown hosts', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
-        const results = await page.evaluate(() => {
+        const results = await page.evaluate(async () => {
+            const { safeUrl } = await import('/js/format.js');
             return [
                 safeUrl('javascript:alert(1)'),
                 safeUrl('http://simplecast.com/ep'),
@@ -303,8 +304,9 @@ test.describe('IRCB Search', () => {
     test('tsToSeconds returns 0 for missing or malformed timestamps', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
-        const result = await page.evaluate(() => {
-            // Test the function directly — it's in global scope
+        const result = await page.evaluate(async () => {
+            // Test the function directly — it's exported from js/format.js
+            const { tsToSeconds } = await import('/js/format.js');
             return [
                 tsToSeconds(null),
                 tsToSeconds(''),
@@ -479,13 +481,16 @@ test.describe('IRCB Search', () => {
     test('secsToSimplecastT formats seconds into 00h00m00s pattern', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
-        const results = await page.evaluate(() => [
-            secsToSimplecastT(2990),
-            secsToSimplecastT(3661),
-            secsToSimplecastT(0),
-            secsToSimplecastT(null),
-            secsToSimplecastT(60),
-        ]);
+        const results = await page.evaluate(async () => {
+            const { secsToSimplecastT } = await import('/js/format.js');
+            return [
+                secsToSimplecastT(2990),
+                secsToSimplecastT(3661),
+                secsToSimplecastT(0),
+                secsToSimplecastT(null),
+                secsToSimplecastT(60),
+            ];
+        });
         expect(results[0]).toBe('00h49m50s');  // 2990s = 49m50s
         expect(results[1]).toBe('01h01m01s');  // 3661s = 1h1m1s
         expect(results[2]).toBe('');            // 0 returns empty string
@@ -835,16 +840,19 @@ test.describe('IRCB Search', () => {
     test('normalizeSeries strips issue numbers from comic names', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
-        const results = await page.evaluate(() => [
-            normalizeSeries('Batman #3'),
-            normalizeSeries('Batman #140'),
-            normalizeSeries('Doctor Aphra #20-24'),
-            normalizeSeries('Batman Thrillkiller #1 (1997)'),
-            normalizeSeries('Beast of Borikén #1 ft. Julio Anta'),
-            normalizeSeries('Sweet Tooth'),
-            normalizeSeries('X-Men Blue #4-6'),
-            normalizeSeries('Zatanna #1 (2026)'),
-        ]);
+        const results = await page.evaluate(async () => {
+            const { normalizeSeries } = await import('/js/format.js');
+            return [
+                normalizeSeries('Batman #3'),
+                normalizeSeries('Batman #140'),
+                normalizeSeries('Doctor Aphra #20-24'),
+                normalizeSeries('Batman Thrillkiller #1 (1997)'),
+                normalizeSeries('Beast of Borikén #1 ft. Julio Anta'),
+                normalizeSeries('Sweet Tooth'),
+                normalizeSeries('X-Men Blue #4-6'),
+                normalizeSeries('Zatanna #1 (2026)'),
+            ];
+        });
         expect(results[0]).toBe('Batman');
         expect(results[1]).toBe('Batman');
         expect(results[2]).toBe('Doctor Aphra');
@@ -872,8 +880,10 @@ test.describe('IRCB Search', () => {
     test('findRelated returns episode objects for a Saga episode', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
-        const result = await page.evaluate(() => {
-            const sagaEp = episodes.find(e => (e.keywords || '').toLowerCase().includes('saga'));
+        const result = await page.evaluate(async () => {
+            const { findRelated } = await import('/js/render.js');
+            const { state } = await import('/js/state.js');
+            const sagaEp = state.episodes.find(e => (e.keywords || '').toLowerCase().includes('saga'));
             if (!sagaEp) return null;
             const related = findRelated(sagaEp, 3);
             return { count: related.length, allHaveTitles: related.every(r => !!r.title), excludesSelf: related.every(r => r.show_id !== sagaEp.show_id) };
