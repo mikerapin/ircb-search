@@ -555,6 +555,10 @@
             border-top: 1px solid var(--border);
             font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
         }
+        .related-eps { margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+        .related-label { display: block; font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+        .related-chip { display: inline-block; margin: 0.2rem 0.3rem 0.2rem 0; padding: 0.25rem 0.55rem; background: var(--bg-card-hover); border: 1px solid var(--border); border-radius: 4px; font-size: 0.78rem; color: var(--text); cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.15s, color 0.15s; }
+        .related-chip:hover { border-color: var(--red); color: var(--red); }
 
         .panelist-hero  { font-family: 'Bangers', cursive; font-size: 2rem; letter-spacing: 0.06em; margin-bottom: 0.25rem; }
         .panelist-stats { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1.5rem; }
@@ -795,6 +799,7 @@ const PANELIST_MAP = Object.fromEntries(PANELISTS.map(p => [p.name, p]));
 let comics   = [];
 let episodes = [];
 let epMap    = {};   // show_id → episode
+let comicsByEp = {};  // show_id → Set of normalized series names
 let fuseComics   = null;
 let fuseEpisodes = null;
 let topComics       = [];
@@ -834,8 +839,9 @@ async function init() {
         const comicEpisodes = {};
         comics.forEach(m => {
             if (m.comic) {
-                if (!comicEpisodes[m.comic]) comicEpisodes[m.comic] = new Set();
-                comicEpisodes[m.comic].add(m.show_id);
+                const series = normalizeSeries(m.comic);
+                if (!comicEpisodes[series]) comicEpisodes[series] = new Set();
+                comicEpisodes[series].add(m.show_id);
             }
         });
         const comicCounts = {};
@@ -854,8 +860,9 @@ async function init() {
             if (!m.comic) return;
             const ep = epMap[m.show_id];
             if (ep && ep.date && new Date(ep.date) >= twelveMonthsAgo) {
-                if (!recentEps[m.comic]) recentEps[m.comic] = new Set();
-                recentEps[m.comic].add(m.show_id);
+                const series = normalizeSeries(m.comic);
+                if (!recentEps[series]) recentEps[series] = new Set();
+                recentEps[series].add(m.show_id);
             }
         });
         topRecentComics = Object.entries(recentEps)
@@ -865,8 +872,7 @@ async function init() {
 
         // Find most recent episode with comic mentions
         const sortedEps = [...episodes].sort((a, b) => new Date(b.date) - new Date(a.date));
-        const comicsByEp = {};
-        comics.forEach(m => { if (m.comic) (comicsByEp[m.show_id] ||= new Set()).add(m.comic); });
+        comics.forEach(m => { if (m.comic) (comicsByEp[m.show_id] ||= new Set()).add(normalizeSeries(m.comic)); });
         for (const ep of sortedEps) {
             const set = comicsByEp[ep.show_id];
             if (set && set.size) { latestEpisodeComics = [...set]; latestEpisodeInfo = ep; break; }
@@ -898,10 +904,15 @@ async function init() {
         });
 
         fuseEpisodes = new Fuse(episodes, {
-            keys: ["keywords", "title"],
+            keys: [
+                { name: "keywords", weight: 1 },
+                { name: "title",    weight: 1 },
+                { name: "summary",  weight: 0.3 }
+            ],
             threshold: 0.3,
             minMatchCharLength: 2,
-            includeScore: true
+            includeScore: true,
+            ignoreLocation: true
         });
 
         // Recompute chip counts using fuzzy search so they match what clicking the chip shows
@@ -1086,6 +1097,43 @@ function esc(s) {
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+function normalizeSeries(name) {
+    if (!name) return name;
+    return String(name)
+        .replace(/\s*#[\d][\d\-–,]*.*$/, '')  // strip #1, #1-6, #20–24, etc.
+        .replace(/\s*\(\d{4}\)\s*$/, '')        // strip trailing year (1997)
+        .replace(/\s+ft\..+$/i, '')             // strip ft. credits
+        .trim() || name;
+}
+
+const KEYWORD_NOISE = new Set([
+    "comic books", "comics", "ircb", "i read comic books",
+    "goodreads", "interview", "kickstarter"
+]);
+
+function findRelated(ep, limit = 3) {
+    const myKws = new Set(
+        (ep.keywords || "").split(",").map(s => s.trim().toLowerCase()).filter(k => k && !KEYWORD_NOISE.has(k))
+    );
+    const myComics = comicsByEp[ep.show_id] || new Set();
+    return episodes
+        .filter(e => e.show_id !== ep.show_id)
+        .map(e => {
+            const eKws = new Set(
+                (e.keywords || "").split(",").map(s => s.trim().toLowerCase()).filter(k => k && !KEYWORD_NOISE.has(k))
+            );
+            const eComics = comicsByEp[e.show_id] || new Set();
+            let score = 0;
+            for (const kw of myKws) if (eKws.has(kw)) score += 1;
+            for (const comic of myComics) if (eComics.has(comic)) score += 2;
+            return { ep: e, score };
+        })
+        .filter(r => r.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, limit)
+        .map(r => r.ep);
+}
+
 function parsePeople(str) {
     if (!str) return [];
     return str.split(",").map(s => s.trim()).filter(Boolean);
@@ -1197,7 +1245,15 @@ function renderEpisodeCard(ep) {
         ${kwHtml}
         ${action}
         ${playBtn}
-        ${ep.summary ? `<button class="summary-toggle" onclick="toggleCardSummary(${esc(JSON.stringify(ep.show_id))})">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden>${esc(ep.summary)}</div>` : ""}
+        ${ep.summary ? (() => {
+            const related = findRelated(ep);
+            const relatedHtml = related.length
+                ? `<div class="related-eps"><span class="related-label">Episodes you might also like</span>${
+                    related.map(r => `<button class="related-chip" onclick="setSearch(${esc(JSON.stringify(r.title))})">${esc(r.title)}</button>`).join("")
+                }</div>`
+                : "";
+            return `<button class="summary-toggle" onclick="toggleCardSummary(${esc(JSON.stringify(ep.show_id))})">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden><p class="summary-text">${esc(ep.summary)}</p>${relatedHtml}</div>`;
+        })() : ""}
     </div>`;
 }
 

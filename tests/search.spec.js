@@ -830,4 +830,108 @@ test.describe('IRCB Search', () => {
         }
     });
 
+    // ── E8: publisher/series grouping ───────────────────────────────────────
+
+    test('normalizeSeries strips issue numbers from comic names', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const results = await page.evaluate(() => [
+            normalizeSeries('Batman #3'),
+            normalizeSeries('Batman #140'),
+            normalizeSeries('Doctor Aphra #20-24'),
+            normalizeSeries('Batman Thrillkiller #1 (1997)'),
+            normalizeSeries('Beast of Borikén #1 ft. Julio Anta'),
+            normalizeSeries('Sweet Tooth'),
+            normalizeSeries('X-Men Blue #4-6'),
+            normalizeSeries('Zatanna #1 (2026)'),
+        ]);
+        expect(results[0]).toBe('Batman');
+        expect(results[1]).toBe('Batman');
+        expect(results[2]).toBe('Doctor Aphra');
+        expect(results[3]).toBe('Batman Thrillkiller');
+        expect(results[4]).toBe('Beast of Borikén');
+        expect(results[5]).toBe('Sweet Tooth');
+        expect(results[6]).toBe('X-Men Blue');
+        expect(results[7]).toBe('Zatanna');
+    });
+
+    test('Batman appears in All Time trending chips after series grouping', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const allTimeChips = page.locator('.trending-header:text("All Time") + .trending-grid .tc-name');
+        const count = await allTimeChips.count();
+        const names = [];
+        for (let i = 0; i < count; i++) {
+            names.push((await allTimeChips.nth(i).textContent()).trim());
+        }
+        expect(names).toContain('Batman');
+    });
+
+    // ── E9: you might also like ──────────────────────────────────────────────
+
+    test('findRelated returns episode objects for a Saga episode', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        const result = await page.evaluate(() => {
+            const sagaEp = episodes.find(e => (e.keywords || '').toLowerCase().includes('saga'));
+            if (!sagaEp) return null;
+            const related = findRelated(sagaEp, 3);
+            return { count: related.length, allHaveTitles: related.every(r => !!r.title), excludesSelf: related.every(r => r.show_id !== sagaEp.show_id) };
+        });
+        expect(result).not.toBeNull();
+        expect(result.count).toBeGreaterThan(0);
+        expect(result.allHaveTitles).toBe(true);
+        expect(result.excludesSelf).toBe(true);
+    });
+
+    test('expanded show notes include "You might also like" related episode chips', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.tab[data-mode="topics"]').click();
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        // Find an episode card with a show notes toggle
+        const toggleBtn = page.locator('.summary-toggle').first();
+        await expect(toggleBtn).toBeVisible();
+        await toggleBtn.click();
+
+        await expect(page.locator('.related-chip').first()).toBeVisible();
+    });
+
+    test('clicking a related chip runs a new search', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.tab[data-mode="topics"]').click();
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+
+        await page.locator('.summary-toggle').first().click();
+        await expect(page.locator('.related-chip').first()).toBeVisible();
+
+        const chipText = await page.locator('.related-chip').first().evaluate(el => el.textContent.trim());
+        await page.locator('.related-chip').first().click();
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        // URL should reflect the new search (related episode title or keyword)
+        const url = new URL(page.url());
+        expect(url.searchParams.get('q')).not.toBeNull();
+    });
+
+    // ── E10: full-text show notes search ─────────────────────────────────────
+
+    test('summary search: "trucker" finds episode via show notes text', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.tab[data-mode="topics"]').click();
+        await page.locator('#search-input').fill('trucker');
+        // "trucker" appears only in a summary, not in any title or keyword
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        const labels = await page.locator('.section-label').allTextContents();
+        expect(labels.some(t => t.includes('Episodes by Topic'))).toBe(true);
+    });
+
+    test('summary search: "conspiracy" finds episodes via show notes text', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('.tab[data-mode="topics"]').click();
+        await page.locator('#search-input').fill('conspiracy');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+    });
+
 });
