@@ -633,8 +633,17 @@
             margin-top: 0.5rem; font-family: 'Inter', sans-serif; display: block;
             transition: color 0.15s;
         }
+        .summary-toggle::before, .tags-toggle::before {
+            content: "▾";
+            display: inline-block;
+            margin-right: 0.3em;
+            transition: transform 0.2s;
+        }
+        .summary-toggle.is-open::before, .tags-toggle.is-open::before {
+            transform: rotate(-180deg);
+        }
         .summary-toggle:hover, .tags-toggle:hover { color: var(--text); }
-        .summary-toggle.is-open { color: var(--text); }
+        .summary-toggle.is-open, .tags-toggle.is-open { color: var(--text); }
         .card-summary {
             margin-top: 0.75rem; padding-top: 0.75rem;
             border-top: 1px solid var(--border);

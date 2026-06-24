@@ -163,7 +163,7 @@ export function toggleCardSummary(showId) {
     const opening = div.hidden;
     div.hidden = !opening;
     if (btn) {
-        btn.textContent = opening ? "▴ Hide notes" : "▾ Show notes";
+        btn.textContent = opening ? "Hide notes" : "Show notes";
         btn.classList.toggle("is-open", opening);
     }
 }
@@ -176,7 +176,10 @@ export function toggleCardTags(showId) {
     const opening = div.hidden;
     div.hidden = !opening;
     const count = div.querySelectorAll(".kw").length;
-    if (btn) btn.textContent = opening ? `▴ Tags (${count})` : `▾ Tags (${count})`;
+    if (btn) {
+        btn.textContent = opening ? `Tags (${count})` : `Tags (${count})`;
+        btn.classList.toggle("is-open", opening);
+    }
 }
 
 export function togglePanelistMenu() {

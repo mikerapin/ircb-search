@@ -137,7 +137,7 @@ export function renderEpisodeCard(ep) {
     const qLow = state.query.toLowerCase();
 
     const kwHtml = kwList.length
-        ? `<button class="tags-toggle" data-action="tags" data-id="${esc(ep.show_id)}">▾ Tags (${kwList.length})</button><div class="card-tags" id="card-tags-${esc(ep.show_id)}" hidden><div class="keywords">${kwList.map(k => {
+        ? `<button class="tags-toggle" data-action="tags" data-id="${esc(ep.show_id)}">Tags (${kwList.length})</button><div class="card-tags" id="card-tags-${esc(ep.show_id)}" hidden><div class="keywords">${kwList.map(k => {
                 const hit = k.toLowerCase().includes(qLow) || qLow.includes(k.toLowerCase());
                 return `<button class="kw${hit ? " match" : ""}" data-action="search" data-q="${esc(k)}">${esc(k)}</button>`;
             }).join("")}</div></div>`
@@ -177,7 +177,7 @@ export function renderEpisodeCard(ep) {
                     related.map(r => `<button class="related-chip" data-action="search" data-q="${esc(r.title || "")}">${esc(r.title)}</button>`).join("")
                 }</div>`
                 : "";
-            return `<button class="summary-toggle" data-action="summary" data-id="${esc(ep.show_id)}">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden><p class="summary-text">${esc(ep.summary)}</p>${relatedHtml}</div>`;
+            return `<button class="summary-toggle" data-action="summary" data-id="${esc(ep.show_id)}">Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden><p class="summary-text">${esc(ep.summary)}</p>${relatedHtml}</div>`;
         })() : ""}
         ${kwHtml}
     </div>`;
