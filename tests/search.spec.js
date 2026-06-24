@@ -998,6 +998,43 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
     });
 
+    test('clicking episode card body toggles show notes', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+
+        // Find a card with show notes (has data-show-id)
+        const card = page.locator('.card-episode[data-show-id]').first();
+        await expect(card).toBeVisible();
+        const summary = card.locator('.card-summary');
+        await expect(summary).toBeHidden();
+
+        // Click the title (card body — not a button or link)
+        await card.locator('.episode-title').click();
+        await expect(summary).toBeVisible();
+
+        // Click again to close
+        await card.locator('.episode-title').click();
+        await expect(summary).toBeHidden();
+    });
+
+    test('clicking play button does not open show notes', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+
+        const card = page.locator('.card-episode[data-show-id]').first();
+        const summary = card.locator('.card-summary');
+        await expect(summary).toBeHidden();
+
+        // Click the play/listen button — should NOT open show notes
+        const playBtn = card.locator('.play-btn').first();
+        if (await playBtn.count() > 0) {
+            await playBtn.click();
+            await expect(summary).toBeHidden();
+        }
+    });
+
     test('home page shows 3 recent episodes above the trending chips', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });

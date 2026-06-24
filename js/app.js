@@ -244,7 +244,12 @@ document.addEventListener('click', e => {
     if (nav && !nav.contains(/** @type {Node} */ (el))) closePanelistMenu();
 
     const btn = el.closest('[data-action]');
-    if (!btn) return;
+    if (!btn) {
+        // Card-body click: toggle show notes when clicking outside interactive children
+        const card = /** @type {HTMLElement | null} */ (el.closest('.card-episode[data-show-id]'));
+        if (card && !el.closest('button, a')) toggleCardSummary(card.dataset.showId ?? "");
+        return;
+    }
     const d = /** @type {HTMLElement} */ (btn).dataset;
     switch (d.action) {
         case 'search':        setSearch(d.q ?? ""); break;

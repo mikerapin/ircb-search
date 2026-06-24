@@ -156,7 +156,7 @@ export function renderEpisodeCard(ep) {
         data-action="embed" data-slug="${esc(slug)}" data-secs="0">▶ Play</button>${extLink ? " " + extLink : ""}
         <div class="embed-wrap" data-key="${esc(key)}"></div>` : "";
 
-    return `<div class="card card-episode">
+    return `<div class="card card-episode"${ep.summary ? ` data-show-id="${esc(ep.show_id)}"` : ""}>
         <div class="card-top">
             <div class="episode-title">${esc(ep.title || "")}</div>
             ${date ? `<span class="card-date">${date}</span>` : ""}
