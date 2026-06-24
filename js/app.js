@@ -80,8 +80,16 @@ async function init() {
         state.comics.forEach(m => { if (m.comic) (state.comicsByEp[m.show_id] ||= new Set()).add(normalizeSeries(m.comic)); });
         for (const ep of sortedEps) {
             const set = state.comicsByEp[ep.show_id];
-            if (set && set.size) { state.latestEpisodeComics = [...set]; state.latestEpisodeInfo = ep; break; }
+            if (set && set.size) {
+                // Only include series that appear in 2+ episodes — singletons are too ephemeral to feature
+                state.latestEpisodeComics = [...set].filter(name => (comicEpisodes[name]?.size || 0) >= 2);
+                state.latestEpisodeInfo = ep;
+                break;
+            }
         }
+        // Expose for Playwright tests and debugging
+        window.latestEpisodeComics = state.latestEpisodeComics;
+        window.comicEpisodes = comicEpisodes;
 
         const episodeNames = new Set();
         state.episodes.forEach(ep => {

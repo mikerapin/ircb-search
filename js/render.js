@@ -99,7 +99,7 @@ export function renderComicCard(mention) {
     return `<div class="card">
         <div class="card-top">
             <div>
-                <div class="comic-name">${esc(mention.comic)}</div>
+                <button class="comic-eyebrow" onclick="setSearch(${esc(JSON.stringify(mention.comic))})">${esc(mention.comic)} →</button>
                 <div class="episode-title">${esc(ep.title || "")}</div>
             </div>
             ${date ? `<span class="card-date">${date}</span>` : ""}
@@ -301,12 +301,19 @@ export function emptyState() {
 }
 
 export function noResultsState() {
+    const filterActive = state.panelist || state.guestOnly;
+    const filterLabel = state.guestOnly ? "Guest Episodes" : state.panelist;
+    const clearAction = state.guestOnly ? `toggleGuestOnly()` : `setPanelist(${esc(JSON.stringify(state.panelist))})`;
+    const msg = filterActive
+        ? `Nothing found for "<strong>${esc(state.query)}</strong>" with the <strong>${esc(filterLabel)}</strong> filter active.
+           <button class="clear-filter-btn" onclick="${clearAction}">Clear filter →</button>`
+        : `Nothing found for "<strong>${esc(state.query)}</strong>". Try a broader term or check the spelling.`;
     return `<div>
-        ${(state.panelist || state.guestOnly) ? panelistFilterHtml() : ""}
+        ${filterActive ? panelistFilterHtml() : ""}
         <div class="state-box">
             <div class="icon">🔍</div>
             <h2>No Results</h2>
-            <p>Nothing found for "<strong>${esc(state.query)}</strong>". Try a broader term or check the spelling.</p>
+            <p>${msg}</p>
         </div>
     </div>`;
 }

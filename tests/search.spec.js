@@ -63,6 +63,32 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.section-label').first()).toContainText('Comic Mentions');
     });
 
+    test('comic mention cards show episode title as primary heading with comic eyebrow above', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        const firstCard = page.locator('.card').first();
+        await expect(firstCard.locator('.comic-eyebrow')).toBeVisible();
+        await expect(firstCard.locator('.episode-title')).toBeVisible();
+        // Eyebrow must come before episode title in the DOM
+        const eyebrowFirst = await firstCard.evaluate(el => {
+            const all = [...el.querySelectorAll('.comic-eyebrow, .episode-title')];
+            return all[0]?.classList.contains('comic-eyebrow');
+        });
+        expect(eyebrowFirst).toBe(true);
+    });
+
+    test('comic eyebrow is clickable and triggers a search for that comic', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        const eyebrow = page.locator('.comic-eyebrow').first();
+        const rawText = (await eyebrow.textContent()) || '';
+        const comicName = rawText.replace(/→$/, '').trim();
+        await eyebrow.click();
+        await expect(page.locator('#search-input')).toHaveValue(comicName);
+    });
+
     test('comic result cards do not show blue episode count pill', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Saga');
@@ -106,6 +132,13 @@ test.describe('IRCB Search', () => {
         await page.locator('#search-input').fill('xyzzy123noresults');
         await expect(page.locator('.state-box')).toBeVisible({ timeout: 5000 });
         await expect(page.locator('.state-box h2')).toContainText('No Results');
+    });
+
+    test('no-results with active filter mentions the filter and offers Clear filter button', async ({ page }) => {
+        await page.goto('/?q=xyzzy123noresults&panelist=Kate');
+        await expect(page.locator('.state-box')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.state-box')).toContainText(/filter/i);
+        await expect(page.locator('.state-box .clear-filter-btn')).toBeVisible();
     });
 
     test('clear button appears on type and clears on click', async ({ page }) => {
@@ -721,6 +754,18 @@ test.describe('IRCB Search', () => {
         await chip.click();
         await expect(page.locator('#search-input')).not.toHaveValue('', { timeout: 5000 });
         await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('"New This Week" chips only show series appearing in 2+ episodes', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
+        // latestEpisodeComics and comicEpisodes are exposed on window by app.js after data loads
+        const result = await page.evaluate(() => {
+            const comics = window.latestEpisodeComics || [];
+            const eps = window.comicEpisodes || {};
+            return comics.every(name => (eps[name] || new Set()).size >= 2);
+        });
+        expect(result).toBe(true);
     });
 
     test('"New This Week" section not visible after search', async ({ page }) => {
