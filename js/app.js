@@ -9,6 +9,7 @@ import { setResults, renderPanelistPage, loadingState, errorState } from "./rend
 import {
     runSearch, clearSearch, setSearch, setPanelist, toggleGuestOnly, goHome,
     toggleEmbed, toggleCardSummary, toggleCardTags, togglePanelistMenu, closePanelistMenu, setPanelistSort,
+    goHomeWithPanelistSearch,
 } from "./actions.js";
 
 
@@ -258,8 +259,9 @@ document.addEventListener('click', e => {
         case 'embed':         toggleEmbed(d.key ?? "", d.slug ?? "", Number(d.secs ?? 0)); break;
         case 'set-panelist':  setPanelist(d.name ?? ""); break;
         case 'toggle-guest':  toggleGuestOnly(); break;
-        case 'home':          goHome(); break;
-        case 'home-search':   goHome(); setSearch(d.q ?? ""); break;
+        case 'home':              goHome(); break;
+        case 'home-search':       goHome(); setSearch(d.q ?? ""); break;
+        case 'panelist-search':   goHomeWithPanelistSearch(d.name ?? "", d.q ?? ""); break;
         case 'panelist-sort': setPanelistSort(/** @type {"newest"|"oldest"} */ (d.sort ?? "newest")); break;
         case 'summary':       toggleCardSummary(d.id ?? ""); break;
             case 'tags':          toggleCardTags(d.id ?? ""); break;

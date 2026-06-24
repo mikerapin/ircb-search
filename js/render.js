@@ -243,7 +243,7 @@ export function renderPanelistPage(name) {
     const topPanelistComics = Object.entries(panelistComicCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
-        .map(([comic, count]) => `<button class="trending-chip" data-action="home-search" data-q="${esc(comic)}">
+        .map(([comic, count]) => `<button class="trending-chip" data-action="panelist-search" data-name="${esc(name)}" data-q="${esc(comic)}">
             <span class="tc-name">${esc(comic)}</span>
             <span class="tc-count">${count} eps</span>
         </button>`).join("");

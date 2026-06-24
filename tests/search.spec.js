@@ -815,6 +815,24 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('#search-input')).not.toBeVisible({ timeout: 5000 });
     });
 
+    test('Most Discussed chip on panelist page searches filtered to that panelist', async ({ page }) => {
+        await page.goto('/?view=panelist&name=Mike+Rapin');
+        await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });
+
+        // Click the first "Most Discussed" comic chip
+        const chip = page.locator('.trending-grid .trending-chip').first();
+        const comicName = await chip.locator('.tc-name').textContent();
+        await chip.click();
+
+        // Should return to search view with results
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+
+        // Search results should be filtered by Mike Rapin — panelist chip must be active
+        const panelistChip = page.locator('.panelist-chip.active');
+        await expect(panelistChip).toBeVisible();
+        await expect(panelistChip).toContainText('Mike');
+    });
+
     test('back link returns to empty state', async ({ page }) => {
         await page.goto('/?view=panelist&name=Mike+Rapin');
         await expect(page.locator('.panelist-hero')).toBeVisible({ timeout: 10000 });

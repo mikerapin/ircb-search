@@ -201,12 +201,29 @@ export function setPanelistSort(sort) {
     if (state.panelistView) renderPanelistPage(state.panelistView);
 }
 
-/** Leave a panelist page and restore the search UI. */
-export function goHome() {
+/** Tear down the panelist page view without touching search or filter state. */
+function leavePanelistPage() {
     state.panelistView = null;
     delete document.documentElement.dataset.view;
     /** @type {HTMLElement} */ (document.getElementById("search-input")).style.display = "";
     /** @type {HTMLElement} */ (document.getElementById("clear-btn")).style.display = "";
     /** @type {HTMLElement} */ (document.querySelector(".tabs")).style.display = "";
+}
+
+/** Leave a panelist page and restore the search UI. */
+export function goHome() {
+    leavePanelistPage();
     clearSearch();
+}
+
+/**
+ * Leave a panelist page and run a search scoped to that panelist.
+ * Used by "Most Discussed" chips on panelist pages so the filter is preserved.
+ * @param {string} panelistName
+ * @param {string} query
+ */
+export function goHomeWithPanelistSearch(panelistName, query) {
+    leavePanelistPage();
+    state.panelist = panelistName;
+    setSearch(query);
 }
