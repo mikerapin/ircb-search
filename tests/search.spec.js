@@ -1109,6 +1109,26 @@ test.describe('IRCB Search', () => {
         expect(recentTop?.y).toBeLessThan(chipsTop?.y ?? Infinity);
     });
 
+    test('clicking a keyword tag triggers a search for that keyword', async ({ page }) => {
+        await page.goto('/');
+        await page.fill('#search-input', 'Saga');
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+
+        // Open the tags panel on the first card that has one
+        const card = page.locator('.card-episode .tags-toggle').first();
+        await card.click();
+
+        // Click the first keyword tag
+        const tag = page.locator('.card-episode .kw').first();
+        const tagText = (await tag.textContent() || '').trim();
+        await tag.click();
+
+        // Search input should now contain the keyword and results should update
+        const inputVal = await page.locator('#search-input').inputValue();
+        expect(inputVal).toBe(tagText);
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+    });
+
     test('recent episode embed button opens inline player', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('.recent-eps-section').first()).toBeVisible({ timeout: 5000 });

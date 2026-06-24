@@ -386,7 +386,11 @@
             border: 1px solid var(--border);
             padding: 0.12rem 0.45rem;
             border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.15s, color 0.15s;
         }
+        .kw:hover { border-color: var(--border-hover); color: var(--text-muted); }
 
         .kw.match {
             color: var(--blue);
