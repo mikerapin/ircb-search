@@ -274,7 +274,6 @@
             border-radius: 6px;
             padding: 1.1rem 1.25rem;
             margin-bottom: 0.6rem;
-            overflow: hidden;
             transition: border-color 0.15s, background 0.15s, border-left-color 0.15s;
         }
 
@@ -284,7 +283,10 @@
         }
 
         /* P8: persistent left-border type indicators */
-        .card-comic { border-left-color: rgba(245,197,24,0.4); }
+        /* overflow:hidden only on comic cards — needed to clip the card-band bleed to
+           the card's border-radius. Episode cards avoid it so iOS Safari can render
+           the Simplecast iframe (iOS has a known bug with iframes inside overflow:hidden). */
+        .card-comic { overflow: hidden; border-left-color: rgba(245,197,24,0.4); }
         .card-comic:hover { border-left-color: var(--yellow); }
         .card-episode { border-left-color: rgba(230,57,70,0.3); }
         .card-episode:hover { border-left-color: var(--red); }
@@ -764,7 +766,36 @@
         @media (max-width: 480px) {
             header { padding: 2rem 1rem 1.75rem; }
             main { padding: 1.5rem 1rem 4rem; }
-            .tabs { flex-wrap: wrap; }
+        }
+
+        /* ── Mobile layout pass ─────────────────────────────── */
+        @media (max-width: 640px) {
+            /* Keyword tags make cards 3-4× taller on small screens;
+               they're still indexed for search, just not displayed. */
+            .keywords { display: none; }
+
+            /* Dropdown anchors to right edge so it doesn't overflow
+               when the nav button is on the far right of a narrow header. */
+            .panelist-dropdown {
+                left: auto;
+                right: 0;
+            }
+            /* 3-col grid fits better than 4 on 390px screens */
+            .panelist-dropdown-grid { grid-template-columns: repeat(3, 1fr); }
+
+            /* Reduce vertical rhythm between sections */
+            .section-label { margin-top: 1.25rem; }
+            .recent-eps-section .section-label { margin-top: 0; }
+
+            /* Cards: slightly tighter padding */
+            .card { padding: 0.9rem; }
+            .card-band {
+                margin: -0.9rem -0.9rem 0.6rem;
+                padding: 0.35rem 0.9rem;
+            }
+
+            /* Panelist page avatars: smaller on mobile */
+            .panelist-avatar { width: 44px; height: 44px; }
         }
 
         .sr-only {
@@ -783,7 +814,7 @@
         }
 
         @media (pointer: coarse) {
-            .panelist-chip, .trending-chip, .tab, .sort-btn { min-height: 44px; }
+            .panelist-chip, .trending-chip, .tab, .sort-btn, .play-btn, .summary-toggle { min-height: 44px; }
         }
     </style>
 </head>

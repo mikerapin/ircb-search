@@ -149,7 +149,7 @@ export function toggleEmbed(key, slug, startSecs) {
     const src = `https://player.simplecast.com/${slug}?dark=true${startSecs ? "&t=" + secsToSimplecastT(startSecs) : ""}`;
     wrap.innerHTML = `<iframe src="${esc(safeUrl(src))}" frameborder="0" scrolling="no"
         title="Episode player"
-        allow="autoplay *; encrypted-media *; fullscreen *"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
         style="width:100%;height:152px;border-radius:8px;margin-top:0.75rem;display:block;"></iframe>`;
     const btn = document.querySelector(`.play-btn[data-key="${CSS.escape(key)}"]`);
     if (btn) btn.innerHTML = "■ Stop";
