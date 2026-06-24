@@ -175,7 +175,7 @@ test.describe('IRCB Search', () => {
     test('panelist filter narrows results', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Batman');
-        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
         const totalBefore = await page.locator('.card').count();
         const firstChip = page.locator('.panelist-chip').first();
         const chipText = (await firstChip.textContent()).trim();
@@ -403,9 +403,9 @@ test.describe('IRCB Search', () => {
     test('embed toggle: play shows iframe, stop hides it, switching closes previous', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Saga');
-        // Wait for search results specifically — the home page now has .play-btn elements
-        // in the recent-episodes section, so we must wait for result cards to avoid a race.
-        await expect(page.locator('.card-episode, .card-comic').first()).toBeVisible({ timeout: 5000 });
+        // #sort-row only becomes visible once runSearch() renders results — safe sentinel
+        // against the home page's recent-episode cards which are also .card-episode.
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
         await expect(page.locator('.card .play-btn').first()).toBeVisible({ timeout: 5000 });
 
         // Play → iframe appears, button says Stop
@@ -454,7 +454,7 @@ test.describe('IRCB Search', () => {
         await page.goto('/');
         await page.locator('.tab[data-mode="topics"]').click();
         await page.locator('#search-input').fill('batman');
-        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
         const labelTexts = await page.locator('.section-label').allTextContents();
         expect(labelTexts.some(t => t.includes('Episodes by Topic'))).toBe(true);
         expect(labelTexts.some(t => t.includes('Comic Mentions'))).toBe(false);
@@ -781,7 +781,7 @@ test.describe('IRCB Search', () => {
         await page.goto('/');
         await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 10000 });
         await page.locator('#search-input').fill('Saga');
-        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
         const headers = page.locator('.trending-header');
         const texts = await headers.allTextContents();
         expect(texts.some(t => t.includes('New This Week'))).toBe(false);
@@ -986,7 +986,7 @@ test.describe('IRCB Search', () => {
         await page.locator('.tab[data-mode="topics"]').click();
         await page.locator('#search-input').fill('trucker');
         // "trucker" appears only in a summary, not in any title or keyword
-        await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
         const labels = await page.locator('.section-label').allTextContents();
         expect(labels.some(t => t.includes('Episodes by Topic'))).toBe(true);
     });
@@ -1006,32 +1006,32 @@ test.describe('IRCB Search', () => {
         const heading = page.locator('.section-label', { hasText: 'Recent Episodes' });
         await expect(heading).toBeVisible();
 
-        // Exactly 3 recent episode cards
-        const cards = page.locator('.recent-ep-card');
+        // Exactly 3 recent episode cards (full card-episode markup, same as search results)
+        const cards = page.locator('.recent-eps-section .card-episode');
         await expect(cards).toHaveCount(3);
 
         // Each card has a title and a date
         for (let i = 0; i < 3; i++) {
-            await expect(cards.nth(i).locator('.recent-ep-title')).not.toBeEmpty();
-            await expect(cards.nth(i).locator('.recent-ep-date')).not.toBeEmpty();
+            await expect(cards.nth(i).locator('.episode-title')).not.toBeEmpty();
+            await expect(cards.nth(i).locator('.card-date')).not.toBeEmpty();
         }
 
         // Recent episodes appear before the trending chips in DOM order
-        const recentTop = await page.locator('.recent-ep-card').first().boundingBox();
+        const recentTop = await page.locator('.recent-eps-section').boundingBox();
         const chipsTop  = await page.locator('.trending-chip').first().boundingBox();
         expect(recentTop?.y).toBeLessThan(chipsTop?.y ?? Infinity);
     });
 
     test('recent episode embed button opens inline player', async ({ page }) => {
         await page.goto('/');
-        await expect(page.locator('.recent-ep-card').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.recent-eps-section').first()).toBeVisible({ timeout: 5000 });
 
         // Only episode cards with a player_id get a data-action="embed" button
-        const embedBtn = page.locator('.recent-ep-card button[data-action="embed"]').first();
+        const embedBtn = page.locator('.recent-eps-section button[data-action="embed"]').first();
         if (await embedBtn.count() === 0) return; // skip if no embeddable episodes in top 3
 
         await embedBtn.click();
-        await expect(page.locator('.recent-ep-card .embed-wrap iframe').first()).toBeVisible();
+        await expect(page.locator('.recent-eps-section .embed-wrap iframe').first()).toBeVisible();
     });
 
 });
