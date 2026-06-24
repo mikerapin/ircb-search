@@ -26,6 +26,7 @@ export const state = {
     /** @type {ReturnType<typeof setTimeout>|undefined} */ searchDebounceTimer: undefined,
     /** @type {string[]} */                       latestEpisodeComics: [],
     /** @type {Episode|null} */                   latestEpisodeInfo: null,
+    /** @type {Episode[]} top 3 most recent */    recentEpisodes: [],
     /** @type {string|null} */                    panelistView: null,
     /** @type {"newest"|"oldest"} */              panelistSort: "newest",
 };

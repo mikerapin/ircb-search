@@ -81,6 +81,8 @@ async function init() {
                 break;
             }
         }
+        state.recentEpisodes = sortedEps.slice(0, 3);
+
         // Expose for Playwright tests and debugging
         window.latestEpisodeComics = state.latestEpisodeComics;
         window.comicEpisodes = comicEpisodes;

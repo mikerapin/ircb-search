@@ -282,6 +282,32 @@ export function renderPanelistPage(name) {
 }
 
 /** Empty/landing state: trending chips for all-time, last 12 months, this week. */
+function renderRecentEpisodes() {
+    if (!state.recentEpisodes.length) return "";
+    const cards = state.recentEpisodes.map(ep => {
+        const slug = ep.player_id || null;
+        const key  = ep.show_id + ":";
+        const date = fmtDate(ep.date);
+        const people = parsePeople(ep.people).join(", ");
+        const playBtn = slug
+            ? `<button class="play-btn recent-ep-play" data-key="${esc(key)}" data-orig="▶ Play"
+                   data-action="embed" data-slug="${esc(slug)}" data-secs="0">▶ Play</button>
+               <div class="embed-wrap" data-key="${esc(key)}"></div>`
+            : ep.simplecast_url
+                ? `<a class="play-btn recent-ep-play" href="${esc(safeUrl(ep.simplecast_url))}" target="_blank" rel="noopener noreferrer">▶ Listen →</a>`
+                : "";
+        return `<div class="recent-ep-card">
+            <div class="recent-ep-title">${esc(ep.title || "")}</div>
+            <div class="recent-ep-date">${esc(date)}${people ? ` · ${esc(people)}` : ""}</div>
+            ${playBtn}
+        </div>`;
+    }).join("");
+    return `<div class="recent-eps-section">
+        ${sectionLabel("Recent Episodes", state.recentEpisodes.length)}
+        ${cards}
+    </div>`;
+}
+
 export function emptyState() {
     if (!state.topComics.length) {
         return `<div class="state-box">
@@ -313,6 +339,7 @@ export function emptyState() {
           </div>`
         : "";
     return `<div class="empty-state-wrap">
+        ${renderRecentEpisodes()}
         ${newThisWeek}
         <p class="trending-header">All Time</p>
         <div class="trending-grid">${renderChips(state.topComics)}</div>

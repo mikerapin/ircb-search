@@ -403,26 +403,29 @@ test.describe('IRCB Search', () => {
     test('embed toggle: play shows iframe, stop hides it, switching closes previous', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Saga');
-        await expect(page.locator('.play-btn').first()).toBeVisible({ timeout: 5000 });
+        // Wait for search results specifically — the home page now has .play-btn elements
+        // in the recent-episodes section, so we must wait for result cards to avoid a race.
+        await expect(page.locator('.card-episode, .card-comic').first()).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('.card .play-btn').first()).toBeVisible({ timeout: 5000 });
 
         // Play → iframe appears, button says Stop
-        await page.locator('.play-btn').first().click();
-        await expect(page.locator('.embed-wrap iframe').first()).toBeVisible();
-        await expect(page.locator('.play-btn').first()).toContainText('■ Stop');
+        const cardPlayBtns = page.locator('.card .play-btn');
+        await cardPlayBtns.first().click();
+        await expect(page.locator('.card .embed-wrap iframe').first()).toBeVisible();
+        await expect(cardPlayBtns.first()).toContainText('■ Stop');
 
         // Stop → iframe gone, button restores to original label (not "■ Stop")
-        await page.locator('.play-btn').first().click();
-        await expect(page.locator('.embed-wrap iframe')).toHaveCount(0);
-        await expect(page.locator('.play-btn').first()).not.toContainText('■ Stop');
+        await cardPlayBtns.first().click();
+        await expect(page.locator('.card .embed-wrap iframe')).toHaveCount(0);
+        await expect(cardPlayBtns.first()).not.toContainText('■ Stop');
 
         // Click A then B → only B open; A restores to original label
-        const buttons = page.locator('.play-btn');
-        if (await buttons.count() >= 2) {
-            await buttons.first().click();
-            await buttons.nth(1).click();
-            await expect(page.locator('.embed-wrap iframe')).toHaveCount(1);
-            await expect(buttons.first()).not.toContainText('■ Stop');
-            await expect(buttons.nth(1)).toContainText('■ Stop');
+        if (await cardPlayBtns.count() >= 2) {
+            await cardPlayBtns.first().click();
+            await cardPlayBtns.nth(1).click();
+            await expect(page.locator('.card .embed-wrap iframe')).toHaveCount(1);
+            await expect(cardPlayBtns.first()).not.toContainText('■ Stop');
+            await expect(cardPlayBtns.nth(1)).toContainText('■ Stop');
         }
     });
 
@@ -993,6 +996,42 @@ test.describe('IRCB Search', () => {
         await page.locator('.tab[data-mode="topics"]').click();
         await page.locator('#search-input').fill('conspiracy');
         await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('home page shows 3 recent episodes above the trending chips', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.trending-chip').first()).toBeVisible({ timeout: 5000 });
+
+        // Section heading exists
+        const heading = page.locator('.section-label', { hasText: 'Recent Episodes' });
+        await expect(heading).toBeVisible();
+
+        // Exactly 3 recent episode cards
+        const cards = page.locator('.recent-ep-card');
+        await expect(cards).toHaveCount(3);
+
+        // Each card has a title and a date
+        for (let i = 0; i < 3; i++) {
+            await expect(cards.nth(i).locator('.recent-ep-title')).not.toBeEmpty();
+            await expect(cards.nth(i).locator('.recent-ep-date')).not.toBeEmpty();
+        }
+
+        // Recent episodes appear before the trending chips in DOM order
+        const recentTop = await page.locator('.recent-ep-card').first().boundingBox();
+        const chipsTop  = await page.locator('.trending-chip').first().boundingBox();
+        expect(recentTop?.y).toBeLessThan(chipsTop?.y ?? Infinity);
+    });
+
+    test('recent episode embed button opens inline player', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.locator('.recent-ep-card').first()).toBeVisible({ timeout: 5000 });
+
+        // Only episode cards with a player_id get a data-action="embed" button
+        const embedBtn = page.locator('.recent-ep-card button[data-action="embed"]').first();
+        if (await embedBtn.count() === 0) return; // skip if no embeddable episodes in top 3
+
+        await embedBtn.click();
+        await expect(page.locator('.recent-ep-card .embed-wrap iframe').first()).toBeVisible();
     });
 
 });
