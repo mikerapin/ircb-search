@@ -379,6 +379,12 @@ test.describe('IRCB Search', () => {
         expect(csp).toContain('frame-src https://player.simplecast.com');
         expect(csp).toContain('img-src');
         expect(csp).toContain('font-src https://fonts.gstatic.com');
+        // Hardening: unsafe-inline must not be present in script-src; pre-paint
+        // script must be whitelisted by its SHA-256 hash instead.
+        const scriptSrc = csp?.split(';').find(d => d.trim().startsWith('script-src'));
+        expect(scriptSrc).toBeDefined();
+        expect(scriptSrc).not.toContain("'unsafe-inline'");
+        expect(scriptSrc).toContain("'sha256-");
     });
 
     // ── E2: new coverage ──────────────────────────────────────────────────────

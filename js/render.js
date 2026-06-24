@@ -220,8 +220,8 @@ export function renderPanelistPage(name) {
     const panelistEps = state.episodes
         .filter(ep => parsePeople(ep.people).some(n => panelistNames(name).includes(n)))
         .sort((a, b) => state.panelistSort === "oldest"
-            ? +new Date(a.date ?? "") - +new Date(b.date ?? "")
-            : +new Date(b.date ?? "") - +new Date(a.date ?? ""));
+            ? +new Date(a.date || 0) - +new Date(b.date || 0)
+            : +new Date(b.date || 0) - +new Date(a.date || 0));
 
     if (!panelistEps.length) {
         setResults(`<div class="state-box">

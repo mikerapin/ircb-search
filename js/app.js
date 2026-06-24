@@ -70,7 +70,7 @@ async function init() {
             .slice(0, 10);
 
         // Find most recent episode with comic mentions
-        const sortedEps = [...state.episodes].sort((a, b) => +new Date(b.date ?? "") - +new Date(a.date ?? ""));
+        const sortedEps = [...state.episodes].sort((a, b) => +new Date(b.date || 0) - +new Date(a.date || 0));
         state.comics.forEach(m => { if (m.comic) (state.comicsByEp[m.show_id] ||= new Set()).add(normalizeSeries(m.comic)); });
         for (const ep of sortedEps) {
             const set = state.comicsByEp[ep.show_id];
@@ -229,6 +229,9 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
 
 init();
 window.addEventListener('popstate', () => location.reload());
+
+const logoArt = /** @type {HTMLElement | null} */ (document.getElementById("logo-art"));
+if (logoArt) logoArt.addEventListener("error", () => { logoArt.style.display = "none"; });
 
 // Single delegated click handler for all data-action buttons.
 document.addEventListener('click', e => {
