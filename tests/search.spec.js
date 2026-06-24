@@ -998,6 +998,37 @@ test.describe('IRCB Search', () => {
         await expect(page.locator('.card').first()).toBeVisible({ timeout: 5000 });
     });
 
+    test('keyword tags are hidden behind a toggle button by default', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+
+        const card = page.locator('.card-episode').first();
+        await expect(card.locator('.card-tags')).toBeHidden();
+
+        const tagsToggle = card.locator('.tags-toggle');
+        await expect(tagsToggle).toBeVisible();
+
+        await tagsToggle.click();
+        await expect(card.locator('.card-tags')).toBeVisible();
+
+        await tagsToggle.click();
+        await expect(card.locator('.card-tags')).toBeHidden();
+    });
+
+    test('summary-toggle gets is-open class when notes expand', async ({ page }) => {
+        await page.goto('/');
+        await page.locator('#search-input').fill('Saga');
+        await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
+
+        const toggle = page.locator('.card-episode[data-show-id] .summary-toggle').first();
+        await expect(toggle).not.toHaveClass(/is-open/);
+        await toggle.click();
+        await expect(toggle).toHaveClass(/is-open/);
+        await toggle.click();
+        await expect(toggle).not.toHaveClass(/is-open/);
+    });
+
     test('clicking episode card body toggles show notes', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Saga');

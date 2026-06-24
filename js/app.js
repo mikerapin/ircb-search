@@ -8,7 +8,7 @@ import { PANELISTS } from "./panelists.js";
 import { setResults, renderPanelistPage, loadingState, errorState } from "./render.js";
 import {
     runSearch, clearSearch, setSearch, setPanelist, toggleGuestOnly, goHome,
-    toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu, setPanelistSort,
+    toggleEmbed, toggleCardSummary, toggleCardTags, togglePanelistMenu, closePanelistMenu, setPanelistSort,
 } from "./actions.js";
 
 
@@ -260,6 +260,7 @@ document.addEventListener('click', e => {
         case 'home-search':   goHome(); setSearch(d.q ?? ""); break;
         case 'panelist-sort': setPanelistSort(/** @type {"newest"|"oldest"} */ (d.sort ?? "newest")); break;
         case 'summary':       toggleCardSummary(d.id ?? ""); break;
+            case 'tags':          toggleCardTags(d.id ?? ""); break;
         case 'panelist-menu': togglePanelistMenu(); break;
         case 'open-panelist': closePanelistMenu(); location.href = d.href ?? ""; break;
     }

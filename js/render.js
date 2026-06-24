@@ -137,10 +137,10 @@ export function renderEpisodeCard(ep) {
     const qLow = state.query.toLowerCase();
 
     const kwHtml = kwList.length
-        ? `<div class="keywords">${kwList.map(k => {
+        ? `<button class="tags-toggle" data-action="tags" data-id="${esc(ep.show_id)}">▾ Tags (${kwList.length})</button><div class="card-tags" id="card-tags-${esc(ep.show_id)}" hidden><div class="keywords">${kwList.map(k => {
                 const hit = k.toLowerCase().includes(qLow) || qLow.includes(k.toLowerCase());
                 return `<span class="kw${hit ? " match" : ""}">${esc(k)}</span>`;
-            }).join("")}</div>`
+            }).join("")}</div></div>`
         : "";
 
     const slug = ep.player_id || null;

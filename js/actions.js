@@ -158,11 +158,25 @@ export function toggleEmbed(key, slug, startSecs) {
 /** @param {string} showId */
 export function toggleCardSummary(showId) {
     const div = document.getElementById("card-summary-" + showId);
-    const btn = div && div.previousElementSibling;
+    const btn = div && /** @type {Element} */ (div.previousElementSibling);
     if (!div) return;
     const opening = div.hidden;
     div.hidden = !opening;
-    if (btn) btn.textContent = opening ? "▴ Hide notes" : "▾ Show notes";
+    if (btn) {
+        btn.textContent = opening ? "▴ Hide notes" : "▾ Show notes";
+        btn.classList.toggle("is-open", opening);
+    }
+}
+
+/** @param {string} showId */
+export function toggleCardTags(showId) {
+    const div = document.getElementById("card-tags-" + showId);
+    const btn = div && /** @type {Element} */ (div.previousElementSibling);
+    if (!div) return;
+    const opening = div.hidden;
+    div.hidden = !opening;
+    const count = div.querySelectorAll(".kw").length;
+    if (btn) btn.textContent = opening ? `▴ Tags (${count})` : `▾ Tags (${count})`;
 }
 
 export function togglePanelistMenu() {
