@@ -245,9 +245,11 @@ document.addEventListener('click', e => {
 
     const btn = el.closest('[data-action]');
     if (!btn) {
-        // Card-body click: toggle show notes when clicking outside interactive children
+        // Only open show notes when clicking the title/date/meta header area.
+        // Restricting to .card-top/.card-meta fixes the iOS Safari bug where
+        // cursor:pointer on the whole card claimed tap events from child buttons.
         const card = /** @type {HTMLElement | null} */ (el.closest('.card-episode[data-show-id]'));
-        if (card && !el.closest('button, a')) toggleCardSummary(card.dataset.showId ?? "");
+        if (card && el.closest('.card-top, .card-meta')) toggleCardSummary(card.dataset.showId ?? "");
         return;
     }
     const d = /** @type {HTMLElement} */ (btn).dataset;

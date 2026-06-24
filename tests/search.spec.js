@@ -1029,18 +1029,17 @@ test.describe('IRCB Search', () => {
         await expect(toggle).not.toHaveClass(/is-open/);
     });
 
-    test('clicking episode card body toggles show notes', async ({ page }) => {
+    test('clicking card title or meta area toggles show notes', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Saga');
         await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
 
-        // Find a card with show notes (has data-show-id)
         const card = page.locator('.card-episode[data-show-id]').first();
         await expect(card).toBeVisible();
         const summary = card.locator('.card-summary');
         await expect(summary).toBeHidden();
 
-        // Click the title (card body — not a button or link)
+        // Clicking the title (inside .card-top) should open notes
         await card.locator('.episode-title').click();
         await expect(summary).toBeVisible();
 
@@ -1049,7 +1048,7 @@ test.describe('IRCB Search', () => {
         await expect(summary).toBeHidden();
     });
 
-    test('clicking play button does not open show notes', async ({ page }) => {
+    test('clicking play button opens embed, not show notes', async ({ page }) => {
         await page.goto('/');
         await page.locator('#search-input').fill('Saga');
         await expect(page.locator('#sort-row')).toBeVisible({ timeout: 5000 });
@@ -1058,11 +1057,13 @@ test.describe('IRCB Search', () => {
         const summary = card.locator('.card-summary');
         await expect(summary).toBeHidden();
 
-        // Click the play/listen button — should NOT open show notes
-        const playBtn = card.locator('.play-btn').first();
+        const playBtn = card.locator('button[data-action="embed"]').first();
         if (await playBtn.count() > 0) {
             await playBtn.click();
+            // Show notes must stay hidden — embed opened, not notes
             await expect(summary).toBeHidden();
+            // Iframe must appear
+            await expect(card.locator('.embed-wrap iframe')).toBeVisible();
         }
     });
 

@@ -290,9 +290,11 @@
         .card-comic:hover { border-left-color: var(--yellow); }
         .card-episode { border-left-color: rgba(230,57,70,0.3); }
         .card-episode:hover { border-left-color: var(--red); }
-        .card-episode[data-show-id] { cursor: pointer; }
-        .card-episode[data-show-id] button,
-        .card-episode[data-show-id] a { cursor: auto; }
+        /* Only the title/meta area gets cursor:pointer — avoids the iOS Safari
+           bug where cursor:pointer on a parent claims the tap target from child
+           buttons, sending clicks to the card instead of the play button. */
+        .card-episode[data-show-id] .card-top,
+        .card-episode[data-show-id] .card-meta { cursor: pointer; }
 
         /* P4: yellow header band on comic mention cards */
         .card-band {
