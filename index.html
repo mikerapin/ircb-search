@@ -828,7 +828,10 @@
         }
 
         @media (pointer: coarse) {
-            .panelist-chip, .trending-chip, .tab, .sort-btn, .play-btn, .summary-toggle, .tags-toggle { min-height: 44px; }
+            .panelist-chip, .trending-chip, .tab, .sort-btn, .play-btn { min-height: 44px; }
+            /* Text toggles use padding for tap area — min-height inflates visual
+               card height without making the card look better on small screens */
+            .summary-toggle, .tags-toggle { padding: 0.5rem 0.25rem; margin-top: 0; }
         }
     </style>
 </head>
