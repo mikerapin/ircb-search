@@ -105,6 +105,7 @@ async function init() {
                     onclick="closePanelistMenu(); location.href='?view=panelist&name=${esc(encodeURIComponent(p.name))}'">
                     <img class="panelist-avatar" src="${esc(p.photo)}" alt="${esc(p.display)}" loading="lazy">
                     <span class="panelist-avatar-name">${esc(p.display.split(" ")[0])}</span>
+                    ${p.tagline ? `<span class="panelist-avatar-tagline">${esc(p.tagline)}</span>` : ""}
                 </button>`
             ).join("");
         }

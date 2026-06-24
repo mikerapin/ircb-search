@@ -30,6 +30,7 @@ export interface Panelist {
   display: string;
   photo: string;
   aliases?: string[];
+  tagline?: string;
 }
 
 // Test-helper globals exposed by app.js after data load

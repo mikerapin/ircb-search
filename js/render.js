@@ -262,10 +262,12 @@ export function renderPanelistPage(name) {
         : "";
     const heroName = pInfo ? pInfo.display : name;
 
+    const taglineHtml = pInfo?.tagline ? `<div class="panelist-tagline">${esc(pInfo.tagline)}</div>` : "";
     const html = `
         <button class="back-link" onclick="goHome()">← Back to search</button>
         ${photoHtml}
         <div class="panelist-hero">${esc(heroName)}</div>
+        ${taglineHtml}
         <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""}${dateRange ? ` · ${dateRange}` : ""}</div>
         ${topPanelistComics ? `<p class="trending-header">Most Discussed</p>
         <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
