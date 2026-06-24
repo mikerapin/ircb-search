@@ -27,4 +27,5 @@ export const state = {
     /** @type {string[]} */                       latestEpisodeComics: [],
     /** @type {Episode|null} */                   latestEpisodeInfo: null,
     /** @type {string|null} */                    panelistView: null,
+    /** @type {"newest"|"oldest"} */              panelistSort: "newest",
 };

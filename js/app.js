@@ -9,13 +9,13 @@ import { PANELISTS } from "./panelists.js";
 import { setResults, renderPanelistPage, loadingState, errorState } from "./render.js";
 import {
     runSearch, clearSearch, setSearch, setPanelist, toggleGuestOnly, goHome,
-    toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu,
+    toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu, setPanelistSort,
 } from "./actions.js";
 
 // Inline onclick="" attributes in generated markup call these as globals.
 Object.assign(window, {
     setSearch, setPanelist, toggleGuestOnly, goHome,
-    toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu,
+    toggleEmbed, toggleCardSummary, togglePanelistMenu, closePanelistMenu, setPanelistSort,
 });
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────

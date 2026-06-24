@@ -31,3 +31,11 @@ export interface Panelist {
   photo: string;
   aliases?: string[];
 }
+
+// Test-helper globals exposed by app.js after data load
+declare global {
+  interface Window {
+    latestEpisodeComics: string[];
+    comicEpisodes: Record<string, Set<string>>;
+  }
+}

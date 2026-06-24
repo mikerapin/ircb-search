@@ -16,12 +16,22 @@ export function setResults(html) {
     document.getElementById("results").innerHTML = html;
 }
 
+/** @type {Record<string, string>} */
+const SECTION_SUBTITLES = {
+    "Comic Mentions": "specific moments a comic was discussed — click ⏱ to jump to that point",
+    "Episodes by Topic": "full episodes matching your search",
+};
+
 /**
  * @param {string} label
  * @param {number} count
  */
 export function sectionLabel(label, count) {
-    return `<div class="section-label">${label} <span class="result-count">${count} result${count !== 1 ? "s" : ""}</span></div>`;
+    const sub = SECTION_SUBTITLES[label] ? `<span class="section-subtitle">${SECTION_SUBTITLES[label]}</span>` : "";
+    return `<div class="section-label">
+        <div class="section-label-row">${label} <span class="result-count">${count} result${count !== 1 ? "s" : ""}</span></div>
+        ${sub}
+    </div>`;
 }
 
 /**
@@ -182,8 +192,10 @@ export function panelistFilterHtml() {
             ${esc(label)}
         </button>`;
     }).join("");
-    const guestChip = `<button class="panelist-chip guest-chip${state.guestOnly ? " active" : ""}"
-        onclick="toggleGuestOnly()">Guest Episodes</button>`;
+    const guestDisabled = !!state.panelist;
+    const guestChip = `<button class="panelist-chip guest-chip${state.guestOnly ? " active" : ""}${guestDisabled ? " disabled" : ""}"
+        title="${guestDisabled ? "Clear the panelist filter to filter by outside guest episodes instead" : "Episodes featuring an outside guest (creator, industry guest, etc.)"}"
+        ${guestDisabled ? "disabled" : `onclick="toggleGuestOnly()"`}>Guest Episodes</button>`;
     const overflowChip = (state.panelist && !state.panelists.includes(state.panelist))
         ? `<button class="panelist-chip active" onclick="setPanelist(${esc(JSON.stringify(state.panelist))})">
             ${esc(state.panelist)} ✕
@@ -207,7 +219,9 @@ export function renderPanelistPage(name) {
 
     const panelistEps = state.episodes
         .filter(ep => parsePeople(ep.people).some(n => panelistNames(name).includes(n)))
-        .sort((a, b) => +new Date(b.date) - +new Date(a.date));
+        .sort((a, b) => state.panelistSort === "oldest"
+            ? +new Date(a.date) - +new Date(b.date)
+            : +new Date(b.date) - +new Date(a.date));
 
     if (!panelistEps.length) {
         setResults(`<div class="state-box">
@@ -255,7 +269,11 @@ export function renderPanelistPage(name) {
         <div class="panelist-stats">${panelistEps.length} episode${panelistEps.length !== 1 ? "s" : ""}${dateRange ? ` · ${dateRange}` : ""}</div>
         ${topPanelistComics ? `<p class="trending-header">Most Discussed</p>
         <div class="trending-grid" style="margin-bottom:2rem">${topPanelistComics}</div>` : ""}
-        <p class="trending-header">Episodes</p>
+        <div class="panelist-sort-row">
+            <span class="sort-label">Sort:</span>
+            <button class="sort-btn${state.panelistSort === "newest" ? " active" : ""}" onclick="setPanelistSort('newest')">Newest First</button>
+            <button class="sort-btn${state.panelistSort === "oldest" ? " active" : ""}" onclick="setPanelistSort('oldest')">Oldest First</button>
+        </div>
         ${panelistEps.map(ep => renderEpisodeCard(ep)).join("")}
     `;
     setResults(html);

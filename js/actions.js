@@ -7,7 +7,7 @@ import { esc, safeUrl, secsToSimplecastT, parsePeople, isGuestEp } from "./forma
 import { panelistNames } from "./panelists.js";
 import {
     setResults, emptyState, noResultsState, sectionLabel,
-    renderComicCard, renderEpisodeCard, panelistFilterHtml,
+    renderComicCard, renderEpisodeCard, panelistFilterHtml, renderPanelistPage,
 } from "./render.js";
 
 /** Run the current query/mode/filters and render the results. */
@@ -177,6 +177,12 @@ export function closePanelistMenu() {
     const btn = document.getElementById("panelist-nav-btn");
     dropdown.classList.remove("open");
     btn.setAttribute("aria-expanded", "false");
+}
+
+/** @param {"newest"|"oldest"} sort */
+export function setPanelistSort(sort) {
+    state.panelistSort = sort;
+    if (state.panelistView) renderPanelistPage(state.panelistView);
 }
 
 /** Leave a panelist page and restore the search UI. */
