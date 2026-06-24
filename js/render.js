@@ -146,8 +146,11 @@ export function renderEpisodeCard(ep) {
     const slug = ep.player_id || null;
     const key  = ep.show_id + ":";
     const extUrl = ep.simplecast_url ? safeUrl(ep.simplecast_url) : null;
+    const patreonUrl = (!slug && !extUrl && ep.patreon_url) ? safeUrl(ep.patreon_url) : null;
     const action = (!slug && extUrl)
         ? `<a class="play-btn card-action listen" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">▶ Play</a> <a class="card-ext-link" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>`
+        : patreonUrl
+        ? `<a class="patreon-link card-action" href="${esc(patreonUrl)}" target="_blank" rel="noopener noreferrer">Listen on Patreon ↗</a>`
         : "";
     const extLink = (slug && extUrl)
         ? `<a class="card-ext-link" href="${esc(extUrl)}" target="_blank" rel="noopener noreferrer">Simplecast ↗</a>`

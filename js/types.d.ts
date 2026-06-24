@@ -22,6 +22,7 @@ export interface Episode {
   simplecast_url?: string;
   player_id?: string | null;
   summary?: string;
+  patreon_url?: string | null;
 }
 
 /** A canonical panelist roster entry. */

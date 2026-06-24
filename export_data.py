@@ -6,6 +6,7 @@ Run this whenever the source data is updated.
 Requirements: pip install pandas openpyxl
 """
 
+import json
 import re
 import sys
 import urllib.request
@@ -77,6 +78,25 @@ def export_comics():
     print(f"  → {len(df)} comic mentions → {out}")
 
 
+def load_patreon_series():
+    """Load the series-name → Patreon collection URL mapping from data/patreon-series.json."""
+    path = DATA_DIR / "patreon-series.json"
+    if not path.exists():
+        return []
+    with open(path) as f:
+        return json.load(f)
+
+
+def assign_patreon_url(title, patreon_series):
+    """Return the Patreon collection URL for a title that matches a known series, else None."""
+    if not title or not isinstance(title, str):
+        return None
+    for series in patreon_series:
+        if series["pattern"] in title:
+            return series["url"]
+    return None
+
+
 def export_episodes():
     print("Fetching episodes data from GitHub...")
     df = pd.read_excel(EPISODES_URL, engine="openpyxl")
@@ -93,6 +113,17 @@ def export_episodes():
     df["summary"]   = df["simplecast_url"].apply(lambda u: lookup_rss(u, summary_map))
     matched = df["player_id"].notna().sum()
     print(f"  → {matched}/{len(df)} episodes matched to a Simplecast player ID")
+
+    # Assign Patreon collection URLs to spin-off episodes that have no Simplecast URL
+    patreon_series = load_patreon_series()
+    df["patreon_url"] = df.apply(
+        lambda row: assign_patreon_url(row.get("title"), patreon_series)
+        if (pd.isna(row.get("simplecast_url")) or not row.get("simplecast_url"))
+        else None,
+        axis=1,
+    )
+    patreon_matched = df["patreon_url"].notna().sum()
+    print(f"  → {patreon_matched} episodes linked to a Patreon collection")
 
     out = DATA_DIR / "episodes.json"
     df.to_json(out, orient="records", force_ascii=False)
