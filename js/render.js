@@ -165,7 +165,6 @@ export function renderEpisodeCard(ep) {
             ${people ? `<span class="meta-people">with ${esc(people)}</span>` : ""}
             ${isGuest ? `<span class="pill pill-orange">Guest</span>` : ""}
         </div>
-        ${kwHtml}
         ${action}
         ${playBtn}
         ${ep.summary ? (() => {
@@ -177,6 +176,7 @@ export function renderEpisodeCard(ep) {
                 : "";
             return `<button class="summary-toggle" data-action="summary" data-id="${esc(ep.show_id)}">▾ Show notes</button><div class="card-summary" id="card-summary-${esc(ep.show_id)}" hidden><p class="summary-text">${esc(ep.summary)}</p>${relatedHtml}</div>`;
         })() : ""}
+        ${kwHtml}
     </div>`;
 }
 
