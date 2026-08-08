@@ -14,6 +14,7 @@ import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
 import { fail, renderShell, setSearchBox, setView } from "./shell";
 import { viewHome } from "./views/home";
+import { viewSearch } from "./views/search";
 import type { CoreData } from "./data/types";
 
 /** Placeholder for routes whose real view lands in a later plan. */
@@ -26,7 +27,7 @@ function stub(title: string, note: string): string {
 async function view(r: Route, data: CoreData): Promise<[html: string, label: string]> {
   const [head, rest] = [r.seg[0], r.seg[1] ?? ""];
   switch (head) {
-    case "search": return [stub("Search", "Coming in the next task"), "The Page"];
+    case "search": return [await viewSearch(r.qs), "The Page"];
     case "ep": {
       const ep = data.episodes.find(e => e.key === rest);
       return [stub(ep?.title || "Episode not found", "Episode"), "The Episode"];

@@ -204,7 +204,7 @@ html[data-neg] .ts{color:#14120F}
 html[data-neg] .ts:hover{color:#14120F}
 .ts .tri{font-size:11px}
 .ts .lab{margin-left:auto; font-size:10px; opacity:.85; letter-spacing:.1em}
-.ts.dead{background:var(--paper-2); color:var(--ink); opacity:.7; cursor:default}
+.ts.dead{background:var(--paper-2); color:color-mix(in srgb, var(--ink) 78%, var(--paper-2)); cursor:default}
 .ts.dark{background:var(--ink); color:var(--paper)}
 html[data-neg] .ts.dark{color:#14120F}
 
@@ -458,7 +458,7 @@ html[data-neg] .railbox .rh{color:#14120F}
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px}
 .facet .n{margin-left:auto; font-size:11px; font-weight:700; opacity:.6; font-feature-settings:"tnum"}
 .facet:hover{background:var(--yellow); color:#14120F; text-decoration:none}
-.facet[aria-pressed=true]{background:var(--red-deep); color:var(--paper)}
+.facet[aria-pressed=true],.facet[aria-current=true]{background:var(--red-deep); color:var(--paper)}
 html[data-neg] .facet[aria-pressed=true]{color:#14120F}
 .facet[aria-pressed=true] .n{opacity:.85}
 .railnote{padding:10px; font-size:11.5px; line-height:1.5; opacity:.75; border-top:var(--rule) solid var(--ink)}
