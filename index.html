@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I Read Comic Books — Search the Archive</title>
 <meta name="description" content="Search 11 years of I Read Comic Books — every comic mentioned, every episode, every panelist.">
+<!-- Restore the negative plate before first paint. In a module this would run after the
+     document renders, and every load would flash light before going dark. -->
+<script>try{if(localStorage.getItem("ircb.neg")==="1")document.documentElement.setAttribute("data-neg","")}catch(e){}</script>
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>

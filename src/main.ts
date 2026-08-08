@@ -12,7 +12,7 @@ import "./style/dress.css";
 import { core } from "./data/load";
 import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
-import { fail, renderShell, setSearchBox, setView } from "./shell";
+import { fail, initChrome, renderShell, setSearchBox, setView } from "./shell";
 import { fitPlates } from "./views/cover";
 import { viewHome } from "./views/home";
 import { viewSearch } from "./views/search";
@@ -58,6 +58,7 @@ document.getElementById("sform")?.addEventListener("submit", ev => {
   const q = (document.getElementById("q") as HTMLInputElement | null)?.value.trim() ?? "";
   go("/search", { q });
 });
+initChrome();
 const box = document.getElementById("q");
 if (box instanceof HTMLInputElement) initTypeahead(box);
 

@@ -21,6 +21,8 @@ const ROUTES: Array<[path: string, label: string, sub: (s: Stats) => string]> = 
   ["/subscribe", "Subscribe", () => "&amp; Patreon"],
 ];
 
+const NEG_KEY = "ircb.neg";
+
 let wired = false;
 
 function closeMenu(): void {
@@ -38,7 +40,13 @@ function buildMenu(stats: Stats): void {
     ).join("");
 }
 
-function wire(): void {
+/**
+ * Wires the chrome that does not depend on data. Called at module scope, not from
+ * renderShell: everything here is reachable from the first frame, and waiting on core()
+ * left the negative toggle inert and the skip link following its own href into the router.
+ */
+export function initChrome(): void {
+  if (wired) return;
   const menu = el("menu"), navbtn = el("navbtn"), neg = el("neg"), view = el("view");
 
   navbtn.addEventListener("click", ev => {
@@ -59,10 +67,14 @@ function wire(): void {
     if (ev.key === "Escape" && !menu.hidden) closeMenu();
   });
 
+  /* The plate choice follows the reader across pages and visits. index.html applies the
+     stored value in the head so a returning dark-mode reader never sees a light flash. */
+  neg.setAttribute("aria-pressed", String(document.documentElement.hasAttribute("data-neg")));
   neg.addEventListener("click", () => {
-    const on = document.documentElement.hasAttribute("data-neg");
-    document.documentElement.toggleAttribute("data-neg", !on);
-    neg.setAttribute("aria-pressed", String(!on));
+    const on = !document.documentElement.hasAttribute("data-neg");
+    document.documentElement.toggleAttribute("data-neg", on);
+    neg.setAttribute("aria-pressed", String(on));
+    try { localStorage.setItem(NEG_KEY, on ? "1" : "0"); } catch { /* private mode */ }
   });
 
   /* The skip link targets #view, but the hash is the router. Following it literally would
@@ -78,7 +90,7 @@ function wire(): void {
 /* The menu's "you are here" marker reads the hash directly, so this takes no `active`
    argument — call it on every route and the highlight follows. */
 export function renderShell(stats: Stats): void {
-  if (!wired) wire();
+  initChrome();
   buildMenu(stats);
   el("foot-legal").innerHTML =
     "I Read Comic Books Search, a search index of the podcast <em>I Read Comic Books</em>, " +
