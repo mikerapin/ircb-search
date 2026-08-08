@@ -3,10 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>I Read Comic Books — Search</title>
+<title>I Read Comic Books — Search the Archive</title>
+<meta name="description" content="Search 11 years of I Read Comic Books — every comic mentioned, every episode, every panelist.">
 </head>
 <body>
-<div id="app"></div>
+<div class="grain" aria-hidden="true"></div>
+<a class="skip" href="#view">Skip to contents</a>
+
+<header class="dress">
+  <div class="dress-in">
+    <div class="dress-top">
+      <a class="logo" href="#/" aria-label="I Read Comic Books — home">
+        <span class="logo-badge" aria-hidden="true"></span>
+        <span class="logo-wm">I Read Comic Books</span>
+      </a>
+      <div class="dress-meta">
+        <span class="micro" id="dressno"></span>
+        <button class="neg-toggle" id="neg" aria-pressed="false">Negative</button>
+        <button class="upc" id="navbtn" aria-expanded="false" aria-controls="menu" aria-haspopup="true">
+          <span class="bars" aria-hidden="true"></span>
+          <span class="cr" aria-hidden="true">▾</span>
+          <span class="skip">Open menu</span>
+        </button>
+      </div>
+    </div>
+    <div class="blurb">
+      <form id="sform" role="search">
+        <label class="skip" for="q">Search comics, episodes, panelists</label>
+        <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Saga, Batman, X-Men, Ice Cream Man…">
+        <button class="go" type="submit">Search</button>
+      </form>
+      <span class="slash" aria-hidden="true">Press /</span>
+    </div>
+    <nav class="menu" id="menu" hidden aria-label="Sections"></nav>
+    <div class="ta" id="ta" hidden role="listbox" aria-label="Search suggestions"></div>
+  </div>
+</header>
+
+<main id="view" tabindex="-1"></main>
+
+<footer class="indicia">
+  <div class="cols">
+    <div>
+      <h2>Indicia</h2>
+      <p class="legal" id="foot-legal">I Read Comic Books Search, a search index of the podcast <em>I Read Comic Books</em>, published weekly since 2015 by Mike Rapin. All audio is hosted by Simplecast; artwork and episode metadata are the property of their respective owners.</p>
+      <h2 style="margin-top:14px">Credits</h2>
+      <ul>
+        <li>IRCB Logo by <a href="http://www.kylerosedesign.com/">Kyle Rose</a></li>
+        <li>Music by <a href="http://infinityshred.com/">Infinity Shred</a></li>
+        <li>IRCB Avatars by <a href="https://www.twitter.com/ICELEVEL">Flynn Nicholls</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Sources</h2>
+      <ul>
+        <li>Mention data — <a href="https://github.com/sshugars/ircb">sshugars/ircb</a></li>
+        <li>Episodes &amp; audio — <a href="https://ircbpodcast.simplecast.com">Simplecast</a></li>
+        <li>Show home — <a href="https://ircbpodcast.com">ircbpodcast.com</a></li>
+        <li><a href="#/about">How this data was built →</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Where to get it</h2>
+      <ul>
+        <li><a href="https://podcasts.apple.com/us/podcast/i-read-comic-books/id981964360">Apple Podcasts</a></li>
+        <li><a href="https://open.spotify.com/show/2XNmyG7TfF3FzTqmGxLoIJ">Spotify</a></li>
+        <li><a href="https://feeds.simplecast.com/U93zjuSN">RSS feed</a></li>
+        <li><a href="https://patreon.com/ircbpodcast">Patreon</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
 <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
