@@ -76,6 +76,7 @@ export function shapeEpisodes(raw: unknown[]): EpisodeCore[] {
       date,
       people: people(e["people"]),
       runtimeSecs: num(e["duration_secs"]),
+      mentionCount: 0,
       artwork: text(e["artwork_url"]),
       enclosure: text(e["enclosure_url"]),
       playerId: text(e["player_id"]),
@@ -120,6 +121,14 @@ export function shapeMentions(raw: unknown[], episodes: EpisodeCore[]): Mention[
     });
   }
   return out;
+}
+
+/** Fold each episode's mention count onto its record, in place. Returns the same array. */
+export function attachMentionCounts(episodes: EpisodeCore[], mentions: Mention[]): EpisodeCore[] {
+  const counts = new Map<string, number>();
+  for (const m of mentions) counts.set(m.epKey, (counts.get(m.epKey) ?? 0) + 1);
+  for (const e of episodes) e.mentionCount = counts.get(e.key) ?? 0;
+  return episodes;
 }
 
 export function buildStats(episodes: EpisodeCore[], mentions: Mention[]): Stats {

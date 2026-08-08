@@ -5,7 +5,8 @@ export interface EpisodeCore {
   date: string | null;         // "yyyy-mm-dd"; null when the source date is missing or pre-1980
   people: string[];            // trimmed full names, aliases resolved (Danny→Daniel Martinez)
   runtimeSecs: number | null;
-  artwork: string | null;
+  mentionCount: number;        // folded in at build time so home can show honest counts
+  artwork: string | null;      // without fetching the full mention list
   enclosure: string | null;
   playerId: string | null;
   simplecastUrl: string | null;

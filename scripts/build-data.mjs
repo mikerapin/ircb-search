@@ -8,6 +8,7 @@ const epsRaw = JSON.parse(readFileSync("data/episodes.json", "utf8"));
 const eps = shape.shapeEpisodes(epsRaw);
 const det = shape.shapeDetails(epsRaw);
 const men = shape.shapeMentions(JSON.parse(readFileSync("data/comics.json", "utf8")), eps);
+shape.attachMentionCounts(eps, men);
 
 // Keys are route parameters. A collision would silently merge two episodes into one page.
 const keys = new Set(eps.map(e => e.key));

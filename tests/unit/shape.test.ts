@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { shapeEpisodes, shapeDetails, shapeMentions, buildStats, tsToSeconds } from "../../src/data/shape";
+import { shapeEpisodes, shapeDetails, shapeMentions, buildStats, attachMentionCounts, tsToSeconds } from "../../src/data/shape";
 import epsRaw from "./fixtures/episodes.sample.json";
 import comicsRaw from "./fixtures/comics.sample.json";
 
@@ -79,6 +79,17 @@ describe("shapeMentions", () => {
 
   it("drops generic segment labels", () => {
     expect(men.some(m => m.segment === "Timestamps")).toBe(false);
+  });
+});
+
+describe("attachMentionCounts", () => {
+  it("counts per episode and totals to the mention count", () => {
+    const fresh = shapeEpisodes(epsRaw);
+    const men = shapeMentions(comicsRaw, fresh);
+    attachMentionCounts(fresh, men);
+    expect(fresh.reduce((n, e) => n + e.mentionCount, 0)).toBe(men.length);
+    const indexed = fresh.filter(e => e.mentionCount > 0);
+    expect(indexed.length).toBe(new Set(men.map(m => m.epKey)).size);
   });
 });
 

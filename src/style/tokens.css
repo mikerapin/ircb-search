@@ -11,6 +11,7 @@
   --paper-2:#EAE5D7;
   --ink:#141210;
   --red:#E5322A;
+  --red-deep:#C4231C;   /* red as a background behind paper text: 5.16:1, AA at any size */
   --blue:#1B4B9E;
   --yellow:#FDC22D;
   --tint:#8FB8D8;
@@ -31,6 +32,7 @@ html[data-neg]{
   --paper-2:#1E1B17;
   --ink:#F4F1E8;
   --red:#FF4A3D;
+  --red-deep:#FF4A3D;   /* in the negative the text on red is dark ink: 5.61:1 */
   --blue:#79A6FF;
   --yellow:#FDC22D;
   --dot:rgba(143,184,216,.28);

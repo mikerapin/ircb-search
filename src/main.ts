@@ -13,6 +13,7 @@ import { core } from "./data/load";
 import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
 import { fail, renderShell, setSearchBox, setView } from "./shell";
+import { viewHome } from "./views/home";
 import type { CoreData } from "./data/types";
 
 /** Placeholder for routes whose real view lands in a later plan. */
@@ -22,7 +23,7 @@ function stub(title: string, note: string): string {
   </section>`;
 }
 
-function view(r: Route, data: CoreData): [html: string, label: string] {
+async function view(r: Route, data: CoreData): Promise<[html: string, label: string]> {
   const [head, rest] = [r.seg[0], r.seg[1] ?? ""];
   switch (head) {
     case "search": return [stub("Search", "Coming in the next task"), "The Page"];
@@ -37,7 +38,7 @@ function view(r: Route, data: CoreData): [html: string, label: string] {
     case "about": return [stub("About the Data", "What is indexed"), "About the Data"];
     case "subscribe": return [stub("Subscribe", "& Patreon"), "Subscribe"];
     case "wall": return [stub("The Wall", `All ${nf(data.stats.episodes)} episodes`), "The Wall"];
-    default: return [stub("The Cover", "Home"), "EP. " + data.stats.episodes];
+    default: return [await viewHome(), "EP. " + data.stats.episodes];
   }
 }
 
@@ -48,11 +49,16 @@ core().then(data => {
     go("/search", { q });
   });
 
+  // Views load their own chunks, so a slow route must not paint over a newer one.
+  let token = 0;
   onRoute(r => {
-    const [html, label] = view(r, data);
-    setView(html, label);
+    const mine = ++token;
     setSearchBox(r.seg[0] === "search" ? (r.qs.get("q") ?? "") : "");
-    renderShell(data.stats);
+    void view(r, data).then(([html, label]) => {
+      if (mine !== token) return;
+      setView(html, label);
+      renderShell(data.stats);
+    });
   });
 }).catch((err: unknown) => {
   setView(fail("The archive did not load. Try a refresh."), "Offline");

@@ -3,7 +3,7 @@
 .dress-in{max-width:1400px; margin:0 auto; position:relative}
 .dress-top{display:flex; align-items:stretch; gap:0; border-bottom:var(--rule) solid var(--ink)}
 .logo{
-  display:flex; align-items:center; gap:8px; background:var(--red); color:var(--paper);
+  display:flex; align-items:center; gap:8px; background:var(--red-deep); color:var(--paper);
   padding:7px 12px 7px 10px; border-right:var(--rule) solid var(--ink); flex:0 0 auto;
 }
 html[data-neg] .logo{color:#14120F}
@@ -12,10 +12,8 @@ html[data-neg] .logo{color:#14120F}
 .logo-badge::before{content:""; position:absolute; inset:3px 3px auto 3px; height:8px; background:var(--red); border-bottom:2px solid var(--ink)}
 .logo-badge::after{content:""; position:absolute; left:3px; right:3px; bottom:3px; height:12px; background:var(--paper);
   background-image:radial-gradient(var(--ink) 32%,transparent 34%); background-size:4px 4px}
-/* 19px + an explicit weight so the wordmark clears WCAG large-text (>=18.66px bold),
-   where paper-on-red measures 3.86:1 against a 3:1 threshold. The palette is untouched. */
-.logo-wm{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; font-weight:900; text-transform:uppercase;
-  font-size:19px; line-height:.86; letter-spacing:.01em; max-width:4.6em}
+.logo-wm{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; text-transform:uppercase;
+  font-size:13px; line-height:.86; letter-spacing:.01em; max-width:6.2em}
 .dress-meta{flex:1 1 auto; display:flex; align-items:center; justify-content:flex-end; gap:12px; padding:0 10px; overflow:hidden}
 .dress-meta .micro{white-space:nowrap; opacity:.85}
 .neg-toggle{border:2px solid var(--ink); padding:4px 8px; font-size:10px; letter-spacing:.12em; font-weight:700; text-transform:uppercase; background:var(--paper)}
@@ -103,7 +101,7 @@ main{max-width:1400px; margin:0 auto; padding:var(--sec) 0 20px; display:block}
   padding:0 var(--pad) 9px; border-bottom:3px solid var(--ink); margin:0 0 20px;
 }
 .sec-head h2{margin:0; font-size:clamp(20px,4.4vw,30px)}
-.sec-head .note{font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; opacity:.68; margin-left:auto; text-align:right; line-height:1.5}
+.sec-head .note{font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; color:color-mix(in srgb, var(--ink) 68%, var(--paper)); margin-left:auto; text-align:right; line-height:1.5}
 .sec-head .tools{margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap}
 .sec-head .tools+.note{margin-left:0; width:100%; text-align:left}
 @media(max-width:620px){
@@ -202,7 +200,7 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   text-transform:uppercase; font-size:12.5px; letter-spacing:.05em; text-align:left;
 }
 html[data-neg] .ts{color:#14120F}
-.ts:hover{background:var(--red); text-decoration:none}
+.ts:hover{background:var(--red-deep); text-decoration:none}
 html[data-neg] .ts:hover{color:#14120F}
 .ts .tri{font-size:11px}
 .ts .lab{margin-left:auto; font-size:10px; opacity:.85; letter-spacing:.1em}
@@ -213,7 +211,7 @@ html[data-neg] .ts.dark{color:#14120F}
 /* the jump cut: panel becomes player */
 .panel.playing{border-width:5px; background:var(--paper-2)}
 .panel.playing .gc-screen{opacity:0}
-.panel.playing .band{background:var(--red); color:var(--paper)}
+.panel.playing .band{background:var(--red-deep); color:var(--paper)}
 html[data-neg] .panel.playing .band{color:#14120F}
 .player{border:var(--rule) solid var(--ink); background:var(--ink); color:var(--paper); padding:8px; display:flex; flex-direction:column; gap:7px}
 html[data-neg] .player{color:#14120F; background:var(--ink)}
@@ -254,7 +252,7 @@ html[data-neg] .player .pp{border-color:#14120F}
 @media(min-width:900px){ .hero-art{border-right:var(--rule) solid var(--ink); border-bottom:0} }
 .hero-art img{width:100%; aspect-ratio:1/1; object-fit:cover; filter:saturate(.92) contrast(1.04)}
 .hero-flag{
-  position:absolute; bottom:0; left:0; z-index:2; background:var(--red); color:var(--paper);
+  position:absolute; bottom:0; left:0; z-index:2; background:var(--red-deep); color:var(--paper);
   padding:6px 11px; font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900;
   font-size:12px; letter-spacing:.05em; text-transform:uppercase; border:var(--rule) solid var(--ink); border-bottom:0; border-left:0;
 }
@@ -315,7 +313,7 @@ html[data-neg] .sh .shh{color:#14120F}
 
 /* ---------- house ad: only on Patreon ---------- */
 .housead{margin:0 var(--pad); border:3px solid var(--ink); background:var(--paper); position:relative}
-.housead .hh{background:var(--red); color:var(--paper); padding:9px 14px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.housead .hh{background:var(--red-deep); color:var(--paper); padding:9px 14px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
 html[data-neg] .housead .hh{color:#14120F}
 .housead .hh .k{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; text-transform:uppercase; font-size:clamp(18px,3.6vw,26px); line-height:1}
 .housead .hh .s{font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-left:auto; opacity:.9}
@@ -332,7 +330,7 @@ html[data-neg] .housead .hh{color:#14120F}
   font-weight:700; padding:6px 9px; border-top:var(--rule) solid var(--ink)}
 html[data-neg] .adslot .go{color:#14120F}
 .adslot:hover{text-decoration:none}
-.adslot:hover .go{background:var(--red)}
+.adslot:hover .go{background:var(--red-deep)}
 
 /* subscription coupon */
 .coupon{margin:0 var(--pad); border:3px dashed var(--ink); padding:16px; position:relative;
@@ -347,7 +345,7 @@ html[data-neg] .adslot .go{color:#14120F}
   text-transform:uppercase; font-size:12px; letter-spacing:.05em; min-height:44px; display:flex; align-items:center;
 }
 html[data-neg] .coupon .subs a{color:#14120F}
-.coupon .subs a:hover{background:var(--red); text-decoration:none}
+.coupon .subs a:hover{background:var(--red-deep); text-decoration:none}
 .coupon .subs a.alt{background:var(--paper); color:var(--ink)}
 .coupon .subs a.alt:hover{background:var(--yellow); color:#14120F}
 
@@ -412,7 +410,7 @@ html[data-neg] .ra-row.on{color:#14120F}
 .tag{font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; border:1.5px solid var(--ink); padding:3px 7px; opacity:.8}
 .big-play{
   display:inline-flex; align-items:center; gap:9px; align-self:flex-start; min-height:46px;
-  background:var(--red); color:var(--paper); border:var(--rule) solid var(--ink); padding:9px 16px;
+  background:var(--red-deep); color:var(--paper); border:var(--rule) solid var(--ink); padding:9px 16px;
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 900; text-transform:uppercase;
   font-size:14px; letter-spacing:.05em;
 }
@@ -460,7 +458,7 @@ html[data-neg] .railbox .rh{color:#14120F}
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px}
 .facet .n{margin-left:auto; font-size:11px; font-weight:700; opacity:.6; font-feature-settings:"tnum"}
 .facet:hover{background:var(--yellow); color:#14120F; text-decoration:none}
-.facet[aria-pressed=true]{background:var(--red); color:var(--paper)}
+.facet[aria-pressed=true]{background:var(--red-deep); color:var(--paper)}
 html[data-neg] .facet[aria-pressed=true]{color:#14120F}
 .facet[aria-pressed=true] .n{opacity:.85}
 .railnote{padding:10px; font-size:11.5px; line-height:1.5; opacity:.75; border-top:var(--rule) solid var(--ink)}
@@ -559,7 +557,7 @@ html[data-neg] .ignite .x{color:#14120F}
   padding:3px 10px 3px 3px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; min-height:38px}
 .pface img,.pface .ph{width:28px; height:28px; object-fit:cover; border:1.5px solid var(--ink); background:var(--paper-2);
   background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px; flex:0 0 auto}
-.pface[aria-pressed=true]{background:var(--red); color:var(--paper)}
+.pface[aria-pressed=true]{background:var(--red-deep); color:var(--paper)}
 html[data-neg] .pface[aria-pressed=true]{color:#14120F}
 .pface:hover{background:var(--yellow); color:#14120F}
 .wrack{display:flex; flex-wrap:wrap; gap:6px}
@@ -665,7 +663,7 @@ html[data-neg] #minibar.paused .pp{color:#14120F; border-color:#14120F}
 #minibar .clk{font-size:11px; font-weight:700; letter-spacing:.04em; font-feature-settings:"tnum"; flex:0 0 auto; opacity:.8}
 @media(max-width:520px){ #minibar .clk{display:none} }
 #minibar .x{flex:0 0 auto; border:2px solid currentColor; padding:3px 9px; font-size:11px; font-weight:800; opacity:.75}
-#minibar .x:hover{opacity:1; background:var(--red); border-color:var(--red); color:var(--paper)}
+#minibar .x:hover{opacity:1; background:var(--red-deep); border-color:var(--red-deep); color:var(--paper)}
 
 /* ---------- indicia footer ---------- */
 .indicia{border-top:3px solid var(--ink); margin:var(--sec) auto 0; padding:18px var(--pad) 48px; max-width:1400px; font-size:11.5px; line-height:1.6}
