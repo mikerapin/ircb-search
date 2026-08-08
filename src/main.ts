@@ -17,6 +17,7 @@ import { fitPlates } from "./views/cover";
 import { viewEpisode } from "./views/episode";
 import { viewHome } from "./views/home";
 import { viewSearch } from "./views/search";
+import { viewIndex } from "./views/index-view";
 import { viewSeries } from "./views/series";
 import { initTypeahead } from "./search/typeahead";
 import type { CoreData } from "./data/types";
@@ -44,7 +45,10 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       return [v.html, "The Run", v.after];
     }
     case "panel": return [stub("The Panel", "Panelists & guests"), "The Panel"];
-    case "index": return [stub("The Index", `All ${nf(data.stats.series)} series`), "The Index"];
+    case "index": {
+      const v = await viewIndex();
+      return [v.html, "The Index", v.after];
+    }
     case "about": return [stub("About the Data", "What is indexed"), "About the Data"];
     case "subscribe": return [stub("Subscribe", "& Patreon"), "Subscribe"];
     case "wall": return [stub("The Wall", `All ${nf(data.stats.episodes)} episodes`), "The Wall"];

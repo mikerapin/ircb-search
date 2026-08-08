@@ -494,10 +494,10 @@ html[data-neg] .azbar a:hover{color:#14120F}
 @media(min-width:1000px){ .azgrid{columns:3} }
 @media(min-width:1300px){ .azgrid{columns:4} }
 .azsec{break-inside:avoid-column; margin-bottom:16px; border:var(--rule) solid var(--ink); background:var(--paper)}
-.azsec>h3{margin:0; background:var(--ink); color:var(--paper); font-family:var(--disp);
+.azsec>h2{margin:0; background:var(--ink); color:var(--paper); font-family:var(--disp);
   font-variation-settings:"wdth" 125,"wght" 900; font-size:15px; padding:4px 9px; display:flex; scroll-margin-top:170px}
-html[data-neg] .azsec>h3{color:#14120F}
-.azsec>h3 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
+html[data-neg] .azsec>h2{color:#14120F}
+.azsec>h2 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
 .azrow{display:flex; gap:8px; align-items:baseline; padding:2px 9px; font-size:12.5px; color:var(--ink); line-height:1.35}
 .azrow:nth-child(odd){background:var(--paper-2)}
 .azrow .nm{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -702,3 +702,6 @@ html[data-neg] .chip:hover{color:#14120F}
 
 /* The not-found link sits inside a sentence, so hue alone will not distinguish it. */
 .empty a{text-decoration:underline; text-underline-offset:2px}
+
+/* Links inside a sentence need more than hue to be findable. */
+.statline a,.lead a{text-decoration:underline; text-underline-offset:2px}

@@ -17,7 +17,14 @@ export interface EpisodeDetail { key: string; summary: string | null; keywords: 
 
 export interface Mention { comic: string; series: string; epKey: string; segment: string | null; secs: number | null }
 
-export interface Stats { episodes: number; mentions: number; series: number; indexedEpisodes: number; people: number }
+export interface Stats {
+  episodes: number;
+  mentions: number;
+  series: number;          // distinct headings after normalization
+  uniqueComics: number;    // distinct raw item strings, before normalization
+  indexedEpisodes: number;
+  people: number;
+}
 
 export interface PatreonSeries { pattern: string; name: string; url: string }
 

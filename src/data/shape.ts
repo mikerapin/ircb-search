@@ -145,6 +145,7 @@ export function buildStats(episodes: EpisodeCore[], mentions: Mention[]): Stats 
     episodes: episodes.length,
     mentions: mentions.length,
     series: new Set(mentions.map(m => m.series)).size,
+    uniqueComics: new Set(mentions.map(m => m.comic)).size,
     indexedEpisodes: new Set(mentions.map(m => m.epKey)).size,
     people: names.size,
   };

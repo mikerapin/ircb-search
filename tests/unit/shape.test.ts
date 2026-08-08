@@ -122,5 +122,7 @@ describe("shapeDetails / buildStats", () => {
     expect(stats.mentions).toBe(men.length);
     expect(stats.indexedEpisodes).toBe(new Set(men.map(m => m.epKey)).size);
     expect(stats.series).toBe(new Set(men.map(m => m.series)).size);
+    expect(stats.uniqueComics).toBe(new Set(men.map(m => m.comic)).size);
+    expect(stats.uniqueComics).toBeGreaterThanOrEqual(stats.series);
   });
 });
