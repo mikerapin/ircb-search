@@ -33,17 +33,31 @@ export function raToggle(): string {
   `</div>`;
 }
 
-function raListRow(m: Mention, ep: EpisodeCore | undefined): string {
+function raListRow(m: Mention, ep: EpisodeCore | undefined, until: number | null): string {
   const can = jumpable(m, ep);
   const meta = [m.segment, ep?.date ? fmtDate(ep.date) : null].filter(Boolean).join(" · ");
   const body =
     `<span class="t${can ? "" : " none"}">${can ? esc(fmtRuntime(m.secs)) : "—:——"}</span>` +
     `<span><span class="cm">${esc(m.comic)}</span>${meta ? `<span class="mt">${esc(meta)}</span>` : ""}</span>` +
     `<span class="cue">${can ? "▶ Play" : "Open →"}</span>`;
+  if (can && ep?.enclosure) {
+    return `<div class="rawrap panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs}" data-comic="${esc(m.comic)}"${until != null ? ` data-until="${until}"` : ""}>` +
+      `<button class="ra-row" type="button" data-act="cut">${body}</button><div class="cutslot"></div></div>`;
+  }
   const at = can ? simplecastAt(ep?.simplecastUrl ?? null, m.secs) : null;
   const dest = at ?? href("/ep/" + encodeURIComponent(m.epKey));
   const ext = at ? ` target="_blank" rel="noopener noreferrer"` : "";
   return `<div class="rawrap"><a class="ra-row" href="${esc(dest)}"${ext}>${body}</a></div>`;
+}
+
+/* A logged minute starts a segment; the next one ends it. Only the read-along knows this,
+   because only there are the mentions one episode in broadcast order. */
+function boundary(list: Mention[], i: number): number | null {
+  for (let j = i + 1; j < list.length; j++) {
+    const s = list[j]?.secs;
+    if (s != null && s > (list[i]?.secs ?? 0)) return s;
+  }
+  return null;
 }
 
 export function readAlong(
@@ -57,10 +71,10 @@ export function readAlong(
   }
   const mode = raMode();
   if (mode === "list") {
-    return `<div class="ra-list">${mentions.map(m => raListRow(m, byKey.get(m.epKey))).join("")}</div>`;
+    return `<div class="ra-list">${mentions.map((m, i) => raListRow(m, byKey.get(m.epKey), boundary(mentions, i))).join("")}</div>`;
   }
   const cls = mode === "stack" ? "ra-stack" : "ra-strip";
-  return `<div class="${cls}">${mentions.map(m => mentionPanel(m, byKey.get(m.epKey))).join("")}</div>`;
+  return `<div class="${cls}">${mentions.map((m, i) => mentionPanel(m, byKey.get(m.epKey), { until: boundary(mentions, i) })).join("")}</div>`;
 }
 
 /** Wires the layout toggle. `onChange` re-renders the block in the new mode. */

@@ -99,12 +99,14 @@ export async function viewSeries(name: string): Promise<{ html: string; after: (
 function checklistRow(m: Mention, ep: EpisodeCore | undefined): string {
   const can = jumpable(m, ep);
   const epLink = href("/ep/" + encodeURIComponent(m.epKey));
-  return `<div class="clrow" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}">` +
+  return `<div class="clrow panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}">` +
     `<div class="t"><div class="cm">${esc(m.comic)}</div>` +
       `<div class="ep"><a href="${epLink}">${esc(ep?.title || "Untitled")}</a> · ${esc(fmtDate(ep?.date ?? null) || "date unknown")}` +
-        `${m.segment ? " · " + esc(m.segment) : ""}</div></div>` +
+        `${m.segment ? " · " + esc(m.segment) : ""}</div><div class="cutslot"></div></div>` +
     (can
-      ? `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}</a>`
+      ? (ep?.enclosure
+          ? `<button class="ts" type="button" data-act="cut"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}</button>`
+          : `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}</a>`)
       : `<a class="nomin" href="${epLink}">${ep?.enclosure ? "no minute logged" : "no audio"} →</a>`) +
   `</div>`;
 }

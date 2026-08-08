@@ -21,7 +21,7 @@ test("checklist rows offer a jump or say plainly they have none", async ({ page 
   await page.goto("/#/series/Batman");
   await expect(page.locator(".checklist .clrow").first()).toBeVisible();
   const bad = await page.locator(".checklist .clrow").evaluateAll(els => els.filter(el => {
-    const ts = el.querySelector("a.ts"), no = el.querySelector(".nomin");
+    const ts = el.querySelector(".ts"), no = el.querySelector(".nomin");
     if (ts) return !/\d+:\d\d/.test(ts.textContent);          // a jump must show a real minute
     return !(no && /no minute logged|no audio/.test(no.textContent));
   }).length);

@@ -58,12 +58,13 @@ export function firstNames(people: string[]): string {
 }
 
 /** Shared by search results and the episode read-along. */
-export function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
+export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { until?: number | null }): string {
   const yr = ep?.date ? ep.date.slice(0, 4) : null;
   const noLab = num(m.comic, null) === "—" && yr ? yr : null;
   const seriesLink = href("/series/" + encodeURIComponent(m.series));
   const epLink = href("/ep/" + encodeURIComponent(m.epKey));
-  return `<article class="panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}">` +
+  const until = opts?.until;
+  return `<article class="panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}"${until != null ? ` data-until="${until}"` : ""}>` +
     `<a class="gcwrap" href="${seriesLink}" style="container-type:inline-size;display:block" aria-label="Every mention of ${esc(m.series)}">` +
       cover(m.comic, "", yr, noLab) +
     `</a>` +
@@ -75,6 +76,7 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
         `${ep?.people.length ? " · " + esc(firstNames(ep.people)) : ""}</div>` +
       (m.segment ? `<span class="seg" title="${esc(m.segment)}">${esc(m.segment)}</span>` : "") +
       `<div class="spacer"></div>` +
+      `<div class="cutslot"></div>` +
       playAffordance(m, ep) +
     `</div>` +
   `</article>`;
@@ -104,8 +106,14 @@ export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: {
   if (!jumpable(m, ep)) {
     return `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`;
   }
-  /* Point at the minute itself. Linking back to the episode page did nothing at all when
-     the reader was already on it — the whole affordance was a no-op there. */
+  /* Plays in the page. The engine seeks with currentTime and never touches the enclosure
+     URL, so the download still counts as the download it is. Falls back to the Simplecast
+     page only when we have no audio to stream. */
+  if (ep?.enclosure) {
+    return `<button class="ts" type="button" data-act="cut" data-ep="${esc(m.epKey)}" data-secs="${m.secs}" data-comic="${esc(m.comic)}"` +
+      ` aria-label="Play ${esc(m.comic)} at ${esc(fmtRuntime(m.secs))}">` +
+      `<span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">${label}</span></button>`;
+  }
   const at = simplecastAt(ep?.simplecastUrl ?? null, m.secs);
   if (!at) {
     return `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">Open</span></a>`;

@@ -78,6 +78,17 @@
   </div>
 </footer>
 
+<div id="minibar" role="region" aria-label="Now playing">
+  <button class="pp" id="mb-pp" type="button" aria-label="Pause">II</button>
+  <span class="txt"><a class="cm" id="mb-cm" href="#/">—</a><span class="ep" id="mb-ep"></span></span>
+  <span class="clk" id="mb-clk">0:00 / --:--</span>
+  <button class="x" id="mb-x" type="button" aria-label="Stop and close">✕</button>
+</div>
+
+<!-- preload="none" and no autoplay attribute: a page visit must not register as a download,
+     and playback only ever follows a click. See final-spec §9. -->
+<audio id="au" preload="none"></audio>
+
 <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

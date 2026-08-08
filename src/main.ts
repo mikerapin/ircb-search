@@ -9,6 +9,7 @@ import "@fontsource-variable/shantell-sans/full.css";
 import "./style/tokens.css";
 import "./style/dress.css";
 
+import { initAudio } from "./audio/engine";
 import { core } from "./data/load";
 import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
@@ -100,6 +101,10 @@ window.addEventListener("resize", () => {
 document.body.dataset["ready"] = "1";
 
 core().then(data => {
+  // One <audio> for the whole site; the mini-bar inherits it when navigation eats the panel.
+  const byKey = new Map(data.episodes.map(e => [e.key, e]));
+  initAudio(k => byKey.get(k));
+
   // Views load their own chunks, so a slow route must not paint over a newer one.
   let token = 0;
 

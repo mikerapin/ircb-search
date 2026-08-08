@@ -65,9 +65,9 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
 
   /* A whole episode deserves a way to start it, not just a jump into somebody else's minute.
      Plan 3 turns this into the in-page player; until then it opens the episode at Simplecast. */
-  const play = ep.simplecastUrl
-    ? `<a class="big-play" href="${esc(ep.simplecastUrl)}" target="_blank" rel="noopener noreferrer">` +
-        `<span aria-hidden="true">▶</span> Play from the top</a>`
+  const play = ep.enclosure
+    ? `<button class="big-play" type="button" data-act="cut-ep" data-ep="${esc(ep.key)}" data-secs="0">` +
+        `<span aria-hidden="true">▶</span> Play from the top</button>`
     : ep.patreonUrl
       ? `<a class="big-play" href="${esc(ep.patreonUrl)}" target="_blank" rel="noopener noreferrer">` +
           `<span aria-hidden="true">▶</span> Listen on Patreon</a>`
@@ -88,6 +88,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
               `<a class="tag" href="${href("/search", { q: k })}">${esc(k)}</a>`).join("")}</div>`
           : ""}
         ${play}
+        <div class="cutslot"></div>
         <div class="linkrow">
           ${ep.simplecastUrl ? `<a href="${esc(ep.simplecastUrl)}">Listen at Simplecast →</a>` : ""}
           ${ep.patreonUrl ? `<a href="${esc(ep.patreonUrl)}">On Patreon →</a>` : ""}

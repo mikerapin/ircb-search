@@ -121,24 +121,21 @@ test("episode page is axe clean with no console errors", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test("the jump link opens the actual minute, not the page you are already on", async ({ page }) => {
+test("the jump control plays in the page, not off to another site", async ({ page }) => {
   await openNewestEpisode(page);
-  const jump = page.locator("#readalong a.ts").first();
+  const jump = page.locator("#readalong button.ts[data-act=cut]").first();
   await expect(jump).toBeVisible();
-  const href = await jump.getAttribute("href");
-  // Linking back to #/ep/:key was a no-op for a reader already on the episode page.
-  expect(href).not.toMatch(/^#\/ep\//);
-  expect(href).toMatch(/^https:\/\/[a-z.]*simplecast\.com\/.*[?&]t=\d\dh\d\dm\d\ds/);
-  await expect(jump).toHaveAttribute("target", "_blank");
-  await expect(jump).toHaveAttribute("rel", /noopener/);
+  // It used to be a link back to the page you were already on, then a link off to Simplecast.
+  expect(await jump.getAttribute("data-secs")).toMatch(/^\d+$/);
+  expect(await jump.getAttribute("href")).toBeNull();
 });
 
-test("timestamp rows link to the minute too", async ({ page }) => {
+test("timestamp rows play in place too", async ({ page }) => {
   await openNewestEpisode(page);
   await page.getByRole("button", { name: "Timestamps" }).click();
-  const playable = page.locator("#readalong .ra-row").filter({ hasText: "Play" }).first();
-  if (await playable.count()) {
-    expect(await playable.getAttribute("href")).toMatch(/simplecast\.com\/.*[?&]t=/);
+  const row = page.locator("#readalong .rawrap.panel button.ra-row[data-act=cut]").first();
+  if (await row.count()) {
+    await expect(row.locator("..")).toHaveAttribute("data-secs", /^\d+$/);
   }
 });
 
