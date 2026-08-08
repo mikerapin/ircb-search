@@ -63,8 +63,12 @@ test("panelist avatars are self-hosted and actually load", async ({ page }) => {
   await expect(avatars.first()).toBeVisible();
   // Squarespace-hosted avatars would break silently if ircbpodcast.com were redesigned.
   expect(foreign.filter(h => h.includes("squarespace"))).toEqual([]);
-  const broken = await avatars.evaluateAll(els => els.filter(i => !i.complete || i.naturalWidth === 0).length);
-  expect(broken).toBe(0);
+  // They are lazy-loaded, so wait for decode rather than sampling mid-flight.
+  await page.waitForFunction(
+    () => [...document.querySelectorAll(".railbox.who .facet img")].every(i => i.complete),
+    null, { timeout: 10000 });
+  const broken = await avatars.evaluateAll(els => els.filter(i => i.naturalWidth === 0).map(i => i.src));
+  expect(broken).toEqual([]);
 });
 
 test("search is axe clean with no console errors", async ({ page }) => {
