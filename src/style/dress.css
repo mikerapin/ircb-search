@@ -524,8 +524,11 @@ html[data-neg] .bar .bf::after{background-image:radial-gradient(rgba(20,18,15,.4
 @media(min-width:980px){ .tenure{grid-template-columns:repeat(6,1fr)} }
 .tenure .yr{border:1.5px solid var(--ink); aspect-ratio:1/1; display:flex; flex-direction:column;
   align-items:center; justify-content:center; font-size:9px; font-weight:700; letter-spacing:.02em;
-  background:var(--paper); opacity:.35; font-feature-settings:"tnum"}
-.tenure .yr.on{opacity:1; background:var(--ink); color:var(--paper)}
+  background:var(--paper); font-feature-settings:"tnum";
+  /* Quiet, not invisible: opacity .35 put the off years at 2.22:1 and faded the border too. */
+  color:color-mix(in srgb, var(--ink) 70%, transparent);
+  border-color:color-mix(in srgb, var(--ink) 45%, transparent)}
+.tenure .yr.on{background:var(--ink); color:var(--paper); border-color:var(--ink)}
 html[data-neg] .tenure .yr.on{color:#14120F}
 .tenure .yr b{font-size:11px; font-weight:800}
 

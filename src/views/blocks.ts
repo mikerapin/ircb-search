@@ -2,7 +2,7 @@ import { peopleStats, sharePct } from "../data/people";
 import { ROSTER } from "../data/roster";
 import { seriesRows } from "../data/series-index";
 import type { CoreData, EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, fmtShortDate, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
 import { cover } from "./cover";
@@ -111,12 +111,6 @@ export { SUBSCRIBE };
 
 const pick = <T,>(a: T[]): T | undefined => a[Math.floor(Math.random() * a.length)];
 
-const shortDate = (d: string | null): string => {
-  if (!d) return "——";
-  const p = d.split("-");
-  const mon = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(p[1]) - 1];
-  return `${mon} '${(p[0] ?? "").slice(2)}`;
-};
 
 export function shuffle(core: CoreData, mentions: Mention[]): string {
   const stats = peopleStats(core.episodes);
@@ -149,7 +143,7 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
         </div>
         <p class="cap" style="margin:0">${esc(person.tagline)}</p>
         <div class="spacer"></div>
-        <div class="credits">${esc(shortDate(ps?.first ?? null))} → ${esc(shortDate(ps?.latest ?? null))}</div>
+        <div class="credits">${esc(fmtShortDate(ps?.first ?? null))} → ${esc(fmtShortDate(ps?.latest ?? null))}</div>
       </div></div>
 
       <div class="sh"><div class="shh">From the back catalogue<span class="dice" aria-hidden="true">⚅</span></div>

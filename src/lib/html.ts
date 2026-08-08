@@ -49,3 +49,11 @@ export function fmtDate(d: string | null): string {
   const mon = MON[Number(p[1]) - 1];
   return mon ? `${mon} ${Number(p[2])}, ${p[0]}` : "";
 }
+
+/** "2017-01-25" → "Jan '17" — the tenure strip and shuffle cards have no room for more. */
+export function fmtShortDate(d: string | null): string {
+  if (!d) return "——";
+  const p = d.split("-");
+  const mon = MON[Number(p[1]) - 1];
+  return mon ? `${mon} '${(p[0] ?? "").slice(2)}` : "——";
+}
