@@ -25,3 +25,6 @@ playwright/.auth/
 
 # OS
 .DS_Store
+
+# Vite build output
+dist/

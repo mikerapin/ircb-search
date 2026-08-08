@@ -3,8 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
     "test": "playwright test",
-    "dev": "serve . -p 3000 -s",
+    "test:unit": "vitest run",
     "export": "python export_data.py",
     "check": "tsc --noEmit"
   },
@@ -12,6 +15,11 @@
     "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.44.0",
     "serve": "^14.2.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
+  },
+  "dependencies": {
+    "fuse.js": "^7.5.0"
   }
 }
