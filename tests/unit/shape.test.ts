@@ -80,6 +80,23 @@ describe("shapeMentions", () => {
   it("drops generic segment labels", () => {
     expect(men.some(m => m.segment === "Timestamps")).toBe(false);
   });
+
+  it("gives punctuation variants one shared series name", () => {
+    const raw = [
+      { comic: "Star Wars: Visions #1", show_id: "s", timestamp: "00:01:00" },
+      { comic: "Star Wars: Visions #2", show_id: "s", timestamp: "00:02:00" },
+      { comic: "Star Wars Visions", show_id: "s", timestamp: "00:03:00" },
+      { comic: "Monsters", show_id: "s", timestamp: "00:04:00" },
+      { comic: "Monster", show_id: "s", timestamp: "00:05:00" },
+    ];
+    const epsOne = shapeEpisodes([{ show_id: "s", title: "T", date: 1600000000000, people: "" }]);
+    const out = shapeMentions(raw, epsOne);
+    const names = out.map(m => m.series);
+    expect(names.filter(n => n.toLowerCase().includes("visions"))).toEqual(
+      ["Star Wars: Visions", "Star Wars: Visions", "Star Wars: Visions"]);
+    // ...but singular and plural stay two different books.
+    expect(new Set(names).size).toBe(3);
+  });
 });
 
 describe("attachMentionCounts", () => {

@@ -1,5 +1,5 @@
 import type { EpisodeCore, EpisodeDetail, Mention, Stats } from "./types";
-import { clean, normalizeSeries } from "./series";
+import { clean, normalizeSeries, pickDisplayNames, seriesKey } from "./series";
 
 /* The roster spells one regular "Daniel"; the feed spells him "Danny".
    One person, two strings — fold them or he shows up as his own guest. */
@@ -120,6 +120,13 @@ export function shapeMentions(raw: unknown[], episodes: EpisodeCore[]): Mention[
       secs: tsToSeconds(text(m["timestamp"])),
     });
   }
+
+  /* Second pass: headings that differ only in punctuation or case are one run, so every
+     mention in a group gets that group's most-written spelling. Without this, "Star Wars:
+     Visions" and "Star Wars Visions" are two series pages splitting one run between them. */
+  const display = pickDisplayNames(out.map(m => m.comic));
+  for (const m of out) m.series = display.get(seriesKey(m.comic)) ?? m.series;
+
   return out;
 }
 

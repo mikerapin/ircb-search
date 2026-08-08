@@ -1,5 +1,5 @@
-import { it, expect } from "vitest";
-import { normalizeSeries } from "../../src/data/series";
+import { it, expect, describe } from "vitest";
+import { normalizeSeries, seriesKey, pickDisplayNames } from "../../src/data/series";
 
 it("strips issue/vol/year/ft noise", () => {
   expect(normalizeSeries("Batman #50")).toBe("Batman");
@@ -11,6 +11,13 @@ it("strips issue/vol/year/ft noise", () => {
   expect(normalizeSeries("Giant Days Book 3")).toBe("Giant Days");
 });
 
+it("strips manga chapter numbering", () => {
+  // Real headings: the index logs manga by chapter the way it logs comics by issue.
+  expect(normalizeSeries("Haikyu!! Chapter 381")).toBe("Haikyu!!");
+  expect(normalizeSeries("Black Clover Chapter 192")).toBe("Black Clover");
+  expect(normalizeSeries("One Piece Ch. 1044")).toBe("One Piece");
+});
+
 it("strips scraped show-note HTML fragments", () => {
   expect(normalizeSeries("Wonder Woman Special #1.</P><P><STRONG")).toBe("Wonder Woman Special");
   expect(normalizeSeries("Daredevil   \n  #7")).toBe("Daredevil");
@@ -19,4 +26,65 @@ it("strips scraped show-note HTML fragments", () => {
 it("never returns empty for a non-empty input", () => {
   expect(normalizeSeries("#1")).toBe("#1");
   expect(normalizeSeries("")).toBe("");
+});
+
+describe("seriesKey — groups headings that differ only in punctuation or case", () => {
+  const same = (a: string, b: string) => expect(seriesKey(a)).toBe(seriesKey(b));
+  const differ = (a: string, b: string) => expect(seriesKey(a)).not.toBe(seriesKey(b));
+
+  it("folds subtitle separators", () => {
+    same("Star Wars: Visions", "Star Wars Visions");
+    same("Star Wars: Doctor Aphra", "Star Wars - Doctor Aphra");
+    same("Batman Universe", "Batman: Universe");
+    same("X-Men Gold", "X-Men: Gold");
+    same("Catwoman: Lonely City", "Catwoman Lonely City");
+  });
+
+  it("folds smart quotes, case and trailing punctuation", () => {
+    same("We Only Find Them When They’re Dead", "We Only Find Them When They're Dead");
+    same("We only Find Them When They’re Dead", "We Only Find Them When They're Dead");
+    same("Quantum and Woody!", "Quantum and Woody");
+    same("Fantastic Four (", "Fantastic Four");
+    // An apostrophe is not a word break: these are one book, not two.
+    same("Dead Dog’s Bite", "Dead Dogs Bite");
+  });
+
+  it("folds hyphen-vs-space", () => {
+    same("All-Star Batman", "All Star Batman");
+    same("All-Star Superman", "All Star Superman");
+  });
+
+  it("keeps genuinely different series apart", () => {
+    // Folding any of these would silently lie about which episodes discussed what.
+    differ("Batman Vs Robin", "Batman & Robin");
+    differ("Black Cloak", "Black Cloud");
+    differ("Black Magick", "Black Magic");
+    differ("Monster", "Monsters");
+    differ("Immortal Iron Fist", "Immortal Iron Fists");
+    differ("The Forged", "The Forge");
+    differ("Haikyu!!", "Haikyuu!!");            // romanisation, left split on purpose
+    differ("Predator Hunters II", "Predator Hunters III");
+    differ("Archie vs Predator", "Archie vs Predator 2");
+  });
+
+  it("is stable and non-empty", () => {
+    expect(seriesKey("Saga")).toBe(seriesKey("saga"));
+    expect(seriesKey("!!!")).toBe("!!!");        // falls back rather than returning ""
+    expect(seriesKey("")).toBe("");
+  });
+});
+
+describe("pickDisplayNames", () => {
+  it("gives every variant in a group the most-used spelling", () => {
+    const names = ["Star Wars Visions", "Star Wars: Visions", "Star Wars: Visions", "Monster"];
+    const map = pickDisplayNames(names);
+    expect(map.get(seriesKey("Star Wars Visions"))).toBe("Star Wars: Visions");
+    expect(map.get(seriesKey("Monster"))).toBe("Monster");
+  });
+
+  it("breaks ties deterministically", () => {
+    const a = pickDisplayNames(["Batman Universe", "Batman: Universe"]);
+    const b = pickDisplayNames(["Batman: Universe", "Batman Universe"]);
+    expect(a.get(seriesKey("Batman Universe"))).toBe(b.get(seriesKey("Batman Universe")));
+  });
 });
