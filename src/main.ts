@@ -14,6 +14,7 @@ import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
 import { fail, initChrome, renderShell, setSearchBox, setView } from "./shell";
 import { fitPlates } from "./views/cover";
+import { viewEpisode } from "./views/episode";
 import { viewHome } from "./views/home";
 import { viewSearch } from "./views/search";
 import { initTypeahead } from "./search/typeahead";
@@ -33,8 +34,8 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
   switch (head) {
     case "search": return [await viewSearch(r.qs), "The Page"];
     case "ep": {
-      const ep = data.episodes.find(e => e.key === rest);
-      return [stub(ep?.title || "Episode not found", "Episode"), "The Episode"];
+      const v = await viewEpisode(rest);
+      return [v.html, "The Episode", v.after];
     }
     case "who": return [stub(rest || "Panelist", "Credits"), "Credits"];
     case "series": return [stub(rest || "Series", "The run"), "The Run"];

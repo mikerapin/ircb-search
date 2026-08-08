@@ -1,5 +1,7 @@
-import type { EpisodeCore } from "../data/types";
+import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, pl } from "../lib/html";
+import { jumpable } from "../search/engine";
+import { cover, num } from "./cover";
 import { href } from "../router";
 
 /** A comic cover carries a price; an episode carries a runtime. */
@@ -48,4 +50,40 @@ export function byDateDesc(a: EpisodeCore, b: EpisodeCore): number {
   if (a.date === null) return 1;
   if (b.date === null) return -1;
   return a.date < b.date ? 1 : -1;
+}
+
+/** First names only — the panel line under a mention plate has no room for more. */
+export function firstNames(people: string[]): string {
+  return people.map(p => p.split(" ")[0]).join(" · ");
+}
+
+/** Shared by search results and the episode read-along. */
+export function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
+  const can = jumpable(m, ep);
+  const yr = ep?.date ? ep.date.slice(0, 4) : null;
+  const noLab = num(m.comic, null) === "—" && yr ? yr : null;
+  const seriesLink = href("/series/" + encodeURIComponent(m.series));
+  const epLink = href("/ep/" + encodeURIComponent(m.epKey));
+  const stamp = m.secs == null ? "" : fmtStamp(m.secs);
+  return `<article class="panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}">` +
+    `<a class="gcwrap" href="${seriesLink}" style="container-type:inline-size;display:block" aria-label="Every mention of ${esc(m.series)}">` +
+      cover(m.comic, "", yr, noLab) +
+    `</a>` +
+    `<h3 class="band"><a href="${seriesLink}">${esc(m.series)}</a>` +
+      (/#|vol|book/i.test(m.comic) ? `<span class="no">${esc(num(m.comic, null))}</span>` : "") + `</h3>` +
+    `<div class="pbody">` +
+      `<a class="cap" href="${epLink}">${esc(ep?.title || "Untitled episode")}</a>` +
+      `<div class="credits">${esc(fmtDate(ep?.date ?? null) || "Date unknown")}` +
+        `${ep?.people.length ? " · " + esc(firstNames(ep.people)) : ""}</div>` +
+      (m.segment ? `<span class="seg" title="${esc(m.segment)}">${esc(m.segment)}</span>` : "") +
+      `<div class="spacer"></div>` +
+      (can
+        ? `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(stamp)}<span class="lab">Jump</span></a>`
+        : `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`) +
+    `</div>` +
+  `</article>`;
+}
+
+export function fmtStamp(secs: number | null): string {
+  return secs == null ? "" : fmtRuntime(secs);
 }

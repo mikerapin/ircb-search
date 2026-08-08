@@ -4,7 +4,7 @@ import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { SEARCH_CAP, jumpable, runSearch, type SearchData, type SearchQuery } from "../search/engine";
-import { byDateDesc, episodePanel } from "./components";
+import { byDateDesc, episodePanel, mentionPanel } from "./components";
 import { cover, num } from "./cover";
 
 const SUGGESTIONS = ["Saga", "Batman", "X-Men", "Ice Cream Man", "Giant Days", "Sweet Tooth"];
@@ -27,44 +27,9 @@ export function readQuery(qs: URLSearchParams): SearchQuery {
   };
 }
 
-function firstNames(people: string[]): string {
-  return people.map(p => p.split(" ")[0]).join(" · ");
-}
-
 function avatar(name: string): string {
   const p = ROSTER_MAP.get(name);
   return p ? `<img src="${esc(p.photo)}" alt="" loading="lazy">` : `<span class="ph"></span>`;
-}
-
-function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
-  const can = jumpable(m, ep);
-  const yr = ep?.date ? ep.date.slice(0, 4) : null;
-  const noLab = num(m.comic, null) === "—" && yr ? yr : null;
-  const seriesLink = href("/series/" + encodeURIComponent(m.series));
-  const epLink = href("/ep/" + encodeURIComponent(m.epKey));
-  const stamp = m.secs == null ? "" : fmtStamp(m.secs);
-  return `<article class="panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}">` +
-    `<a class="gcwrap" href="${seriesLink}" style="container-type:inline-size;display:block" aria-label="Every mention of ${esc(m.series)}">` +
-      cover(m.comic, "", yr, noLab) +
-    `</a>` +
-    `<h3 class="band"><a href="${seriesLink}">${esc(m.series)}</a>` +
-      (/#|vol|book/i.test(m.comic) ? `<span class="no">${esc(num(m.comic, null))}</span>` : "") + `</h3>` +
-    `<div class="pbody">` +
-      `<a class="cap" href="${epLink}">${esc(ep?.title || "Untitled episode")}</a>` +
-      `<div class="credits">${esc(fmtDate(ep?.date ?? null) || "Date unknown")}` +
-        `${ep?.people.length ? " · " + esc(firstNames(ep.people)) : ""}</div>` +
-      (m.segment ? `<span class="seg" title="${esc(m.segment)}">${esc(m.segment)}</span>` : "") +
-      `<div class="spacer"></div>` +
-      (can
-        ? `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(stamp)}<span class="lab">Jump</span></a>`
-        : `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`) +
-    `</div>` +
-  `</article>`;
-}
-
-function fmtStamp(secs: number): string {
-  const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
-  return (h ? h + ":" + String(m).padStart(2, "0") : String(m)) + ":" + String(s).padStart(2, "0");
 }
 
 function facetHref(q: SearchQuery, over: Partial<SearchQuery>): string {

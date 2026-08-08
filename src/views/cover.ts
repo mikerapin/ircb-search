@@ -1,5 +1,5 @@
 import { normalizeSeries } from "../data/series";
-import { esc } from "../lib/html";
+import { esc, fmtDate, fmtRuntime } from "../lib/html";
 
 /* The generated trade-dress cover: a plate that needs no artwork. Real cover images are
    post-launch, so every comic mention prints its own. Ported from the prototype. */
@@ -49,6 +49,21 @@ export function cover(title: string, extraClass: string, seed: string | null, no
     `<span class="gc-rule"></span>` +
     `<span class="gc-pub">${PUBS[h % PUBS.length]}</span>` +
     `<span class="gc-no">${esc(noLabel ?? num(title, /^\d{4}$/.test(String(seed)) ? String(seed) : null))}</span>` +
+  `</span>`;
+}
+
+/* Publishers have a name for a cover with no art on it: the blank variant. */
+export function blankVariant(e: { date: string | null; key: string; runtimeSecs: number | null }): string {
+  const yr = (e.date ?? "").slice(0, 4);
+  const f = plateFor(yr || e.key || "x");
+  const d = e.date ? fmtDate(e.date).replace(",", "") : "Date unknown";
+  return `<span class="gc blank" style="--gc-f:${f[0]};--gc-t:${f[1]}" aria-hidden="true">` +
+    `<span class="gc-screen"></span>` +
+    `<span class="bv-wm">I Read Comic Books</span>` +
+    `<span class="bv-d">${esc(d)}</span>` +
+    `<span class="gc-rule"></span>` +
+    `<span class="gc-pub">No artwork on file</span>` +
+    `<span class="gc-no">${esc(fmtRuntime(e.runtimeSecs) || "Blank")}</span>` +
   `</span>`;
 }
 
