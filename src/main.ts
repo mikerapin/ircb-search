@@ -18,6 +18,7 @@ import { fail, initChrome, renderShell, setSearchBox, setView } from "./shell";
 import { fitPlates } from "./views/cover";
 import { viewEpisode } from "./views/episode";
 import { viewHome } from "./views/home";
+import { viewPanel } from "./views/panel";
 import { viewPanelist } from "./views/panelist";
 import { viewSearch } from "./views/search";
 import { viewIndex } from "./views/index-view";
@@ -50,7 +51,10 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       const v = await viewSeries(rest);
       return [v.html, "The Run", v.after];
     }
-    case "panel": return [stub("The Panel", "Panelists & guests"), "The Panel"];
+    case "panel": {
+      const v = await viewPanel();
+      return [v.html, "The Panel", v.after];
+    }
     case "index": {
       const v = await viewIndex();
       return [v.html, "The Index", v.after];

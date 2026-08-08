@@ -307,6 +307,8 @@ html[data-neg] .sh .shh{color:#14120F}
 .pblock .por img{width:100%; height:100%; object-fit:contain; object-position:bottom}
 .pblock .nm{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase;
   font-size:13px; letter-spacing:.02em; padding:8px 9px 4px; line-height:1.1}
+/* Colour, not opacity: element opacity on 11.5px text compounds and drops it under AA. */
+.pblock .tag{padding:0 9px 6px; font-size:11.5px; line-height:1.35; color:color-mix(in srgb, var(--ink) 78%, transparent)}
 .pblock .st{padding:0 9px 9px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; opacity:.7; margin-top:auto}
 .pblock:hover{text-decoration:none; background:var(--yellow); color:#14120F}
 .pblock:hover .por{background:var(--yellow)}
@@ -433,6 +435,8 @@ html[data-neg] .big-play:hover{color:#14120F}
 .statline{font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
   border-top:var(--rule) solid var(--ink); border-bottom:var(--rule) solid var(--ink); padding:8px 0; line-height:1.7}
 .statline b{font-size:14px}
+/* An aside inside the stat line drops out of the all-caps run without dropping out of AA. */
+.statline .note{font-weight:400; text-transform:none; letter-spacing:0; color:color-mix(in srgb, var(--ink) 72%, transparent)}
 
 /* two-column layout (search results, panelist page) */
 .split{display:grid; grid-template-columns:1fr; gap:var(--sec) var(--gut); padding:0 var(--pad); align-items:start}
@@ -494,10 +498,11 @@ html[data-neg] .azbar a:hover,.azbar button:hover{color:#14120F}
 @media(min-width:1000px){ .azgrid{columns:3} }
 @media(min-width:1300px){ .azgrid{columns:4} }
 .azsec{break-inside:avoid-column; margin-bottom:16px; border:var(--rule) solid var(--ink); background:var(--paper)}
-.azsec>h2{margin:0; background:var(--ink); color:var(--paper); font-family:var(--disp);
+/* h2 on the Index, h3 on the panel directory — there the buckets sit inside a "Guests" section. */
+.azsec>h2,.azsec>h3{margin:0; background:var(--ink); color:var(--paper); font-family:var(--disp);
   font-variation-settings:"wdth" 125,"wght" 900; font-size:15px; padding:4px 9px; display:flex; scroll-margin-top:170px}
-html[data-neg] .azsec>h2{color:#14120F}
-.azsec>h2 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
+html[data-neg] .azsec>h2,html[data-neg] .azsec>h3{color:#14120F}
+.azsec>h2 span,.azsec>h3 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
 .azrow{display:flex; gap:8px; align-items:baseline; padding:2px 9px; font-size:12.5px; color:var(--ink); line-height:1.35}
 .azrow:nth-child(odd){background:var(--paper-2)}
 .azrow .nm{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}

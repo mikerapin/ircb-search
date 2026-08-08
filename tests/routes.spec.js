@@ -36,6 +36,7 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
     ["panelist", "/#/who/Kara%20Szamborski"],
     ["panelist alias", "/#/who/Danny%20Martinez"],
     ["panelist missing", "/#/who/Nobody%20At%20All"],
+    ["panel", "/#/panel"],
     ["about", "/#/about"],
   ];
 
@@ -58,7 +59,7 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
 
 test("no route renders a dead link", async ({ page }) => {
   const { ep } = await sampleKeys(page);
-  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/index", "/#/who/Mike%20Rapin", "/#/about"];
+  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/index", "/#/who/Mike%20Rapin", "/#/panel", "/#/about"];
   const dead = [];
   for (const path of routes) {
     await page.goto(path);
@@ -74,7 +75,7 @@ test("no route renders a dead link", async ({ page }) => {
 
 test("no route leaks pre-launch process language", async ({ page }) => {
   const { ep } = await sampleKeys(page);
-  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga"];
+  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/panel"];
   const leaks = [];
   for (const path of routes) {
     await page.goto(path);

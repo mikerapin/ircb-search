@@ -1,27 +1,13 @@
 import { core, mentions as loadMentions } from "../data/load";
-import { seriesRows, type SeriesRow } from "../data/series-index";
+import { seriesRows } from "../data/series-index";
+import { azBuckets } from "../lib/az";
 import { esc, nf, pl } from "../lib/html";
 import { href } from "../router";
-
-interface Bucket { letter: string; rows: SeriesRow[] }
-
-function azBuckets(rows: SeriesRow[]): Bucket[] {
-  const by = new Map<string, SeriesRow[]>();
-  for (const r of rows) {
-    let ch = (r.name.match(/[A-Za-z0-9]/)?.[0] ?? "#").toUpperCase();
-    if (/[0-9]/.test(ch)) ch = "#";
-    let list = by.get(ch);
-    if (!list) by.set(ch, (list = []));
-    list.push(r);
-  }
-  for (const list of by.values()) list.sort((a, b) => a.name.localeCompare(b.name));
-  return [...by.keys()].sort().map(letter => ({ letter, rows: by.get(letter) ?? [] }));
-}
 
 export async function viewIndex(): Promise<{ html: string; after: () => void }> {
   const data = await core();
   const men = await loadMentions();
-  const buckets = azBuckets(seriesRows(men));
+  const buckets = azBuckets(seriesRows(men), r => r.name);
   const s = data.stats;
 
   const html =
