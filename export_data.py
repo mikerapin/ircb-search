@@ -40,28 +40,52 @@ _ITUNES_NS = "http://www.itunes.com/dtds/podcast-1.0.dtd"
 
 
 def build_rss_maps():
-    """Return ({url → player_uuid}, {url → summary}) extracted from the RSS feed."""
-    print("Fetching RSS feed for Simplecast player IDs and episode summaries...")
+    """Return {url → {player_id, summary, enclosure_url, artwork_url, duration_secs}} from RSS."""
+    print("Fetching RSS feed...")
     with urllib.request.urlopen(RSS_URL) as resp:
         rss_bytes = resp.read()
     tree = ET.fromstring(rss_bytes)
-    player_map = {}
-    summary_map = {}
+    rss = {}
     for item in tree.iter("item"):
         link_el = item.find("link")
-        if link_el is None:
+        if link_el is None or not link_el.text:
             continue
-        link = (link_el.text or "").split("?")[0].rstrip("/")
+        link = link_el.text.split("?")[0].rstrip("/")
+        rec = {"player_id": None, "summary": None, "enclosure_url": None,
+               "artwork_url": None, "duration_secs": None}
         enc_el = item.find("enclosure")
         if enc_el is not None:
-            m = _EPISODE_UUID_RE.search(enc_el.get("url", ""))
-            if m and link:
-                player_map[link] = m.group(1)
+            url = enc_el.get("url", "")
+            rec["enclosure_url"] = url or None
+            m = _EPISODE_UUID_RE.search(url)
+            if m:
+                rec["player_id"] = m.group(1)
         summary_el = item.find(f"{{{_ITUNES_NS}}}summary")
-        if summary_el is not None and summary_el.text and link:
-            summary_map[link] = summary_el.text.strip()
-    print(f"  → {len(player_map)} player IDs, {len(summary_map)} summaries extracted from RSS")
-    return player_map, summary_map
+        if summary_el is not None and summary_el.text:
+            rec["summary"] = summary_el.text.strip()
+        img_el = item.find(f"{{{_ITUNES_NS}}}image")
+        if img_el is not None:
+            rec["artwork_url"] = img_el.get("href") or None
+        dur_el = item.find(f"{{{_ITUNES_NS}}}duration")
+        if dur_el is not None and dur_el.text:
+            rec["duration_secs"] = _parse_duration(dur_el.text.strip())
+        rss[link] = rec
+    print(f"  → {len(rss)} RSS items mapped")
+    return rss
+
+
+def _parse_duration(s):
+    """'1:02:33' or '3753' → seconds, else None."""
+    try:
+        parts = [int(p) for p in s.split(":")]
+    except ValueError:
+        return None
+    if not parts:
+        return None
+    secs = 0
+    for p in parts:
+        secs = secs * 60 + p
+    return secs
 
 
 def export_comics():
@@ -102,15 +126,16 @@ def export_episodes():
     df = pd.read_excel(EPISODES_URL, engine="openpyxl")
     df = df[[c for c in EPISODE_COLS if c in df.columns]]
 
-    player_map, summary_map = build_rss_maps()
+    rss = build_rss_maps()
 
-    def lookup_rss(url, rss_map):
+    def rss_field(url, field):
         if not url or isinstance(url, float):
             return None
-        return rss_map.get(str(url).split("?")[0].rstrip("/"))
+        rec = rss.get(str(url).split("?")[0].rstrip("/"))
+        return rec[field] if rec else None
 
-    df["player_id"] = df["simplecast_url"].apply(lambda u: lookup_rss(u, player_map))
-    df["summary"]   = df["simplecast_url"].apply(lambda u: lookup_rss(u, summary_map))
+    for field in ("player_id", "summary", "enclosure_url", "artwork_url", "duration_secs"):
+        df[field] = df["simplecast_url"].apply(lambda u, f=field: rss_field(u, f))
     matched = df["player_id"].notna().sum()
     print(f"  → {matched}/{len(df)} episodes matched to a Simplecast player ID")
 
