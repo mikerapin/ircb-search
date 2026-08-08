@@ -15,6 +15,7 @@ import { go, onRoute, type Route } from "./router";
 import { fail, renderShell, setSearchBox, setView } from "./shell";
 import { viewHome } from "./views/home";
 import { viewSearch } from "./views/search";
+import { initTypeahead } from "./search/typeahead";
 import type { CoreData } from "./data/types";
 
 /** Placeholder for routes whose real view lands in a later plan. */
@@ -43,15 +44,21 @@ async function view(r: Route, data: CoreData): Promise<[html: string, label: str
   }
 }
 
-core().then(data => {
-  document.getElementById("sform")?.addEventListener("submit", ev => {
-    ev.preventDefault();
-    const q = (document.getElementById("q") as HTMLInputElement | null)?.value.trim() ?? "";
-    go("/search", { q });
-  });
+/* The search band is in the static markup, so it has to work from the first frame — wiring
+   it behind core() left `/` and the search box dead until the data landed. The typeahead
+   loads its own chunks and falls back to static suggestions until they arrive. */
+document.getElementById("sform")?.addEventListener("submit", ev => {
+  ev.preventDefault();
+  const q = (document.getElementById("q") as HTMLInputElement | null)?.value.trim() ?? "";
+  go("/search", { q });
+});
+const box = document.getElementById("q");
+if (box instanceof HTMLInputElement) initTypeahead(box);
 
+core().then(data => {
   // Views load their own chunks, so a slow route must not paint over a newer one.
   let token = 0;
+
   onRoute(r => {
     const mine = ++token;
     setSearchBox(r.seg[0] === "search" ? (r.qs.get("q") ?? "") : "");
