@@ -1,5 +1,5 @@
 import type { EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, fmtRuntime, pl } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, pl, simplecastAt } from "../lib/html";
 import { jumpable } from "../search/engine";
 import { cover, num } from "./cover";
 import { href } from "../router";
@@ -59,12 +59,10 @@ export function firstNames(people: string[]): string {
 
 /** Shared by search results and the episode read-along. */
 export function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
-  const can = jumpable(m, ep);
   const yr = ep?.date ? ep.date.slice(0, 4) : null;
   const noLab = num(m.comic, null) === "—" && yr ? yr : null;
   const seriesLink = href("/series/" + encodeURIComponent(m.series));
   const epLink = href("/ep/" + encodeURIComponent(m.epKey));
-  const stamp = m.secs == null ? "" : fmtStamp(m.secs);
   return `<article class="panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}">` +
     `<a class="gcwrap" href="${seriesLink}" style="container-type:inline-size;display:block" aria-label="Every mention of ${esc(m.series)}">` +
       cover(m.comic, "", yr, noLab) +
@@ -77,9 +75,7 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
         `${ep?.people.length ? " · " + esc(firstNames(ep.people)) : ""}</div>` +
       (m.segment ? `<span class="seg" title="${esc(m.segment)}">${esc(m.segment)}</span>` : "") +
       `<div class="spacer"></div>` +
-      (can
-        ? `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(stamp)}<span class="lab">Jump</span></a>`
-        : `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`) +
+      playAffordance(m, ep) +
     `</div>` +
   `</article>`;
 }
@@ -95,4 +91,26 @@ export function fmtStamp(secs: number | null): string {
 export function emptyState(title: string, message: string, linkHref: string, linkText: string): string {
   return `<div class="pagehead"><span class="eyebrow">Not in the index</span><h1 class="disp">${esc(title)}</h1></div>` +
     `<div class="empty">${esc(message)} <a href="${linkHref}">${esc(linkText)}</a></div>`;
+}
+
+/**
+ * The one place a play affordance is built. Plan 3 replaces the body of this function with
+ * the Jump Cut player; every read-along layout and the search plates go through it, so the
+ * swap is one function rather than a sweep.
+ */
+export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: { label?: string }): string {
+  const epLink = href("/ep/" + encodeURIComponent(m.epKey));
+  const label = opts?.label ?? "Jump";
+  if (!jumpable(m, ep)) {
+    return `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`;
+  }
+  /* Point at the minute itself. Linking back to the episode page did nothing at all when
+     the reader was already on it — the whole affordance was a no-op there. */
+  const at = simplecastAt(ep?.simplecastUrl ?? null, m.secs);
+  if (!at) {
+    return `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">Open</span></a>`;
+  }
+  return `<a class="ts" href="${esc(at)}" target="_blank" rel="noopener noreferrer"` +
+    ` aria-label="Play ${esc(m.comic)} at ${esc(fmtRuntime(m.secs))} on Simplecast">` +
+    `<span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">${label}</span></a>`;
 }

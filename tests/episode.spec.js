@@ -120,3 +120,42 @@ test("episode page is axe clean with no console errors", async ({ page }) => {
   expect(axe.violations).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test("the jump link opens the actual minute, not the page you are already on", async ({ page }) => {
+  await openNewestEpisode(page);
+  const jump = page.locator("#readalong a.ts").first();
+  await expect(jump).toBeVisible();
+  const href = await jump.getAttribute("href");
+  // Linking back to #/ep/:key was a no-op for a reader already on the episode page.
+  expect(href).not.toMatch(/^#\/ep\//);
+  expect(href).toMatch(/^https:\/\/[a-z.]*simplecast\.com\/.*[?&]t=\d\dh\d\dm\d\ds/);
+  await expect(jump).toHaveAttribute("target", "_blank");
+  await expect(jump).toHaveAttribute("rel", /noopener/);
+});
+
+test("timestamp rows link to the minute too", async ({ page }) => {
+  await openNewestEpisode(page);
+  await page.getByRole("button", { name: "Timestamps" }).click();
+  const playable = page.locator("#readalong .ra-row").filter({ hasText: "Play" }).first();
+  if (await playable.count()) {
+    expect(await playable.getAttribute("href")).toMatch(/simplecast\.com\/.*[?&]t=/);
+  }
+});
+
+test("a full-episode play control sits above the Simplecast link", async ({ page }) => {
+  await openNewestEpisode(page);
+  const play = page.locator(".meta .big-play");
+  await expect(play).toBeVisible();
+  await expect(play).toHaveText(/Play from the top/);
+  const order = await page.evaluate(() => {
+    const meta = document.querySelector(".meta");
+    const kids = [...meta.children];
+    return {
+      play: kids.findIndex(k => k.classList.contains("big-play")),
+      links: kids.findIndex(k => k.classList.contains("linkrow")),
+      tags: kids.findIndex(k => k.classList.contains("tags")),
+    };
+  });
+  expect(order.play).toBeGreaterThan(order.tags);
+  expect(order.play).toBeLessThan(order.links);
+});

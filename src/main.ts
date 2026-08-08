@@ -78,6 +78,17 @@ export function refitPlates(root: ParentNode = document): void {
   requestAnimationFrame(() => fitPlates(root));
 }
 if (document.fonts) void document.fonts.ready.then(() => fitPlates(document));
+
+/* Anything else that sticks has to sit flush under the header, and the header's height
+   changes with viewport width and font loading. Hardcoding it left a strip of page
+   scrolling through the gap. Measure it and let CSS read it. */
+const dress = document.querySelector(".dress");
+if (dress) {
+  const publish = (): void =>
+    document.documentElement.style.setProperty("--dress-h", Math.round(dress.getBoundingClientRect().height) + "px");
+  publish();
+  new ResizeObserver(publish).observe(dress);
+}
 let resizeTimer = 0;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);

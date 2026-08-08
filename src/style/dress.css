@@ -443,7 +443,7 @@ html[data-neg] .big-play:hover{color:#14120F}
 @media(min-width:640px){ .split .panels{grid-template-columns:repeat(2,1fr)} }
 @media(min-width:1240px){ .split .panels{grid-template-columns:repeat(3,1fr)} }
 .rail{display:flex; flex-direction:column; gap:var(--gut)}
-@media(min-width:980px){ .rail{position:sticky; top:132px} }
+@media(min-width:980px){ .rail{position:sticky; top:calc(var(--dress-h,118px) + 14px)} }
 .railbox{border:var(--rule) solid var(--ink); background:var(--paper)}
 .railbox .rh{background:var(--ink); color:var(--paper); padding:5px 10px; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:700}
 html[data-neg] .railbox .rh{color:#14120F}
@@ -483,12 +483,12 @@ html[data-neg] .checklist .hd{color:#14120F}
 .nomin:hover{color:var(--blue)}
 
 /* the index: Overstreet price-guide density */
-.azbar{display:flex; flex-wrap:wrap; gap:4px; padding:0 var(--pad) 18px; position:sticky; top:118px; z-index:20;
+.azbar{display:flex; flex-wrap:wrap; gap:4px; padding:10px var(--pad) 12px; position:sticky; top:var(--dress-h,118px); z-index:20;
   background:var(--paper); padding-top:10px; border-bottom:var(--rule) solid var(--ink); margin-bottom:20px}
-.azbar a{border:1.5px solid var(--ink); min-width:30px; text-align:center; padding:5px 6px; font-size:11px;
+.azbar a,.azbar button{border:1.5px solid var(--ink); min-width:30px; text-align:center; padding:5px 6px; font-size:11px;
   font-weight:800; color:var(--ink); font-family:var(--disp); text-transform:uppercase}
-.azbar a:hover{background:var(--ink); color:var(--paper); text-decoration:none}
-html[data-neg] .azbar a:hover{color:#14120F}
+.azbar a:hover,.azbar button:hover{background:var(--ink); color:var(--paper); text-decoration:none}
+html[data-neg] .azbar a:hover,.azbar button:hover{color:#14120F}
 .azgrid{padding:0 var(--pad); columns:1; column-gap:var(--gut)}
 @media(min-width:600px){ .azgrid{columns:2} }
 @media(min-width:1000px){ .azgrid{columns:3} }

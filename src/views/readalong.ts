@@ -1,8 +1,11 @@
 import type { EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, nf, pl, simplecastAt } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
-import { mentionPanel } from "./components";
+import { mentionPanel, playAffordance } from "./components";
+
+// Re-exported so the episode page and Plan 3 have one obvious import site.
+export { playAffordance };
 
 export type RaMode = "strip" | "stack" | "list";
 
@@ -30,19 +33,6 @@ export function raToggle(): string {
   `</div>`;
 }
 
-/**
- * The one place a play affordance is built. Plan 3 replaces the body of this function with
- * the Jump Cut player; every read-along layout and the search plates go through it, so the
- * swap is one function rather than a sweep.
- */
-export function playAffordance(m: Mention, ep: EpisodeCore | undefined): string {
-  const epLink = href("/ep/" + encodeURIComponent(m.epKey));
-  if (!jumpable(m, ep)) {
-    return `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`;
-  }
-  return `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">Jump</span></a>`;
-}
-
 function raListRow(m: Mention, ep: EpisodeCore | undefined): string {
   const can = jumpable(m, ep);
   const meta = [m.segment, ep?.date ? fmtDate(ep.date) : null].filter(Boolean).join(" · ");
@@ -50,7 +40,10 @@ function raListRow(m: Mention, ep: EpisodeCore | undefined): string {
     `<span class="t${can ? "" : " none"}">${can ? esc(fmtRuntime(m.secs)) : "—:——"}</span>` +
     `<span><span class="cm">${esc(m.comic)}</span>${meta ? `<span class="mt">${esc(meta)}</span>` : ""}</span>` +
     `<span class="cue">${can ? "▶ Play" : "Open →"}</span>`;
-  return `<div class="rawrap"><a class="ra-row" href="${href("/ep/" + encodeURIComponent(m.epKey))}">${body}</a></div>`;
+  const at = can ? simplecastAt(ep?.simplecastUrl ?? null, m.secs) : null;
+  const dest = at ?? href("/ep/" + encodeURIComponent(m.epKey));
+  const ext = at ? ` target="_blank" rel="noopener noreferrer"` : "";
+  return `<div class="rawrap"><a class="ra-row" href="${esc(dest)}"${ext}>${body}</a></div>`;
 }
 
 export function readAlong(
