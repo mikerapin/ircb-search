@@ -103,7 +103,7 @@ export function jumpCut(
   key: string,
   secs: number,
   comic: string | null,
-  opts?: { until?: number | null; autoplay?: boolean },
+  opts?: { until?: number | null; autoplay?: boolean; seek?: boolean },
 ): void {
   const e = lookup(key);
   if (!e?.enclosure) return;
@@ -112,10 +112,12 @@ export function jumpCut(
   const slot = panel.querySelector(".cutslot");
   if (!slot) return;
   const autoplay = opts?.autoplay !== false;
+  const seek = opts?.seek !== false;
   const until = opts?.until ?? readUntil(panel);
   slot.innerHTML = playerHTML(secs, e.runtimeSecs, comic ?? e.title, autoplay);
   panel.classList.add("playing");
   play = { key, comic, panel, until };
+  if (!seek && au.dataset["ep"] === key) { paintBar(); return; }   // same tape, already rolling
   seekPending = true;
 
   if (au.dataset["ep"] !== key) {
@@ -154,17 +156,42 @@ function advanceAtBoundary(): void {
   const panel = play.panel;
   if (!panel || play.until == null || au.currentTime < play.until) return;
 
-  au.pause();
   const root = panel.closest("#readalong, .checklist, .ra-list, .ra-strip, .ra-stack");
   const next = root ? nextPanelAfter(root, panel) : null;
-  if (!next) { paintBar(); return; }
+  if (!next) {
+    if (!continuous) au.pause();          // last segment: stopping is the whole point
+    play = { ...play, until: null };      // ...and don't re-fire on every tick
+    paintBar();
+    return;
+  }
 
   const key = next.dataset["ep"];
   const secs = Number(next.dataset["secs"]);
-  if (!key || !Number.isFinite(secs)) { paintBar(); return; }
-  // Opened, seeked and waiting — the reader decides whether to keep going.
-  jumpCut(next, key, secs, next.dataset["comic"] ?? null, { autoplay: false });
+  if (!key || !Number.isFinite(secs)) { play = { ...play, until: null }; return; }
+
+  if (continuous) {
+    /* Already sitting exactly on the next segment's first second, so re-seeking there would
+       only stutter. Move the player, leave the tape running. */
+    jumpCut(next, key, secs, next.dataset["comic"] ?? null, { autoplay: true, seek: false });
+  } else {
+    au.pause();
+    // Opened, seeked and waiting — the reader decides whether to keep going.
+    jumpCut(next, key, secs, next.dataset["comic"] ?? null, { autoplay: false });
+  }
   next.scrollIntoView({ block: "nearest" });
+}
+
+const ROLL_KEY = "ircb.letitroll";
+let continuous = false;
+
+/** Off by default: a jump lands on one comic and stops there unless the reader says otherwise. */
+export function isContinuous(): boolean {
+  return continuous;
+}
+
+export function setContinuous(on: boolean): void {
+  continuous = on;
+  try { localStorage.setItem(ROLL_KEY, on ? "1" : "0"); } catch { /* private mode */ }
 }
 
 function nextPanelAfter(root: Element, panel: HTMLElement): HTMLElement | null {
@@ -189,6 +216,7 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
   if (!(found instanceof HTMLAudioElement)) return;
   au = found;
   bar = el("minibar");
+  try { continuous = localStorage.getItem(ROLL_KEY) === "1"; } catch { /* private mode */ }
 
   au.addEventListener("seeked", () => { seekPending = false; });
   au.addEventListener("play", paintBar);

@@ -705,3 +705,16 @@ html[data-neg] .chip:hover{color:#14120F}
 
 /* Links inside a sentence need more than hue to be findable. */
 .statline a,.lead a{text-decoration:underline; text-underline-offset:2px}
+
+/* Read-along: keep-rolling opt-in. Matches the .togg group it sits beside — ink rule,
+   paper ground, no invented widget. */
+.roll{display:inline-flex; align-items:center; gap:7px; border:var(--rule) solid var(--ink);
+  background:var(--paper); padding:5px 9px; min-height:34px; cursor:pointer;
+  font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; white-space:nowrap}
+.roll:hover{background:var(--yellow)}
+html[data-neg] .roll:hover{color:#14120F}
+.roll input{appearance:none; width:14px; height:14px; margin:0; flex:0 0 auto;
+  border:var(--rule) solid var(--ink); background:var(--paper); display:grid; place-content:center; cursor:pointer}
+.roll input:checked{background:var(--red-deep)}
+.roll input:checked::after{content:""; width:6px; height:6px; background:var(--paper)}
+.roll input:focus-visible{outline:3px solid var(--blue); outline-offset:2px}

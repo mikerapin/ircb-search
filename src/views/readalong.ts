@@ -2,6 +2,7 @@ import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, nf, pl, simplecastAt } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
+import { isContinuous, setContinuous } from "../audio/engine";
 import { mentionPanel, playAffordance } from "./components";
 
 // Re-exported so the episode page and Plan 3 have one obvious import site.
@@ -77,8 +78,21 @@ export function readAlong(
   return `<div class="${cls}">${mentions.map((m, i) => mentionPanel(m, byKey.get(m.epKey), { until: boundary(mentions, i) })).join("")}</div>`;
 }
 
+/**
+ * Off by default: a jump lands on one comic and stops there. Ticking this keeps the tape
+ * running past each boundary while the player still walks to the next comic.
+ */
+export function rollToggle(): string {
+  const on = isContinuous();
+  return `<label class="roll"><input type="checkbox" data-act="roll"${on ? " checked" : ""}>` +
+    `<span>Let it roll</span></label>`;
+}
+
 /** Wires the layout toggle. `onChange` re-renders the block in the new mode. */
 export function wireReadAlong(root: ParentNode, onChange: () => void): void {
+  const roll = root.querySelector<HTMLInputElement>('[data-act="roll"]');
+  roll?.addEventListener("change", () => setContinuous(roll.checked));
+
   for (const btn of root.querySelectorAll<HTMLButtonElement>('[data-act="ra"]')) {
     btn.addEventListener("click", () => {
       const mode = btn.dataset["ra"];

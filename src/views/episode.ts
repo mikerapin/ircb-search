@@ -6,7 +6,7 @@ import { href } from "../router";
 import { subscribeCoupon } from "./blocks";
 import { emptyState, episodePanel, priceBox, sfx } from "./components";
 import { blankVariant, fitPlates } from "./cover";
-import { raToggle, readAlong, wireReadAlong } from "./readalong";
+import { raToggle, readAlong, rollToggle, wireReadAlong } from "./readalong";
 
 /** Shared books count triple; a shared panelist counts once. */
 function related(ep: EpisodeCore, episodes: EpisodeCore[], byEp: Map<string, Mention[]>): EpisodeCore[] {
@@ -99,8 +99,8 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
 
   const raSection = (): string =>
     `<div class="sec-head"><h2 class="disp">Read Along</h2>
-      <div class="tools">${raToggle()}</div>
-      <span class="note">In broadcast order · your layout choice is remembered across the site</span></div>` +
+      <div class="tools">${raToggle()}${rollToggle()}</div>
+      <span class="note">In broadcast order · a jump stops at the next comic unless you let it roll</span></div>` +
     readAlong(mine, byKey, { episodes: data.stats.episodes, indexed: data.stats.indexedEpisodes });
 
   const html = head +
