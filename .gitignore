@@ -28,3 +28,4 @@ playwright/.auth/
 
 # Vite build output
 dist/
+public/d/
