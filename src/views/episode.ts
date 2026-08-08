@@ -4,7 +4,7 @@ import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { subscribeCoupon } from "./blocks";
-import { episodePanel, priceBox, sfx } from "./components";
+import { emptyState, episodePanel, priceBox, sfx } from "./components";
 import { blankVariant, fitPlates } from "./cover";
 import { raToggle, readAlong, wireReadAlong } from "./readalong";
 
@@ -38,7 +38,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   const ep = data.episodes.find(e => e.key === key);
   if (!ep) {
     return {
-      html: crumb() + `<div class="empty">No episode by that id in the index. <a href="${href("/")}">Back to the cover</a></div>`,
+      html: crumb() + emptyState("Episode not found", "No episode by that id in the index.", href("/"), "Back to the cover"),
       after: () => {},
     };
   }

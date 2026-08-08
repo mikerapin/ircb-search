@@ -95,6 +95,7 @@ test("an unknown episode key says so instead of rendering blank", async ({ page 
   await page.goto("/#/ep/not-a-real-key");
   await expect(page.locator(".empty")).toContainText(/No episode by that id/);
   await expect(page.locator(".empty a")).toHaveAttribute("href", "#/");
+  await expect(page.locator(".pagehead h1")).toHaveText("Episode not found");
 });
 
 test("an episode with no artwork gets a blank variant plate", async ({ page }) => {

@@ -66,7 +66,7 @@ html[data-neg] .menu .mh{color:#14120F}
 }
 html[data-neg] .blurb input,html[data-neg] .blurb input::placeholder{color:#14120F}
 html[data-neg] .blurb .go{background:#14120F; color:var(--yellow)}
-.slash{padding:0 10px; font-size:10px; letter-spacing:.1em; font-weight:700; color:#14120F; opacity:.5; white-space:nowrap}
+.slash{padding:0 10px; font-size:10px; letter-spacing:.1em; font-weight:700; color:#14120F; color:color-mix(in srgb, var(--ink) 70%, transparent); white-space:nowrap}
 @media(max-width:640px){ .slash{display:none} }
 
 /* ---------- typeahead popover (A2 pattern, Indicia dress) ---------- */
@@ -374,10 +374,10 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 }
 .ra-row .t{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; font-size:13px;
   color:var(--blue); font-feature-settings:"tnum"; letter-spacing:.03em}
-.ra-row .t.none{color:var(--ink); opacity:.45}
+.ra-row .t.none{color:var(--ink); color:color-mix(in srgb, var(--ink) 70%, transparent)}
 .ra-row .cm{display:block; font-size:15px; font-weight:600; line-height:1.3; overflow-wrap:anywhere}
 .ra-row .mt{display:block; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; opacity:.62; margin-top:3px}
-.ra-row .cue{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; opacity:.55; white-space:nowrap}
+.ra-row .cue{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:color-mix(in srgb, var(--ink) 72%, transparent); white-space:nowrap}
 .ra-row:hover{background:var(--yellow); color:#14120F; text-decoration:none}
 .ra-row:hover .t,.ra-row:hover .cue{color:#14120F; opacity:.85}
 .ra-row.on{background:var(--ink); color:var(--paper)}
@@ -473,11 +473,14 @@ html[data-neg] .checklist .hd{color:#14120F}
 .clrow:nth-child(even){background:var(--paper-2)}
 .clrow .t{min-width:0}
 .clrow .t .cm{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase; font-size:13.5px; line-height:1.15}
-.clrow .t .ep{font-size:11.5px; opacity:.75; margin-top:3px}
+/* Alpha on colour, not element opacity: opacity dims the nested episode link too, and no
+   blue is distinguishable from muted ink by hue alone — hence the underline. */
+.clrow .t .ep{font-size:11.5px; color:color-mix(in srgb, var(--ink) 82%, transparent); margin-top:3px}
+.clrow .t .ep a{text-decoration:underline; text-underline-offset:2px}
 .clrow .ts{width:auto; min-height:42px; flex:0 0 auto}
-.nomin{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; opacity:.45;
+.nomin{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; color:color-mix(in srgb, var(--ink) 78%, transparent);
   color:var(--ink); white-space:nowrap; padding:6px 2px; display:inline-block}
-.nomin:hover{opacity:.85; color:var(--blue)}
+.nomin:hover{color:var(--blue)}
 
 /* the index: Overstreet price-guide density */
 .azbar{display:flex; flex-wrap:wrap; gap:4px; padding:0 var(--pad) 18px; position:sticky; top:118px; z-index:20;
@@ -498,7 +501,7 @@ html[data-neg] .azsec>h3{color:#14120F}
 .azrow{display:flex; gap:8px; align-items:baseline; padding:2px 9px; font-size:12.5px; color:var(--ink); line-height:1.35}
 .azrow:nth-child(odd){background:var(--paper-2)}
 .azrow .nm{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.azrow .n{margin-left:auto; font-size:11px; font-weight:700; opacity:.55; font-feature-settings:"tnum"; flex:0 0 auto}
+.azrow .n{margin-left:auto; font-size:11px; font-weight:700; color:color-mix(in srgb, var(--ink) 72%, transparent); font-feature-settings:"tnum"; flex:0 0 auto}
 .azrow:hover{background:var(--yellow); color:#14120F; text-decoration:none}
 
 /* ---------- bars (co-panelists) ---------- */
@@ -681,7 +684,7 @@ html[data-neg] #minibar.paused .pp{color:#14120F; border-color:#14120F}
   text-transform:uppercase; background:var(--paper); color:var(--ink); min-height:38px; display:inline-flex; align-items:center; gap:7px}
 .chip:hover{background:var(--blue); color:var(--paper); text-decoration:none}
 html[data-neg] .chip:hover{color:#14120F}
-.chip .n{opacity:.55; font-weight:800; font-feature-settings:"tnum"}
+.chip .n{color:color-mix(in srgb, var(--ink) 72%, transparent); font-weight:800; font-feature-settings:"tnum"}
 .kv{display:grid; grid-template-columns:1fr; gap:0; border:var(--rule) solid var(--ink); margin:0 var(--pad)}
 .kv>div{display:grid; grid-template-columns:1fr; gap:2px; padding:11px 12px; border-top:var(--rule) solid var(--ink)}
 .kv>div:first-child{border-top:0}
@@ -696,3 +699,6 @@ html[data-neg] .chip:hover{color:#14120F}
    ink and were distinguishable by colour alone. Underlining them is the smallest
    fix that does not touch the locked palette. */
 .indicia a{text-decoration:underline; text-underline-offset:2px}
+
+/* The not-found link sits inside a sentence, so hue alone will not distinguish it. */
+.empty a{text-decoration:underline; text-underline-offset:2px}

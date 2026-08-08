@@ -87,3 +87,12 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined): string {
 export function fmtStamp(secs: number | null): string {
   return secs == null ? "" : fmtRuntime(secs);
 }
+
+/**
+ * The honest not-found state. Carries its own h1 so the page has a heading, and its link
+ * is underlined — blue on paper is not distinguishable from body text by hue alone.
+ */
+export function emptyState(title: string, message: string, linkHref: string, linkText: string): string {
+  return `<div class="pagehead"><span class="eyebrow">Not in the index</span><h1 class="disp">${esc(title)}</h1></div>` +
+    `<div class="empty">${esc(message)} <a href="${linkHref}">${esc(linkText)}</a></div>`;
+}
