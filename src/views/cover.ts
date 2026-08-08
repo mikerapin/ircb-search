@@ -74,9 +74,12 @@ export function fitPlates(root: ParentNode): void {
     for (const t of (el.textContent ?? "").split(/[\s/]+/)) {
       if (!t) continue;
       probe.textContent = t;
-      widest = Math.max(widest, probe.offsetWidth);
+      // Fractional width: offsetWidth rounds to an integer, so a word that is really
+      // 106.4px wide in a 106px box measures as exactly fitting and then wraps mid-word.
+      widest = Math.max(widest, probe.getBoundingClientRect().width);
     }
-    if (widest > avail) { size = Math.max(7, size * (avail / widest) * 0.99); el.style.fontSize = size + "px"; }
+    const room = avail - 1;                       // leave a pixel rather than land on the boundary
+    if (widest > room) { size = Math.max(7, size * (room / widest)); el.style.fontSize = size + "px"; }
     const maxH = plate.clientHeight * 0.78 - el.offsetTop;
     for (let i = 0; i < 8 && el.scrollHeight > maxH && size > 7; i++) { size *= 0.9; el.style.fontSize = size + "px"; }
   }

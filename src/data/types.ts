@@ -19,4 +19,6 @@ export interface Mention { comic: string; series: string; epKey: string; segment
 
 export interface Stats { episodes: number; mentions: number; series: number; indexedEpisodes: number; people: number }
 
-export interface CoreData { stats: Stats; episodes: EpisodeCore[] }
+export interface PatreonSeries { pattern: string; name: string; url: string }
+
+export interface CoreData { stats: Stats; episodes: EpisodeCore[]; patreonSeries: PatreonSeries[] }

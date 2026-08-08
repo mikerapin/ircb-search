@@ -18,9 +18,10 @@ if (keys.size !== eps.length) {
   throw new Error(`duplicate episode keys: ${[...new Set(dupes)].slice(0, 5).join(", ")}`);
 }
 
+const patreonSeries = JSON.parse(readFileSync("data/patreon-series.json", "utf8"));
 const stats = shape.buildStats(eps, men);
 mkdirSync("public/d", { recursive: true });
-writeFileSync("public/d/core.json", JSON.stringify({ stats, episodes: eps }));
+writeFileSync("public/d/core.json", JSON.stringify({ stats, episodes: eps, patreonSeries }));
 writeFileSync("public/d/detail.json", JSON.stringify(det));
 writeFileSync("public/d/mentions.json", JSON.stringify(men));
 await vite.close();

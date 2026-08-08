@@ -316,7 +316,7 @@ html[data-neg] .sh .shh{color:#14120F}
 .housead .hh{background:var(--red-deep); color:var(--paper); padding:9px 14px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
 html[data-neg] .housead .hh{color:#14120F}
 .housead .hh .k{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; text-transform:uppercase; font-size:clamp(18px,3.6vw,26px); line-height:1}
-.housead .hh .s{font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-left:auto; opacity:.9}
+.housead .hh .s{font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-left:auto}
 .housead .hb{padding:16px 14px; display:flex; flex-direction:column; gap:14px}
 .housead .hb p{margin:0; max-width:64ch}
 .adgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:var(--gut)}

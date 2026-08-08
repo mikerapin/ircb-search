@@ -13,6 +13,7 @@ import { core } from "./data/load";
 import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
 import { fail, renderShell, setSearchBox, setView } from "./shell";
+import { fitPlates } from "./views/cover";
 import { viewHome } from "./views/home";
 import { viewSearch } from "./views/search";
 import { initTypeahead } from "./search/typeahead";
@@ -25,7 +26,9 @@ function stub(title: string, note: string): string {
   </section>`;
 }
 
-async function view(r: Route, data: CoreData): Promise<[html: string, label: string]> {
+type ViewResult = [html: string, label: string, after?: () => void];
+
+async function view(r: Route, data: CoreData): Promise<ViewResult> {
   const [head, rest] = [r.seg[0], r.seg[1] ?? ""];
   switch (head) {
     case "search": return [await viewSearch(r.qs), "The Page"];
@@ -40,7 +43,10 @@ async function view(r: Route, data: CoreData): Promise<[html: string, label: str
     case "about": return [stub("About the Data", "What is indexed"), "About the Data"];
     case "subscribe": return [stub("Subscribe", "& Patreon"), "Subscribe"];
     case "wall": return [stub("The Wall", `All ${nf(data.stats.episodes)} episodes`), "The Wall"];
-    default: return [await viewHome(), "EP. " + data.stats.episodes];
+    default: {
+      const h = await viewHome();
+      return [h.html, "EP. " + data.stats.episodes, h.after];
+    }
   }
 }
 
@@ -55,6 +61,19 @@ document.getElementById("sform")?.addEventListener("submit", ev => {
 const box = document.getElementById("q");
 if (box instanceof HTMLInputElement) initTypeahead(box);
 
+/* Generated plates size their own titles to fit, so the measurement has to happen with the
+   real font metrics and a settled layout — measuring once at paint time sized them against
+   fallback metrics and broke long words mid-word ("FANTASTI / C FOUR"). */
+export function refitPlates(root: ParentNode = document): void {
+  requestAnimationFrame(() => fitPlates(root));
+}
+if (document.fonts) void document.fonts.ready.then(() => fitPlates(document));
+let resizeTimer = 0;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => fitPlates(document), 180);
+});
+
 // The search band and `/` only work once this module has run, which is later than `load`
 // on a cold start. Marks the moment the interactive handlers exist.
 document.body.dataset["ready"] = "1";
@@ -66,10 +85,11 @@ core().then(data => {
   onRoute(r => {
     const mine = ++token;
     setSearchBox(r.seg[0] === "search" ? (r.qs.get("q") ?? "") : "");
-    void view(r, data).then(([html, label]) => {
+    void view(r, data).then(([html, label, after]) => {
       if (mine !== token) return;
       setView(html, label);
       renderShell(data.stats);
+      after?.();
     });
   });
 }).catch((err: unknown) => {
