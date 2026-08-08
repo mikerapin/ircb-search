@@ -703,11 +703,7 @@ html[data-neg] .chip:hover{color:#14120F}
    fix that does not touch the locked palette. */
 .indicia a{text-decoration:underline; text-underline-offset:2px}
 
-/* The not-found link sits inside a sentence, so hue alone will not distinguish it. */
-.empty a{text-decoration:underline; text-underline-offset:2px}
 
-/* Links inside a sentence need more than hue to be findable. */
-.statline a,.lead a{text-decoration:underline; text-underline-offset:2px}
 
 /* Read-along: keep-rolling opt-in. Matches the .togg group it sits beside — ink rule,
    paper ground, no invented widget. */
@@ -721,3 +717,10 @@ html[data-neg] .roll:hover{color:#14120F}
 .roll input:checked{background:var(--red-deep)}
 .roll input:checked::after{content:""; width:6px; height:6px; background:var(--paper)}
 .roll input:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
+
+/* ---------- links in prose ----------
+   Blue on paper is 2.26:1 against body ink — not distinguishable by hue alone, so any link
+   sitting inside a sentence gets an underline. Chrome links (chips, facets, panels, nav)
+   are their own visual objects and are deliberately not in this list. */
+.statline a,.lead a,.empty a,.kv a,.sparse a,.notes a,.railnote a,.indicia a,.artcap a{
+  text-decoration:underline; text-underline-offset:2px}

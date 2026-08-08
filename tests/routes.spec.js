@@ -36,6 +36,7 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
     ["panelist", "/#/who/Kara%20Szamborski"],
     ["panelist alias", "/#/who/Danny%20Martinez"],
     ["panelist missing", "/#/who/Nobody%20At%20All"],
+    ["about", "/#/about"],
   ];
 
   const errors = [];
@@ -57,7 +58,7 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
 
 test("no route renders a dead link", async ({ page }) => {
   const { ep } = await sampleKeys(page);
-  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/index", "/#/who/Mike%20Rapin"];
+  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/index", "/#/who/Mike%20Rapin", "/#/about"];
   const dead = [];
   for (const path of routes) {
     await page.goto(path);

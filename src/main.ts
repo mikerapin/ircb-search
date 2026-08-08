@@ -11,6 +11,7 @@ import "./style/dress.css";
 
 import { initAudio } from "./audio/engine";
 import { core } from "./data/load";
+import { viewAbout } from "./views/about";
 import { esc, nf } from "./lib/html";
 import { go, onRoute, type Route } from "./router";
 import { fail, initChrome, renderShell, setSearchBox, setView } from "./shell";
@@ -54,7 +55,10 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       const v = await viewIndex();
       return [v.html, "The Index", v.after];
     }
-    case "about": return [stub("About the Data", "What is indexed"), "About the Data"];
+    case "about": {
+      const v = await viewAbout();
+      return [v.html, "About the Data", v.after];
+    }
     case "subscribe": return [stub("Subscribe", "& Patreon"), "Subscribe"];
     case "wall": return [stub("The Wall", `All ${nf(data.stats.episodes)} episodes`), "The Wall"];
     default: {
