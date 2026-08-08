@@ -55,6 +55,10 @@ document.getElementById("sform")?.addEventListener("submit", ev => {
 const box = document.getElementById("q");
 if (box instanceof HTMLInputElement) initTypeahead(box);
 
+// The search band and `/` only work once this module has run, which is later than `load`
+// on a cold start. Marks the moment the interactive handlers exist.
+document.body.dataset["ready"] = "1";
+
 core().then(data => {
   // Views load their own chunks, so a slow route must not paint over a newer one.
   let token = 0;

@@ -51,6 +51,22 @@ test("mention plates carry a jump or an honest refusal", async ({ page }) => {
   await expect(first.locator(".gc")).toBeVisible();
 });
 
+test("panelist avatars are self-hosted and actually load", async ({ page }) => {
+  const foreign = [];
+  page.on("request", r => {
+    if (r.resourceType() !== "image") return;
+    const h = new URL(r.url()).host;
+    if (h !== new URL(page.url()).host) foreign.push(h);
+  });
+  await page.goto("/#/search?q=batman");
+  const avatars = page.locator(".railbox.who .facet img");
+  await expect(avatars.first()).toBeVisible();
+  // Squarespace-hosted avatars would break silently if ircbpodcast.com were redesigned.
+  expect(foreign.filter(h => h.includes("squarespace"))).toEqual([]);
+  const broken = await avatars.evaluateAll(els => els.filter(i => !i.complete || i.naturalWidth === 0).length);
+  expect(broken).toBe(0);
+});
+
 test("search is axe clean with no console errors", async ({ page }) => {
   const errors = [];
   page.on("pageerror", e => errors.push(e));
