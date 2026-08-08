@@ -1,1 +1,71 @@
-/* Filled in Task 4 — Indicia tokens ported from the R2 prototype. */
+/* ============================================================
+   THE INDICIA — Round 2. Four inks on paper.
+   Plates: paper / ink / red / blue / yellow + screen tint.
+   Dark mode is not a theme, it is the negative.
+   R2 changes: air between sections, episode language on kept
+   trade dress, nav in the barcode, typeahead, the Wall, the
+   mini-bar, the Index, the Panel directory, About the Data.
+   ============================================================ */
+:root{
+  --paper:#F4F1E8;
+  --paper-2:#EAE5D7;
+  --ink:#141210;
+  --red:#E5322A;
+  --blue:#1B4B9E;
+  --yellow:#FDC22D;
+  --tint:#8FB8D8;
+  --dot:rgba(143,184,216,.55);
+  --rule:2px;
+  --gut:12px;
+  --pad:14px;
+  --sec:34px;         /* air between sections — R1's #1 complaint */
+  --disp:"Archivo Variable","Arial Black",system-ui,sans-serif;
+  --hand:"Shantell Sans Variable","Comic Sans MS",cursive;
+  --body:"Inter",system-ui,-apple-system,sans-serif;
+  --shift:2px;
+  --bar:0px;
+}
+@media(min-width:760px){ :root{--pad:20px; --sec:52px; --gut:14px} }
+html[data-neg]{
+  --paper:#14120F;
+  --paper-2:#1E1B17;
+  --ink:#F4F1E8;
+  --red:#FF4A3D;
+  --blue:#79A6FF;
+  --yellow:#FDC22D;
+  --dot:rgba(143,184,216,.28);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:15.5px; line-height:1.5;
+  overflow-x:hidden; padding-bottom:var(--bar);
+}
+.grain{
+  position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:.055;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+}
+html[data-neg] .grain{mix-blend-mode:screen; opacity:.07}
+
+a{color:var(--blue); text-decoration:none}
+a:hover{text-decoration:underline; text-decoration-thickness:2px}
+button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
+img{display:block; max-width:100%}
+:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
+html[data-neg] :focus-visible{outline-color:var(--yellow)}
+.skip{position:absolute; left:-9999px; top:0; background:var(--yellow); color:#141210; padding:8px 14px; font-weight:700; z-index:10000}
+.skip:focus{left:8px; top:8px}
+
+/* ---------- display type ---------- */
+.disp{
+  font-family:var(--disp); font-weight:900;
+  font-variation-settings:"wdth" 125,"wght" 900;
+  text-transform:uppercase; letter-spacing:.005em; line-height:.92;
+}
+.disp-m{font-family:var(--disp); font-weight:800; font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase; letter-spacing:.02em}
+.hand{font-family:var(--hand); font-variation-settings:"BNCE" 0,"INFM" 14; font-weight:500}
+.micro{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; font-feature-settings:"tnum"}
+.tnum{font-feature-settings:"tnum"}
