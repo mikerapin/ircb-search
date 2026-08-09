@@ -2,6 +2,7 @@ import { core, mentions as loadMentions } from "../data/load";
 import { ALIASED_REGULARS, ROSTER } from "../data/roster";
 import { nf, pl } from "../lib/html";
 import { href } from "../router";
+import { jumpable } from "../search/engine";
 import { subscribeCoupon } from "./blocks";
 
 /**
@@ -19,7 +20,10 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
   const noAudio = data.episodes.filter(e => !e.enclosure).length;
   const noTitle = data.episodes.filter(e => !e.title).length;
   const noMinute = men.filter(m => m.secs == null).length;
-  const withMinute = men.length - noMinute;
+  /* Not `men.length - noMinute`: a minute is necessary but not sufficient. jumpable() also
+     needs audio on file and a stamp inside the runtime, which is one mention fewer. Quote
+     the number the play controls actually honour. */
+  const canJump = men.filter(m => jumpable(m, byKey.get(m.epKey))).length;
   const pastRuntime = men.filter(m => {
     const e = byKey.get(m.epKey);
     return m.secs != null && e?.runtimeSecs != null && m.secs >= e.runtimeSecs;
@@ -89,7 +93,7 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
         <span class="note">What the rules above can&rsquo;t fix</span></div>
       <dl class="kv">
         <div><dt>Minutes</dt><dd><b>${nf(noMinute)} of ${nf(men.length)} mentions carry no minute</b> — someone logged
-          the comic but never the timestamp. Only ${nf(withMinute)} can be jumped into. Those without show
+          the comic but never the timestamp. Only ${nf(canJump)} can be jumped into. Those without show
           <b>&mdash;:&mdash;&mdash;</b> and link to the episode rather than fake a play button.</dd></div>
         <div><dt>Dates</dt><dd>${nf(undated)} episodes have no recoverable air date, so they sort last everywhere
           and sit outside every calendar.</dd></div>

@@ -26,7 +26,11 @@ const NEG_KEY = "ircb.neg";
 let wired = false;
 
 function closeMenu(): void {
-  el("menu").hidden = true;
+  /* .menu[hidden] is display:none, which blurs whatever inside it had focus and strands
+     the user on <body>. Hand focus back to the button that opened it first. */
+  const menu = el("menu");
+  if (!menu.hidden && menu.contains(document.activeElement)) el("navbtn").focus();
+  menu.hidden = true;
   el("navbtn").setAttribute("aria-expanded", "false");
 }
 
@@ -95,15 +99,24 @@ export function renderShell(stats: Stats): void {
   el("foot-legal").innerHTML =
     "I Read Comic Books Search, a search index of the podcast <em>I Read Comic Books</em>, " +
     `published weekly since 2015 by Mike Rapin. ${nf(stats.episodes)} episodes and ` +
-    `${nf(stats.mentions)} timestamped comic mentions across ${nf(stats.indexedEpisodes)} indexed ` +
+    `${nf(stats.mentions)} comic mentions across ${nf(stats.indexedEpisodes)} indexed ` +
     "episodes. All audio is hosted by Simplecast; artwork and episode metadata are the property " +
     "of their respective owners.";
 }
 
+let painted = false;
+
 export function setView(html: string, dressLabel: string): void {
-  el("view").innerHTML = html;
+  const view = el("view");
+  view.innerHTML = html;
   el("dressno").textContent = dressLabel;
   closeMenu();
+  /* A hash route swaps the whole view out from under the element that had focus, which
+     drops it to <body>: a screen reader announces nothing and the new page's heading is
+     never read. #view carries tabindex="-1" for exactly this. Not on first paint — there
+     focus belongs at the top of the document, where the skip link is. */
+  if (painted) view.focus({ preventScroll: true });
+  painted = true;
   window.scrollTo(0, 0);
 }
 

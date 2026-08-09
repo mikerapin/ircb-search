@@ -8,7 +8,15 @@ async function data(page) {
       fetch("d/core.json").then(r => r.json()),
       fetch("d/mentions.json").then(r => r.json()),
     ]);
-    return { core, noMinute: men.filter(m => m.secs == null).length, mentions: men.length };
+    /* jumpable() re-implemented from its documented rule rather than imported, so a silent
+       change to the rule in engine.ts shows up here as a failure instead of agreeing with
+       itself. A minute alone is not enough: it needs audio and a stamp inside the runtime. */
+    const byKey = new Map(core.episodes.map(e => [e.key, e]));
+    const canJump = men.filter(m => {
+      const e = byKey.get(m.epKey);
+      return m.secs != null && m.secs > 0 && !!e?.enclosure && (e.runtimeSecs == null || m.secs < e.runtimeSecs);
+    }).length;
+    return { core, noMinute: men.filter(m => m.secs == null).length, mentions: men.length, canJump };
   });
 }
 
@@ -25,7 +33,7 @@ test("about renders all five sections", async ({ page }) => {
 test("every figure on the page matches the data", async ({ page }) => {
   await page.goto("/#/about");
   await expect(page.locator(".sparse")).toBeVisible();
-  const { core, noMinute, mentions } = await data(page);
+  const { core, noMinute, canJump } = await data(page);
   const s = core.stats;
   const text = await page.locator("#view").innerText();
 
@@ -38,7 +46,9 @@ test("every figure on the page matches the data", async ({ page }) => {
   // The gaps are the point of the page — they have to be the real ones.
   expect(text).toContain(nf(core.episodes.filter(e => !e.date).length));
   expect(text).toContain(nf(noMinute));
-  expect(text).toContain(nf(mentions - noMinute));
+  // "Only N can be jumped into" must be the jumpable count, not merely the with-a-minute
+  // count — those differ by one, and the page is claiming what the play controls honour.
+  expect(text).toMatch(new RegExp(`Only ${nf(canJump)} can be jumped into`));
   expect(text).toContain(`${nf(s.indexedEpisodes)} episodes indexed`);
 });
 

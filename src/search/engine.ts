@@ -50,9 +50,14 @@ export function runSearch(query: SearchQuery, data: SearchData): SearchResults {
   const t = query.q.trim();
   const idx = indexes(data);
 
-  let mentions: Mention[] = t ? idx.men.search(t, { limit: 400 }).map(r => r.item) : [];
+  /* No Fuse `limit` here. It truncates the result array without saving any scoring work —
+     Fuse walks the whole corpus either way — but `mentionTotal` and `all` are declared
+     above as honest, uncapped figures, and a limit turned "1,204 mentions" into a flat
+     "400" for any broad query. SEARCH_CAP on line 79 is the only cap, and it caps what is
+     rendered, not what is counted. */
+  let mentions: Mention[] = t ? idx.men.search(t).map(r => r.item) : [];
   let episodes: EpisodeCore[] = t
-    ? idx.eps.search(t, { limit: 100 }).map(r => byKey.get(r.item.key)).filter((e): e is EpisodeCore => !!e)
+    ? idx.eps.search(t).map(r => byKey.get(r.item.key)).filter((e): e is EpisodeCore => !!e)
     : data.core.episodes.slice();
 
   if (query.who) {

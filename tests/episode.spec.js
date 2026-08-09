@@ -20,9 +20,16 @@ test("episode page shows artwork, credits, notes and read-along", async ({ page 
   await expect(page.locator(".notes")).not.toBeEmpty();
   await expect(page.locator("#dressno")).toHaveText("The Episode");
 
-  // Row count matches the count the page itself claims.
-  const claimed = Number((await page.locator(".issue-head .micro").textContent()).match(/(\d+) comics? indexed/)[1]);
+  // Row count matches the count the page itself claims, now stated in the hero colophon.
+  // /i because .artcap is text-transform:uppercase and innerText returns rendered text.
+  const colo = await page.locator(".colo").innerText();
+  const claimed = Number(colo.match(/(\d+) indexed/i)[1]);
   await expect(page.locator("#readalong .panel")).toHaveCount(claimed);
+
+  // ...and the colophon's jump figure never promises more than the read-along delivers.
+  const jumpable = Number(colo.match(/(\d+) playable/i)[1]);
+  expect(jumpable).toBeLessThanOrEqual(claimed);
+  await expect(page.locator("#readalong .ts:not(.dead)")).toHaveCount(jumpable);
 });
 
 test("keyword tags search, and the crew links to panelists", async ({ page }) => {
@@ -139,20 +146,23 @@ test("timestamp rows play in place too", async ({ page }) => {
   }
 });
 
-test("a full-episode play control sits above the Simplecast link", async ({ page }) => {
+test("the page leads with in-page playback, not with the off-site link", async ({ page }) => {
   await openNewestEpisode(page);
   const play = page.locator(".meta .big-play");
   await expect(play).toBeVisible();
   await expect(play).toHaveText(/Play from the top/);
+
+  // The play control is the last thing in the reading column, after the notes and tags.
   const order = await page.evaluate(() => {
-    const meta = document.querySelector(".meta");
-    const kids = [...meta.children];
+    const kids = [...document.querySelector(".meta").children];
     return {
       play: kids.findIndex(k => k.classList.contains("big-play")),
-      links: kids.findIndex(k => k.classList.contains("linkrow")),
       tags: kids.findIndex(k => k.classList.contains("tags")),
     };
   });
   expect(order.play).toBeGreaterThan(order.tags);
-  expect(order.play).toBeLessThan(order.links);
+
+  // Simplecast is a source credit in the hero colophon, not a call to action in the column.
+  await expect(page.locator(".meta a[href*='simplecast']")).toHaveCount(0);
+  await expect(page.locator(".colo a[href*='simplecast']")).toHaveCount(1);
 });

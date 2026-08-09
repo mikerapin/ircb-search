@@ -206,7 +206,9 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
    on specificity, so without it the dead row went dark-on-dark on the negative plate. */
 html[data-neg] .ts:not(.dead){color:#14120F}
 .ts:hover{background:var(--red-deep); text-decoration:none}
-html[data-neg] .ts:hover{color:#14120F}
+/* :not(.dead) for the same reason as the rule above — .ts.dead keeps its paper-2 ground on
+   hover (it is declared later), so this rule alone made the hovered dead row dark-on-dark. */
+html[data-neg] .ts:hover:not(.dead){color:#14120F}
 .ts .tri{font-size:11px}
 .ts .lab{margin-left:auto; font-size:10px; opacity:.85; letter-spacing:.1em}
 .ts.dead{background:var(--paper-2); color:color-mix(in srgb, var(--ink) 78%, var(--paper-2)); cursor:default}
@@ -353,7 +355,10 @@ html[data-neg] .adslot .go{color:#14120F}
   padding:9px 14px; font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800;
   text-transform:uppercase; font-size:12px; letter-spacing:.05em; min-height:44px; display:flex; align-items:center;
 }
-html[data-neg] .coupon .subs a{color:#14120F}
+/* No `html[data-neg] .coupon .subs a` rule here: it outranked `.subs a.alt` (0-3-2 vs
+   0-3-1) and painted the RSS and Patreon buttons #14120F on a #14120F ground — invisible
+   until hover, on all seven routes the coupon ships on. It was a no-op for the solid
+   buttons anyway, since their `color:var(--paper)` already resolves to #14120F there. */
 .coupon .subs a:hover{background:var(--red-deep); text-decoration:none}
 .coupon .subs a.alt{background:var(--paper); color:var(--ink)}
 .coupon .subs a.alt:hover{background:var(--yellow); color:#14120F}
@@ -396,6 +401,11 @@ html[data-neg] .ra-row.on{color:#14120F}
 
 /* ---------- episode view ---------- */
 .issue-head{display:grid; grid-template-columns:1fr; border:var(--rule) solid var(--ink); margin:0 var(--pad) var(--sec)}
+/* Grid items default to min-width:auto, so one long word in the display-face h1 floors the
+   track above the viewport and body{overflow-x:hidden} amputates the rest. Same fix .split
+   already carries. A title is one unbroken word more often than you'd think. */
+.issue-head>*{min-width:0}
+.issue-head h1{overflow-wrap:anywhere}
 @media(min-width:800px){ .issue-head{grid-template-columns:260px minmax(0,1fr)} }
 .issue-head .art{border-bottom:var(--rule) solid var(--ink); background:var(--paper-2); position:relative;
   background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:6px 6px}
@@ -404,8 +414,15 @@ html[data-neg] .ra-row.on{color:#14120F}
 .issue-head .art img{width:100%; aspect-ratio:1/1; object-fit:cover; flex:0 0 auto}
 /* the cover is square, the row is not — the leftover is a screened tint field carrying
    the issue line, so it reads as trade dress rather than as a gap */
+/* Colour, not opacity — 10px at .75 is the compounding trap house rule 1 names, and the
+   field now carries links whose own colour must not be dimmed by an ancestor. */
 .artcap{flex:1 1 auto; min-height:44px; border-top:var(--rule) solid var(--ink); padding:8px 10px;
-  font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; opacity:.75; line-height:1.7}
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; line-height:1.7;
+  color:color-mix(in srgb, var(--ink) 78%, transparent)}
+.colo{margin:0; display:grid; gap:5px}
+.colo>div{display:grid; grid-template-columns:52px minmax(0,1fr); gap:8px; align-items:baseline}
+.colo dt{margin:0; color:color-mix(in srgb, var(--ink) 62%, transparent)}
+.colo dd{margin:0; letter-spacing:.08em; overflow-wrap:anywhere}
 .issue-head .meta{padding:18px; display:flex; flex-direction:column; gap:13px}
 .issue-head h1{margin:0; font-size:clamp(24px,5.2vw,42px)}
 .crew{display:flex; flex-wrap:wrap; gap:7px}
@@ -499,7 +516,9 @@ html[data-neg] .checklist .hd{color:#14120F}
 .azbar a,.azbar button{border:1.5px solid var(--ink); min-width:30px; text-align:center; padding:5px 6px; font-size:11px;
   font-weight:800; color:var(--ink); font-family:var(--disp); text-transform:uppercase}
 .azbar a:hover,.azbar button:hover{background:var(--ink); color:var(--paper); text-decoration:none}
-html[data-neg] .azbar a:hover,.azbar button:hover{color:#14120F}
+/* Both halves need the prefix — without it the second selector applied on the light plate
+   too, painting #14120F on the --ink ground the rule above sets: an invisible letter. */
+html[data-neg] .azbar a:hover,html[data-neg] .azbar button:hover{color:#14120F}
 .azgrid{padding:0 var(--pad); columns:1; column-gap:var(--gut)}
 @media(min-width:600px){ .azgrid{columns:2} }
 @media(min-width:1000px){ .azgrid{columns:3} }
@@ -700,6 +719,9 @@ html[data-neg] #minibar.paused .pp{color:#14120F; border-color:#14120F}
 .chip:hover{background:var(--blue); color:var(--paper); text-decoration:none}
 html[data-neg] .chip:hover{color:#14120F}
 .chip .n{color:color-mix(in srgb, var(--ink) 72%, transparent); font-weight:800; font-feature-settings:"tnum"}
+/* The count matches the span directly, so it survives the hover repaint and sat at 1.9:1
+   on the blue ground. Inherit instead of restating the colour for each plate. */
+.chip:hover .n{color:inherit}
 .kv{display:grid; grid-template-columns:1fr; gap:0; border:var(--rule) solid var(--ink); margin:0 var(--pad)}
 .kv>div{display:grid; grid-template-columns:1fr; gap:2px; padding:11px 12px; border-top:var(--rule) solid var(--ink)}
 .kv>div:first-child{border-top:0}

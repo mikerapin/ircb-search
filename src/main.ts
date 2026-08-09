@@ -132,6 +132,12 @@ core().then(data => {
       setView(html, label);
       renderShell(data.stats);
       after?.();
+    }).catch((err: unknown) => {
+      // A view whose lazy chunk failed must say so; without this the old page just sits
+      // there and the route looks like it silently did nothing.
+      if (mine !== token) return;
+      setView(fail("That page didn’t load. Try again."), "Offline");
+      console.error(err);
     });
   });
 }).catch((err: unknown) => {

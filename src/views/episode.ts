@@ -3,6 +3,7 @@ import { ROSTER_MAP } from "../data/roster";
 import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
+import { jumpable } from "../search/engine";
 import { subscribeCoupon } from "./blocks";
 import { emptyState, episodePanel, priceBox, sfx } from "./components";
 import { blankVariant, fitPlates } from "./cover";
@@ -58,10 +59,27 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   const rel = related(ep, data.episodes, byEp);
   const n = mine.length;
 
+  /* The cover is square and the row is not, so the leftover is a screened tint field. Left
+     carrying two lines it read as a failed image, so it carries the episode's whole
+     colophon instead — the facts that used to sit twice over in the right column. */
+  const jumps = mine.filter(m => jumpable(m, ep)).length;
+  const row = (k: string, v: string): string => `<div><dt>${k}</dt><dd>${v}</dd></div>`;
+  const source = ep.simplecastUrl
+    ? `<a href="${esc(ep.simplecastUrl)}">Simplecast &rarr;</a>`
+    : ep.patreonUrl
+      ? `<a href="${esc(ep.patreonUrl)}">Patreon &rarr;</a>`
+      : "Not in the public feed";
+
+  const colophon = `<div class="artcap"><dl class="colo">` +
+    row("Aired", esc(fmtDate(ep.date)) || "No date on file") +
+    (ep.runtimeSecs ? row("Runtime", esc(fmtRuntime(ep.runtimeSecs))) : "") +
+    row("Comics", n ? `${n} indexed &middot; ${jumps} playable` : "None indexed") +
+    row("Listen", source) +
+  `</dl></div>`;
+
   const art = ep.artwork
-    ? `<div class="art"><img src="${esc(ep.artwork)}" alt="Episode artwork">${priceBox(ep)}` +
-        `<div class="artcap">Simplecast &middot; ${esc(fmtDate(ep.date) || "undated")}<br>${n} comic${pl(n)} indexed</div></div>`
-    : `<div class="art" style="container-type:inline-size;background:var(--paper)">${blankVariant(ep)}</div>`;
+    ? `<div class="art"><img src="${esc(ep.artwork)}" alt="Episode artwork">${priceBox(ep)}${colophon}</div>`
+    : `<div class="art" style="container-type:inline-size;background:var(--paper)">${blankVariant(ep)}${colophon}</div>`;
 
   /* A whole episode deserves a way to start it, not just a jump into somebody else's minute.
      Plan 3 turns this into the in-page player; until then it opens the episode at Simplecast. */
@@ -76,7 +94,6 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   const head = crumb() +
     `<section class="sec"><div class="issue-head">${art}
       <div class="meta">
-        <div class="micro">${esc(fmtDate(ep.date) || "Date unknown")}${ep.runtimeSecs ? " · " + esc(fmtRuntime(ep.runtimeSecs)) : ""} · ${n} comic${pl(n)} indexed</div>
         <h1 class="disp">${esc(ep.title || "Untitled episode")}</h1>
         <div class="crew">${ep.people.map(p =>
           `<a href="${href("/who/" + encodeURIComponent(p))}">${avatar(p)}${esc(p)}</a>`).join("")}</div>
@@ -89,10 +106,9 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
           : ""}
         ${play}
         <div class="cutslot"></div>
-        <div class="linkrow">
-          ${ep.simplecastUrl ? `<a href="${esc(ep.simplecastUrl)}">Listen at Simplecast →</a>` : ""}
-          ${ep.patreonUrl ? `<a href="${esc(ep.patreonUrl)}">On Patreon →</a>` : ""}
-        </div>
+        ${ep.simplecastUrl && ep.patreonUrl
+          ? `<div class="linkrow"><a href="${esc(ep.patreonUrl)}">On Patreon →</a></div>`
+          : ""}
       </div>
     </div></section>` +
     sfx(n ? `${nf(n)} moment${pl(n)}` : "Not indexed");

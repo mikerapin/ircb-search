@@ -21,7 +21,8 @@ export function statement(core: CoreData): string {
   const newest = core.episodes.reduce<string | null>((d, e) => (e.date && (!d || e.date > d) ? e.date : d), null);
   const tiles: Array<[value: string, label: string]> = [
     [nf(s.episodes), "Episodes published"],
-    [nf(s.mentions), "Comics timestamped"],
+    // Not "timestamped": only 1,916 of the 4,857 carry a minute. About the Data says so.
+    [nf(s.mentions), "Comics logged"],
     [nf(s.series), "Distinct series"],
     [nf(s.people), "Panelists &amp; guests"],
   ];
