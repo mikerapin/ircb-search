@@ -171,3 +171,31 @@ test("nothing inside an episode panel escapes its own border", async ({ page }) 
     expect(escaped, `overflow on ${route}`).toEqual([]);
   }
 });
+
+test("every homepage section keeps its air", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector(".rack");
+  await page.evaluate(async () => {
+    for (let y = 0; y < 8000; y += 600) { window.scrollTo(0, y); await new Promise(r => setTimeout(r, 40)); }
+  });
+  await page.waitForTimeout(800);
+  // The Shuffle and the Spinner Rack are injected into wrapper divs, which made their
+  // lone section :last-child and zeroed the bottom margin — the next heading sat flush.
+  const gaps = await page.evaluate(() => {
+    const headOf = t => [...document.querySelectorAll(".sec-head")].find(h => h.textContent.includes(t));
+    const gap = (sel, t) => {
+      const a = document.querySelector(sel), h = headOf(t);
+      return a && h ? Math.round(h.getBoundingClientRect().top - a.getBoundingClientRect().bottom) : null;
+    };
+    return {
+      shuffle: gap(".threeup", "Statement of Circulation"),
+      stats: gap(".stats", "Spinner Rack"),
+      rack: gap(".rack", "The Panel"),
+      panel: gap(".panelgrid", "Recent Episodes"),
+    };
+  });
+  for (const [where, px] of Object.entries(gaps)) {
+    expect(px, `gap below ${where}`).not.toBeNull();
+    expect(px, `gap below ${where}`).toBeGreaterThanOrEqual(40);
+  }
+});

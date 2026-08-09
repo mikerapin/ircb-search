@@ -26,9 +26,11 @@ test("episode page shows artwork, credits, notes and read-along", async ({ page 
   const claimed = Number(colo.match(/(\d+) indexed/i)[1]);
   await expect(page.locator("#readalong .panel")).toHaveCount(claimed);
 
-  // ...and the colophon's jump figure never promises more than the read-along delivers.
-  const jumpable = Number(colo.match(/(\d+) playable/i)[1]);
-  expect(jumpable).toBeLessThanOrEqual(claimed);
+  /* The colophon states "N playable" only when some comics cannot be played — saying
+     "7 indexed · 7 playable" repeats itself. Either way it must match the read-along. */
+  const m = colo.match(/(\d+) playable/i);
+  const jumpable = m ? Number(m[1]) : claimed;
+  if (m) expect(jumpable).toBeLessThan(claimed);
   await expect(page.locator("#readalong .ts:not(.dead)")).toHaveCount(jumpable);
 });
 

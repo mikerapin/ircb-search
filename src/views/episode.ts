@@ -83,7 +83,9 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   const colophon = `<div class="artcap"><dl class="colo">` +
     row("Aired", esc(fmtDate(ep.date)) || "No date on file") +
     (ep.runtimeSecs ? row("Runtime", esc(fmtRuntime(ep.runtimeSecs))) : "") +
-    row("Comics", n ? `${n} indexed &middot; ${jumps} playable` : "None indexed") +
+    /* "7 indexed · 7 playable" says the same thing twice. The second figure earns its
+       place only when some of them can't be played. */
+    row("Comics", n ? `${n} indexed${jumps < n ? ` &middot; ${jumps} playable` : ""}` : "None indexed") +
     row("Listen", source) +
   `</dl></div>`;
 

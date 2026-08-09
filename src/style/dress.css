@@ -98,7 +98,11 @@ html[data-neg] .ta-grp{color:#14120F}
 /* ---------- page shell ---------- */
 main{max-width:1400px; margin:0 auto; padding:var(--sec) 0 20px; display:block}
 .sec{margin:0 0 var(--sec)}
-.sec:last-child{margin-bottom:0}
+/* Scoped to the page's own last section. Unscoped, this also matched the lone section
+   inside each of home's hydration slots — the Shuffle and the Spinner Rack are injected
+   into wrapper divs, so both were :last-child and lost their bottom margin entirely,
+   leaving the next heading sitting flush against them. */
+#view > .sec:last-child{margin-bottom:0}
 .sec-head{
   display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap;
   padding:0 var(--pad) 9px; border-bottom:3px solid var(--ink); margin:0 0 20px;
