@@ -1,5 +1,5 @@
 import { core, mentions as loadMentions } from "../data/load";
-import { ROSTER } from "../data/roster";
+import { ALIASED_REGULARS, ROSTER } from "../data/roster";
 import { nf, pl } from "../lib/html";
 import { href } from "../router";
 import { subscribeCoupon } from "./blocks";
@@ -100,8 +100,10 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
         <div><dt>Names</dt><dd>Some headings resist any safe rule — different romanisations of the same manga,
           spacing variants, sequel numbering. They stay split rather than risk a wrong merge, and turn up in
           <b>See Also</b> on the series pages.</dd></div>
-        <div><dt>People</dt><dd>One regular is credited two ways in the source; both spellings resolve to one person.
-          Guests are whoever appears in the credits and isn&rsquo;t on the roster.</dd></div>
+        <div><dt>People</dt><dd>${nf(ALIASED_REGULARS)} regulars are credited by a short name in some episodes &mdash;
+          a first name on its own, or a nickname. Every spelling resolves to the one person, so their episode counts and
+          percentages are whole rather than split across two pages. Guests are whoever appears in the credits and
+          isn&rsquo;t on the roster.</dd></div>
       </dl>
     </section>` +
 

@@ -1,6 +1,6 @@
 import { core } from "../data/load";
 import { guestNames, peopleStats, sharePct } from "../data/people";
-import { ROSTER } from "../data/roster";
+import { ALIASED_REGULARS, ROSTER } from "../data/roster";
 import { azBuckets } from "../lib/az";
 import { esc, fmtShortDate, nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -26,7 +26,7 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
       a creator who came on, a friend who filled a chair. Everybody gets a page.</p>
       <div class="statline" style="max-width:none"><b>${nf(data.stats.people)}</b> names in the archive ·
         <b>${nf(ROSTER.length)}</b> on the roster · <b>${nf(guests.length)}</b> guests
-        <span class="note">(one regular is spelled two ways in the feed; folded into one page)</span></div></div>` +
+        <span class="note">(${ALIASED_REGULARS} regulars are credited by a short name in some episodes; those fold into one page)</span></div></div>` +
 
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">The Regulars</h2>

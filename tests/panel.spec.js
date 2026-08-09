@@ -35,15 +35,28 @@ test("every regular carries a portrait, a tagline and a link to their page", asy
   }
 });
 
-test("the one regular spelled two ways is disclosed, not hidden", async ({ page }) => {
+test("regulars credited by a short name are folded, and the fold is disclosed", async ({ page }) => {
   await page.goto("/#/panel");
   await page.waitForSelector(".azrow");
   const text = await page.locator("#view").innerText();
-  expect(text).toMatch(/\([^)]*spelled two ways[^)]*\)/i);
-  // ...and the second spelling is not sitting in the guest list as its own person.
+  expect(text).toMatch(/\([^)]*credited by a short name[^)]*\)/i);
+
+  // None of the folded spellings may sit in the guest list as their own person, and no
+  // regular may appear there under any spelling.
   const names = await page.locator(".azrow .nm").allInnerTexts();
-  expect(names).not.toContain("Danny Martinez");
-  expect(names).not.toContain("Daniel Martinez");
+  for (const n of ["Danny Martinez", "Daniel Martinez", "Nick", "Nick White", "Paul", "Paul Jaissle", "Kate", "Kate Skocelas"]) {
+    expect(names).not.toContain(n);
+  }
+});
+
+test("a folded short name lands on the regular's page, not a guest page", async ({ page }) => {
+  for (const [alias, display] of [["Nick", "Nick White"], ["Paul", "Paul Jaissle"], ["Kate", "Kate Skocelas"], ["Danny%20Martinez", "Daniel Martinez"]]) {
+    await page.goto(`/#/who/${alias}`);
+    await page.waitForSelector(".credit-head h1");
+    await expect(page.locator(".credit-head h1")).toHaveText(display);
+    // A guest page has no portrait or tagline; landing on one would mean the fold missed.
+    await expect(page.locator(".credit-head .tagline")).toBeVisible();
+  }
 });
 
 test("guests bucket A-Z and the counts add up", async ({ page }) => {

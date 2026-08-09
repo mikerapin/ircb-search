@@ -45,6 +45,17 @@ describe("shapeEpisodes", () => {
     expect(eps.some(e => e.people.includes("Daniel Martinez"))).toBe(true);
   });
 
+  it("folds every short-name spelling to the regular", () => {
+    const [e] = shapeEpisodes([{ show_id: "al", title: "T", date: 1600000000000, people: "Nick, Paul, Kate" }]);
+    expect(e?.people).toEqual(["Nick White", "Paul Jaissle", "Kate Skocelas"]);
+  });
+
+  it("credits a person once when both spellings appear on one episode", () => {
+    // peopleStats counts per entry, so a duplicate would double their episode count.
+    const [e] = shapeEpisodes([{ show_id: "d", title: "T", date: 1600000000000, people: "Nick, Nick White" }]);
+    expect(e?.people).toEqual(["Nick White"]);
+  });
+
   it("rounds float runtimes to whole seconds", () => {
     const withRuntime = eps.filter(e => e.runtimeSecs !== null);
     expect(withRuntime.length).toBeGreaterThan(0);

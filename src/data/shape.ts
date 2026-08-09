@@ -1,9 +1,6 @@
 import type { EpisodeCore, EpisodeDetail, Mention, Stats } from "./types";
+import { ALIASES } from "./roster";
 import { clean, normalizeSeries, pickDisplayNames, seriesKey } from "./series";
-
-/* The roster spells one regular "Daniel"; the feed spells him "Danny".
-   One person, two strings — fold them or he shows up as his own guest. */
-export const ALIASES: Record<string, string> = { "Danny Martinez": "Daniel Martinez" };
 
 /** Segment labels that describe the show's plumbing, not a topic worth surfacing. */
 const GENERIC_SEG =
@@ -48,12 +45,17 @@ function num(v: unknown): number | null {
   return Number.isFinite(n) ? Math.round(n) : null;
 }
 
+/* Deduped after aliasing, not before: no episode credits both "Nick" and "Nick White"
+   today, but one that did would list the same person twice and `peopleStats` counts per
+   entry — so the episode, and their whole percentage, would silently double. */
 function people(v: unknown): string[] {
-  return String(v ?? "")
-    .split(",")
-    .map(s => s.trim())
-    .filter(Boolean)
-    .map(n => ALIASES[n] ?? n);
+  return [...new Set(
+    String(v ?? "")
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(n => ALIASES[n] ?? n),
+  )];
 }
 
 /* 230 records carry no Simplecast id — the pre-feed back catalogue and the Patreon shelf.

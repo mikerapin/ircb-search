@@ -1,7 +1,6 @@
 import { core, mentions as loadMentions } from "../data/load";
 import { peopleStats, sharePct } from "../data/people";
-import { ROSTER_MAP, isRoster } from "../data/roster";
-import { ALIASES } from "../data/shape";
+import { ALIASES, ROSTER_MAP, isRoster } from "../data/roster";
 import type { CoreData, EpisodeCore } from "../data/types";
 import { esc, fmtDate, fmtShortDate, nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -11,7 +10,7 @@ import { fitPlates } from "./cover";
 
 const firstName = (n: string): string => n.split(" ")[0] ?? n;
 
-/** The feed spells one regular "Danny"; a link to that spelling must still find him. */
+/** The feed credits some regulars by a short name; a link to that spelling must still land. */
 const canon = (n: string): string => ALIASES[n] ?? n;
 
 function crumb(): string {
