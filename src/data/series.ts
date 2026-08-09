@@ -17,6 +17,10 @@ export function normalizeSeries(comic: string, yearSensitive?: ReadonlySet<strin
     .replace(/\b(chapter|chapters|ch\.)\s*[0-9]+.*$/i, "")            // manga is logged by chapter
     .replace(/\s*\(\d{4}\)\s*$/, "")                                  // trailing "(1991)"
     .replace(/\s+ft\..+$/i, "")                                       // "ft. Ed Brubaker"
+    /* An opening bracket the strips above cut the close off — "Thor (#1)" became "Thor (",
+       and "…Doom Patrol (Doom Patrol #35" became a half-open parenthetical. Drop the
+       fragment. A balanced "(2022)" is untouched, because the closer is still in there. */
+    .replace(/\s*[([{][^)\]}]*$/, "")
     .replace(/[\s,:\-–]+$/, "")
     .trim();
   const base = out || c;

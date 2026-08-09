@@ -182,3 +182,49 @@ test("the read-along really is in broadcast order", async ({ page }) => {
   const firstNull = rows.indexOf(null);
   if (firstNull !== -1) expect(rows.slice(firstNull).every(s => s == null)).toBe(true);
 });
+
+test("a read-along row with no logged minute refuses honestly", async ({ page }) => {
+  // 2,941 of 4,857 mentions carry no minute, but every episode test ran on the newest
+  // episode, whose rows are all playable — so this branch was never rendered once.
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+  const key = await page.evaluate(async () => {
+    const [core, men] = await Promise.all([
+      fetch("d/core.json").then(r => r.json()),
+      fetch("d/mentions.json").then(r => r.json()),
+    ]);
+    const byKey = new Map(core.episodes.map(e => [e.key, e]));
+    const byEp = new Map();
+    for (const m of men) {
+      if (!byEp.has(m.epKey)) byEp.set(m.epKey, []);
+      byEp.get(m.epKey).push(m);
+    }
+    // An episode that has audio and mixes logged and unlogged minutes.
+    for (const [k, list] of byEp) {
+      const e = byKey.get(k);
+      if (e?.enclosure && list.some(m => m.secs == null) && list.some(m => m.secs != null)) return k;
+    }
+    return null;
+  });
+  test.skip(!key, "no episode mixes logged and unlogged minutes");
+
+  await page.goto("/#/ep/" + encodeURIComponent(key));
+  await page.getByRole("button", { name: "Timestamps" }).click();
+  await page.waitForSelector("#readalong .ra-row");
+
+  const rows = await page.locator("#readalong .rawrap").evaluateAll(els => els.map(el => ({
+    playable: !!el.querySelector("button.ra-row[data-act=cut]"),
+    stamp: el.querySelector(".t")?.textContent ?? "",
+    cue: el.querySelector(".cue")?.textContent ?? "",
+    href: el.querySelector("a.ra-row")?.getAttribute("href") ?? null,
+  })));
+  const dead = rows.filter(r => !r.playable);
+  expect(dead.length).toBeGreaterThan(0);
+  for (const r of dead) {
+    expect(r.stamp).toContain("—");          // no invented timestamp
+    expect(r.cue).toContain("Open");         // and no play cue it cannot honour
+    expect(r.href).toMatch(/^#\/ep\//);      // links to the episode, never off-site
+  }
+  // ...and the playable ones really are buttons, not links.
+  for (const r of rows.filter(r => r.playable)) expect(r.stamp).toMatch(/\d+:\d\d/);
+});

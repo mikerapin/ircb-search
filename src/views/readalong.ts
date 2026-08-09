@@ -1,5 +1,5 @@
 import type { EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, fmtRuntime, nf, pl, simplecastAt } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
 import { isContinuous, setContinuous } from "../audio/engine";
@@ -45,10 +45,10 @@ function raListRow(m: Mention, ep: EpisodeCore | undefined, until: number | null
     return `<div class="rawrap panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs}" data-comic="${esc(m.comic)}"${until != null ? ` data-until="${until}"` : ""}>` +
       `<button class="ra-row" type="button" data-act="cut">${body}</button><div class="cutslot"></div></div>`;
   }
-  const at = can ? simplecastAt(ep?.simplecastUrl ?? null, m.secs) : null;
-  const dest = at ?? href("/ep/" + encodeURIComponent(m.epKey));
-  const ext = at ? ` target="_blank" rel="noopener noreferrer"` : "";
-  return `<div class="rawrap"><a class="ra-row" href="${esc(dest)}"${ext}>${body}</a></div>`;
+  /* Reached only when the row is not playable, since `can` implies an enclosure. The
+     Simplecast fallback that used to sit here was unreachable for the same reason. */
+  const dest = href("/ep/" + encodeURIComponent(m.epKey));
+  return `<div class="rawrap"><a class="ra-row" href="${esc(dest)}">${body}</a></div>`;
 }
 
 /* A logged minute starts a segment; the next one ends it. Only the read-along knows this,

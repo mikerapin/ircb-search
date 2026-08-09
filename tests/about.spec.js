@@ -79,7 +79,12 @@ test("the published normalization rules describe what the code actually does", a
   const names = new Set(men.map(m => m.series));
   const folded = new Set(men.filter(m => /Star Wars.{0,3}Visions/i.test(m.comic)).map(m => m.series));
   if (folded.size) expect(folded.size).toBe(1);        // one run, not two
-  if (names.has("Monster") && names.has("Monsters")) expect(true).toBe(true);
+  // Was `expect(true).toBe(true)`. The page claims these are kept apart; prove it.
+  expect(names.has("Monster")).toBe(true);
+  expect(names.has("Monsters")).toBe(true);
+  const runFor = t => [...new Set(men.filter(m => m.comic.trim().toLowerCase() === t).map(m => m.series))];
+  expect(runFor("monster")).toEqual(["Monster"]);
+  expect(runFor("monsters")).toEqual(["Monsters"]);
   expect(core.stats.uniqueComics).toBeGreaterThan(core.stats.series);
 });
 

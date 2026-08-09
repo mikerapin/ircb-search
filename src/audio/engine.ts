@@ -105,7 +105,8 @@ function playerHTML(secs: number, dur: number | null, label: string, playing = t
       <span class="t" data-role="t">${clock(secs)}</span>
       <span class="t" style="margin-left:auto" data-role="d">${dur ? clock(dur) : "--:--"}</span>
     </div>
-    <input type="range" min="0" max="${dur || 3600}" value="${secs}" data-role="seek" aria-label="Seek">
+    <input type="range" min="0" max="${dur || 3600}" value="${secs}" step="15" data-role="seek"
+      aria-label="Seek" aria-valuetext="${clock(secs)}">
     <div class="note">${playing ? "Playing" : "Paused"} · ${esc(label)}</div>
   </div>`;
 }
@@ -171,6 +172,10 @@ function readUntil(panel: HTMLElement): number | null {
 function advanceAtBoundary(): void {
   const panel = play.panel;
   if (!panel || play.until == null || au.currentTime < play.until) return;
+  /* A panel removed by a re-render still answers closest(), so the handover would open
+     the next player inside a detached tree — playing on, with no visible control. Let
+     the mini-bar keep it instead. */
+  if (!document.contains(panel)) { play = { ...play, until: null }; paintBar(); return; }
 
   const root = panel.closest("#readalong, .checklist, .ra-list, .ra-strip, .ra-stack");
   const next = root ? nextPanelAfter(root, panel) : null;
@@ -235,6 +240,15 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
   try { continuous = localStorage.getItem(ROLL_KEY) === "1"; } catch { /* private mode */ }
 
   au.addEventListener("loadedmetadata", applyPending);
+  /* dataset.ep is stamped before the load resolves. Without this, one failed enclosure
+     marked that episode as loaded forever and every later click took the "same tape"
+     branch, seeking a source that was never there. */
+  au.addEventListener("error", () => {
+    delete au.dataset["ep"];
+    pending = null;
+    seekPending = false;
+    paintBar();
+  });
   au.addEventListener("seeked", () => { seekPending = false; });
   au.addEventListener("play", paintBar);
   au.addEventListener("pause", paintBar);
@@ -248,6 +262,8 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
     const s = play.panel.querySelector<HTMLInputElement>("[data-role=seek]");
     if (t) t.textContent = clock(au.currentTime);
     if (s && document.activeElement !== s) s.value = String(Math.floor(au.currentTime));
+    // Without valuetext a screen reader reads the raw second count, not a timestamp.
+    if (s) s.setAttribute("aria-valuetext", clock(au.currentTime));
   });
 
   /* Delegated, because every panel carrying a play control is rendered from a template

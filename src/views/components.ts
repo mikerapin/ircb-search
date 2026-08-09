@@ -1,5 +1,5 @@
 import type { EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, fmtRuntime, pl, simplecastAt } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, pl } from "../lib/html";
 import { jumpable } from "../search/engine";
 import { blankVariant, cover, num } from "./cover";
 import { href } from "../router";
@@ -121,29 +121,21 @@ export function emptyState(title: string, message: string, linkHref: string, lin
 }
 
 /**
- * The one place a play affordance is built. Plan 3 replaces the body of this function with
- * the Jump Cut player; every read-along layout and the search plates go through it, so the
- * swap is one function rather than a sweep.
+ * The one place a play affordance is built. Every read-along layout and every search plate
+ * goes through it, so changing how playback is offered is one function, not a sweep.
  */
 export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: { label?: string }): string {
   const epLink = href("/ep/" + encodeURIComponent(m.epKey));
   const label = opts?.label ?? "Jump";
-  if (!jumpable(m, ep)) {
-    return `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}<span class="lab">Open</span></a>`;
+  /* One guard, not two. jumpable() already requires an enclosure, so the "no audio, link
+     out to Simplecast instead" branch that used to sit below could never be reached. */
+  if (!jumpable(m, ep) || !ep?.enclosure) {
+    return `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}` +
+      `<span class="lab">Open</span></a>`;
   }
   /* Plays in the page. The engine seeks with currentTime and never touches the enclosure
-     URL, so the download still counts as the download it is. Falls back to the Simplecast
-     page only when we have no audio to stream. */
-  if (ep?.enclosure) {
-    return `<button class="ts" type="button" data-act="cut" data-ep="${esc(m.epKey)}" data-secs="${m.secs}" data-comic="${esc(m.comic)}"` +
-      ` aria-label="Play ${esc(m.comic)} at ${esc(fmtRuntime(m.secs))}">` +
-      `<span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">${label}</span></button>`;
-  }
-  const at = simplecastAt(ep?.simplecastUrl ?? null, m.secs);
-  if (!at) {
-    return `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">Open</span></a>`;
-  }
-  return `<a class="ts" href="${esc(at)}" target="_blank" rel="noopener noreferrer"` +
-    ` aria-label="Play ${esc(m.comic)} at ${esc(fmtRuntime(m.secs))} on Simplecast">` +
-    `<span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">${label}</span></a>`;
+     URL, so the download still counts as the download it is. */
+  return `<button class="ts" type="button" data-act="cut" data-ep="${esc(m.epKey)}" data-secs="${m.secs}" data-comic="${esc(m.comic)}"` +
+    ` aria-label="Play ${esc(m.comic)} at ${esc(fmtRuntime(m.secs))}">` +
+    `<span class="tri">▶</span>${esc(fmtRuntime(m.secs))}<span class="lab">${label}</span></button>`;
 }
