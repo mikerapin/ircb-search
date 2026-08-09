@@ -1,6 +1,6 @@
 import type { EpisodeCore, EpisodeDetail, Mention, Stats } from "./types";
 import { ALIASES } from "./roster";
-import { clean, normalizeSeries, pickDisplayNames, seriesKey } from "./series";
+import { clean, normalizeSeries, pickDisplayNames, seriesKey, yearSensitiveKeys } from "./series";
 
 /** Segment labels that describe the show's plumbing, not a topic worth surfacing. */
 const GENERIC_SEG =
@@ -125,9 +125,15 @@ export function shapeMentions(raw: unknown[], episodes: EpisodeCore[]): Mention[
 
   /* Second pass: headings that differ only in punctuation or case are one run, so every
      mention in a group gets that group's most-written spelling. Without this, "Star Wars:
-     Visions" and "Star Wars Visions" are two series pages splitting one run between them. */
-  const display = pickDisplayNames(out.map(m => m.comic));
-  for (const m of out) m.series = display.get(seriesKey(m.comic)) ?? m.series;
+     Visions" and "Star Wars Visions" are two series pages splitting one run between them.
+     The year test runs over the whole corpus first, because whether "(2022)" matters can
+     only be answered by looking at every other heading for the same title. */
+  const comics = out.map(m => m.comic);
+  const yearSensitive = yearSensitiveKeys(comics);
+  const display = pickDisplayNames(comics, yearSensitive);
+  for (const m of out) {
+    m.series = display.get(seriesKey(m.comic, yearSensitive)) ?? normalizeSeries(m.comic, yearSensitive);
+  }
 
   return out;
 }

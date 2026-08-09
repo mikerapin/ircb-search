@@ -1,5 +1,5 @@
 import { it, expect, describe } from "vitest";
-import { normalizeSeries, seriesKey, pickDisplayNames } from "../../src/data/series";
+import { normalizeSeries, seriesKey, pickDisplayNames, yearSensitiveKeys } from "../../src/data/series";
 
 it("strips issue/vol/year/ft noise", () => {
   expect(normalizeSeries("Batman #50")).toBe("Batman");
@@ -86,5 +86,29 @@ describe("pickDisplayNames", () => {
     const a = pickDisplayNames(["Batman Universe", "Batman: Universe"]);
     const b = pickDisplayNames(["Batman: Universe", "Batman Universe"]);
     expect(a.get(seriesKey("Batman Universe"))).toBe(b.get(seriesKey("Batman Universe")));
+  });
+});
+
+describe("volume years are kept only when they disambiguate", () => {
+  it("drops a year that no other volume contradicts", () => {
+    // "Daredevil" and "Daredevil (1998)" are one run written two ways.
+    const s = yearSensitiveKeys(["Daredevil #7", "Daredevil (1998) #1"]);
+    expect(normalizeSeries("Daredevil (1998) #1", s)).toBe("Daredevil");
+    expect(seriesKey("Daredevil #7", s)).toBe(seriesKey("Daredevil (1998) #1", s));
+  });
+
+  it("keeps the year when the same title carries two of them", () => {
+    const raw = ["Fantastic Four (1961) #51", "Fantastic Four (2022) #1", "Fantastic Four #3"];
+    const s = yearSensitiveKeys(raw);
+    expect(normalizeSeries("Fantastic Four (1961) #51", s)).toBe("Fantastic Four (1961)");
+    expect(normalizeSeries("Fantastic Four (2022) #1", s)).toBe("Fantastic Four (2022)");
+    // Two different books must not share a page.
+    expect(seriesKey(raw[0], s)).not.toBe(seriesKey(raw[1], s));
+    // The undated mentions stay on their own run — we cannot know which volume they meant.
+    expect(normalizeSeries("Fantastic Four #3", s)).toBe("Fantastic Four");
+  });
+
+  it("is inert without the corpus, so display-only callers are unchanged", () => {
+    expect(normalizeSeries("Fantastic Four (1961) #51")).toBe("Fantastic Four");
   });
 });

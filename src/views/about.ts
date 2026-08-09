@@ -85,8 +85,13 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
       page, ${nf(folded)} of those ${nf(s.uniqueComics)} headings fold into another. These are the rules.</p>
       <dl class="kv">
         <div><dt>Stripped</dt><dd>Issue, volume and chapter numbering: <b>#12</b> · <b>Vol. 3</b> ·
-          <b>volumes 1&ndash;9</b> · <b>Book 1</b> · <b>Chapter 381</b>. Also a trailing year, <b>ft.</b> credits, and
-          the stray HTML that came in with some scraped show notes.</dd></div>
+          <b>volumes 1&ndash;9</b> · <b>Book 1</b> · <b>Chapter 381</b>. Also <b>ft.</b> credits and the stray HTML
+          that came in with some scraped show notes.</dd></div>
+        <div><dt>Volume years</dt><dd>A year in brackets is dropped &mdash; unless the same title was written under
+          two different ones, which is the only time it&rsquo;s telling you something. <i>Daredevil (1998)</i> is
+          just <i>Daredevil</i>, but <i>Mister Miracle (1971)</i> and <i>Mister Miracle (2017)</i> are different
+          books and get separate pages. Mentions written without a year stay on their own run, because there&rsquo;s
+          no way to know which volume was meant.</dd></div>
         <div><dt>Folded together</dt><dd>Headings that differ only in punctuation, quote style or capitals.
           <i>Star Wars: Visions</i> and <i>Star Wars Visions</i> are one run; so are <i>Dead Dog&rsquo;s Bite</i> and
           <i>Dead Dogs Bite</i>. Each run is shown under whichever spelling was written most often.</dd></div>
