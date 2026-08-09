@@ -77,7 +77,7 @@ export function patreonAd(core: CoreData): string {
     <div class="hh"><span class="k">Only on Patreon</span>
       <span class="s">${runs.length} bonus series · house ad</span></div>
     <div class="hb">
-      <p>${runs.length} series never hit the public feed. They&rsquo;re not lost episodes — they&rsquo;re made for the folks who chip in on Patreon, and they all live behind one link.</p>
+      <p>Some episodes are only available to those willing to toss a few bucks to us, all on Patreon.</p>
       <div class="adgrid">${runs.map(p =>
         `<a class="adslot" href="${esc(p.url)}" style="container-type:inline-size">` +
           cover(p.name, "", p.name, "PAT") +

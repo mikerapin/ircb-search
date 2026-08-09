@@ -142,3 +142,32 @@ test("the hero wears a real feed number, not the record count", async ({ page })
   expect(newest.key).toBe(await page.locator(".hero-title a").getAttribute("href")
     .then(h => decodeURIComponent(h.replace("#/ep/", ""))));
 });
+
+test("nothing inside an episode panel escapes its own border", async ({ page }) => {
+  // .epw used a 1fr track, which keeps a min-content floor, so the artwork's intrinsic
+  // width pushed the track — and the runtime badge with it — past the panel's border.
+  for (const route of ["/", "/#/who/Mike%20Rapin", "/#/search?q=batman"]) {
+    await page.goto(route);
+    await page.waitForSelector(".panel");
+    await page.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 700) {
+        window.scrollTo(0, y); await new Promise(r => setTimeout(r, 40));
+      }
+    });
+    await page.waitForTimeout(600);
+    const escaped = await page.evaluate(() => {
+      const out = [];
+      for (const panel of document.querySelectorAll(".panel")) {
+        const pb = panel.getBoundingClientRect();
+        for (const el of panel.querySelectorAll("*")) {
+          const b = el.getBoundingClientRect();
+          if (!b.width) continue;
+          const over = Math.max(b.right - pb.right, b.bottom - pb.bottom, pb.left - b.left, pb.top - b.top);
+          if (over > 1) out.push(`${el.className || el.tagName} +${Math.round(over)}px`);
+        }
+      }
+      return [...new Set(out)];
+    });
+    expect(escaped, `overflow on ${route}`).toEqual([]);
+  }
+});

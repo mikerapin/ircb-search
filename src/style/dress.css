@@ -114,6 +114,9 @@ main{max-width:1400px; margin:0 auto; padding:var(--sec) 0 20px; display:block}
 .lead{padding:0 var(--pad); max-width:66ch; font-size:15px; margin:0 0 18px}
 .lead.tight{margin-bottom:12px}
 .screened{background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:5px 5px}
+/* A screened head makes its own box visible, so it needs the breathing room a plain head
+   never shows: .sec-head has no top padding and the type sat flush against the dots. */
+.sec-head.screened{padding-top:15px; padding-bottom:15px}
 .crumb{padding:0 var(--pad) 14px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:700}
 .pagehead{padding:0 var(--pad) 8px; margin-bottom:var(--sec)}
 .pagehead h1{margin:6px 0 10px; font-size:clamp(30px,7vw,58px)}
@@ -150,7 +153,11 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   .panel::after{transition:none}
   .panel:hover::after,.panel:focus-within::after{transform:none; opacity:1; inset:-4px}
 }
-.epw{display:grid; grid-template-columns:1fr; flex:1 1 auto; min-width:0}
+/* minmax(0,1fr), not 1fr: a 1fr track keeps an automatic min-content floor, so the
+   artwork's intrinsic width pushed the track — and every child in it — 10px past the
+   panel's own border. That is the runtime badge and cover hanging over the edge. */
+.epw{display:grid; grid-template-columns:minmax(0,1fr); flex:1 1 auto; min-width:0}
+.epw>*{min-width:0}
 /* reserve the slot with a screen tint — a cover that has not arrived yet should look
    like an unprinted plate, not a hole */
 /* aspect-ratio belongs on the slot, not only on the image inside it: with it on the img
@@ -158,7 +165,7 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
    above promises never appeared. */
 .epw-art{display:block; aspect-ratio:1/1; border-bottom:var(--rule) solid var(--ink); position:relative;
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:6px 6px}
-.epw-art img{width:100%; height:100%; object-fit:cover}
+.epw-art img{display:block; width:100%; height:100%; object-fit:cover}
 .epw-art.gen{background:var(--paper)}
 .epw-art.gen .gc{aspect-ratio:1/1; border-bottom:0}
 .gc.blank{aspect-ratio:1/1}
@@ -277,7 +284,7 @@ html[data-neg] .hero-flag{color:#14120F}
 html[data-neg] .bbadge{color:#14120F}
 
 /* spinner rack */
-.rack{display:flex; gap:0; overflow-x:auto; padding:6px var(--pad) 20px; scroll-snap-type:x proximity}
+.rack{display:flex; gap:0; overflow-x:auto; padding:22px var(--pad) 34px; scroll-snap-type:x proximity}
 .rack .slot{flex:0 0 140px; margin-right:-12px; scroll-snap-align:start; position:relative; transition:transform .16s ease}
 .rack .slot .gc-t{right:16%}
 /* rack plates carry no numbers at all — the one stat lives in the labeled badge below */
@@ -296,7 +303,7 @@ html[data-neg] .rack .cnt{color:#14120F}
 /* stats indicia block */
 .stats{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--rule); background:var(--ink); border:var(--rule) solid var(--ink); margin:0 var(--pad)}
 @media(min-width:760px){ .stats{grid-template-columns:repeat(4,1fr)} }
-.stats .st{background:var(--paper); padding:16px 12px}
+.stats .st{background:var(--paper); padding:26px 18px}
 .stats .n{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; font-size:clamp(26px,5vw,40px); line-height:.9; font-feature-settings:"tnum"}
 .stats .l{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:600; opacity:.75; margin-top:6px}
 
@@ -315,7 +322,7 @@ html[data-neg] .sh .shh{color:#14120F}
 .sh .toprow{display:flex; gap:11px; align-items:flex-start}
 
 /* ---------- the panel (home, wrapping blocks) ---------- */
-.panelgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); gap:var(--gut); padding:0 var(--pad)}
+.panelgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); gap:var(--gut); padding:14px var(--pad) 18px}
 @media(min-width:760px){ .panelgrid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))} }
 .pblock{border:var(--rule) solid var(--ink); background:var(--paper); display:flex; flex-direction:column; color:var(--ink); position:relative}
 .pblock .por{aspect-ratio:1/1; background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%);
@@ -323,8 +330,12 @@ html[data-neg] .sh .shh{color:#14120F}
 .pblock .por img{width:100%; height:100%; object-fit:contain; object-position:bottom}
 .pblock .nm{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase;
   font-size:13px; letter-spacing:.02em; padding:8px 9px 4px; line-height:1.1}
-/* Colour, not opacity: element opacity on 11.5px text compounds and drops it under AA. */
-.pblock .tag{padding:0 9px 6px; font-size:11.5px; line-height:1.35; color:color-mix(in srgb, var(--ink) 78%, transparent)}
+/* .ptag, not .tag — .tag is the keyword chip and carries its own 1.5px border, which is
+   where the box-inside-a-box came from. Distinguished the way the panelist hero already
+   distinguishes a tagline: the hand face, italic. No border, no second background.
+   Colour, not opacity: element opacity on small text compounds and drops it under AA. */
+.pblock .ptag{padding:2px 9px 8px; font-family:var(--hand); font-variation-settings:"BNCE" 0,"INFM" 20;
+  font-style:italic; font-size:13px; line-height:1.2; color:color-mix(in srgb, var(--ink) 82%, transparent)}
 .pblock .st{padding:0 9px 9px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; opacity:.7; margin-top:auto}
 .pblock:hover{text-decoration:none; background:var(--yellow); color:#14120F}
 .pblock:hover .por{background:var(--yellow)}

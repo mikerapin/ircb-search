@@ -30,7 +30,7 @@ test("every regular carries a portrait, a tagline and a link to their page", asy
     const b = blocks.nth(i);
     expect(await b.getAttribute("href")).toMatch(/^#\/who\/.+/);
     await expect(b.locator("img")).toHaveAttribute("src", /avatars\/.+\.webp$/);
-    await expect(b.locator(".tag")).not.toBeEmpty();
+    await expect(b.locator(".ptag")).not.toBeEmpty();
     await expect(b.locator(".st")).toContainText("%");
   }
 });

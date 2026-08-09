@@ -36,7 +36,7 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
         return `<a class="pblock" href="${href("/who/" + encodeURIComponent(p.name))}">` +
           `<span class="por"><img src="${esc(p.photo)}" alt="" loading="lazy"></span>` +
           `<span class="nm">${esc(p.display)}</span>` +
-          `<span class="tag">${esc(p.tagline)}</span>` +
+          `<span class="ptag">${esc(p.tagline)}</span>` +
           `<span class="st">${nf(n)} ep${pl(n)} · ${sharePct(n, data.stats.episodes)}% · ` +
             `${esc(fmtShortDate(s?.first ?? null))} → ${esc(fmtShortDate(s?.latest ?? null))}</span></a>`;
       }).join("")}</div>
