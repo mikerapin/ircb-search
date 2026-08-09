@@ -256,6 +256,9 @@ test("the mini-bar takes over when the panel is destroyed while paused", async (
   await openEpisode(page);
   await page.locator("#readalong button.ts[data-act='cut']").first().click();
   await page.waitForSelector(".panel.playing .player");
+  // Wait for playback to actually start: au.play() is async, and pausing before its
+  // promise settles lets the resolution flip paused back to false.
+  await expect(page.locator("#au")).toHaveJSProperty("paused", false);
   await page.locator(".panel.playing .player .pp").click();      // pause
   await expect(page.locator("#au")).toHaveJSProperty("paused", true);
 
