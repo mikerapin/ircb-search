@@ -112,29 +112,49 @@ export function initTypeahead(input: HTMLInputElement): void {
   const close = (): void => {
     ta.hidden = true;
     idx = -1;
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
   };
 
   const paint = (): void => {
     const q = input.value.trim();
     ta.innerHTML = !q ? starter() : (data ? results(q, data) : starter());
+    /* The combobox contract: #ta is a listbox, so its children are options and everything
+       else (group headings, the footer count) must be presentational or AT counts them as
+       choices. Ids are stamped here rather than threaded through every opt() call site. */
+    let n = 0;
+    for (const el of ta.children) {
+      if (el.classList.contains("ta-opt")) {
+        el.setAttribute("role", "option");
+        el.id = "ta-opt-" + n++;
+      } else {
+        el.setAttribute("role", "presentation");
+      }
+    }
     ta.hidden = false;
     idx = -1;
+    input.setAttribute("aria-expanded", "true");
+    input.removeAttribute("aria-activedescendant");
     if (q && !data) ensureData(() => { if (!ta.hidden && input.value.trim()) paint(); });
   };
 
   const move = (d: number): void => {
     const o = options();
     if (!o.length) return;
-    if (idx >= 0) { o[idx]?.classList.remove("act"); o[idx]?.removeAttribute("aria-current"); }
+    if (idx >= 0) { o[idx]?.classList.remove("act"); o[idx]?.setAttribute("aria-selected", "false"); }
     /* Cycle over [input, ...options]: shift by one so the input sits at 0, rotate, shift back.
        The prototype's version left -1 mapping to itself, so the first ArrowDown did nothing. */
     const span = o.length + 1;
     idx = (((idx + 1 + d) % span) + span) % span - 1;
-    if (idx < 0) { input.focus(); return; }
+    if (idx < 0) { input.removeAttribute("aria-activedescendant"); input.focus(); return; }
     const el = o[idx];
     if (!el) return;
     el.classList.add("act");
-    el.setAttribute("aria-current", "true");
+    el.setAttribute("aria-selected", "true");
+    /* Focus stays in the input; aria-activedescendant is what tells a screen reader which
+       option is current. aria-current said nothing here, and the popover had no listbox
+       role for it to say it about. */
+    input.setAttribute("aria-activedescendant", el.id);
     el.scrollIntoView({ block: "nearest" });
   };
 
@@ -145,7 +165,9 @@ export function initTypeahead(input: HTMLInputElement): void {
     if (ev.key === "ArrowDown") { ev.preventDefault(); move(1); }
     else if (ev.key === "ArrowUp") { ev.preventDefault(); move(-1); }
     else if (ev.key === "Enter" && idx >= 0) { ev.preventDefault(); options()[idx]?.click(); }
-    else if (ev.key === "Escape") { close(); input.blur(); }
+    // Escape dismisses the popover; it does not throw the user out of the field they are
+    // typing in. blur() here sent focus to <body>.
+    else if (ev.key === "Escape") { close(); }
   });
   ta.addEventListener("click", ev => { if ((ev.target as HTMLElement).closest(".ta-opt")) close(); });
 

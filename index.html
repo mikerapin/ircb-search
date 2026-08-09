@@ -33,13 +33,15 @@
     <div class="blurb">
       <form id="sform" role="search">
         <label class="skip" for="q">Search comics, episodes, panelists</label>
-        <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Saga, Batman, X-Men, Ice Cream Man…">
+        <input id="q" name="q" type="search" autocomplete="off" spellcheck="false"
+               role="combobox" aria-controls="ta" aria-expanded="false" aria-autocomplete="list"
+               placeholder="Saga, Batman, X-Men, Ice Cream Man…">
         <button class="go" type="submit">Search</button>
       </form>
       <span class="slash" aria-hidden="true">Press /</span>
     </div>
     <nav class="menu" id="menu" hidden aria-label="Sections"></nav>
-    <div class="ta" id="ta" hidden aria-label="Search suggestions"></div>
+    <div class="ta" id="ta" role="listbox" hidden aria-label="Search suggestions"></div>
   </div>
 </header>
 

@@ -67,3 +67,42 @@ test("typeahead is axe clean with the popover open", async ({ page }) => {
   expect(axe.violations).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test("the popover is a real combobox, not a div of links", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+  const box = page.locator("#q");
+
+  await expect(box).toHaveAttribute("role", "combobox");
+  await expect(box).toHaveAttribute("aria-controls", "ta");
+  await expect(box).toHaveAttribute("aria-expanded", "false");
+
+  await box.click();
+  await expect(page.locator("#ta")).toBeVisible();
+  await expect(box).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator("#ta")).toHaveAttribute("role", "listbox");
+
+  // Every direct child is either an option with an id, or explicitly presentational —
+  // a bare div inside a listbox is announced as a choice the user cannot make.
+  const kids = await page.locator("#ta > *").evaluateAll(els =>
+    els.map(e => ({ role: e.getAttribute("role"), id: e.id, opt: e.classList.contains("ta-opt") })));
+  expect(kids.length).toBeGreaterThan(0);
+  for (const k of kids) {
+    if (k.opt) { expect(k.role).toBe("option"); expect(k.id).toMatch(/^ta-opt-\d+$/); }
+    else expect(k.role).toBe("presentation");
+  }
+
+  // Arrow keys move the active option via activedescendant, with focus staying in the field.
+  await page.keyboard.press("ArrowDown");
+  const active = await box.getAttribute("aria-activedescendant");
+  expect(active).toMatch(/^ta-opt-\d+$/);
+  expect(await page.evaluate(() => document.activeElement?.id)).toBe("q");
+  await expect(page.locator("#" + active)).toHaveAttribute("aria-selected", "true");
+
+  // Escape closes the popover but leaves the user in the field they were typing in.
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#ta")).toBeHidden();
+  await expect(box).toHaveAttribute("aria-expanded", "false");
+  expect(await box.getAttribute("aria-activedescendant")).toBeNull();
+  expect(await page.evaluate(() => document.activeElement?.id)).toBe("q");
+});
