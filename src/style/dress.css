@@ -66,7 +66,10 @@ html[data-neg] .menu .mh{color:#14120F}
 }
 html[data-neg] .blurb input,html[data-neg] .blurb input::placeholder{color:#14120F}
 html[data-neg] .blurb .go{background:#14120F; color:var(--yellow)}
-.slash{padding:0 10px; font-size:10px; letter-spacing:.1em; font-weight:700; color:#14120F; color:color-mix(in srgb, var(--ink) 70%, transparent); white-space:nowrap}
+/* The band stays yellow on both plates, so this softens toward the yellow, not toward
+   --ink — mixing with --ink flipped the hint light on the negative plate (1.28:1). */
+.slash{padding:0 10px; font-size:10px; letter-spacing:.1em; font-weight:700;
+  color:color-mix(in srgb, #14120F 74%, var(--yellow)); white-space:nowrap}
 @media(max-width:640px){ .slash{display:none} }
 
 /* ---------- typeahead popover (A2 pattern, Indicia dress) ---------- */
@@ -199,7 +202,9 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   padding:6px 9px; font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800;
   text-transform:uppercase; font-size:12.5px; letter-spacing:.05em; text-align:left;
 }
-html[data-neg] .ts{color:#14120F}
+/* :not(.dead) — the dead state isn't on the blue plate, and this rule outranks .ts.dead
+   on specificity, so without it the dead row went dark-on-dark on the negative plate. */
+html[data-neg] .ts:not(.dead){color:#14120F}
 .ts:hover{background:var(--red-deep); text-decoration:none}
 html[data-neg] .ts:hover{color:#14120F}
 .ts .tri{font-size:11px}
@@ -338,7 +343,9 @@ html[data-neg] .adslot .go{color:#14120F}
 .coupon{margin:0 var(--pad); border:3px dashed var(--ink); padding:16px; position:relative;
   background:var(--paper); background-image:radial-gradient(var(--dot) 28%,transparent 30%); background-size:7px 7px}
 .coupon .in{background:var(--paper); border:var(--rule) solid var(--ink); padding:16px}
-.coupon h3{margin:0 0 8px; font-size:clamp(21px,5vw,34px)}
+/* h2: the coupon is a top-level block, and on /subscribe it follows the h1 directly —
+   an h3 there skips a level. */
+.coupon h2{margin:0 0 8px; font-size:clamp(21px,5vw,34px)}
 .coupon .scissors{position:absolute; top:-13px; left:16px; background:var(--paper); padding:0 6px; font-size:15px}
 .coupon .subs{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px}
 .coupon .subs a{
@@ -727,5 +734,5 @@ html[data-neg] .roll:hover{color:#14120F}
    Blue on paper is 2.26:1 against body ink — not distinguishable by hue alone, so any link
    sitting inside a sentence gets an underline. Chrome links (chips, facets, panels, nav)
    are their own visual objects and are deliberately not in this list. */
-.statline a,.lead a,.empty a,.kv a,.sparse a,.notes a,.railnote a,.indicia a,.artcap a{
+.statline a,.lead a,.empty a,.kv a,.sparse a,.notes a,.railnote a,.indicia a,.artcap a,.pagehead p a{
   text-decoration:underline; text-underline-offset:2px}

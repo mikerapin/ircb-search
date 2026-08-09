@@ -93,7 +93,7 @@ export function subscribeCoupon(line?: string): string {
   return `<section class="sec"><div class="coupon">
     <span class="scissors" aria-hidden="true">✂</span>
     <div class="in">
-      <h3 class="disp">Next Wednesday, they do it again.</h3>
+      <h2 class="disp">Next Wednesday, they do it again.</h2>
       <p style="margin:0;max-width:58ch">${esc(line ?? "New episode every Wednesday since 2015. Three people, a stack of comics, one hour — all catalogued in this index.")}</p>
       <div class="subs">
         <a href="${SUBSCRIBE.apple}">Apple Podcasts</a>

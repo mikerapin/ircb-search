@@ -2,8 +2,8 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 /**
- * Plan 2 exit check 3: axe clean on every route, not on whichever pages someone remembered
- * to check. Add new routes here as they land rather than writing a fresh axe test per view.
+ * Plan 2 exit checks 3–6, run across the whole route list rather than on whichever pages
+ * someone remembered to check. Add new routes to routeList() as they land.
  */
 
 async function sampleKeys(page) {
@@ -18,9 +18,8 @@ async function sampleKeys(page) {
   });
 }
 
-test("every route is axe clean and free of console errors", async ({ page }) => {
-  const { ep, undated } = await sampleKeys(page);
-  const routes = [
+function routeList({ ep, undated }) {
+  return [
     ["home", "/"],
     ["search", "/#/search?q=batman"],
     ["search empty", "/#/search"],
@@ -38,11 +37,12 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
     ["panelist missing", "/#/who/Nobody%20At%20All"],
     ["panel", "/#/panel"],
     ["about", "/#/about"],
+    ["subscribe", "/#/subscribe"],
+    ["wall placeholder", "/#/wall"],
   ];
+}
 
-  const errors = [];
-  page.on("pageerror", e => errors.push(String(e)));
-
+async function axeSweep(page, routes) {
   const failures = [];
   for (const [name, path] of routes) {
     await page.goto(path);
@@ -50,16 +50,35 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
     await page.waitForTimeout(250);
     const r = await new AxeBuilder({ page }).analyze();
     if (r.violations.length) {
-      failures.push(`${name}: ` + r.violations.map(v => `${v.id}(x${v.nodes.length})`).join(", "));
+      // The selector matters more than the count — "color-contrast(x61)" alone sends you
+      // hunting through 61 nodes for one bad rule.
+      failures.push(`${name}: ` + r.violations.map(v =>
+        `${v.id}(x${v.nodes.length} @ ${v.nodes[0]?.target.join(" ")})`).join(", "));
     }
   }
-  expect(failures).toEqual([]);
+  return failures;
+}
+
+test("every route is axe clean and free of console errors", async ({ page }) => {
+  const routes = routeList(await sampleKeys(page));
+  const errors = [];
+  page.on("pageerror", e => errors.push(String(e)));
+  expect(await axeSweep(page, routes)).toEqual([]);
   expect(errors).toEqual([]);
 });
 
+test("every route is axe clean on the negative plate too", async ({ page }) => {
+  const routes = routeList(await sampleKeys(page));
+  // The inline <head> script reads this before first paint, so every navigation below
+  // renders dark from the start rather than flipping after the axe run.
+  await page.addInitScript(() => localStorage.setItem("ircb.neg", "1"));
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-neg", "");
+  expect(await axeSweep(page, routes)).toEqual([]);
+});
+
 test("no route renders a dead link", async ({ page }) => {
-  const { ep } = await sampleKeys(page);
-  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/index", "/#/who/Mike%20Rapin", "/#/panel", "/#/about"];
+  const routes = routeList(await sampleKeys(page)).map(([, path]) => path);
   const dead = [];
   for (const path of routes) {
     await page.goto(path);
@@ -74,16 +93,23 @@ test("no route renders a dead link", async ({ page }) => {
 });
 
 test("no route leaks pre-launch process language", async ({ page }) => {
-  const { ep } = await sampleKeys(page);
-  const routes = ["/", "/#/search?q=saga", "/#/ep/" + encodeURIComponent(ep), "/#/series/Saga", "/#/panel"];
+  const routes = routeList(await sampleKeys(page)).map(([, path]) => path);
   const leaks = [];
   for (const path of routes) {
     await page.goto(path);
     await page.waitForSelector("body[data-ready]");
     await page.waitForTimeout(250);
     const text = await page.evaluate(() => document.body.innerText);
-    const m = text.match(/showcase series|prototype|pitch|round [12]\b|data cut|design test/i);
+    /* No bare "pitch": the Index prints all 3,013 series headings and one of them is a
+       comic called Pitch. The terms here are ones our own copy would use and a comic
+       title would not. */
+    const m = text.match(/showcase series|prototype|round [12]\b|data cut|design test|sample data/i);
     if (m) leaks.push(`${path} → "${m[0]}"`);
   }
   expect(leaks).toEqual([]);
 });
+/* Exit check 5 (honest counts) is deliberately not a page scan: 527 is a stale prototype
+   figure in one place and Danny Martinez's real mention count in another, and no regex
+   tells them apart. Each view's own spec asserts its figures against core.json instead —
+   about.spec (all six stats), panel.spec (roster + guests = people), index.spec (rows =
+   series), home.spec (the Statement tiles). */

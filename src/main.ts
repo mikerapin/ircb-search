@@ -12,8 +12,8 @@ import "./style/dress.css";
 import { initAudio } from "./audio/engine";
 import { core } from "./data/load";
 import { viewAbout } from "./views/about";
-import { esc, nf } from "./lib/html";
-import { go, onRoute, type Route } from "./router";
+import { nf } from "./lib/html";
+import { go, href, onRoute, type Route } from "./router";
 import { fail, initChrome, renderShell, setSearchBox, setView } from "./shell";
 import { fitPlates } from "./views/cover";
 import { viewEpisode } from "./views/episode";
@@ -21,17 +21,11 @@ import { viewHome } from "./views/home";
 import { viewPanel } from "./views/panel";
 import { viewPanelist } from "./views/panelist";
 import { viewSearch } from "./views/search";
+import { viewSubscribe } from "./views/subscribe";
 import { viewIndex } from "./views/index-view";
 import { viewSeries } from "./views/series";
 import { initTypeahead } from "./search/typeahead";
 import type { CoreData } from "./data/types";
-
-/** Placeholder for routes whose real view lands in a later plan. */
-function stub(title: string, note: string): string {
-  return `<section class="sec">
-    <div class="pagehead"><span class="eyebrow">${esc(note)}</span><h1 class="disp">${esc(title)}</h1></div>
-  </section>`;
-}
 
 type ViewResult = [html: string, label: string, after?: () => void];
 
@@ -63,8 +57,18 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       const v = await viewAbout();
       return [v.html, "About the Data", v.after];
     }
-    case "subscribe": return [stub("Subscribe", "& Patreon"), "Subscribe"];
-    case "wall": return [stub("The Wall", `All ${nf(data.stats.episodes)} episodes`), "The Wall"];
+    case "subscribe": {
+      const v = await viewSubscribe();
+      return [v.html, "Subscribe", v.after];
+    }
+    /* The last placeholder in the build. Plan 3 owns the wall; until then the route says
+       so on the page rather than painting an empty grid. */
+    case "wall": return [`<section class="sec">
+      <div class="pagehead"><span class="eyebrow">All ${nf(data.stats.episodes)} episodes</span>
+        <h1 class="disp">The Wall</h1>
+        <p>Eleven years as one grid, lit up by whatever you search. It isn&rsquo;t built yet —
+        <a href="${href("/search")}">search the index</a> in the meantime.</p></div>
+    </section>`, "The Wall"];
     default: {
       const h = await viewHome();
       return [h.html, "EP. " + data.stats.episodes, h.after];
