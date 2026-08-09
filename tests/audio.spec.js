@@ -90,7 +90,9 @@ test("playback survives navigation via the mini-bar", async ({ page }) => {
 
   const before = await page.evaluate(() => document.getElementById("au").currentTime);
   await page.locator(".crumb a").click();                             // navigate away
-  await page.waitForTimeout(1200);
+  /* Wait for the tape to actually advance rather than for a fixed 1.2s. Under full-suite
+     load the timer expired before playback had moved, which read as a stall. */
+  await page.waitForFunction(t => document.getElementById("au").currentTime > t, before, { timeout: 15000 });
 
   const after = await page.evaluate(() => ({
     playing: !document.getElementById("au").paused,
