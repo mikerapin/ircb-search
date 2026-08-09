@@ -119,23 +119,33 @@ test("the mini-bar can pause and close", async ({ page }) => {
   expect(await page.evaluate(() => document.getElementById("au").getAttribute("src"))).toBeNull();
 });
 
-test("an episode with no audio still says so rather than offering a dead control", async ({ page }) => {
+test("an episode with no audio says so rather than offering a dead control", async ({ page }) => {
   await stubAudio(page);
+  /* No real record both lacks an enclosure and carries mentions, so this honest-refusal
+     path — the one playAffordance() renders when ep.enclosure is null — had zero coverage
+     and the guard that hunted for it could never be satisfied. Manufacture the case. */
+  let key = null;
+  await page.route("**/d/core.json", async route => {
+    const res = await route.fetch();
+    const core = await res.json();
+    const ep = core.episodes.find(e => e.enclosure && e.mentionCount > 2);
+    key = ep.key;
+    ep.enclosure = null;
+    await route.fulfill({ response: res, json: core });
+  });
+
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
-  const key = await page.evaluate(async () => {
-    const [core, men] = await Promise.all([
-      fetch("d/core.json").then(r => r.json()),
-      fetch("d/mentions.json").then(r => r.json()),
-    ]);
-    const withMentions = new Set(men.map(m => m.epKey));
-    return core.episodes.find(e => !e.enclosure && withMentions.has(e.key))?.key ?? null;
-  });
-  test.skip(!key, "no un-enclosed episode carries mentions");
+  expect(key).not.toBeNull();
+
   await page.goto("/#/ep/" + encodeURIComponent(key));
-  await page.waitForSelector("#readalong");
+  await page.waitForSelector("#readalong .panel");
+  // Not one play control anywhere, and every row says why.
   expect(await page.locator("#readalong button[data-act=cut]").count()).toBe(0);
-  await expect(page.locator("#readalong .ts.dead").first()).toContainText(/No audio on file|No minute logged/);
+  expect(await page.locator(".meta .big-play").count()).toBe(0);
+  await expect(page.locator("#readalong .ts.dead").first()).toContainText("No audio on file");
+  // The colophon must not promise jumps it cannot honour either.
+  expect(await page.locator(".colo").innerText()).toMatch(/0 playable/i);
 });
 
 test("a segment stops at the next logged minute and hands over the player", async ({ page }) => {
