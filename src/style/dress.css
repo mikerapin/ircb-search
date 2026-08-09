@@ -47,7 +47,7 @@ html[data-neg] .menu .mh{color:#14120F}
 .menu a:first-of-type{border-top:0}
 .menu a .sub,.menu button .sub{margin-left:auto; font-family:var(--body); font-size:10px; letter-spacing:.1em; font-weight:600; opacity:.6; text-transform:uppercase}
 .menu a:hover,.menu button:hover,.menu a.on{background:var(--yellow); color:#14120F; text-decoration:none}
-.menu a:hover .sub,.menu button:hover .sub{opacity:.75}
+.menu a:hover .sub,.menu button:hover .sub,.menu a.on .sub{opacity:.78}
 
 /* blurb band = search */
 .blurb{display:flex; align-items:center; gap:0; background:var(--yellow); border-bottom:var(--rule) solid var(--ink)}
@@ -57,8 +57,11 @@ html[data-neg] .menu .mh{color:#14120F}
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 700; font-size:16px;
   text-transform:uppercase; letter-spacing:.02em; color:#14120F;
 }
-.blurb input::placeholder{color:#14120F; opacity:.45}
-.blurb input:focus{outline:0; background:rgba(255,255,255,.35)}
+.blurb input::placeholder{color:color-mix(in srgb, #14120F 70%, var(--yellow)); opacity:1}
+/* outline:0 removed the only focus cue on the site's main control; the tint left behind
+   was 1.18:1. Ink, not blue: the ring sits on the yellow band. */
+.blurb input:focus{background:rgba(255,255,255,.35)}
+.blurb input:focus-visible{outline:3px solid var(--ink); outline-offset:-3px}
 .blurb .go{
   background:var(--ink); color:var(--paper); padding:0 16px; font-family:var(--disp);
   font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase; font-size:13px; letter-spacing:.06em;
@@ -194,8 +197,10 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   text-transform:uppercase; font-size:13px; line-height:1.15; letter-spacing:.01em;
   display:flex; justify-content:space-between; gap:6px; align-items:flex-start;
 }
+.band,.clrow .t .cm{overflow-wrap:anywhere}
 .band .no{font-size:11px; opacity:.75; flex:0 0 auto; padding-top:1px}
 .band a{color:#14120F}
+.panel.playing .band a{color:inherit}
 .pbody{padding:10px; display:flex; flex-direction:column; gap:8px; flex:1 1 auto}
 .cap{
   font-family:var(--hand); font-variation-settings:"BNCE" 0,"INFM" 14; font-size:13.5px; line-height:1.3;
@@ -224,7 +229,8 @@ html[data-neg] .ts:not(.dead){color:#14120F}
    hover (it is declared later), so this rule alone made the hovered dead row dark-on-dark. */
 html[data-neg] .ts:hover:not(.dead){color:#14120F}
 .ts .tri{font-size:11px}
-.ts .lab{margin-left:auto; font-size:10px; opacity:.85; letter-spacing:.1em}
+.ts .lab{margin-left:auto; font-size:10px; letter-spacing:.1em;
+  color:color-mix(in srgb, currentColor 88%, transparent)}
 .ts.dead{background:var(--paper-2); color:color-mix(in srgb, var(--ink) 78%, var(--paper-2)); cursor:default}
 .ts.dark{background:var(--ink); color:var(--paper)}
 html[data-neg] .ts.dark{color:#14120F}
@@ -495,7 +501,10 @@ html[data-neg] .big-play:hover{color:#14120F}
 @media(min-width:640px){ .split .panels{grid-template-columns:repeat(2,1fr)} }
 @media(min-width:1240px){ .split .panels{grid-template-columns:repeat(3,1fr)} }
 .rail{display:flex; flex-direction:column; gap:var(--gut)}
-@media(min-width:980px){ .rail{position:sticky; top:calc(var(--dress-h,118px) + 14px)} }
+@media(min-width:980px){ .rail{position:sticky; top:calc(var(--dress-h,118px) + 14px);
+  /* Taller than the viewport and the bottom facets could never be reached — the rail
+     scrolls itself rather than pinning content off-screen. */
+  max-height:calc(100vh - var(--dress-h,118px) - 28px); overflow-y:auto} }
 .railbox{border:var(--rule) solid var(--ink); background:var(--paper)}
 .railbox .rh{background:var(--ink); color:var(--paper); padding:5px 10px; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:700}
 html[data-neg] .railbox .rh{color:#14120F}
@@ -508,11 +517,14 @@ html[data-neg] .railbox .rh{color:#14120F}
 .railbox .rb.rows>.facet:first-child{border-top:0}
 .facet img,.facet .ph{width:24px; height:24px; flex:0 0 auto; object-fit:cover; border:1.5px solid var(--ink);
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px}
-.facet .n{margin-left:auto; font-size:11px; font-weight:700; opacity:.6; font-feature-settings:"tnum"}
+/* currentColor so it tracks every state, instead of an opacity that survived the
+   repaint. The old correction keyed on aria-pressed, which is button-only — these are
+   links carrying aria-current, so it never matched and the active count sat at 2.66:1. */
+.facet .n{margin-left:auto; font-size:11px; font-weight:700;
+  color:color-mix(in srgb, currentColor 72%, transparent); font-feature-settings:"tnum"}
 .facet:hover{background:var(--yellow); color:#14120F; text-decoration:none}
-.facet[aria-pressed=true],.facet[aria-current=true]{background:var(--red-deep); color:var(--paper)}
-html[data-neg] .facet[aria-pressed=true]{color:#14120F}
-.facet[aria-pressed=true] .n{opacity:.85}
+.facet[aria-current=true]{background:var(--red-deep); color:var(--paper)}
+.facet[aria-current=true] .n,.facet:hover .n{color:inherit}
 .railnote{padding:10px; font-size:11.5px; line-height:1.5; opacity:.75; border-top:var(--rule) solid var(--ink)}
 
 /* ---------- checklist (series / index) ---------- */
@@ -530,8 +542,10 @@ html[data-neg] .checklist .hd{color:#14120F}
 .clrow .t .ep{font-size:11.5px; color:color-mix(in srgb, var(--ink) 82%, transparent); margin-top:3px}
 .clrow .t .ep a{text-decoration:underline; text-underline-offset:2px}
 .clrow .ts{width:auto; min-height:42px; flex:0 0 auto}
-.nomin{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; color:color-mix(in srgb, var(--ink) 78%, transparent);
-  color:var(--ink); white-space:nowrap; padding:6px 2px; display:inline-block}
+/* fallback first, mix second — the other order left the mix dead. */
+.nomin{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
+  color:var(--ink); color:color-mix(in srgb, var(--ink) 78%, transparent);
+  white-space:nowrap; padding:6px 2px; display:inline-block}
 .nomin:hover{color:var(--blue)}
 
 /* the index: Overstreet price-guide density */
@@ -581,9 +595,9 @@ html[data-neg] .bar .bf::after{background-image:radial-gradient(rgba(20,18,15,.4
 
 /* tenure strip */
 .tenure{display:grid; grid-template-columns:repeat(6,1fr); gap:3px; padding:10px}
-@media(min-width:400px){ .tenure{grid-template-columns:repeat(12,1fr)} }
+@media(min-width:480px){ .tenure{grid-template-columns:repeat(12,1fr)} }
 @media(min-width:980px){ .tenure{grid-template-columns:repeat(6,1fr)} }
-.tenure .yr{border:1.5px solid var(--ink); aspect-ratio:1/1; display:flex; flex-direction:column;
+.tenure .yr{border:1.5px solid var(--ink); aspect-ratio:1/1; min-width:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center; font-size:9px; font-weight:700; letter-spacing:.02em;
   background:var(--paper); font-feature-settings:"tnum";
   /* Quiet, not invisible: opacity .35 put the off years at 2.22:1 and faded the border too. */
@@ -724,7 +738,8 @@ html[data-neg] #minibar.paused .pp{color:#14120F; border-color:#14120F}
 #minibar .cm{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase;
   font-size:12.5px; letter-spacing:.03em; color:var(--yellow); display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 #minibar.paused .cm{color:inherit}
-#minibar .ep{display:block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; opacity:.6;
+#minibar .ep{display:block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+  color:color-mix(in srgb, currentColor 74%, transparent);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 #minibar .cm:hover{text-decoration:underline}
 #minibar .clk{font-size:11px; font-weight:700; letter-spacing:.04em; font-feature-settings:"tnum"; flex:0 0 auto; opacity:.8}
