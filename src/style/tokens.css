@@ -56,8 +56,11 @@ a{color:var(--blue); text-decoration:none}
 a:hover{text-decoration:underline; text-decoration-thickness:2px}
 button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
 img{display:block; max-width:100%}
-:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
-html[data-neg] :focus-visible{outline-color:var(--yellow)}
+/* currentColor, not an accent: a fixed ring colour cannot contrast with every ground it
+   lands on — blue measured 2.27:1 on the dark submit button and 1.42:1 on the red active
+   facet, and the negative plate's yellow measured 2.05:1 on red. An element's own text
+   colour already contrasts with its own background, so the ring inherits that guarantee. */
+:focus-visible{outline:3px solid currentColor; outline-offset:2px}
 .skip{position:absolute; left:-9999px; top:0; background:var(--yellow); color:#141210; padding:8px 14px; font-weight:700; z-index:10000}
 .skip:focus{left:8px; top:8px}
 

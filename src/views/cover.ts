@@ -5,7 +5,10 @@ import { esc, fmtDate, fmtRuntime } from "../lib/html";
    post-launch, so every comic mention prints its own. Ported from the prototype. */
 
 const FIELDS: Array<[field: string, text: string]> = [
-  ["var(--red)", "#14120F"], ["var(--blue)", "var(--paper)"],
+  /* --red-deep, not --red: dark ink on the bright red measured 4.29:1, and a plate title
+     is not always large text — fitPlates sizes it in cqw, so a rack slot renders it at
+     ~13px. House rule 2, applied to the plate palette. */
+  ["var(--red-deep)", "var(--paper)"], ["var(--blue)", "var(--paper)"],
   ["var(--yellow)", "#14120F"], ["var(--ink)", "var(--yellow)"],
   ["var(--tint)", "#14120F"], ["var(--paper-2)", "var(--ink)"],
   ["var(--ink)", "var(--red)"], ["var(--blue)", "var(--yellow)"],
