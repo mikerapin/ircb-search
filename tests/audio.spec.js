@@ -135,8 +135,10 @@ test("an episode with no audio says so rather than offering a dead control", asy
   });
 
   await page.goto("/");
-  await page.waitForSelector("body[data-ready]");
-  expect(key).not.toBeNull();
+  /* Not waitForSelector("body[data-ready]"): that flag is set at module scope, before
+     core.json is even requested, so under load we read `key` before the route ran. Wait
+     for the interception itself. */
+  await expect.poll(() => key, { timeout: 15000 }).not.toBeNull();
 
   await page.goto("/#/ep/" + encodeURIComponent(key));
   await page.waitForSelector("#readalong .panel");
