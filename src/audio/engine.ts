@@ -127,6 +127,11 @@ export function jumpCut(
 ): void {
   const e = lookup(key);
   if (!e?.enclosure) return;
+  /* Captured before closeCut wipes the old cutslot: at a segment boundary the engine
+     destroys the player the listener may have been holding focus in, dropping them to
+     <body> mid-playback. Restored on the new player below — this only ever moves focus
+     that we ourselves just destroyed. */
+  const keptFocus = !!play.panel && play.panel.contains(document.activeElement);
   if (play.panel && play.panel !== panel && document.contains(play.panel)) closeCut(play.panel);
 
   const slot = panel.querySelector(".cutslot");
@@ -136,6 +141,7 @@ export function jumpCut(
   const until = opts?.until ?? readUntil(panel);
   slot.innerHTML = playerHTML(secs, e.runtimeSecs, comic ?? e.title, autoplay);
   panel.classList.add("playing");
+  if (keptFocus) panel.querySelector<HTMLButtonElement>(".player .pp")?.focus();
   play = { key, comic, panel, until };
   if (!seek && au.dataset["ep"] === key) { paintBar(); return; }   // same tape, already rolling
   seekPending = true;

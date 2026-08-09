@@ -280,3 +280,27 @@ test("the mini-bar takes over when the panel is destroyed while paused", async (
   // Paused audio fires nothing, so without a DOM-driven repaint there was no control at all.
   await expect(page.locator("#minibar")).toHaveClass(/\bon\b/);
 });
+
+test("a segment handover keeps focus on a player, not on <body>", async ({ page }) => {
+  await stubAudio(page);
+  await openEpisode(page);
+  const seg = await shortSegment(page, 4);
+  await page.locator("#readalong .panel").first().locator("[data-act=cut]").click();
+  await page.waitForSelector(".panel.playing .player");
+  // Put focus where a keyboard listener would have it: on the player's own control.
+  await page.locator(".panel.playing .player .pp").focus();
+  expect(await page.evaluate(() => document.activeElement?.className)).toContain("pp");
+
+  // Ride past the boundary; the engine destroys this player and opens the next one.
+  await page.waitForFunction(i => {
+    const panels = [...document.querySelectorAll("#readalong .panel")];
+    return panels.indexOf(document.querySelector("#readalong .panel.playing")) === i;
+  }, 1, { timeout: 20000 });
+
+  // Focus used to land on <body>, mid-playback, with no way back to the controls.
+  const active = await page.evaluate(() => ({
+    cls: document.activeElement?.className ?? "",
+    inPlayer: !!document.activeElement?.closest?.(".panel.playing .player"),
+  }));
+  expect(active.inPlayer, `focus was on ${active.cls || "<body>"}`).toBe(true);
+});
