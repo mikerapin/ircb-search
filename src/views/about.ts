@@ -18,6 +18,12 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
   const noMention = s.episodes - s.indexedEpisodes;
   const undated = data.episodes.filter(e => !e.date).length;
   const noAudio = data.episodes.filter(e => !e.enclosure).length;
+  /* Three populations, not two. The undated records are the Patreon shelf, not the
+     pre-feed back catalogue — the back catalogue all carries dates. Filing them together
+     told readers the oldest episodes are the ones with no date, which is false. */
+  const feedEps = data.episodes.filter(e => e.showId).length;
+  const backCatalogue = data.episodes.filter(e => !e.showId && e.date).length;
+  const patreonShelf = data.episodes.filter(e => e.patreonUrl).length;
   const noTitle = data.episodes.filter(e => !e.title).length;
   const noMinute = men.filter(m => m.secs == null).length;
   /* Not `men.length - noMinute`: a minute is necessary but not sufficient. jumpable() also
@@ -56,11 +62,16 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
       <div class="sec-head"><h2 class="disp">The Two Eras</h2></div>
       <p class="lead">The archive comes in two eras, and the site doesn&rsquo;t pretend otherwise.</p>
       <dl class="kv">
-        <div><dt>Before the feed</dt><dd>The back catalogue. The earliest episodes predate the RSS feed entirely, and
-          ${nf(undated)} records carry no recoverable air date. They exist and they&rsquo;re listed; they just can&rsquo;t
-          be placed on a calendar. ${nf(noAudio)} have no audio on file, so those pages offer no play control at all.</dd></div>
-        <div><dt>The feed era</dt><dd>Titles, dates, panel, runtime and audio for everything, and the mention index
-          reaches ${nf(s.indexedEpisodes)} of the ${nf(s.episodes)}.</dd></div>
+        <div><dt>The feed era</dt><dd>${nf(feedEps)} episodes published to the RSS feed, with titles, dates, panel,
+          runtime and audio. These are the ones that carry a broadcast number, and the mention index reaches
+          ${nf(s.indexedEpisodes)} of them.</dd></div>
+        <div><dt>Before the feed</dt><dd>${nf(backCatalogue)} records predate the feed. They all carry air dates —
+          it&rsquo;s the audio that&rsquo;s missing, so those pages offer no play control. They were never numbered
+          in the feed, so the site doesn&rsquo;t give them a number.</dd></div>
+        <div><dt>The Patreon shelf</dt><dd>${nf(patreonShelf)} bonus episodes made for Patreon members. They never
+          hit the public feed, and ${nf(undated)} of the archive&rsquo;s records carry no recoverable air date —
+          almost entirely these. They&rsquo;re listed and searchable; they just can&rsquo;t be placed on a calendar,
+          and they link to Patreon rather than to audio. In all, ${nf(noAudio)} records have no audio on file.</dd></div>
         <div><dt>The honest headline</dt><dd><b>${nf(s.indexedEpisodes)} episodes indexed</b>, not
           &ldquo;${nf(s.episodes)} episodes searchable.&rdquo; ${nf(noMention)} episodes have no mention data —
           search can&rsquo;t reach inside them, and the site won&rsquo;t pretend it can.</dd></div>

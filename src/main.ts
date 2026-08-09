@@ -11,6 +11,7 @@ import "./style/dress.css";
 
 import { initAudio } from "./audio/engine";
 import { core } from "./data/load";
+import { feedNumbers } from "./data/numbering";
 import { viewAbout } from "./views/about";
 import { nf } from "./lib/html";
 import { go, href, onRoute, type Route } from "./router";
@@ -25,7 +26,7 @@ import { viewSubscribe } from "./views/subscribe";
 import { viewIndex } from "./views/index-view";
 import { viewSeries } from "./views/series";
 import { initTypeahead } from "./search/typeahead";
-import type { CoreData } from "./data/types";
+import type { CoreData, EpisodeCore } from "./data/types";
 
 type ViewResult = [html: string, label: string, after?: () => void];
 
@@ -71,7 +72,13 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
     </section>`, "The Wall"];
     default: {
       const h = await viewHome();
-      return [h.html, "EP. " + data.stats.episodes, h.after];
+      /* The newest episode's real feed number, not the record count — 230 of the 798
+         records were never numbered feed episodes. */
+      const nos = feedNumbers(data.episodes);
+      const newest = data.episodes.reduce<EpisodeCore | null>(
+        (best, e) => (e.date && nos.has(e.key) && (!best?.date || e.date > best.date) ? e : best), null);
+      const no = newest ? nos.get(newest.key) : undefined;
+      return [h.html, no ? "EP. " + nf(no) : "The Cover", h.after];
     }
   }
 }

@@ -3,7 +3,8 @@ import type { EpisodeCore } from "../data/types";
 import { esc, fmtDate, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { patreonAd, panelGrid, shuffle, spinnerRack, statement, subscribeCoupon } from "./blocks";
-import { byDateDesc, epHref, episodePanel, priceBox, sfx } from "./components";
+import { feedNumbers } from "../data/numbering";
+import { byDateDesc, epHref, episodeBadge, episodePanel, priceBox, sfx } from "./components";
 import { fitPlates } from "./cover";
 
 /** Measure after the browser has laid the grid out, not in the same tick we injected it. */
@@ -11,7 +12,8 @@ const refit = (root: ParentNode): void => { requestAnimationFrame(() => fitPlate
 
 const RECENT = 8;
 
-function hero(e: EpisodeCore, episodes: number): string {
+function hero(e: EpisodeCore, feedNo: number | undefined): string {
+  const badge = episodeBadge(e, feedNo);
   return `<section class="sec">
     <div class="cover-hero">
       <div class="hero-art">
@@ -20,7 +22,7 @@ function hero(e: EpisodeCore, episodes: number): string {
         ${priceBox(e)}
       </div>
       <div class="hero-side">
-        <div class="micro" style="opacity:.7">EP. ${episodes} · ${esc(fmtDate(e.date))} · ${e.mentionCount} comic${pl(e.mentionCount)} indexed</div>
+        <div class="micro">${badge ? badge + " · " : ""}${esc(fmtDate(e.date))} · ${e.mentionCount} comic${pl(e.mentionCount)} indexed</div>
         <h1 class="hero-title disp"><a href="${epHref(e)}" style="color:inherit">${esc(e.title)}</a></h1>
         <div class="credits">${esc(e.people.join(", "))}</div>
         <a class="big-play" href="${epHref(e)}"><span aria-hidden="true">▶</span> Read &amp; listen</a>
@@ -44,7 +46,7 @@ export async function viewHome(): Promise<{ html: string; after: () => void }> {
   const recent = dated.filter(e => e.key !== top.key && e.artwork).slice(0, RECENT);
 
   const html =
-    hero(top, stats.episodes) +
+    hero(top, feedNumbers(episodes).get(top.key)) +
     sfx(nf(stats.mentions) + " comics!") +
     `<div id="home-shuffle"></div>` +
     statement(data) +

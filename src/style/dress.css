@@ -269,6 +269,12 @@ html[data-neg] .player .pp{border-color:#14120F}
 html[data-neg] .hero-flag{color:#14120F}
 .hero-side{padding:18px; display:flex; flex-direction:column; gap:13px; min-width:0; justify-content:center}
 .hero-title{font-size:clamp(27px,6vw,50px); margin:0}
+/* episode badges: the Patreon mark and the bonus B sit on the micro line */
+.pmark{vertical-align:-1px; margin-right:3px}
+.pl{letter-spacing:.1em}
+.bbadge{display:inline-block; min-width:15px; text-align:center; background:var(--ink); color:var(--paper);
+  border-radius:2px; padding:0 3px; font-weight:800}
+html[data-neg] .bbadge{color:#14120F}
 
 /* spinner rack */
 .rack{display:flex; gap:0; overflow-x:auto; padding:6px var(--pad) 20px; scroll-snap-type:x proximity}

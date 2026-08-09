@@ -44,6 +44,27 @@ export function episodePanel(e: EpisodeCore): string {
   `</div></article>`;
 }
 
+/* Inline rather than an icon font: a whole font for one glyph, loaded at runtime from
+   somewhere, against a spec that forbids third-party requests. currentColor means it
+   inherits on both plates. */
+const PATREON_MARK =
+  `<svg class="pmark" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" focusable="false">` +
+    `<circle cx="15.2" cy="9.4" r="6.6" fill="currentColor"/>` +
+    `<rect x="2" y="2.8" width="3.6" height="18.4" fill="currentColor"/>` +
+  `</svg>`;
+
+/**
+ * What to call an episode. Feed episodes carry their broadcast number; the Patreon shelf
+ * wears the Patreon mark; a bonus record gets a B. Anything else — the pre-feed back
+ * catalogue — goes unlabelled rather than borrowing a number it never had.
+ */
+export function episodeBadge(e: EpisodeCore, feedNo: number | undefined): string {
+  if (feedNo) return `EP. ${feedNo}`;
+  if (e.patreonUrl) return `${PATREON_MARK}<span class="pl">Patreon</span>`;
+  if (/\bbonus\b/i.test(e.title)) return `<span class="bbadge" title="Bonus episode">B</span>`;
+  return "";
+}
+
 export function sfx(text: string): string {
   return `<div class="sfx">${esc(text)}</div>`;
 }

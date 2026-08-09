@@ -124,3 +124,21 @@ test("home is axe clean with no console errors", async ({ page }) => {
   expect(axe.violations).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test("the hero wears a real feed number, not the record count", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector(".cover-hero");
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const feed = core.episodes.filter(e => e.showId && e.date)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const newest = feed[feed.length - 1];
+
+  const micro = await page.locator(".hero-side .micro").innerText();
+  expect(micro).toContain(`EP. ${feed.length}`);
+  // 230 of the 798 records were never numbered feed episodes, so the total must not appear.
+  expect(feed.length).toBeLessThan(core.stats.episodes);
+  expect(micro).not.toContain(String(core.stats.episodes));
+  await expect(page.locator("#dressno")).toHaveText(`EP. ${feed.length.toLocaleString("en-US")}`);
+  expect(newest.key).toBe(await page.locator(".hero-title a").getAttribute("href")
+    .then(h => decodeURIComponent(h.replace("#/ep/", ""))));
+});
