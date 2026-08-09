@@ -166,3 +166,17 @@ test("the page leads with in-page playback, not with the off-site link", async (
   await expect(page.locator(".meta a[href*='simplecast']")).toHaveCount(0);
   await expect(page.locator(".colo a[href*='simplecast']")).toHaveCount(1);
 });
+
+test("the read-along really is in broadcast order", async ({ page }) => {
+  await openNewestEpisode(page);
+  const rows = await page.locator("#readalong .panel").evaluateAll(els =>
+    els.map(p => (p.dataset.secs === "" ? null : Number(p.dataset.secs))));
+  expect(rows.length).toBeGreaterThan(0);
+
+  // Timestamped rows ascend, and every un-logged one sits after all of them — `secs ?? 0`
+  // used to collapse them to zero and lead the list under a "broadcast order" heading.
+  const stamped = rows.filter(s => s != null);
+  expect(stamped).toEqual([...stamped].sort((a, b) => a - b));
+  const firstNull = rows.indexOf(null);
+  if (firstNull !== -1) expect(rows.slice(firstNull).every(s => s == null)).toBe(true);
+});

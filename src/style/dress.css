@@ -541,7 +541,10 @@ html[data-neg] .azbar a:hover,html[data-neg] .azbar button:hover{color:#14120F}
 .azsec>h2:focus-visible{outline:3px solid var(--blue); outline-offset:-3px}
 html[data-neg] .azsec>h2,html[data-neg] .azsec>h3{color:#14120F}
 .azsec>h2 span,.azsec>h3 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
-.azrow{display:flex; gap:8px; align-items:baseline; padding:2px 9px; font-size:12.5px; color:var(--ink); line-height:1.35}
+/* min-height 24px: 12.5px at 1.35 plus 2px padding computed to 20.9, under the 24x24
+   minimum for a touch target, on a page that is 3,013 adjacent targets with no gap. */
+.azrow{display:flex; gap:8px; align-items:baseline; padding:3px 9px; min-height:24px;
+  font-size:12.5px; color:var(--ink); line-height:1.35}
 .azrow:nth-child(odd){background:var(--paper-2)}
 .azrow .nm{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .azrow .n{margin-left:auto; font-size:11px; font-weight:700; color:color-mix(in srgb, var(--ink) 72%, transparent); font-feature-settings:"tnum"; flex:0 0 auto}

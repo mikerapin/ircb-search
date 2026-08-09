@@ -52,7 +52,17 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
     if (!list) byEp.set(m.epKey, (list = []));
     list.push(m);
   }
-  for (const list of byEp.values()) list.sort((a, b) => (a.secs ?? 0) - (b.secs ?? 0));
+  /* Un-timestamped mentions sort last, not first. `a.secs ?? 0` collapsed all 2,941 of
+     them to zero, so a heading that reads "in broadcast order" led with every comic whose
+     minute was never logged. */
+  for (const list of byEp.values()) {
+    list.sort((a, b) => {
+      if (a.secs == null && b.secs == null) return 0;
+      if (a.secs == null) return 1;
+      if (b.secs == null) return -1;
+      return a.secs - b.secs;
+    });
+  }
 
   const mine = byEp.get(ep.key) ?? [];
   const detail = det.get(ep.key);
