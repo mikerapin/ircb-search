@@ -91,3 +91,33 @@ test("the search filter chip carries the panelist through", async ({ page }) => 
   await expect(page).toHaveURL(/#\/search\?.*who=Mike\+Rapin/);
   await expect(page.locator(".honest-count")).toContainText("filtered to Mike Rapin");
 });
+
+test("an episode with no artwork still reserves its plate", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+  // Someone whose recent episodes predate the artwork era, so the panels actually render.
+  const name = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    const by = new Map();
+    for (const e of core.episodes) for (const p of e.people) {
+      if (!by.has(p)) by.set(p, []);
+      by.get(p).push(e);
+    }
+    return [...by].find(([, eps]) => eps.filter(e => e.date).slice(0, 8).some(e => !e.artwork))?.[0] ?? null;
+  });
+  test.skip(!name, "every rendered episode carries artwork");
+
+  await page.goto("/#/who/" + encodeURIComponent(name));
+  await page.waitForSelector(".panels .epw-art");
+  await page.waitForTimeout(400);
+  const slots = await page.locator(".panels .epw-art").evaluateAll(els => els.map(a => ({
+    img: !!a.querySelector("img"),
+    h: a.getBoundingClientRect().height,
+    w: a.getBoundingClientRect().width,
+  })));
+  const blanks = slots.filter(s => !s.img);
+  expect(blanks.length).toBeGreaterThan(0);
+  // It used to collapse to the 2px border. The slot is square whether or not art exists.
+  for (const s of blanks) expect(s.h).toBeGreaterThan(s.w * 0.8);
+  await expect(page.locator(".panels .epw-art .gc.blank").first()).toBeVisible();
+});

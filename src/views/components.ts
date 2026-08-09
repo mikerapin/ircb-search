@@ -1,7 +1,7 @@
 import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, pl, simplecastAt } from "../lib/html";
 import { jumpable } from "../search/engine";
-import { cover, num } from "./cover";
+import { blankVariant, cover, num } from "./cover";
 import { href } from "../router";
 
 /** A comic cover carries a price; an episode carries a runtime. */
@@ -14,12 +14,16 @@ export function epHref(e: EpisodeCore): string {
   return href("/ep/" + encodeURIComponent(e.key));
 }
 
-/* The generated trade-dress cover (.gc) lands in Plan 2. Until then an episode with no
-   artwork gets the screened slot the stylesheet already reserves — an unprinted plate,
-   not a hole. */
+/* 252 episodes carry no artwork. They used to get an empty <a>, which collapsed to the
+   2px border — the "reserved slot" the stylesheet promised was never reserved, because
+   the aspect-ratio sat on the img rather than on the anchor. They now get the same
+   generated plate the episode hero has always used for this case. */
 function art(e: EpisodeCore): string {
   const link = epHref(e);
-  if (!e.artwork) return `<a class="epw-art" href="${link}" aria-hidden="true" tabindex="-1"></a>`;
+  if (!e.artwork) {
+    return `<a class="epw-art gen" href="${link}" style="container-type:inline-size" ` +
+      `aria-hidden="true" tabindex="-1">${blankVariant(e)}</a>`;
+  }
   return `<a class="epw-art" href="${link}" tabindex="-1" aria-hidden="true">` +
     `<img src="${esc(e.artwork)}" alt="" loading="lazy">${priceBox(e)}</a>`;
 }

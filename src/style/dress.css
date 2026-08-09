@@ -153,9 +153,12 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
 .epw{display:grid; grid-template-columns:1fr; flex:1 1 auto; min-width:0}
 /* reserve the slot with a screen tint — a cover that has not arrived yet should look
    like an unprinted plate, not a hole */
-.epw-art{display:block; border-bottom:var(--rule) solid var(--ink); position:relative;
+/* aspect-ratio belongs on the slot, not only on the image inside it: with it on the img
+   alone, a slot with no img collapsed to the 2px border and the reserved plate the comment
+   above promises never appeared. */
+.epw-art{display:block; aspect-ratio:1/1; border-bottom:var(--rule) solid var(--ink); position:relative;
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:6px 6px}
-.epw-art img{width:100%; aspect-ratio:1/1; object-fit:cover}
+.epw-art img{width:100%; height:100%; object-fit:cover}
 .epw-art.gen{background:var(--paper)}
 .epw-art.gen .gc{aspect-ratio:1/1; border-bottom:0}
 .gc.blank{aspect-ratio:1/1}
