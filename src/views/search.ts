@@ -1,5 +1,5 @@
 import { core, details, mentions as loadMentions } from "../data/load";
-import { ROSTER_MAP, isRoster } from "../data/roster";
+import { ROSTER_MAP, isRoster, panelistNames } from "../data/roster";
 import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -50,7 +50,13 @@ function rail(q: SearchQuery, all: Mention[], byKey: Map<string, EpisodeCore>): 
     for (const n of e.people) if (isRoster(n)) counts.set(n, (counts.get(n) ?? 0) + 1);
   }
   const names = [...counts].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n);
-  if (q.who && !counts.has(q.who)) names.unshift({ name: q.who, n: all.length });
+  /* A guest is not in `counts` (that only tallies the roster), and labelling them with
+     all.length gave them the whole query's total as if it were theirs. Count their own. */
+  if (q.who && !counts.has(q.who)) {
+    const theirs = new Set(panelistNames(q.who));
+    const n = all.filter(m => byKey.get(m.epKey)?.people.some(p => theirs.has(p))).length;
+    names.unshift({ name: q.who, n });
+  }
 
   const sorts: Array<[SearchQuery["sort"], string]> = [
     ["relevance", "Best match"], ["recent", "Newest first"], ["oldest", "Oldest first"],
@@ -93,7 +99,10 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
   }
 
   const res = runSearch(q, d);
-  const unfiltered = runSearch({ ...q, who: null, guest: false }, d);
+  /* Clear only `who` — the facet each rail link actually changes. Clearing `guest` too
+     meant that with the guest filter on, every panelist count was the number you'd get
+     WITHOUT it, so clicking a facet landed on a smaller result than the count promised. */
+  const whoBase = runSearch({ ...q, who: null }, d);
   const eps = res.episodes.slice(0, 6);
   const inEps = new Set(res.all.map(m => m.epKey)).size;   // honest, not the capped 36
 
@@ -128,5 +137,5 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
   }
   results += `</div>`;
 
-  return head + `<div class="split">${rail(q, unfiltered.all, byKey)}${results}</div>`;
+  return head + `<div class="split">${rail(q, whoBase.all, byKey)}${results}</div>`;
 }

@@ -44,11 +44,32 @@ test("a query with no matches says so instead of rendering nothing", async ({ pa
   await expect(page.locator(".chips .chip").first()).toBeVisible();
 });
 
-test("mention plates carry a jump or an honest refusal", async ({ page }) => {
+test("mention plates carry a jump or an honest refusal, and the data decides which", async ({ page }) => {
+  // "exactly one .ts" was true whether the plate offered a real jump or a dead refusal, so
+  // it proved nothing about house rule 4. Decide each plate against the data instead.
   await page.goto("/#/search?q=saga");
-  const first = page.locator(".sec.mentions .panel").first();
-  await expect(first.locator(".ts")).toHaveCount(1);
-  await expect(first.locator(".gc")).toBeVisible();
+  await page.waitForSelector(".sec.mentions .panel");
+  await expect(page.locator(".sec.mentions .panel .gc").first()).toBeVisible();
+
+  const bad = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    const byKey = new Map(core.episodes.map(e => [e.key, e]));
+    const wrong = [];
+    for (const panel of document.querySelectorAll(".sec.mentions .panel")) {
+      const ep = byKey.get(panel.dataset.ep);
+      const secs = panel.dataset.secs === "" ? null : Number(panel.dataset.secs);
+      // jumpable(): a minute, audio on file, and a stamp inside the runtime.
+      const canJump = secs != null && secs > 0 && !!ep?.enclosure
+        && (ep.runtimeSecs == null || secs < ep.runtimeSecs);
+      const live = panel.querySelector("button.ts[data-act='cut']");
+      const dead = panel.querySelector("a.ts.dead");
+      if (canJump && !live) wrong.push(`${panel.dataset.comic}: jumpable but no play control`);
+      if (!canJump && !dead) wrong.push(`${panel.dataset.comic}: not jumpable but offered a jump`);
+      if (live && dead) wrong.push(`${panel.dataset.comic}: both`);
+    }
+    return wrong;
+  });
+  expect(bad).toEqual([]);
 });
 
 test("panelist avatars are self-hosted and actually load", async ({ page }) => {
@@ -79,4 +100,21 @@ test("search is axe clean with no console errors", async ({ page }) => {
   const axe = await new AxeBuilder({ page }).analyze();
   expect(axe.violations).toEqual([]);
   expect(errors).toEqual([]);
+});
+
+test("a facet count is what clicking that facet delivers, guest filter included", async ({ page }) => {
+  // With guest=1 active, the rail used to show counts computed without it.
+  await page.goto("/#/search?q=batman&guest=1");
+  await page.waitForSelector(".railbox.who .facet");
+  const rows = await page.locator(".railbox.who .facet").evaluateAll(els =>
+    els.map(a => ({ href: a.getAttribute("href"), n: a.querySelector(".n")?.textContent }))
+       .filter(r => r.n));
+  expect(rows.length).toBeGreaterThan(0);
+
+  for (const r of rows.slice(0, 3)) {
+    await page.goto(r.href);
+    await page.waitForSelector(".honest-count");
+    const claimed = (await page.locator(".honest-count").innerText()).match(/^([\d,]+) mention/)[1];
+    expect(claimed).toBe(r.n);
+  }
 });
