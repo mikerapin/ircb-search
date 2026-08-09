@@ -223,3 +223,45 @@ test("the roll preference persists", async ({ page }) => {
 test("the stub is long enough for these seeks", () => {
   expect(FAKE_AUDIO_SECONDS).toBeGreaterThan(60);
 });
+
+test("the last jump clicked is the one that plays", async ({ page }) => {
+  await stubAudio(page);
+  await openEpisode(page);
+  // Restamp inside the stub's runtime; real timestamps are minutes into the episode.
+  await shortSegment(page, 4);
+  const jumps = page.locator("#readalong button.ts[data-act='cut']");
+  if (await jumps.count() < 2) test.skip(true, "episode has fewer than two jumpable comics");
+
+  const wanted = Number(await jumps.nth(1).getAttribute("data-secs"));
+  // Back to back, so the second lands while the first may still be loading. The first
+  // click's captured seconds used to win via a stale loadedmetadata closure.
+  await jumps.nth(0).click();
+  await jumps.nth(1).click();
+
+  await page.waitForFunction(() => {
+    const a = document.getElementById("au");
+    return a && a.readyState >= 1;
+  }, null, { timeout: 15000 });
+  await page.waitForTimeout(400);
+  const at = await page.evaluate(() => document.getElementById("au").currentTime);
+  expect(Math.abs(at - wanted)).toBeLessThan(2);
+  // ...and the UI agrees with the tape.
+  await expect(page.locator(".panel.playing")).toHaveCount(1);
+  const playingSecs = await page.locator(".panel.playing").getAttribute("data-secs");
+  expect(Number(playingSecs)).toBe(wanted);
+});
+
+test("the mini-bar takes over when the panel is destroyed while paused", async ({ page }) => {
+  await stubAudio(page);
+  await openEpisode(page);
+  await page.locator("#readalong button.ts[data-act='cut']").first().click();
+  await page.waitForSelector(".panel.playing .player");
+  await page.locator(".panel.playing .player .pp").click();      // pause
+  await expect(page.locator("#au")).toHaveJSProperty("paused", true);
+
+  // Re-render the read-along in another layout: same route, no media event, panel gone.
+  await page.getByRole("button", { name: "Timestamps" }).click();
+  await expect(page.locator(".panel.playing .player")).toHaveCount(0);
+  // Paused audio fires nothing, so without a DOM-driven repaint there was no control at all.
+  await expect(page.locator("#minibar")).toHaveClass(/\bon\b/);
+});

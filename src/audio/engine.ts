@@ -28,6 +28,25 @@ let lookup: (key: string) => EpisodeCore | undefined = () => undefined;
 let play: PlayState = { key: null, comic: null, panel: null, until: null };
 let seekPending = false;
 
+/* Where to start once metadata arrives. Module state, not a per-click closure: a second
+   click on the same episode before metadata landed added no new listener, so the FIRST
+   click's captured `secs` won the seek and the tape started at the wrong comic while the
+   UI showed the one just clicked. Only the newest target survives here. */
+let pending: { secs: number; panel: HTMLElement; autoplay: boolean } | null = null;
+
+function applyPending(): void {
+  const p = pending;
+  if (!p) return;
+  pending = null;
+  const d = au.duration;
+  const dl = p.panel.querySelector("[data-role=d]");
+  const sl = p.panel.querySelector<HTMLInputElement>("[data-role=seek]");
+  if (dl && d && Number.isFinite(d)) dl.textContent = clock(d);
+  if (sl && d && Number.isFinite(d)) sl.max = String(Math.floor(d));
+  try { au.currentTime = p.secs; } catch { /* not seekable yet */ }
+  if (p.autoplay) void au.play().catch(() => {});
+}
+
 const clock = (s: number): string => fmtRuntime(Math.max(0, Math.floor(s || 0))) || "0:00";
 const firstNames = (people: string[]): string => people.map(p => p.split(" ")[0]).join(" · ");
 
@@ -123,18 +142,15 @@ export function jumpCut(
   if (au.dataset["ep"] !== key) {
     au.dataset["ep"] = key;
     au.src = e.enclosure;                     // exactly as published — no added parameters
-    au.addEventListener("loadedmetadata", function once() {
-      au.removeEventListener("loadedmetadata", once);
-      const d = au.duration;
-      const dl = panel.querySelector("[data-role=d]");
-      const sl = panel.querySelector<HTMLInputElement>("[data-role=seek]");
-      if (dl && d && Number.isFinite(d)) dl.textContent = clock(d);
-      if (sl && d && Number.isFinite(d)) sl.max = String(Math.floor(d));
-      try { au.currentTime = secs; } catch { /* not seekable yet */ }
-      if (autoplay) void au.play().catch(() => {});
-    });
+    pending = { secs, panel, autoplay };      // the permanent listener in initAudio applies it
     au.load();
+  } else if (au.readyState < 1) {
+    /* dataset.ep is stamped before the load finishes, so this branch is reachable while
+       metadata is still in flight. Hand the newest target over rather than seeking a tape
+       that has no duration yet. */
+    pending = { secs, panel, autoplay };
   } else {
+    pending = null;
     try { au.currentTime = secs; } catch { /* ignore */ }
     if (autoplay) void au.play().catch(() => {}); else au.pause();
   }
@@ -218,6 +234,7 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
   bar = el("minibar");
   try { continuous = localStorage.getItem(ROLL_KEY) === "1"; } catch { /* private mode */ }
 
+  au.addEventListener("loadedmetadata", applyPending);
   au.addEventListener("seeked", () => { seekPending = false; });
   au.addEventListener("play", paintBar);
   au.addEventListener("pause", paintBar);
@@ -267,6 +284,25 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
   el("mb-x")?.addEventListener("click", stopAll);
 
   // Navigation destroys the inline player; the bar inherits the session mid-sentence.
+  /* Watch the DOM, not the URL. paintBar was driven by media events plus a hashchange
+     timeout, so any swap that removed the playing panel WITHOUT a route change — the
+     read-along layout toggle re-rendering its block, for instance — left the inline
+     player gone and the mini-bar hidden, with no control anywhere for audio that is
+     still loaded. A paused tape fires no media event to recover from, either. */
+  const view = document.getElementById("view");
+  if (view) {
+    /* React only when the panel's existence flips. paintBar -> paintInline writes
+       textContent inside that same panel, which is itself a childList mutation, so an
+       unguarded observer re-enters itself forever. */
+    let wasAlive: boolean | null = null;
+    new MutationObserver(() => {
+      if (!play.key) return;
+      const alive = inlineAlive();
+      if (alive === wasAlive) return;
+      wasAlive = alive;
+      paintBar();
+    }).observe(view, { childList: true, subtree: true });
+  }
   window.addEventListener("hashchange", () => setTimeout(paintBar, 0));
   paintBar();
 }
