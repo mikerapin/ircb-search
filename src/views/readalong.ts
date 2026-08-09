@@ -97,8 +97,15 @@ export function wireReadAlong(root: ParentNode, onChange: () => void): void {
     btn.addEventListener("click", () => {
       const mode = btn.dataset["ra"];
       if (mode !== "strip" && mode !== "stack" && mode !== "list") return;
+      const hadFocus = document.activeElement === btn;
       setRaMode(mode);
       onChange();
+      /* onChange re-renders the whole block, destroying the button that was just pressed —
+         focus fell to <body> and the aria-pressed flip was announced to nobody. The
+         replacement carries aria-pressed="true", so focusing it announces the new state. */
+      if (hadFocus) {
+        document.querySelector<HTMLButtonElement>(`[data-act="ra"][data-ra="${mode}"]`)?.focus();
+      }
     });
   }
 }

@@ -44,12 +44,20 @@ test("the A-Z bar scrolls without hijacking the route", async ({ page }) => {
   await page.locator('.azbar [data-jump="az-S"]').click();
   // A fragment link here would navigate; these are buttons that scroll.
   expect(page.url()).toBe(before);
-  const onScreen = await page.evaluate(() => {
+  // On screen is not enough: it used to land *behind* the sticky bar that triggered it.
+  const r = await page.evaluate(() => {
     const h = document.getElementById("az-S");
-    const r = h.getBoundingClientRect();
-    return r.top >= -2 && r.top < window.innerHeight;
+    return {
+      top: h.getBoundingClientRect().top,
+      barBottom: document.querySelector(".azbar").getBoundingClientRect().bottom,
+      vh: window.innerHeight,
+      focused: document.activeElement?.id,
+    };
   });
-  expect(onScreen).toBe(true);
+  expect(r.top).toBeLessThan(r.vh);
+  expect(r.top).toBeGreaterThanOrEqual(r.barBottom - 2);
+  // ...and the jump has to move focus, or it does nothing for keyboard users.
+  expect(r.focused).toBe("az-S");
 });
 
 test("the index stays responsive at full size", async ({ page }) => {
