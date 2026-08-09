@@ -107,6 +107,8 @@ function checklistRow(m: Mention, ep: EpisodeCore | undefined): string {
       ? (ep?.enclosure
           ? `<button class="ts" type="button" data-act="cut"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}</button>`
           : `<a class="ts" href="${epLink}"><span class="tri">▶</span>${esc(fmtRuntime(m.secs))}</a>`)
-      : `<a class="nomin" href="${epLink}">${ep?.enclosure ? "no minute logged" : "no audio"} →</a>`) +
+      // Same three-way branch as playAffordance: a stamp past the runtime has a minute.
+      : `<a class="nomin" href="${epLink}">${!ep?.enclosure ? "no audio"
+          : m.secs == null ? "no minute logged" : "timestamp out of range"} →</a>`) +
   `</div>`;
 }

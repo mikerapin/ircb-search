@@ -85,7 +85,14 @@ export function firstNames(people: string[]): string {
 /** Shared by search results and the episode read-along. */
 export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { until?: number | null }): string {
   const yr = ep?.date ? ep.date.slice(0, 4) : null;
-  const noLab = num(m.comic, null) === "—" && yr ? yr : null;
+  const no = num(m.comic, null);
+  const noLab = no === "—" && yr ? yr : null;
+  /* The band's badge is the issue/volume slot, so it renders only when one was actually
+     parsed. Gating on the heading merely containing "#", "vol" or "book" printed a bare
+     em-dash — num()'s can't-parse glyph — as though it were an issue number, on 47
+     mentions. Accepting num()'s year fallback here is no better: it would badge
+     "2000 AD Prog 2368" as "2000", and the plate already carries the year. */
+  const issue = /^[#V]/.test(no) ? no : null;
   const seriesLink = href("/series/" + encodeURIComponent(m.series));
   const epLink = href("/ep/" + encodeURIComponent(m.epKey));
   const until = opts?.until;
@@ -94,7 +101,7 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { u
       cover(m.comic, "", yr, noLab) +
     `</a>` +
     `<h3 class="band"><a href="${seriesLink}">${esc(m.series)}</a>` +
-      (/#|vol|book/i.test(m.comic) ? `<span class="no">${esc(num(m.comic, null))}</span>` : "") + `</h3>` +
+      (issue ? `<span class="no">${esc(issue)}</span>` : "") + `</h3>` +
     `<div class="pbody">` +
       `<a class="cap" href="${epLink}">${esc(ep?.title || "Untitled episode")}</a>` +
       `<div class="credits">${esc(fmtDate(ep?.date ?? null) || "Date unknown")}` +
@@ -130,8 +137,14 @@ export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: {
   /* One guard, not two. jumpable() already requires an enclosure, so the "no audio, link
      out to Simplecast instead" branch that used to sit below could never be reached. */
   if (!jumpable(m, ep) || !ep?.enclosure) {
-    return `<a class="ts dead" href="${epLink}">${ep?.enclosure ? "No minute logged" : "No audio on file"}` +
-      `<span class="lab">Open</span></a>`;
+    /* Three refusals, not two. jumpable() also rejects a stamp that runs past its own
+       episode's runtime, and that mention *does* have a minute logged — About the Data
+       counts it under "Bad stamps", so "No minute logged" had the site contradicting
+       itself. Branch on m.secs, which is the thing being reported. */
+    const why = !ep?.enclosure ? "No audio on file"
+      : m.secs == null ? "No minute logged"
+      : "Timestamp out of range";
+    return `<a class="ts dead" href="${epLink}">${why}<span class="lab">Open</span></a>`;
   }
   /* Plays in the page. The engine seeks with currentTime and never touches the enclosure
      URL, so the download still counts as the download it is. */

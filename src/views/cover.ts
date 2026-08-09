@@ -24,7 +24,8 @@ function hash(s: string): number {
 /** The No. box is identity only: the string's own issue/volume number, else a year. */
 export function num(str: string, fallbackDate: string | null): string {
   let m = /#\s*([0-9]+)/.exec(str); if (m) return "#" + m[1];
-  m = /\b(?:vol\.?|volume|book)\s*([0-9]+)/i.exec(str); if (m) return "V" + m[1];
+  // "volumes" too, so this agrees with normalizeSeries — 13 headings say "Volumes 1 and 2".
+  m = /\b(?:vol\.?|volume|volumes|book)\s*([0-9]+)/i.exec(str); if (m) return "V" + m[1];
   m = /\b(19|20)[0-9]{2}\b/.exec(str); if (m) return m[0];
   return fallbackDate ? fallbackDate.slice(0, 4) : "—";
 }

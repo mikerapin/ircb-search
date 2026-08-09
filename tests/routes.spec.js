@@ -42,12 +42,25 @@ function routeList({ ep, undated }) {
   ];
 }
 
+/**
+ * body[data-ready] is stamped at src/main.ts:124, *before* core() is called on line 126, and
+ * every view renders inside core().then(...). So it says the handlers are wired and nothing
+ * about #view. With only a fixed 250 ms behind it, an unpainted #view — which is axe-clean,
+ * holds no <a> and contributes no text — made all three sweeps below report success. Wait
+ * for the view to actually paint, and fail loudly if it never does.
+ */
+async function gotoRoute(page, path) {
+  await page.goto(path);
+  await page.waitForSelector("body[data-ready]");
+  await page.waitForFunction(
+    () => (document.getElementById("view")?.innerText ?? "").trim().length > 0,
+    null, { timeout: 15000 });
+}
+
 async function axeSweep(page, routes) {
   const failures = [];
   for (const [name, path] of routes) {
-    await page.goto(path);
-    await page.waitForSelector("body[data-ready]");
-    await page.waitForTimeout(250);
+    await gotoRoute(page, path);
     const r = await new AxeBuilder({ page }).analyze();
     if (r.violations.length) {
       // The selector matters more than the count — "color-contrast(x61)" alone sends you
@@ -81,9 +94,7 @@ test("no route renders a dead link", async ({ page }) => {
   const routes = routeList(await sampleKeys(page)).map(([, path]) => path);
   const dead = [];
   for (const path of routes) {
-    await page.goto(path);
-    await page.waitForSelector("body[data-ready]");
-    await page.waitForTimeout(250);
+    await gotoRoute(page, path);
     dead.push(...await page.evaluate(p => [...document.querySelectorAll("#view a")]
       .map(a => a.getAttribute("href"))
       .filter(h => !h || h === "#" || h.includes("undefined") || h.includes("null"))
@@ -96,11 +107,9 @@ test("no route leaks pre-launch process language", async ({ page }) => {
   const routes = routeList(await sampleKeys(page)).map(([, path]) => path);
   const leaks = [];
   for (const path of routes) {
-    await page.goto(path);
-    await page.waitForSelector("body[data-ready]");
-    await page.waitForTimeout(250);
+    await gotoRoute(page, path);
     const text = await page.evaluate(() => document.body.innerText);
-    /* No bare "pitch": the Index prints all 3,013 series headings and one of them is a
+    /* No bare "pitch": the Index prints every series heading and one of them is a
        comic called Pitch. The terms here are ones our own copy would use and a comic
        title would not. */
     const m = text.match(/showcase series|prototype|round [12]\b|data cut|design test|sample data/i);

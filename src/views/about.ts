@@ -19,11 +19,18 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
   const undated = data.episodes.filter(e => !e.date).length;
   const noAudio = data.episodes.filter(e => !e.enclosure).length;
   /* Three populations, not two. The undated records are the Patreon shelf, not the
-     pre-feed back catalogue — the back catalogue all carries dates. Filing them together
-     told readers the oldest episodes are the ones with no date, which is false. */
+     pre-feed back catalogue — the back catalogue nearly all carries dates. Filing them
+     together told readers the oldest episodes are the ones with no date, which is false.
+
+     These three must partition the archive, so they split on one axis: in the feed or not,
+     then Patreon or not. Splitting the back catalogue on `date` instead looked verified —
+     the counts summed to 798 — while double-counting the one dated Patreon record
+     (Wic+Div's Younger Sibling) and orphaning the one record that has no showId, no date
+     and no Patreon URL. The two errors cancelled. tests/about.spec.js asserts the sum. */
   const feedEps = data.episodes.filter(e => e.showId).length;
-  const backCatalogue = data.episodes.filter(e => !e.showId && e.date).length;
-  const patreonShelf = data.episodes.filter(e => e.patreonUrl).length;
+  const backCatalogue = data.episodes.filter(e => !e.showId && !e.patreonUrl).length;
+  const backCatalogueDated = data.episodes.filter(e => !e.showId && !e.patreonUrl && e.date).length;
+  const patreonShelf = data.episodes.filter(e => !e.showId && e.patreonUrl).length;
   const noTitle = data.episodes.filter(e => !e.title).length;
   const noMinute = men.filter(m => m.secs == null).length;
   /* Not `men.length - noMinute`: a minute is necessary but not sufficient. jumpable() also
@@ -45,9 +52,12 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
       <div class="sec-head"><h2 class="disp">Sources</h2></div>
       <dl class="kv">
         <div><dt>Mentions</dt><dd><a href="https://github.com/sshugars/ircb">sshugars/ircb</a> — ${nf(s.mentions)}
-          timestamped comic mentions across ${nf(s.indexedEpisodes)} episodes, hand-built from show notes.</dd></div>
-        <div><dt>Episodes</dt><dd>The show&rsquo;s <a href="https://feeds.simplecast.com/U93zjuSN">Simplecast RSS feed</a> —
-          titles, air dates, panel, artwork, runtimes and audio for all ${nf(s.episodes)} records.</dd></div>
+          comic mentions across ${nf(s.indexedEpisodes)} episodes, hand-built from show notes.
+          ${nf(men.length - noMinute)} of them carry a minute; the rest name the comic and nothing else.</dd></div>
+        <div><dt>Episodes</dt><dd>The same <a href="https://github.com/sshugars/ircb">sshugars/ircb</a> episode
+          table — titles, air dates and panel for all ${nf(s.episodes)} records. The show&rsquo;s
+          <a href="https://feeds.simplecast.com/U93zjuSN">Simplecast RSS feed</a> adds artwork, runtimes and
+          audio to the ${nf(feedEps)} of those that reached it.</dd></div>
         <div><dt>Audio</dt><dd>Played straight from the feed&rsquo;s own enclosure, untouched, so a listen here counts
           exactly like a listen anywhere else. Nothing is re-hosted.</dd></div>
         <div><dt>Portraits</dt><dd>The ircbpodcast.com roster — ${ROSTER.length} regulars. Guests carry no portrait,
@@ -59,15 +69,16 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
     </section>` +
 
     `<section class="sec">
-      <div class="sec-head"><h2 class="disp">The Two Eras</h2></div>
-      <p class="lead">The archive comes in two eras, and the site doesn&rsquo;t pretend otherwise.</p>
+      <div class="sec-head"><h2 class="disp">The Three Eras</h2></div>
+      <p class="lead">The archive comes in three eras, and the site doesn&rsquo;t pretend otherwise.</p>
       <dl class="kv">
         <div><dt>The feed era</dt><dd>${nf(feedEps)} episodes published to the RSS feed, with titles, dates, panel,
           runtime and audio. These are the ones that carry a broadcast number, and the mention index reaches
           ${nf(s.indexedEpisodes)} of them.</dd></div>
-        <div><dt>Before the feed</dt><dd>${nf(backCatalogue)} records predate the feed. They all carry air dates —
-          it&rsquo;s the audio that&rsquo;s missing, so those pages offer no play control. They were never numbered
-          in the feed, so the site doesn&rsquo;t give them a number.</dd></div>
+        <div><dt>Before the feed</dt><dd>${nf(backCatalogue)} records never reached the feed and aren&rsquo;t Patreon
+          bonuses. ${nf(backCatalogueDated)} of them carry air dates — it&rsquo;s the audio that&rsquo;s missing, so
+          those pages offer no play control. They were never numbered in the feed, so the site doesn&rsquo;t give them
+          a number.</dd></div>
         <div><dt>The Patreon shelf</dt><dd>${nf(patreonShelf)} bonus episodes made for Patreon members. They never
           hit the public feed, and ${nf(undated)} of the archive&rsquo;s records carry no recoverable air date —
           almost entirely these. They&rsquo;re listed and searchable; they just can&rsquo;t be placed on a calendar,

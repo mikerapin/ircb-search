@@ -21,6 +21,11 @@ export function normalizeSeries(comic: string, yearSensitive?: ReadonlySet<strin
        and "…Doom Patrol (Doom Patrol #35" became a half-open parenthetical. Drop the
        fragment. A balanced "(2022)" is untouched, because the closer is still in there. */
     .replace(/\s*[([{][^)\]}]*$/, "")
+    /* A volume marker with no number after it — "Santos Sisters Vol.", "Arcadia #" — was
+       left in place by the strips above, giving each of those runs a second series page
+       beside the real one. "book" is deliberately excluded: "Red Book", "Blue Book" and
+       "Mouse Guard coloring book" are real titles that end in it. */
+    .replace(/\s*(?:vols?\.?|volumes?|#)\s*$/i, "")
     .replace(/[\s,:\-–]+$/, "")
     .trim();
   const base = out || c;
@@ -38,9 +43,11 @@ function volumeYear(comic: string): string | null {
  * more different years, so folding them would put two different books on one page.
  *
  * Deliberately not "every heading with a year in it". 59 of the 4,353 headings carry one,
- * and preserving all of them would split 21 titles that are plainly a single run written
- * two ways ("Daredevil" and "Daredevil (1998)"). Today only Fantastic Four — 1961 and
- * 2022 — earns the split. Trading one wrong merge for twenty wrong splits is not a fix.
+ * and preserving all of them would split 23 titles that are plainly a single run written
+ * two ways ("Daredevil" and "Daredevil (1998)"). Four titles earn the split today —
+ * Fantastic Four, The Eternals, Generation X and Mister Miracle. Trading four wrong merges
+ * for twenty-three wrong splits is not a fix. `scripts/series-report.mjs` is the source of
+ * truth for these counts; re-run it rather than trusting this comment.
  */
 export function yearSensitiveKeys(comics: string[]): Set<string> {
   const byTitle = new Map<string, Set<string>>();

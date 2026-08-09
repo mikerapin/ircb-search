@@ -48,8 +48,14 @@ test("patreon house ad lists the bonus runs with real collection links", async (
   await page.goto("/");
   const slots = page.locator(".housead .adslot");
   await expect(slots.first()).toBeVisible();
-  const n = await slots.count();
+  /* Against core.patreonSeries, not against itself. Both the header count and the grid come
+     from the same runs.length in blocks.ts, so reading n off the rendered slots and then
+     comparing it to the rendered header could only ever detect a mismatch it also caused.
+     tests/subscribe.spec.js already anchors on the data this way. */
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const n = core.patreonSeries.length;
   expect(n).toBeGreaterThan(0);
+  await expect(slots).toHaveCount(n);
   for (const href of await slots.evaluateAll(els => els.map(a => a.getAttribute("href")))) {
     expect(href).toMatch(/^https:\/\/(www\.)?patreon\.com\//);
   }
@@ -71,28 +77,42 @@ test("rack and shuffle hydrate after first paint", async ({ page }) => {
   await expect(page.locator(".threeup .sh")).toHaveCount(3);
 });
 
-test("generated plate titles never break mid-word", async ({ page }) => {
-  await page.goto("/");
-  await page.waitForSelector(".rack .slot");
+/* Reading only `el.firstChild` covered one text node per plate. cover.ts inserts a <wbr>
+   after every "/", so on the 49 headings that contain one, everything past the first slash
+   lives in a later text node the scan never reached. Walk them all — and run the same scan
+   on a route that renders mention plates, since the rack is 18 of 3,016 series and the same
+   generated plates appear on every search result and read-along panel. */
+async function midWordBreaks(page, selector) {
   await page.evaluate(() => document.fonts.ready);
-  // "FANTASTI / C FOUR" is two lines and two words, so counting lines proves nothing.
-  // A word split across lines yields more than one client rect for its own range.
-  const broken = await page.locator(".rack .gc-t").evaluateAll(els => {
+  return page.locator(selector).evaluateAll(els => {
     const bad = [];
     for (const el of els) {
-      const node = el.firstChild;
-      if (!node || node.nodeType !== Node.TEXT_NODE) continue;
-      const text = node.textContent || "";
-      for (const m of text.matchAll(/\S+/g)) {
-        const r = document.createRange();
-        r.setStart(node, m.index);
-        r.setEnd(node, m.index + m[0].length);
-        if (r.getClientRects().length > 1) bad.push({ plate: text, word: m[0] });
+      const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let node = walk.nextNode(); node; node = walk.nextNode()) {
+        const text = node.textContent || "";
+        for (const m of text.matchAll(/\S+/g)) {
+          const r = document.createRange();
+          r.setStart(node, m.index);
+          r.setEnd(node, m.index + m[0].length);
+          // "FANTASTI / C FOUR" is two lines and two words, so counting lines proves
+          // nothing. A word split across lines yields more than one rect for its own range.
+          if (r.getClientRects().length > 1) bad.push({ plate: el.textContent, word: m[0] });
+        }
       }
     }
     return bad;
   });
-  expect(broken).toEqual([]);
+}
+
+test("generated plate titles never break mid-word", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector(".rack .slot");
+  expect(await midWordBreaks(page, ".rack .gc-t")).toEqual([]);
+
+  // Search results carry the same plates over titles the rack's top 18 never include.
+  await page.goto("/#/search?q=batman");
+  await page.waitForSelector(".panels .panel .gc-t");
+  expect(await midWordBreaks(page, ".panels .gc-t")).toEqual([]);
 });
 
 test("first paint fetches core.json only", async ({ page }) => {

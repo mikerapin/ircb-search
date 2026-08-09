@@ -90,7 +90,8 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
     const latest = d.core.episodes.filter(e => e.artwork && e.date).sort(byDateDesc).slice(0, 8);
     return `<div class="pagehead"><div class="eyebrow">Episodes &amp; search</div>` +
       `<h1 class="disp">Search the archive</h1>` +
-      `<p>${nf(d.core.stats.mentions)} timestamped comic mentions across ${nf(d.core.stats.indexedEpisodes)} indexed episodes. ` +
+      // Not "timestamped": only 1,916 of the 4,857 carry a minute. About the Data says so.
+      `<p>${nf(d.core.stats.mentions)} comic mentions across ${nf(d.core.stats.indexedEpisodes)} indexed episodes. ` +
       `Type in the yellow band above — or hit <b>/</b> from anywhere — and suggestions open as you type.</p>` +
       `<div class="chips" style="padding:0">${SUGGESTIONS.map(t =>
         `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div></div>` +

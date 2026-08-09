@@ -127,6 +127,10 @@ export function initTypeahead(input: HTMLInputElement): void {
       if (el.classList.contains("ta-opt")) {
         el.setAttribute("role", "option");
         el.id = "ta-opt-" + n++;
+        /* opt() emits bare <a href>, which is natively tabbable. A combobox driven by
+           aria-activedescendant must keep DOM focus on the input and take its options out
+           of the tab order — both mechanisms were live at once and disagreed. */
+        el.setAttribute("tabindex", "-1");
       } else {
         el.setAttribute("role", "presentation");
       }
@@ -160,8 +164,18 @@ export function initTypeahead(input: HTMLInputElement): void {
 
   input.addEventListener("focus", () => { ensureData(() => {}); paint(); });
   input.addEventListener("input", paint);
+  /* Focus stays in the input for the whole life of the popover: options are tabindex=-1 and
+     .ta swallows mousedown below, so nothing inside it can take focus. A blur therefore means
+     the user has left the combobox, and the popover must not outlive them. */
+  input.addEventListener("blur", close);
+  ta.addEventListener("mousedown", ev => ev.preventDefault());
   input.addEventListener("keydown", ev => {
-    if (ta.hidden) return;
+    if (ta.hidden) {
+      /* Escape is the only way to dismiss the popover, and it used to leave no keyboard way
+         back in. APG requires Down Arrow to reopen the listbox. */
+      if (ev.key === "ArrowDown") { ev.preventDefault(); paint(); move(1); }
+      return;
+    }
     if (ev.key === "ArrowDown") { ev.preventDefault(); move(1); }
     else if (ev.key === "ArrowUp") { ev.preventDefault(); move(-1); }
     else if (ev.key === "Enter" && idx >= 0) { ev.preventDefault(); options()[idx]?.click(); }

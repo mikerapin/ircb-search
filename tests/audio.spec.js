@@ -38,14 +38,45 @@ async function shortSegment(page, lengthSecs = 4) {
   }, lengthSecs);
 }
 
+/**
+ * Record where each seek actually landed, at the moment it landed.
+ *
+ * Asserting on `currentTime` after a fixed wait raced the running tape: the tolerance was
+ * spent on elapsed wall-clock, so a loaded machine failed a correct seek. These values are
+ * frozen when the `seeked` event fires, so the assertion is immune to how late it is read.
+ */
+async function recordSeeks(page) {
+  await page.evaluate(() => {
+    const a = document.getElementById("au");
+    window.__seeks = [];
+    a.addEventListener("seeked", () => window.__seeks.push(a.currentTime));
+  });
+}
+
+const seekLanded = (page, want, tol = 1.5) =>
+  page.waitForFunction(([w, t]) => (window.__seeks ?? []).some(s => Math.abs(s - w) < t),
+    [want, tol], { timeout: 15000 });
+
 test("a page visit downloads no audio", async ({ page }) => {
   const asked = await stubAudio(page);
   await openEpisode(page);
-  await page.waitForTimeout(500);
   // preload="none" and no autoplay attribute: nothing is fetched until someone clicks.
-  expect(asked).toEqual([]);
   await expect(page.locator("#au")).toHaveAttribute("preload", "none");
   expect(await page.locator("#au").getAttribute("autoplay")).toBeNull();
+
+  /* The headline assertion used to be `expect(asked).toEqual([])` after a 500 ms wait, which
+     held for any implementation: index.html ships <audio> with no src at all and engine.ts
+     assigns one only inside jumpCut, so there was nothing to fetch regardless of preload.
+     Point the element at a real enclosure and *then* assert nothing went out — that is the
+     invariant preload="none" actually buys. A timeout is right here: the claim is that
+     nothing happens, and there is no state to wait for. */
+  const enclosure = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    return core.episodes.find(e => e.enclosure).enclosure;
+  });
+  await page.evaluate(u => { document.getElementById("au").src = u; }, enclosure);
+  await page.waitForTimeout(500);
+  expect(asked).toEqual([]);
 });
 
 test("the enclosure URL goes out unmodified", async ({ page }) => {
@@ -65,20 +96,19 @@ test("the enclosure URL goes out unmodified", async ({ page }) => {
 test("jump plays in the page and seeks to the minute", async ({ page }) => {
   await stubAudio(page);
   await openEpisode(page);
+  await recordSeeks(page);
   const btn = page.locator("#readalong .panel").first().locator("[data-act=cut]");
   const want = Number(await btn.getAttribute("data-secs"));
   await btn.click();
   await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 15000 });
-  await page.waitForTimeout(600);
+  await seekLanded(page, want);                     // seeked to the logged minute
 
   const s = await page.evaluate(() => ({
     src: document.getElementById("au").src,
-    t: document.getElementById("au").currentTime,
     inline: !!document.querySelector(".panel.playing .player"),
   }));
   expect(s.src).toBeTruthy();
   expect(s.inline).toBe(true);                      // the player opened in the clicked panel
-  expect(Math.abs(s.t - want)).toBeLessThan(3);   // seeked to the logged minute
 });
 
 test("playback survives navigation via the mini-bar", async ({ page }) => {
@@ -246,6 +276,7 @@ test("the last jump clicked is the one that plays", async ({ page }) => {
   const jumps = page.locator("#readalong button.ts[data-act='cut']");
   if (await jumps.count() < 2) test.skip(true, "episode has fewer than two jumpable comics");
 
+  await recordSeeks(page);
   const wanted = Number(await jumps.nth(1).getAttribute("data-secs"));
   // Back to back, so the second lands while the first may still be loading. The first
   // click's captured seconds used to win via a stale loadedmetadata closure.
@@ -256,9 +287,10 @@ test("the last jump clicked is the one that plays", async ({ page }) => {
     const a = document.getElementById("au");
     return a && a.readyState >= 1;
   }, null, { timeout: 15000 });
-  await page.waitForTimeout(400);
-  const at = await page.evaluate(() => document.getElementById("au").currentTime);
-  expect(Math.abs(at - wanted)).toBeLessThan(2);
+  /* The seek is the assertion. A fixed 400ms then |t - wanted| < 2 raced the running tape,
+     and shortSegment puts the next boundary only 4s past `wanted` — the tolerance was gone
+     long before the check ran. */
+  await seekLanded(page, wanted);
   // ...and the UI agrees with the tape.
   await expect(page.locator(".panel.playing")).toHaveCount(1);
   const playingSecs = await page.locator(".panel.playing").getAttribute("data-secs");
@@ -281,6 +313,78 @@ test("the mini-bar takes over when the panel is destroyed while paused", async (
   await expect(page.locator(".panel.playing .player")).toHaveCount(0);
   // Paused audio fires nothing, so without a DOM-driven repaint there was no control at all.
   await expect(page.locator("#minibar")).toHaveClass(/\bon\b/);
+});
+
+/* Moved here from episode.spec.js, where it could not click: it asserted only that the row
+   it found carries a numeric data-secs, which readalong.ts guarantees for every element the
+   locator can match. The behaviour in its name — playing in place — was never exercised. */
+test("a timestamp row plays in place", async ({ page }) => {
+  await stubAudio(page);
+  await openEpisode(page);
+  await page.getByRole("button", { name: "Timestamps" }).click();
+  const row = page.locator("#readalong .rawrap.panel button.ra-row[data-act=cut]").first();
+  await expect(row).toBeVisible();
+
+  await recordSeeks(page);
+  const want = Number(await row.locator("..").getAttribute("data-secs"));
+  await row.click();
+  await expect(page.locator("#au")).toHaveJSProperty("paused", false);
+  await seekLanded(page, want);
+  // The player opens inside the row's own wrapper, not somewhere else on the page.
+  await expect(page.locator("#readalong .rawrap.playing .player")).toHaveCount(1);
+});
+
+/* "Play from the top" is the primary way to start an episode and had zero behavioural
+   coverage: episode.spec asserted it is visible, matches /Play from the top/ and sits after
+   .tags, and nothing clicked it. Its handler is a distinct branch (act === "cut-ep" ? 0),
+   and it resolves its panel to .meta — the one container whose .cutslot is in no read-along
+   layout, so no other test touches that path. */
+test("Play from the top starts the episode at zero, from the published enclosure", async ({ page }) => {
+  const asked = await stubAudio(page);
+  await openEpisode(page);
+  await page.locator(".meta .big-play").click();
+  await expect(page.locator("#au")).toHaveJSProperty("paused", false);
+
+  expect(await page.evaluate(() => document.getElementById("au").currentTime)).toBeLessThan(2);
+  await expect(page.locator(".meta .player")).toHaveCount(1);
+
+  // Stats correctness: the enclosure must go out exactly as the feed publishes it.
+  expect(asked.length).toBeGreaterThan(0);
+  const enclosures = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    return core.episodes.map(e => e.enclosure).filter(Boolean);
+  });
+  expect(new Set(enclosures).has(asked[0])).toBe(true);
+  for (const url of asked) expect(url).not.toMatch(/[?&]t=/);
+});
+
+/* The error listener added by the last review had no coverage at all: fake-audio.js fulfils
+   every media request, so no spec ever produced a failing enclosure. It exists to stop one
+   dead load from marking that episode loaded forever — au.dataset.ep is stamped before the
+   load resolves, so every later click would take the "same tape" branch and seek a source
+   that was never there. */
+test("a dead enclosure says so, and the next click retries for real", async ({ page }) => {
+  await stubAudio(page);
+  /* Registered after the stub on purpose: Playwright matches routes in reverse registration
+     order, so this one sees the request first and hands the retry back to the stub. */
+  let failFirst = true;
+  await page.route(/blubrry\.com|podtrac\.com|\.mp3|simplecastcdn\.com\/media/, async route => {
+    if (failFirst) { failFirst = false; await route.abort(); return; }
+    await route.fallback();
+  });
+  await openEpisode(page);
+
+  await page.locator("#readalong button.ts[data-act=cut]").first().click();
+
+  // No player left claiming to be playing, and the failure is stated rather than mimed.
+  await expect(page.locator("#readalong .panel .player .note")).toContainText("didn’t load");
+  await expect(page.locator("#readalong .panel.playing")).toHaveCount(0);
+  await expect(page.locator("#minibar")).not.toHaveClass(/\bon\b/);
+  expect(await page.evaluate(() => document.getElementById("au").dataset.ep)).toBeUndefined();
+
+  // ...and because dataset.ep was cleared, the same control loads the tape on a retry.
+  await page.locator("#readalong button.ts[data-act=cut]").first().click();
+  await expect(page.locator("#au")).toHaveJSProperty("paused", false);
 });
 
 test("a segment handover keeps focus on a player, not on <body>", async ({ page }) => {

@@ -35,12 +35,38 @@ test("episode page shows artwork, credits, notes and read-along", async ({ page 
 });
 
 test("keyword tags search, and the crew links to panelists", async ({ page }) => {
-  await openNewestEpisode(page);
+  /* Was `if (await tag.count())` around every assertion, run against whatever the newest
+     feed episode happens to be — and 292 of the 798 records carry no keywords, so episode.ts
+     renders no .tags block at all and a normal week could switch the whole test off. Pick an
+     episode that has them, and fail rather than skip if the archive somehow has none. */
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+  const key = await page.evaluate(async () => {
+    // detail.json is an array of {key, summary, keywords}, not a map.
+    const det = await fetch("d/detail.json").then(r => r.json());
+    return det.find(d => (d?.keywords ?? []).length > 0)?.key ?? null;
+  });
+  expect(key, "no episode in detail.json carries keywords").not.toBeNull();
+
+  await page.goto("/#/ep/" + encodeURIComponent(key));
+  await expect(page.locator(".issue-head h1")).not.toBeEmpty();
+
+  /* The crew clause of this test's own name, which was only ever asserted as an href
+     pattern in the first test. Follow it: the name is not compared, because ALIASES folds
+     short spellings onto a different display name than the one in the URL. */
+  const crew = page.locator(".crew a").first();
+  await expect(crew).toHaveAttribute("href", /#\/who\//);
+  await crew.click();
+  await expect(page).toHaveURL(/#\/who\//);
+  await expect(page.locator(".credit-head h1")).not.toBeEmpty();
+
+  await page.goBack();
   const tag = page.locator(".tags .tag").first();
-  if (await tag.count()) {
-    await tag.click();
-    await expect(page).toHaveURL(/#\/search\?q=/);
-  }
+  await expect(tag).toBeVisible();
+  const label = (await tag.innerText()).trim();
+  await tag.click();
+  await expect(page).toHaveURL(/#\/search\?q=/);
+  await expect(page.locator("#q")).toHaveValue(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
 });
 
 test("read-along toggle switches layout and persists", async ({ page }) => {
@@ -139,14 +165,12 @@ test("the jump control plays in the page, not off to another site", async ({ pag
   expect(await jump.getAttribute("href")).toBeNull();
 });
 
-test("timestamp rows play in place too", async ({ page }) => {
-  await openNewestEpisode(page);
-  await page.getByRole("button", { name: "Timestamps" }).click();
-  const row = page.locator("#readalong .rawrap.panel button.ra-row[data-act=cut]").first();
-  if (await row.count()) {
-    await expect(row.locator("..")).toHaveAttribute("data-secs", /^\d+$/);
-  }
-});
+/* "timestamp rows play in place too" lived here and asserted only that the row it found
+   carries a numeric data-secs — which readalong.ts:45 guarantees for every element the
+   locator can match, so the assertion was entailed by its own selector and the row was
+   never clicked. It now lives in audio.spec.js as "a timestamp row plays in place", where
+   the media stub makes clicking it safe: no spec in this file may click a play control,
+   because a real enclosure request is a counted download (see fake-audio.js). */
 
 test("the page leads with in-page playback, not with the off-site link", async ({ page }) => {
   await openNewestEpisode(page);

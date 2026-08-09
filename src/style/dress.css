@@ -107,7 +107,10 @@ main{max-width:1400px; margin:0 auto; padding:var(--sec) 0 20px; display:block}
    inside each of home's hydration slots — the Shuffle and the Spinner Rack are injected
    into wrapper divs, so both were :last-child and lost their bottom margin entirely,
    leaving the next heading sitting flush against them. */
-#view > .sec:last-child{margin-bottom:0}
+/* Search puts its results at #view > .split > div > .sec, which the scoping above stopped
+   matching — leaving the last section on the one route with a stray margin before the
+   footer. Cover that nesting explicitly; the hydration slots are not inside .split. */
+#view > .sec:last-child,#view .split>div>.sec:last-child{margin-bottom:0}
 .sec-head{
   display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap;
   padding:0 var(--pad) 9px; border-bottom:3px solid var(--ink); margin:0 0 20px;
@@ -200,7 +203,10 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   display:flex; justify-content:space-between; gap:6px; align-items:flex-start;
 }
 .band,.clrow .t .cm{overflow-wrap:anywhere}
-.band .no{font-size:11px; opacity:.75; flex:0 0 auto; padding-top:1px}
+/* No opacity: .panel.playing repaints this band --red-deep with paper text, and .75
+   compounds onto the token's 5.16:1 to give 3.45:1. Undimmed the yellow band reads 13:1,
+   which is fine — house rule 1, small text carries no element opacity. */
+.band .no{font-size:11px; flex:0 0 auto; padding-top:1px}
 .band a{color:#14120F}
 .panel.playing .band a{color:inherit}
 .pbody{padding:10px; display:flex; flex-direction:column; gap:8px; flex:1 1 auto}
@@ -269,8 +275,10 @@ html[data-neg] .player .pp{border-color:#14120F}
   background:var(--gc-t); color:var(--gc-f); border:2px solid var(--gc-t);
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 900; font-size:12px; padding:2px 4px}
 .gc-rule{position:absolute; left:6%; right:6%; bottom:16%; height:3px; background:var(--gc-t); opacity:.85}
+/* No opacity at 7.5px — it composited over whichever --gc-f/--gc-t pair the hash picked
+   and bottomed out at 1.32:1 on the ink/yellow plate in the negative. Let --gc-t carry it. */
 .gc-pub{position:absolute; left:6%; bottom:5%; max-width:52%; font-size:7.5px; letter-spacing:.14em;
-  font-weight:700; text-transform:uppercase; opacity:.75; white-space:nowrap; overflow:hidden}
+  font-weight:700; text-transform:uppercase; white-space:nowrap; overflow:hidden}
 
 /* ---------- home: the cover ---------- */
 .cover-hero{display:grid; grid-template-columns:1fr; gap:0; border:var(--rule) solid var(--ink); margin:0 var(--pad)}
@@ -428,7 +436,9 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 .ra-row .mt{display:block; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; opacity:.62; margin-top:3px}
 .ra-row .cue{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:color-mix(in srgb, var(--ink) 72%, transparent); white-space:nowrap}
 .ra-row:hover{background:var(--yellow); color:#14120F; text-decoration:none}
-.ra-row:hover .t,.ra-row:hover .cue{color:#14120F; opacity:.85}
+/* .mt joins them: at .62 its 10.5px inherited #14120F over the fixed yellow hover ground
+   measured 4.38:1, just under the 4.5:1 floor, on both plates. */
+.ra-row:hover .t,.ra-row:hover .cue,.ra-row:hover .mt{color:#14120F; opacity:.85}
 .ra-row.on{background:var(--ink); color:var(--paper)}
 html[data-neg] .ra-row.on{color:#14120F}
 .ra-row.on .t,.ra-row.on .cue{color:var(--yellow); opacity:1}
@@ -520,6 +530,11 @@ html[data-neg] .railbox .rh{color:#14120F}
   border-top:var(--rule) solid var(--ink); color:var(--ink); font-size:12px; font-weight:600; min-height:40px;
 }
 .railbox .rb.rows>.facet:first-child{border-top:0}
+/* The sticky rail sets overflow-y:auto, which forces overflow-x to auto too and makes it a
+   clipping box. The global ring sits 5px outside its element (3px at offset 2px) and the
+   facet is 2px inside the rail, so the ring was cut off. Inset it, as .blurb input and
+   .azsec>h2 already do. */
+.facet:focus-visible{outline-offset:-3px}
 .facet img,.facet .ph{width:24px; height:24px; flex:0 0 auto; object-fit:cover; border:1.5px solid var(--ink);
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px}
 /* currentColor so it tracks every state, instead of an opacity that survived the
@@ -576,7 +591,7 @@ html[data-neg] .azbar a:hover,html[data-neg] .azbar button:hover{color:#14120F}
 html[data-neg] .azsec>h2,html[data-neg] .azsec>h3{color:#14120F}
 .azsec>h2 span,.azsec>h3 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
 /* min-height 24px: 12.5px at 1.35 plus 2px padding computed to 20.9, under the 24x24
-   minimum for a touch target, on a page that is 3,013 adjacent targets with no gap. */
+   minimum for a touch target, on a page that is three thousand adjacent targets with no gap. */
 .azrow{display:flex; gap:8px; align-items:baseline; padding:3px 9px; min-height:24px;
   font-size:12.5px; color:var(--ink); line-height:1.35}
 .azrow:nth-child(odd){background:var(--paper-2)}

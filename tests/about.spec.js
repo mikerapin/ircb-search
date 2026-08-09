@@ -25,7 +25,7 @@ test("about renders all five sections", async ({ page }) => {
   await expect(page.locator("#dressno")).toHaveText("About the Data");
   await expect(page.locator(".pagehead h1")).toHaveText("About the Data");
   // Scoped to #view: the footer also carries a "Sources" heading.
-  for (const h of ["Sources", "The Two Eras", "Series Normalization", "Known Gaps", "What’s In This Build"]) {
+  for (const h of ["Sources", "The Three Eras", "Series Normalization", "Known Gaps", "What’s In This Build"]) {
     await expect(page.locator("#view").getByRole("heading", { name: h, exact: true })).toBeVisible();
   }
 });
@@ -50,6 +50,46 @@ test("every figure on the page matches the data", async ({ page }) => {
   // count — those differ by one, and the page is claiming what the play controls honour.
   expect(text).toMatch(new RegExp(`Only ${nf(canJump)} can be jumped into`));
   expect(text).toContain(`${nf(s.indexedEpisodes)} episodes indexed`);
+});
+
+/* The three eras used to split on two different axes — `!showId && date` for the back
+   catalogue, `patreonUrl` for the shelf — which double-counted the one dated Patreon record
+   and orphaned the one record with no showId, no date and no Patreon URL. The two errors
+   cancelled, so the numbers summed to 798 and looked verified. A sum alone would not have
+   caught it; the per-bucket equalities would. */
+test("the three eras partition the archive", async ({ page }) => {
+  await page.goto("/#/about");
+  await expect(page.locator(".sparse")).toBeVisible();
+  const { core } = await data(page);
+  const counts = await page.evaluate(() =>
+    Object.fromEntries([...document.querySelectorAll("#view .kv > div")].flatMap(row => {
+      const dt = row.querySelector("dt")?.textContent?.trim();
+      const n = row.querySelector("dd")?.textContent?.trim().match(/^([\d,]+)/);
+      return dt && n ? [[dt, Number(n[1].replace(/,/g, ""))]] : [];
+    })));
+
+  const eps = core.episodes;
+  expect(counts["The feed era"]).toBe(eps.filter(e => e.showId).length);
+  expect(counts["Before the feed"]).toBe(eps.filter(e => !e.showId && !e.patreonUrl).length);
+  expect(counts["The Patreon shelf"]).toBe(eps.filter(e => !e.showId && e.patreonUrl).length);
+  expect(counts["The feed era"] + counts["Before the feed"] + counts["The Patreon shelf"])
+    .toBe(core.stats.episodes);
+  // Every record lands in exactly one bucket — the property the sum only implies.
+  expect(eps.filter(e => [!!e.showId, !e.showId && !e.patreonUrl, !e.showId && !!e.patreonUrl]
+    .filter(Boolean).length !== 1)).toEqual([]);
+});
+
+test("the sources block credits each source with what it actually supplies", async ({ page }) => {
+  await page.goto("/#/about");
+  await expect(page.locator(".sparse")).toBeVisible();
+  const { core } = await data(page);
+  const dd = await page.locator("#view .kv > div", { hasText: /^Episodes/ }).locator("dd").innerText();
+  // The RSS feed carries 568 of the 798 records and supplies none of the titles, dates or
+  // panel — export_data.py takes those from the spreadsheet and merges only player_id,
+  // summary, enclosure, artwork and duration off the feed.
+  expect(dd).toContain(nf(core.episodes.filter(e => e.showId).length));
+  expect(dd).toMatch(/titles, air dates and panel for all [\d,]+ records/);
+  expect(dd).not.toMatch(/feed[^.]*titles/i);
 });
 
 test("the sample-data claim is gone", async ({ page }) => {

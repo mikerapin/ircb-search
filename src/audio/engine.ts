@@ -79,6 +79,10 @@ export function paintBar(): void {
   if (!bar) return;
   const live = !!play.key && !!au.src;
   const showBar = live && !inlineAlive();
+  /* .on toggles the bar back to display:none, which blurs whatever inside it had focus —
+     "Stop and close" strands the listener on <body> the moment it succeeds. Same bug
+     closeMenu() guards against in shell.ts; the guard was never applied here. */
+  if (!showBar && bar.contains(document.activeElement)) el("view")?.focus({ preventScroll: true });
   bar.classList.toggle("on", showBar);
   document.documentElement.style.setProperty("--bar", showBar ? "58px" : "0px");
   if (!live) return;
@@ -98,15 +102,28 @@ export function paintBar(): void {
   }
 }
 
+/** Seek granularity, in seconds — also what one arrow press moves. */
+const SEEK_STEP = 15;
+
+/** The value a range input will actually hold, given it snaps to SEEK_STEP and clamps to max. */
+function snap(secs: number, max: number): number {
+  return Math.min(Math.max(0, Math.round(secs / SEEK_STEP) * SEEK_STEP), max);
+}
+
 function playerHTML(secs: number, dur: number | null, label: string, playing = true): string {
+  const max = dur || 3600;
+  /* One number drives both. The browser snaps `value` to the step while aria-valuetext was
+     written from the unsnapped time, so the thumb and the position a screen reader reads
+     described instants up to 14 seconds apart. Exact playback time lives in `.t`. */
+  const pos = snap(secs, max);
   return `<div class="player">
     <div class="row">
       <button class="pp" type="button" data-act="pp" aria-label="${playing ? "Pause" : "Play"}">${playing ? "II" : "▶"}</button>
       <span class="t" data-role="t">${clock(secs)}</span>
       <span class="t" style="margin-left:auto" data-role="d">${dur ? clock(dur) : "--:--"}</span>
     </div>
-    <input type="range" min="0" max="${dur || 3600}" value="${secs}" step="15" data-role="seek"
-      aria-label="Seek" aria-valuetext="${clock(secs)}">
+    <input type="range" min="0" max="${max}" value="${pos}" step="${SEEK_STEP}" data-role="seek"
+      aria-label="Seek" aria-valuetext="${clock(pos)}">
     <div class="note">${playing ? "Playing" : "Paused"} · ${esc(label)}</div>
   </div>`;
 }
@@ -224,7 +241,13 @@ export function setContinuous(on: boolean): void {
 function nextPanelAfter(root: Element, panel: HTMLElement): HTMLElement | null {
   const all = [...root.querySelectorAll<HTMLElement>("[data-secs]")].filter(p => p.querySelector(".cutslot"));
   const i = all.indexOf(panel);
-  return i >= 0 ? all[i + 1] ?? null : null;
+  if (i < 0) return null;
+  /* Skip any panel still sitting inside the segment that just ended. boundary() in
+     readalong.ts requires a strictly later minute, so with two comics logged at the same
+     stamp the segment end was the *third* comic's minute while plain DOM order handed over
+     to the second — whose data-secs is the minute already playing, seeking the tape
+     backwards. The handover has to agree with the boundary it stopped at. */
+  return all.slice(i + 1).find(p => Number(p.dataset["secs"]) >= (play.until ?? 0)) ?? null;
 }
 
 export function stopAll(): void {
@@ -249,10 +272,22 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
   /* dataset.ep is stamped before the load resolves. Without this, one failed enclosure
      marked that episode as loaded forever and every later click took the "same tape"
      branch, seeking a source that was never there. */
+  /* ...and it must not leave a player that lies. paintInline reads au.paused, which is true
+     for a tape that never loaded, so the dead player repainted as "Paused · <comic>" behind
+     a Play button that could never work and no message anywhere. Say so instead, and end the
+     session so the mini-bar doesn't claim one either. Clearing dataset.ep above means the
+     same play control retries for real on the next click. */
   au.addEventListener("error", () => {
     delete au.dataset["ep"];
     pending = null;
     seekPending = false;
+    const panel = play.panel;
+    play = { key: null, comic: null, panel: null, until: null };
+    if (panel && document.contains(panel)) {
+      panel.classList.remove("playing");
+      const slot = panel.querySelector(".cutslot");
+      if (slot) slot.innerHTML = `<div class="player"><div class="note" role="status">That audio didn’t load.</div></div>`;
+    }
     paintBar();
   });
   au.addEventListener("seeked", () => { seekPending = false; });
@@ -267,9 +302,13 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
     const t = play.panel.querySelector("[data-role=t]");
     const s = play.panel.querySelector<HTMLInputElement>("[data-role=seek]");
     if (t) t.textContent = clock(au.currentTime);
-    if (s && document.activeElement !== s) s.value = String(Math.floor(au.currentTime));
-    // Without valuetext a screen reader reads the raw second count, not a timestamp.
-    if (s) s.setAttribute("aria-valuetext", clock(au.currentTime));
+    if (s) {
+      if (document.activeElement !== s) s.value = String(snap(au.currentTime, Number(s.max)));
+      /* Read the value back rather than re-deriving from currentTime: without valuetext a
+         screen reader reads the raw second count, and derived from the unsnapped time it
+         disagreed with the thumb by up to 14 seconds. */
+      s.setAttribute("aria-valuetext", clock(Number(s.value)));
+    }
   });
 
   /* Delegated, because every panel carrying a play control is rendered from a template
@@ -297,6 +336,11 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
     const t = ev.target as HTMLElement;
     if (t.dataset?.["role"] === "seek") {
       try { au.currentTime = Number((t as HTMLInputElement).value); } catch { /* ignore */ }
+      /* A hand seek opts out of the segment stop. Without this the next timeupdate saw
+         currentTime >= until, read the drag as a completed segment, paused, handed over to
+         the next panel and seeked backwards to its start. The slider's max is the whole
+         episode, so the control has to deliver the whole episode. */
+      if (play.until != null && au.currentTime >= play.until) play = { ...play, until: null };
     }
   });
 
