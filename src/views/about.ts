@@ -1,9 +1,34 @@
 import { core, mentions as loadMentions } from "../data/load";
 import { ALIASED_REGULARS, ROSTER } from "../data/roster";
+import type { EpisodeCore } from "../data/types";
 import { nf, pl } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
 import { subscribeCoupon } from "./blocks";
+
+/**
+ * The three eras, as counts.
+ *
+ * They must partition the archive, so they split on one axis: in the feed or not, then
+ * Patreon or not. Splitting the back catalogue on `date` instead looked verified — the
+ * counts summed to 798 — while double-counting the one dated Patreon record (Wic+Div's
+ * Younger Sibling) and orphaning the one record with no showId, no date and no Patreon URL.
+ *
+ * Exported so the invariant is reachable, because **on the live data the broken split and
+ * the correct one return the identical 84**: the double-count and the orphan cancel in the
+ * count exactly as they cancel in the sum, so no assertion about a rendered number can tell
+ * them apart. Only a fixture built to separate them can. See tests/unit/eras.test.ts.
+ */
+export function eraCounts(episodes: EpisodeCore[]): {
+  feed: number; backCatalogue: number; backCatalogueDated: number; patreonShelf: number;
+} {
+  return {
+    feed: episodes.filter(e => e.showId).length,
+    backCatalogue: episodes.filter(e => !e.showId && !e.patreonUrl).length,
+    backCatalogueDated: episodes.filter(e => !e.showId && !e.patreonUrl && e.date).length,
+    patreonShelf: episodes.filter(e => !e.showId && e.patreonUrl).length,
+  };
+}
 
 /**
  * Every figure here is computed from the same files the rest of the site reads, so the page
@@ -18,19 +43,7 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
   const noMention = s.episodes - s.indexedEpisodes;
   const undated = data.episodes.filter(e => !e.date).length;
   const noAudio = data.episodes.filter(e => !e.enclosure).length;
-  /* Three populations, not two. The undated records are the Patreon shelf, not the
-     pre-feed back catalogue — the back catalogue nearly all carries dates. Filing them
-     together told readers the oldest episodes are the ones with no date, which is false.
-
-     These three must partition the archive, so they split on one axis: in the feed or not,
-     then Patreon or not. Splitting the back catalogue on `date` instead looked verified —
-     the counts summed to 798 — while double-counting the one dated Patreon record
-     (Wic+Div's Younger Sibling) and orphaning the one record that has no showId, no date
-     and no Patreon URL. The two errors cancelled. tests/about.spec.js asserts the sum. */
-  const feedEps = data.episodes.filter(e => e.showId).length;
-  const backCatalogue = data.episodes.filter(e => !e.showId && !e.patreonUrl).length;
-  const backCatalogueDated = data.episodes.filter(e => !e.showId && !e.patreonUrl && e.date).length;
-  const patreonShelf = data.episodes.filter(e => !e.showId && e.patreonUrl).length;
+  const { feed: feedEps, backCatalogue, backCatalogueDated, patreonShelf } = eraCounts(data.episodes);
   const noTitle = data.episodes.filter(e => !e.title).length;
   const noMinute = men.filter(m => m.secs == null).length;
   /* Not `men.length - noMinute`: a minute is necessary but not sufficient. jumpable() also

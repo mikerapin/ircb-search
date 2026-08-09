@@ -74,7 +74,9 @@ for (const plate of ["light", "negative"]) {
       if (selector.startsWith(".menu")) await page.locator("#navbtn").click();
       await page.waitForTimeout(250);
       const s = await sample(page, selector, state);
-      if (!s) continue;
+      // A silent `continue` here meant a case whose selector stopped matching vanished from
+      // the sweep and reported success. Rename a class and the check disappears with it.
+      if (!s) { bad.push(`${label}: selector "${selector}" matched nothing on ${route}`); continue; }
       const r = ratio(s.fg, s.bg);
       if (r < 4.5) bad.push(`${label}: ${r}:1  (${s.fg} on ${s.bg})`);
     }
@@ -95,7 +97,10 @@ for (const plate of ["light", "negative"]) {
       await page.waitForSelector("body[data-ready]");
       await page.waitForTimeout(250);
       const s = await sample(page, selector, { focus: true });
-      if (!s || parseFloat(s.outlineW) === 0) continue;
+      if (!s) { bad.push(`${label}: selector "${selector}" matched nothing on ${route}`); continue; }
+      // A focusable control with no ring at all is the failure this test exists to catch,
+      // not a case to skip past.
+      if (parseFloat(s.outlineW) === 0) { bad.push(`${label}: no focus ring at all`); continue; }
       // WCAG 1.4.11: a focus indicator needs 3:1 against what it sits on.
       const r = ratio(s.outline, s.bg);
       if (r < 3) bad.push(`${label}: ring ${r}:1  (${s.outline} on ${s.bg})`);
