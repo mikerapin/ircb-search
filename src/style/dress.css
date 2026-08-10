@@ -108,9 +108,12 @@ main{max-width:1400px; margin:0 auto; padding:var(--sec) 0 20px; display:block}
    into wrapper divs, so both were :last-child and lost their bottom margin entirely,
    leaving the next heading sitting flush against them. */
 /* Search puts its results at #view > .split > div > .sec, which the scoping above stopped
-   matching — leaving the last section on the one route with a stray margin before the
-   footer. Cover that nesting explicitly; the hydration slots are not inside .split. */
-#view > .sec:last-child,#view .split>div>.sec:last-child{margin-bottom:0}
+   matching — leaving the last section on that route with a stray margin before the footer.
+   `.split:last-child` is load-bearing: the panelist page ALSO uses .split and then follows
+   it with the subscribe coupon, so an unscoped version zeroed the gap the coupon needs and
+   left it flush against the episode list (Mike, 2026-08-09). Only zero the margin when the
+   split really is the last thing on the page. */
+#view > .sec:last-child,#view > .split:last-child > div > .sec:last-child{margin-bottom:0}
 .sec-head{
   display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap;
   padding:0 var(--pad) 9px; border-bottom:3px solid var(--ink); margin:0 0 20px;

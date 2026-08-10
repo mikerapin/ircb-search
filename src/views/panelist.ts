@@ -73,7 +73,7 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
   for (const m of mine) tally.set(m.series, (tally.get(m.series) ?? 0) + 1);
   const top = [...tally].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 12);
 
-  const recent = dated.slice(0, 8);
+  const recent = dated.slice(0, 9);      // 9, not 8 — Mike 2026-08-09
   const activeYears = new Set(dated.map(e => e.date?.slice(0, 4)));
   const showYears = new Set(data.episodes.map(e => e.date?.slice(0, 4)).filter(Boolean));
 
@@ -95,8 +95,9 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
         `</section>`
       : "") +
     (top.length
-      ? `<section class="sec"><div class="sec-head"><h2 class="disp">Most Discussed On Their Watch</h2>
-          <span class="note">From ${nf(mine.length)} indexed mention${pl(mine.length)} on their episodes</span></div>
+      // The note that sat here ("From N indexed mentions on their episodes") collided with
+      // the heading at 390 and told the reader nothing they wanted. Cut, Mike 2026-08-09.
+      ? `<section class="sec"><div class="sec-head"><h2 class="disp">Most Discussed On Their Watch</h2></div>
           <div class="chips">${top.map(([s, n]) =>
             `<a class="chip" href="${href("/series/" + encodeURIComponent(s))}">${esc(s)}<span class="n">${nf(n)}</span></a>`).join("")}</div></section>`
       : "") +
