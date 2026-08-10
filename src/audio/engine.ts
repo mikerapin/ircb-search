@@ -74,8 +74,102 @@ function paintInline(): void {
   }
 }
 
+/**
+ * What is playing, in two lines. The mini-bar and the OS lock screen must never disagree
+ * about this, so they read the same function rather than each building the strings.
+ */
+function nowPlaying(): { primary: string; secondary: string; ep: EpisodeCore | undefined } {
+  const ep = play.key ? lookup(play.key) : undefined;
+  return {
+    ep,
+    primary: play.comic ?? ep?.title ?? "Now playing",
+    secondary: (play.comic && ep ? ep.title + " · " : "") + firstNames(ep?.people ?? []),
+  };
+}
+
+/**
+ * Media Session — the lock screen, the notification shade and the hardware keys.
+ *
+ * Metadata only; the transport handlers are wired once in `initAudio`. Rule 3 still binds:
+ * the OS seek arrives as a time, and it goes through `scrub()` like every other hand seek,
+ * never as a parameter on the enclosure URL.
+ */
+function paintMediaSession(): void {
+  const ms = navigator.mediaSession as MediaSession | undefined;
+  if (!ms || typeof MediaMetadata !== "function") return;
+
+  const { ep, primary, secondary } = nowPlaying();
+  if (!play.key || !ep) {
+    ms.metadata = null;
+    ms.playbackState = "none";
+    return;
+  }
+  ms.metadata = new MediaMetadata({
+    title: primary,
+    artist: secondary,
+    album: "I Read Comic Books",
+    /* The podcast host's own artwork, the same URL the page already renders. 3000×3000 is
+       what Simplecast serves; the OS picks the size it wants. */
+    artwork: ep.artwork ? [{ src: ep.artwork, sizes: "3000x3000", type: "image/jpeg" }] : [],
+  });
+  ms.playbackState = au.paused ? "paused" : "playing";
+
+  /* Without this the lock screen's scrubber is drawn but inert. It throws on a duration
+     that is not a finite number, which is every moment before metadata lands. */
+  const d = au.duration;
+  if (typeof ms.setPositionState === "function" && Number.isFinite(d) && d > 0) {
+    try {
+      ms.setPositionState({ duration: d, position: Math.min(au.currentTime, d), playbackRate: au.playbackRate });
+    } catch { /* a position past duration mid-seek */ }
+  }
+}
+
+/**
+ * Playhead sync — the read-along tracks the tape.
+ *
+ * The segment machinery only marks the panel a jump opened. Anything else that moves the
+ * playhead — "Play from the top", a drag on the slider, the lock-screen scrubber, "Let it
+ * roll" running on — left every row looking identical while the tape was somewhere else
+ * entirely. This marks the last logged minute the playhead has passed, whatever moved it.
+ */
+let nowRow: HTMLElement | null = null;
+
+function paintPlayhead(): void {
+  let want: HTMLElement | null = null;
+  if (play.key) {
+    const t = au.currentTime;
+    let best = -1;
+    for (const row of document.querySelectorAll<HTMLElement>(`[data-secs][data-ep="${CSS.escape(play.key)}"]`)) {
+      /* Identity is stamped on the row AND on the control inside it, and "Play from the top"
+         is a control carrying `data-secs="0"`. Without this filter the marker landed on the
+         inner button — where neither `.rawrap.now` nor `.panel.now` paints anything — and at
+         t=0 it marked the play-from-the-top button as though zero were a logged minute.
+         A cutslot is what makes something a row: it is the same test the segment handover
+         uses to decide what can be handed the tape. */
+      if (!row.querySelector(".cutslot")) continue;
+      const raw = row.dataset["secs"];
+      /* A row with no logged minute carries `data-secs=""`, and Number("") is 0 — which
+         would mark every unjumpable comic in the episode the moment the tape started. */
+      const s = raw ? Number(raw) : NaN;
+      if (!Number.isFinite(s) || s > t || s < best) continue;
+      best = s;
+      want = row;
+    }
+  }
+  if (want === nowRow) return;
+  /* A re-render leaves the old row detached; removing a class from it is harmless, and the
+     new element is a different node, so this correctly re-marks after a repaint. */
+  nowRow?.classList.remove("now");
+  nowRow?.removeAttribute("aria-current");
+  want?.classList.add("now");
+  want?.setAttribute("aria-current", "true");
+  nowRow = want;
+}
+
 export function paintBar(): void {
   paintInline();
+  paintMediaSession();
+  paintPlayhead();
   if (!bar) return;
   const live = !!play.key && !!au.src;
   const showBar = live && !inlineAlive();
@@ -104,6 +198,22 @@ export function paintBar(): void {
 
 /** Seek granularity, in seconds — also what one arrow press moves. */
 const SEEK_STEP = 15;
+
+/**
+ * Every hand seek goes through here: the slider, and the OS transport controls.
+ *
+ * Rule 3 lives in one place because of it — `currentTime` only, never a parameter appended
+ * to the enclosure URL, which is how Blubrry identifies the episode.
+ */
+function scrub(secs: number): void {
+  try { au.currentTime = Math.max(0, secs); } catch { /* not seekable yet */ }
+  /* A hand seek opts out of the segment stop. Without this the next timeupdate saw
+     currentTime >= until, read the drag as a completed segment, paused, handed over to the
+     next panel and seeked backwards to its start. The slider's max is the whole episode, so
+     the control has to deliver the whole episode — and so does the lock screen. */
+  if (play.until != null && au.currentTime >= play.until) play = { ...play, until: null };
+  paintBar();
+}
 
 /** The value a range input will actually hold, given it snaps to SEEK_STEP and clamps to max. */
 function snap(secs: number, max: number): number {
@@ -290,7 +400,10 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
     }
     paintBar();
   });
-  au.addEventListener("seeked", () => { seekPending = false; });
+  /* Repaint on the seek itself, not only on the next timeupdate. A paused tape fires no
+     timeupdate, so a scrub from the lock screen or the slider while paused left the
+     playhead marker and the clock describing where the tape used to be. */
+  au.addEventListener("seeked", () => { seekPending = false; paintBar(); });
   au.addEventListener("play", paintBar);
   au.addEventListener("pause", paintBar);
   au.addEventListener("ended", paintBar);
@@ -334,15 +447,25 @@ export function initAudio(getEpisode: (key: string) => EpisodeCore | undefined):
 
   document.addEventListener("input", ev => {
     const t = ev.target as HTMLElement;
-    if (t.dataset?.["role"] === "seek") {
-      try { au.currentTime = Number((t as HTMLInputElement).value); } catch { /* ignore */ }
-      /* A hand seek opts out of the segment stop. Without this the next timeupdate saw
-         currentTime >= until, read the drag as a completed segment, paused, handed over to
-         the next panel and seeked backwards to its start. The slider's max is the whole
-         episode, so the control has to deliver the whole episode. */
-      if (play.until != null && au.currentTime >= play.until) play = { ...play, until: null };
-    }
+    if (t.dataset?.["role"] === "seek") scrub(Number((t as HTMLInputElement).value));
   });
+
+  /* The lock screen, the notification shade, the headphone buttons. Every one of these
+     routes into the same engine — a parallel play path would be a second place for the
+     four stats rules to be broken. */
+  const ms = navigator.mediaSession as MediaSession | undefined;
+  if (ms) {
+    const on = (action: MediaSessionAction, handler: MediaSessionActionHandler): void => {
+      // A browser that does not know an action throws rather than ignoring it.
+      try { ms.setActionHandler(action, handler); } catch { /* unsupported action */ }
+    };
+    on("play", () => { void au.play().catch(() => {}); });
+    on("pause", () => au.pause());
+    on("stop", () => stopAll());
+    on("seekto", d => { if (typeof d.seekTime === "number") scrub(d.seekTime); });
+    on("seekbackward", d => scrub(au.currentTime - (d.seekOffset ?? SEEK_STEP)));
+    on("seekforward", d => scrub(au.currentTime + (d.seekOffset ?? SEEK_STEP)));
+  }
 
   el("mb-pp")?.addEventListener("click", () => {
     if (au.paused) void au.play().catch(() => {}); else au.pause();

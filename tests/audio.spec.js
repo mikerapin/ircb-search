@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio, FAKE_AUDIO_SECONDS } from "./fake-audio.js";
+import { stubAudio, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio.js";
 
 /**
  * The rules asserted here are stats-correctness requirements from Blubrry's published player
@@ -56,6 +56,28 @@ async function recordSeeks(page) {
 const seekLanded = (page, want, tol = 1.5) =>
   page.waitForFunction(([w, t]) => (window.__seeks ?? []).some(s => Math.abs(s - w) < t),
     [want, tol], { timeout: 15000 });
+
+/**
+ * A canary, not a feature test — and the first thing to read when several specs below fail
+ * together.
+ *
+ * Chromium on this machine lost its audio output mid-session once, and every spec that rides
+ * the tape turned into an opaque 20-second timeout. Nothing pointed at the cause: `play()`
+ * RESOLVED, `readyState` was 4, `au.error` was null, and `currentTime` simply never advanced.
+ * It reproduced on a bare data: URI in a headed browser with none of this project loaded, and
+ * it fixed itself later with no change to anything here. So: no app, no network, no engine —
+ * if this one is red, the tape specs are telling you about the machine, not the code.
+ */
+test("the browser can actually play audio at all", async ({ page }) => {
+  await page.setContent(`<audio id="canary" src="${SILENT_WAV_URI}"></audio>`);
+  const moved = await page.evaluate(async () => {
+    const a = document.getElementById("canary");
+    try { await a.play(); } catch (e) { return `play() rejected: ${e.name}`; }
+    await new Promise(r => setTimeout(r, 1200));
+    return a.currentTime > 0.2 ? true : `play() resolved but the clock sat at ${a.currentTime}`;
+  });
+  expect(moved, "Chromium is not rendering audio — the tape specs below cannot pass").toBe(true);
+});
 
 test("a page visit downloads no audio", async ({ page }) => {
   const asked = await stubAudio(page);
@@ -409,4 +431,188 @@ test("a segment handover keeps focus on a player, not on <body>", async ({ page 
     inPlayer: !!document.activeElement?.closest?.(".panel.playing .player"),
   }));
   expect(active.inPlayer, `focus was on ${active.cls || "<body>"}`).toBe(true);
+});
+
+/* ---------------------------------------------------------------------------------------
+   Plan 3 Task 4 — Media Session and playhead sync.
+   --------------------------------------------------------------------------------------- */
+
+const session = page => page.evaluate(() => {
+  const ms = navigator.mediaSession;
+  const m = ms?.metadata;
+  return {
+    state: ms?.playbackState ?? null,
+    title: m?.title ?? null,
+    artist: m?.artist ?? null,
+    album: m?.album ?? null,
+    art: m?.artwork?.[0]?.src ?? null,
+  };
+});
+
+/** The episode record behind a panel, so assertions compare against the data, not the DOM. */
+const episodeOf = (page, key) => page.evaluate(async k => {
+  const core = await fetch("d/core.json").then(r => r.json());
+  return core.episodes.find(e => e.key === k);
+}, key);
+
+/**
+ * Capture the handlers the engine registers with the OS.
+ *
+ * Chromium exposes no way to fire a real lock-screen action, and a test that only checked
+ * `setActionHandler` exists would pass against a handler that did nothing. Wrapping it
+ * before the page's own scripts run means the spec can invoke the exact function the OS
+ * would, and assert where the tape actually landed.
+ */
+async function captureTransport(page) {
+  await page.addInitScript(() => {
+    const ms = navigator.mediaSession;
+    if (!ms?.setActionHandler) return;
+    window.__transport = {};
+    const real = ms.setActionHandler.bind(ms);
+    ms.setActionHandler = (action, handler) => {
+      window.__transport[action] = handler;
+      return real(action, handler);
+    };
+  });
+}
+
+test("the lock screen is told what is playing, and told when it stops", async ({ page }) => {
+  await captureTransport(page);
+  await stubAudio(page);
+  await openEpisode(page);
+  test.skip(!await page.evaluate(() => "mediaSession" in navigator), "no Media Session here");
+
+  expect((await session(page)).title).toBeNull();
+
+  const row = page.locator("#readalong .panel").first();
+  const [comic, key] = [await row.getAttribute("data-comic"), await row.getAttribute("data-ep")];
+  await row.locator("[data-act=cut]").click();
+  /* Wait for the player, not for `paused` to flip. Metadata is published by `paintBar()` the
+     moment the jump opens a player, and tying the assertion to real playback would make it
+     depend on the OS actually rendering audio — which these specs deliberately never do. */
+  await page.waitForSelector(".panel.playing .player");
+
+  const on = await session(page);
+  const ep = await episodeOf(page, key);
+  // The comic leads, because a jump plays a comic, not a whole episode.
+  expect(on.title).toBe(comic);
+  expect(on.album).toBe("I Read Comic Books");
+  // The state the OS is shown has to be the state the element is actually in.
+  expect(on.state).toBe(await page.evaluate(() => document.getElementById("au").paused ? "paused" : "playing"));
+  /* The episode title and panel are the second line — read from core.json, not the heading,
+     which the stylesheet renders uppercase and innerText returns transformed. */
+  expect(on.artist).toContain(ep.title);
+  expect(on.art).toBe(ep.artwork);
+
+  await page.evaluate(() => { const a = document.getElementById("au"); a.pause(); a.dispatchEvent(new Event("pause")); });
+  await expect.poll(async () => (await session(page)).state).toBe("paused");
+
+  /* Stop from the OS itself. The mini-bar's ✕ is the other way in, but it only exists once
+     navigation has eaten the inline player, and this is the path the lock screen uses. */
+  await page.evaluate(() => window.__transport.stop());
+  // Never left claiming a session that ended — the lock screen would go on showing it.
+  const off = await session(page);
+  expect(off.title).toBeNull();
+  expect(off.state).toBe("none");
+});
+
+test("an OS seek moves the tape and never touches the enclosure URL", async ({ page }) => {
+  await captureTransport(page);
+  const asked = await stubAudio(page);
+  await openEpisode(page);
+  test.skip(!await page.evaluate(() => "mediaSession" in navigator), "no Media Session here");
+
+  await shortSegment(page);
+  await page.locator("#readalong .panel").first().locator("[data-act=cut]").click();
+  await page.waitForSelector(".panel.playing .player");
+  /* The player opens synchronously, but the tape is not seekable until `loadedmetadata`
+     lands — and `applyPending` then seeks it to the jump's own second. Riding before that
+     means the engine overwrites the position under test. */
+  await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 20000 });
+  await recordSeeks(page);
+
+  const wired = await page.evaluate(() => Object.keys(window.__transport ?? {}));
+  expect(wired).toEqual(expect.arrayContaining(["play", "pause", "seekto", "seekbackward", "seekforward"]));
+
+  // Drive the handler the OS would call.
+  await page.evaluate(() => window.__transport.seekto({ seekTime: 120 }));
+  await seekLanded(page, 120);
+
+  /* Rule 3, and the whole reason the OS seek routes through the same `scrub()`: Blubrry
+     keys episode identity on the exact enclosure URL, so a seek must never become a
+     parameter on it. */
+  expect(asked.length).toBeGreaterThan(0);
+  for (const url of asked) expect(url).not.toMatch(/[?&](t|start|seek)=/);
+
+  /* ...and it inherits the slider's opt-out. The boundary check runs on timeupdate, so fire
+     one — waiting for playback to produce it would make the assertion depend on the OS
+     actually rendering audio, and then it passes whether the opt-out exists or not. Without
+     the opt-out this seek to 2:00, far past a 6-second segment, reads as a finished segment:
+     the engine pauses and hands the player to the next panel. */
+  await page.evaluate(() => document.getElementById("au").dispatchEvent(new Event("timeupdate")));
+  const stayed = await page.evaluate(() => {
+    const panels = [...document.querySelectorAll("#readalong .panel")];
+    return panels.indexOf(document.querySelector("#readalong .panel.playing"));
+  });
+  expect(stayed).toBe(0);
+  expect(await page.evaluate(() => document.getElementById("au").currentTime)).toBeGreaterThan(100);
+
+  await page.evaluate(() => window.__transport.pause());
+  await expect(page.locator("#au")).toHaveJSProperty("paused", true);
+});
+
+test("the read-along marks the comic the tape is actually on", async ({ page }) => {
+  await stubAudio(page);
+  await openEpisode(page);
+
+  /* Restamp into the stub's runtime, and only `data-secs` — leaving `data-until` alone
+     keeps the segment machinery out of it, which is the point: this marker has to come
+     from the playhead, not from a jump or a handover. */
+  const stamps = await page.evaluate(() => {
+    const panels = [...document.querySelectorAll("#readalong .panel")];
+    panels.forEach((p, i) => { p.dataset.secs = String(2 + i * 6); });
+    return panels.map(p => Number(p.dataset.secs));
+  });
+  test.skip(stamps.length < 2, "episode has fewer than two logged minutes");
+
+  // Play from the top: nothing was jumped to, so only the playhead can mark anything.
+  await page.locator(".meta .big-play").click();
+  await page.waitForSelector(".meta .player");
+  /* The player opens synchronously, but the tape is not seekable until `loadedmetadata`
+     lands — and `applyPending` then seeks it to the jump's own second. Riding before that
+     means the engine overwrites the position under test. */
+  await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 20000 });
+  /* Then pause and drive the playhead by seeking. Riding a running tape would race the
+     assertion — six seconds between stamps is less than a poll timeout, so a correct marker
+     moves off the row under test before it can be read — and it is the playhead POSITION
+     under test here, not whether the OS can render audio. */
+  await page.evaluate(() => document.getElementById("au").pause());
+
+  const marked = () => page.evaluate(() => {
+    const panels = [...document.querySelectorAll("#readalong .panel")];
+    return panels.indexOf(document.querySelector("#readalong .panel.now"));
+  });
+  const rideTo = async secs => page.evaluate(s => { document.getElementById("au").currentTime = s; }, secs);
+
+  await rideTo(stamps[1] + 1);
+  await expect.poll(marked).toBe(1);
+
+  // It moves back when the tape does. A marker that only ever advances is a latch.
+  await rideTo(stamps[0] + 1);
+  await expect.poll(marked).toBe(0);
+
+  /* Before the first logged minute nothing is claimed, rather than the first row by default.
+     Counted, not indexed: `marked()` returns -1 both for "no row is marked" and for "the
+     marked row is a stale node that is no longer in this list", so an index cannot tell the
+     clearing apart from a re-render and the assertion could not fail. */
+  await rideTo(0);
+  await expect(page.locator(".now")).toHaveCount(0);
+
+  // Stopping clears it; a stale marker says the tape is somewhere it is not.
+  await rideTo(stamps[1] + 1);
+  await expect.poll(marked).toBe(1);
+  await page.goto("/#/wall");
+  await page.waitForSelector(".cell");
+  await page.locator("#mb-x").click();
+  await expect(page.locator(".now")).toHaveCount(0);
 });

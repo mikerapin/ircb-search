@@ -439,6 +439,13 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 .ra-list>.rawrap:first-child{border-top:0}
 .rawrap:nth-child(even){background:var(--paper-2)}
 .rawrap.playing{background:var(--paper-2); box-shadow:inset 0 0 0 2px var(--ink)}
+/* Playhead sync: the last logged minute the tape has passed. Deliberately quieter than
+   .playing, which means "the open player is in this row" — the two are usually the same row
+   and must not read as two competing states when they are. A rule, not a tint, so it still
+   shows on the striped even rows. */
+.rawrap.now::before,.panel.now::before{content:""; position:absolute; left:0; top:0; bottom:0;
+  width:4px; background:var(--red-deep)}
+.panel.now{position:relative}
 .ra-row{
   display:grid; grid-template-columns:66px minmax(0,1fr) auto; gap:12px; align-items:center;
   width:100%; text-align:left; padding:11px 12px; color:var(--ink); min-height:52px; background:transparent;

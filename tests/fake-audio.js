@@ -36,6 +36,9 @@ const BODY = silentWav();
 
 export const FAKE_AUDIO_SECONDS = SECONDS;
 
+/** The same silence as a data: URI, for a check that must not involve the app or the network. */
+export const SILENT_WAV_URI = "data:audio/wav;base64," + silentWav(5).toString("base64");
+
 /**
  * Serves the silence with range support, and records every URL the page asked for.
  * Returns the recorder so a spec can assert the enclosure went out untouched.
