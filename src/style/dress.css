@@ -45,7 +45,9 @@ html[data-neg] .menu .mh{color:#14120F}
   font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase; font-size:13px; letter-spacing:.03em;
 }
 .menu a:first-of-type{border-top:0}
-.menu a .sub,.menu button .sub{margin-left:auto; font-family:var(--body); font-size:10px; letter-spacing:.1em; font-weight:600; opacity:.6; text-transform:uppercase}
+/* 60% measured 4.13:1 on the hover yellow and 3.68 in the negative. It read as passing
+   only because element opacity hid the alpha from the contrast sweep. */
+.menu a .sub,.menu button .sub{margin-left:auto; font-family:var(--body); font-size:10px; letter-spacing:.1em; font-weight:600; text-transform:uppercase; color:color-mix(in srgb, currentColor 75%, transparent)}
 .menu a:hover,.menu button:hover,.menu a.on{background:var(--yellow); color:#14120F; text-decoration:none}
 .menu a:hover .sub,.menu button:hover .sub,.menu a.on .sub{opacity:.78}
 
@@ -95,7 +97,7 @@ html[data-neg] .ta-grp{color:#14120F}
 }
 .ta-opt .nm{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase;
   font-size:13.5px; letter-spacing:.02em; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.ta-opt .mt{margin-left:auto; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; opacity:.62; white-space:nowrap; flex:0 0 auto}
+.ta-opt .mt{margin-left:auto; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; white-space:nowrap; flex:0 0 auto; color:color-mix(in srgb, currentColor 62%, transparent)}
 .ta-opt:hover,.ta-opt.act{background:var(--yellow); color:#14120F; text-decoration:none}
 .ta-opt:hover .mt,.ta-opt.act .mt{opacity:.8}
 .ta-foot{padding:8px 12px; font-size:11px; border-top:var(--rule) solid var(--ink); background:var(--paper-2); letter-spacing:.02em}
@@ -135,7 +137,7 @@ main{max-width:1400px; margin:0 auto; padding:var(--sec) 0 20px; display:block}
 .crumb{padding:0 var(--pad) 14px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:700}
 .pagehead{padding:0 var(--pad) 8px; margin-bottom:var(--sec)}
 .pagehead h1{margin:6px 0 10px; font-size:clamp(30px,7vw,58px)}
-.pagehead .eyebrow{font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; opacity:.62}
+.pagehead .eyebrow{font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; color:color-mix(in srgb, currentColor 62%, transparent)}
 .pagehead p{max-width:64ch; margin:0 0 12px}
 
 /* one SFX per view */
@@ -196,7 +198,7 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 900; font-size:12px;
   letter-spacing:.02em; font-feature-settings:"tnum"; line-height:1.15; text-align:center;
 }
-.pricebox small{display:block; font-family:var(--body); font-size:7.5px; letter-spacing:.16em; font-weight:700; opacity:.6; text-transform:uppercase}
+.pricebox small{display:block; font-family:var(--body); font-size:7.5px; letter-spacing:.16em; font-weight:700; text-transform:uppercase; color:color-mix(in srgb, currentColor 60%, transparent)}
 
 /* comic-title band — the yellow plate */
 .band{
@@ -217,12 +219,11 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
   font-family:var(--hand); font-variation-settings:"BNCE" 0,"INFM" 14; font-size:13.5px; line-height:1.3;
   background:var(--paper-2); border:var(--rule) solid var(--ink); padding:7px 8px; display:block;
 }
-.credits{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; opacity:.75; line-height:1.5}
+.credits{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; line-height:1.5; color:color-mix(in srgb, currentColor 75%, transparent)}
 .seg{
   display:inline-block; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
-  border:1.5px solid var(--ink); padding:2px 5px; opacity:.75; max-width:100%; overflow:hidden;
-  text-overflow:ellipsis; white-space:nowrap; align-self:flex-start;
-}
+  border:1.5px solid var(--ink); padding:2px 5px; max-width:100%; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap; align-self:flex-start; color:color-mix(in srgb, currentColor 75%, transparent)}
 .spacer{flex:1 1 auto}
 
 /* timestamp caption box = the jump cut trigger */
@@ -243,7 +244,7 @@ html[data-neg] .ts:hover:not(.dead){color:#14120F}
 .ts .lab{margin-left:auto; font-size:10px; letter-spacing:.1em;
   color:color-mix(in srgb, currentColor 88%, transparent)}
 .ts.dead{background:var(--paper-2); color:color-mix(in srgb, var(--ink) 78%, var(--paper-2)); cursor:default}
-.ts.dark{background:var(--ink); color:var(--paper)}
+.ts.dark{background:var(--ink-block); color:var(--paper)}
 html[data-neg] .ts.dark{color:#14120F}
 
 /* the jump cut: panel becomes player */
@@ -251,8 +252,8 @@ html[data-neg] .ts.dark{color:#14120F}
 .panel.playing .gc-screen{opacity:0}
 .panel.playing .band{background:var(--red-deep); color:var(--paper)}
 html[data-neg] .panel.playing .band{color:#14120F}
-.player{border:var(--rule) solid var(--ink); background:var(--ink); color:var(--paper); padding:8px; display:flex; flex-direction:column; gap:7px}
-html[data-neg] .player{color:#14120F; background:var(--ink)}
+.player{border:var(--rule) solid var(--ink); background:var(--ink-block); color:var(--paper); padding:8px; display:flex; flex-direction:column; gap:7px}
+html[data-neg] .player{color:#14120F; background:var(--ink-block)}
 .player .row{display:flex; align-items:center; gap:9px}
 .player .pp{width:34px; height:34px; flex:0 0 auto; border:2px solid var(--paper); background:var(--yellow); color:#14120F; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center}
 html[data-neg] .player .pp{border-color:#14120F}
@@ -262,7 +263,7 @@ html[data-neg] .player .pp{border-color:#14120F}
 .player input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:12px; height:18px; background:var(--red); border:2px solid var(--paper); margin-top:-7px}
 .player input[type=range]::-moz-range-track{height:4px; background:var(--paper); opacity:.5}
 .player input[type=range]::-moz-range-thumb{width:10px; height:16px; border-radius:0; background:var(--red); border:2px solid var(--paper)}
-.player .note{font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; opacity:.65}
+.player .note{font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:color-mix(in srgb, currentColor 65%, transparent)}
 
 /* ---------- generated trade-dress cover ---------- */
 .gc{position:relative; aspect-ratio:3/2; background:var(--gc-f); color:var(--gc-t);
@@ -324,11 +325,13 @@ html[data-neg] .bbadge{color:#14120F}
 html[data-neg] .rack .cnt{color:#14120F}
 
 /* stats indicia block */
-.stats{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--rule); background:var(--ink); border:var(--rule) solid var(--ink); margin:0 var(--pad)}
+/* The biggest painted surface on the site. --ink-block so the negative plate does not
+   turn it into a white slab; the hairline border stays --ink so the edge keeps its bite. */
+.stats{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--rule); background:var(--ink-block); border:var(--rule) solid var(--ink); margin:0 var(--pad)}
 @media(min-width:760px){ .stats{grid-template-columns:repeat(4,1fr)} }
 .stats .st{background:var(--paper); padding:26px 18px}
 .stats .n{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; font-size:clamp(26px,5vw,40px); line-height:.9; font-feature-settings:"tnum"}
-.stats .l{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:600; opacity:.75; margin-top:6px}
+.stats .l{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:600; margin-top:6px; color:color-mix(in srgb, currentColor 75%, transparent)}
 
 /* ---------- the shuffle (3-up randomizer, A2) ---------- */
 .threeup{display:grid; grid-template-columns:1fr; gap:var(--gut); padding:0 var(--pad)}
@@ -362,7 +365,7 @@ html[data-neg] .sh .shh{color:#14120F}
   /* currentColor, not var(--ink): .pblock:hover repaints to a FIXED yellow on both
      plates, so the flipping token went cream-on-yellow (1.34:1) in the negative. */
   color:color-mix(in srgb, currentColor 82%, transparent)}
-.pblock .st{padding:0 9px 9px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; opacity:.7; margin-top:auto}
+.pblock .st{padding:0 9px 9px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-top:auto; color:color-mix(in srgb, currentColor 70%, transparent)}
 .pblock:hover{text-decoration:none; background:var(--yellow); color:#14120F}
 .pblock:hover .por{background:var(--yellow)}
 
@@ -436,7 +439,7 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
   color:var(--blue); font-feature-settings:"tnum"; letter-spacing:.03em}
 .ra-row .t.none{color:var(--ink); color:color-mix(in srgb, var(--ink) 70%, transparent)}
 .ra-row .cm{display:block; font-size:15px; font-weight:600; line-height:1.3; overflow-wrap:anywhere}
-.ra-row .mt{display:block; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; opacity:.62; margin-top:3px}
+.ra-row .mt{display:block; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; margin-top:3px; color:color-mix(in srgb, currentColor 62%, transparent)}
 .ra-row .cue{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:color-mix(in srgb, var(--ink) 72%, transparent); white-space:nowrap}
 .ra-row:hover{background:var(--yellow); color:#14120F; text-decoration:none}
 /* .mt joins them: at .62 its 10.5px inherited #14120F over the fixed yellow hover ground
@@ -481,7 +484,7 @@ html[data-neg] .ra-row.on{color:#14120F}
   background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px; border:1.5px solid var(--ink); flex:0 0 auto}
 .notes{font-size:15px; line-height:1.6; margin:0}
 .tags{display:flex; flex-wrap:wrap; gap:6px}
-.tag{font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; border:1.5px solid var(--ink); padding:3px 7px; opacity:.8}
+.tag{font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; border:1.5px solid var(--ink); padding:3px 7px; color:color-mix(in srgb, currentColor 80%, transparent)}
 .big-play{
   display:inline-flex; align-items:center; gap:9px; align-self:flex-start; min-height:46px;
   background:var(--red-deep); color:var(--paper); border:var(--rule) solid var(--ink); padding:9px 16px;
@@ -562,7 +565,7 @@ html[data-neg] .railbox .rh{color:#14120F}
 .facet:hover{background:var(--yellow); color:#14120F; text-decoration:none}
 .facet[aria-current=true]{background:var(--red-deep); color:var(--paper)}
 .facet[aria-current=true] .n,.facet:hover .n{color:inherit}
-.railnote{padding:10px; font-size:11.5px; line-height:1.5; opacity:.75; border-top:var(--rule) solid var(--ink)}
+.railnote{padding:10px; font-size:11.5px; line-height:1.5; border-top:var(--rule) solid var(--ink); color:color-mix(in srgb, currentColor 75%, transparent)}
 
 /* ---------- checklist (series / index) ---------- */
 .checklist{margin:0 var(--pad); border:var(--rule) solid var(--ink)}
@@ -611,7 +614,7 @@ html[data-neg] .azbar a:hover,html[data-neg] .azbar button:hover{color:#14120F}
   scroll-margin-top:calc(var(--dress-h, 96px) + var(--az-h, 54px) + 8px)}
 .azsec>h2:focus-visible{outline:3px solid currentColor; outline-offset:-3px}
 html[data-neg] .azsec>h2,html[data-neg] .azsec>h3{color:#14120F}
-.azsec>h2 span,.azsec>h3 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; opacity:.7; letter-spacing:.1em; align-self:center}
+.azsec>h2 span,.azsec>h3 span{margin-left:auto; font-size:10px; font-family:var(--body); font-weight:600; letter-spacing:.1em; align-self:center; color:color-mix(in srgb, currentColor 70%, transparent)}
 /* min-height 24px: 12.5px at 1.35 plus 2px padding computed to 20.9, under the 24x24
    minimum for a touch target, on a page that is three thousand adjacent targets with no gap. */
 .azrow{display:flex; gap:8px; align-items:baseline; padding:3px 9px; min-height:24px;
@@ -634,7 +637,7 @@ html[data-neg] .azsec>h2,html[data-neg] .azsec>h3{color:#14120F}
 .bar .bf{position:absolute; inset:0 auto 0 0; background:var(--ink)}
 .bar .bf::after{content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(244,241,232,.45) 30%,transparent 32%); background-size:5px 5px}
 html[data-neg] .bar .bf::after{background-image:radial-gradient(rgba(20,18,15,.45) 30%,transparent 32%)}
-.bar .bn{font-size:11px; font-weight:700; opacity:.65; font-feature-settings:"tnum"; white-space:nowrap}
+.bar .bn{font-size:11px; font-weight:700; font-feature-settings:"tnum"; white-space:nowrap; color:color-mix(in srgb, currentColor 65%, transparent)}
 .bar:hover{background:var(--yellow); color:#14120F; text-decoration:none}
 .bar:hover .bf{background:var(--red)}
 
@@ -699,7 +702,7 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
 .resline{border:var(--rule) solid var(--ink); padding:11px 13px; margin-bottom:16px; background:var(--paper-2)}
 .resline .m{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase; font-size:clamp(15px,2.6vw,20px); line-height:1.2}
 .resline .m .lit{color:var(--red)}
-.resline .s{font-size:11.5px; opacity:.75; margin-top:5px; letter-spacing:.02em}
+.resline .s{font-size:11.5px; margin-top:5px; letter-spacing:.02em; color:color-mix(in srgb, currentColor 75%, transparent)}
 .wall{border:var(--rule) solid var(--ink); padding:12px; background:var(--paper)}
 .yrow{display:grid; grid-template-columns:3.1rem minmax(0,1fr); align-items:center; gap:0 10px; margin-bottom:5px}
 .ylab{font-size:11px; font-weight:800; letter-spacing:.04em; text-align:right; user-select:none; font-feature-settings:"tnum"; line-height:1.25}
@@ -710,10 +713,13 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
 .ycells{display:grid; grid-template-columns:repeat(var(--cols,63),minmax(0,1fr)); gap:2px}
 .cell{aspect-ratio:1/1; border:1px solid var(--ink); background:var(--paper); padding:0; min-width:0; transition:opacity .12s,background .12s}
 .cell.n0{background:var(--paper); border-style:dashed; opacity:.55}
-.cell.n1{background:color-mix(in srgb,var(--ink) 22%,var(--paper))}
-.cell.n2{background:color-mix(in srgb,var(--ink) 45%,var(--paper))}
-.cell.n3{background:color-mix(in srgb,var(--ink) 70%,var(--paper))}
-.cell.n4{background:var(--ink)}
+/* The whole ramp is drawn from --ink-block, not just its darkest step: mixing three
+   rungs from --ink and the fourth from --ink-block would break the progression on the
+   negative plate, where the two tokens differ. */
+.cell.n1{background:color-mix(in srgb,var(--ink-block) 22%,var(--paper))}
+.cell.n2{background:color-mix(in srgb,var(--ink-block) 45%,var(--paper))}
+.cell.n3{background:color-mix(in srgb,var(--ink-block) 70%,var(--paper))}
+.cell.n4{background:var(--ink-block)}
 .cell:hover{outline:2px solid var(--red); outline-offset:1px; z-index:2; position:relative}
 .wall.lit .cell{opacity:.13}
 .wall.lit .cell.hit{opacity:1; background:var(--red); border-color:var(--ink)}
@@ -736,11 +742,11 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
   .ycells{grid-template-columns:repeat(13,minmax(0,1fr)); gap:3px}
 }
 .walllegend{display:flex; flex-wrap:wrap; gap:14px; align-items:center; padding-top:12px; margin-top:12px;
-  border-top:var(--rule) solid var(--ink); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; opacity:.8}
+  border-top:var(--rule) solid var(--ink); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; color:color-mix(in srgb, currentColor 80%, transparent)}
 .walllegend i{display:inline-block; width:13px; height:13px; border:1px solid var(--ink); vertical-align:-2px; margin-right:5px}
 .walllegend .s0{background:var(--paper); border-style:dashed}
-.walllegend .s2{background:color-mix(in srgb,var(--ink) 45%,var(--paper))}
-.walllegend .s4{background:var(--ink)}
+.walllegend .s2{background:color-mix(in srgb,var(--ink-block) 45%,var(--paper))}
+.walllegend .s4{background:var(--ink-block)}
 .walllegend .sh{background:var(--red)}
 /* mini-wall on a panelist page */
 .mini .ycells{grid-template-columns:repeat(var(--cols,63),minmax(0,1fr)); gap:1.5px}
@@ -797,9 +803,9 @@ html[data-neg] #minibar.paused .pp{color:#14120F; border-color:#14120F}
   color:color-mix(in srgb, currentColor 74%, transparent);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 #minibar .cm:hover{text-decoration:underline}
-#minibar .clk{font-size:11px; font-weight:700; letter-spacing:.04em; font-feature-settings:"tnum"; flex:0 0 auto; opacity:.8}
+#minibar .clk{font-size:11px; font-weight:700; letter-spacing:.04em; font-feature-settings:"tnum"; flex:0 0 auto; color:color-mix(in srgb, currentColor 80%, transparent)}
 @media(max-width:520px){ #minibar .clk{display:none} }
-#minibar .x{flex:0 0 auto; border:2px solid currentColor; padding:3px 9px; font-size:11px; font-weight:800; opacity:.75}
+#minibar .x{flex:0 0 auto; border:2px solid currentColor; padding:3px 9px; font-size:11px; font-weight:800; color:color-mix(in srgb, currentColor 75%, transparent)}
 #minibar .x:hover{opacity:1; background:var(--red-deep); border-color:var(--red-deep); color:var(--paper)}
 
 /* ---------- indicia footer ---------- */
@@ -826,10 +832,10 @@ html[data-neg] .chip:hover{color:#14120F}
 .kv>div{display:grid; grid-template-columns:1fr; gap:2px; padding:11px 12px; border-top:var(--rule) solid var(--ink)}
 .kv>div:first-child{border-top:0}
 @media(min-width:700px){ .kv>div{grid-template-columns:160px minmax(0,1fr); gap:14px} }
-.kv dt{font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; opacity:.7; margin:0}
+.kv dt{font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; margin:0; color:color-mix(in srgb, currentColor 70%, transparent)}
 .kv dd{margin:0; font-size:14px; line-height:1.5}
 .sparse{border:var(--rule) solid var(--ink); background:var(--paper-2); padding:13px; margin:0 var(--pad); font-size:14px; line-height:1.6}
-.sparse .hd{font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-bottom:5px; opacity:.7}
+.sparse .hd{font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; margin-bottom:5px; color:color-mix(in srgb, currentColor 70%, transparent)}
 
 /* ---------- accessibility corrections ----------
    axe on the ported chrome: footer links sat at 2.26:1 against the surrounding

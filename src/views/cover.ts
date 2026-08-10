@@ -8,10 +8,14 @@ const FIELDS: Array<[field: string, text: string]> = [
   /* --red-deep, not --red: dark ink on the bright red measured 4.29:1, and a plate title
      is not always large text — fitPlates sizes it in cqw, so a rack slot renders it at
      ~13px. House rule 2, applied to the plate palette. */
+  /* The three pairs that letter in --gc-yellow / --gc-red are the ones whose field also
+     goes bright on the negative plate. Those tokens carry the accent on paper and dark ink
+     in the negative; using --yellow and --red directly measured 1.41, 2.19 and 1.12 there,
+     and a deliberate test.fail() on the light plate's 4.29 was masking all three. */
   ["var(--red-deep)", "var(--paper)"], ["var(--blue)", "var(--paper)"],
-  ["var(--yellow)", "#14120F"], ["var(--ink)", "var(--yellow)"],
+  ["var(--yellow)", "#14120F"], ["var(--ink)", "var(--gc-yellow)"],
   ["var(--tint)", "#14120F"], ["var(--paper-2)", "var(--ink)"],
-  ["var(--ink)", "var(--red)"], ["var(--blue)", "var(--yellow)"],
+  ["var(--ink)", "var(--gc-red)"], ["var(--blue)", "var(--gc-yellow)"],
 ];
 const PUBS = ["IRCB Archive", "On air", "Indexed", "The pile"];
 

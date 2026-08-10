@@ -110,12 +110,21 @@ for (const plate of ["light", "negative"]) {
 }
 
 test("generated cover plates are legible on both plates", async ({ page }) => {
-  /* KNOWN FAILURE, deliberately not skipped: one of the eight palette pairs — --red text
-     on the --ink field — measures 4.29:1, just under AA. Fixing it means changing a plate
-     colour, which is Mike's call, so it is recorded in NOTES.md rather than quietly
-     adjusted. test.fail() keeps the case running: if the palette is fixed, THIS LINE must
-     be removed or the suite goes red, so the bug cannot be forgotten. */
-  test.fail();
+  /* This carried a test.fail() for the one pair known to measure 4.29:1 on the light plate.
+     It hid three more: --yellow on --ink, --red on --ink and --yellow on --blue all
+     collapsed on the NEGATIVE plate, to 1.41, 2.19 and 1.12, because those pairs put bright
+     lettering on a field that also goes bright when the plate inverts.
+
+     test.fail() is a blanket amnesty, not a targeted one — the case passes when it fails for
+     any reason at all, so one acknowledged bug was covering for three nobody had measured.
+     It was also covering for a timeout: this case opens two contexts and walks four routes
+     in each, and it does not fit in the default 30s. Which means that before today it may
+     never have completed a measurement at all — it "passed" by dying.
+
+     If a single known failure ever needs recording again, assert the specific pair rather
+     than excusing the whole test. Fixed 2026-08-10; all sixteen combinations now clear AA,
+     the lowest at 5.08. */
+  test.slow();
   /* Sampled from real rendered plates, NOT from a copy of the FIELDS table in cover.ts —
      duplicating that table here would only assert that I transcribed it correctly. The
      palette pairs a text token with a field token, and --ink/--blue invert with the plate

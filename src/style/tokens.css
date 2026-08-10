@@ -10,11 +10,23 @@
   --paper:#F4F1E8;
   --paper-2:#EAE5D7;
   --ink:#141210;
+  /* Ink used as a large filled surface rather than as text. On the light plate it is the
+     same colour; the two only diverge in the negative, where a slab of near-white glares
+     at a size that the same value is fine at in a heading. See final-spec §4.6. */
+  --ink-block:#141210;
   --red:#E5322A;
   --red-deep:#C4231C;   /* red as a background behind paper text: 5.16:1, AA at any size */
   --blue:#1B4B9E;
   --yellow:#FDC22D;
   --tint:#8FB8D8;
+  /* Plate lettering. A generated cover pairs a field colour with a text colour, and three of
+     the eight pairs put bright lettering on a field that ALSO goes bright in the negative —
+     "yellow on black" becomes "yellow on cream" and collapses to 1.4:1. These two are the
+     lettering for those pairs: an accent on the light plate, dark ink on the negative, so a
+     plate inverts the way everything else does. --gc-red is a shade lighter than --red,
+     which measured 4.29:1 on the ink field and never cleared AA even on the light plate. */
+  --gc-yellow:var(--yellow);
+  --gc-red:#F04A3F;
   --dot:rgba(143,184,216,.55);
   --rule:2px;
   --gut:12px;
@@ -27,14 +39,21 @@
   --bar:0px;
 }
 @media(min-width:760px){ :root{--pad:20px; --sec:52px; --gut:14px} }
+/* The negative plate, reworked 2026-08-10 (final-spec §4.6, Mike's calls).
+   Contrast was never the constraint here — #F4F1E8 measured 16.55:1 and every candidate
+   clears AA with room. It was glare: the plate inverts by swapping ink to near-white, so
+   every surface designed as "ink block, paper text" became a white slab. */
 html[data-neg]{
   --paper:#14120F;
   --paper-2:#1E1B17;
-  --ink:#F4F1E8;
+  --ink:#D6D1C4;        /* 12.27:1 — down from #F4F1E8's 16.55 */
+  --ink-block:#C9C3B5;  /* large filled surfaces go a step further; dark text sits on them */
   --red:#FF4A3D;
   --red-deep:#FF4A3D;   /* in the negative the text on red is dark ink: 5.61:1 */
   --blue:#79A6FF;
-  --yellow:#FDC22D;
+  --yellow:#E0A81F;     /* 8.72:1 — the band was the one thing the negative never inverted */
+  --gc-yellow:#14120F;  /* plate lettering goes dark once its field turns light */
+  --gc-red:#14120F;
   --dot:rgba(143,184,216,.28);
 }
 *{box-sizing:border-box}
