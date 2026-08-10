@@ -29,5 +29,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/comics.json data/episodes.json
-          git diff --staged --quiet || git commit -m "chore: update episode data [skip ci]"
+          # NO [skip ci] HERE. It was correct when the site was "deploy from a branch" and the
+          # raw files in the repo *were* the site, so a data commit updated it with no build.
+          # The site is a Vite build now: `npm run build` runs scripts/build-data.mjs, and
+          # that step is the only thing that regenerates public/d/*.json. GitHub skips
+          # push-triggered workflows for commits containing [skip ci], so with it, this weekly
+          # refresh landed on main and deployed nothing — every figure on the live site would
+          # sit frozen at whatever the last unrelated push happened to build.
+          # Letting tests run on this commit is a bonus, not a cost: a data anomaly that
+          # breaks a view should fail here rather than on the live site.
+          git diff --staged --quiet || git commit -m "chore: update episode data"
           git push
