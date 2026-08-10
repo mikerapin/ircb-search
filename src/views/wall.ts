@@ -1,9 +1,8 @@
 import { core, mentions as loadMentions } from "../data/load";
 import { ROSTER, panelistNames } from "../data/roster";
 import type { CoreData, EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, nf, pl } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
-import { priceBox } from "./components";
 import { readAlong } from "./readalong";
 
 /**
@@ -35,7 +34,10 @@ function yearRows(episodes: EpisodeCore[]): YearRow[] {
     row.push(e);
   }
   for (const row of by.values()) row.sort((a, b) => (a.date ?? "").localeCompare(b.date ?? ""));
-  return [...by.keys()].sort().map(year => ({ year, eps: by.get(year) ?? [] }));
+  /* Newest year at the top — Mike's call, and it is how anyone reads an archive. Within a
+     row the episodes still run oldest to newest, so each year reads left to right the way a
+     year does; only the stack of years is reversed. */
+  return [...by.keys()].sort().reverse().map(year => ({ year, eps: by.get(year) ?? [] }));
 }
 
 function cell(e: EpisodeCore): string {
@@ -264,10 +266,14 @@ function openRail(
   if (label) label.textContent = e.date ? fmtDate(e.date) : "Undated";
 
   const epLink = href("/ep/" + encodeURIComponent(e.key));
+  /* The runtime reads as text here, not as the cover's corner badge. `.pricebox` is
+     `position:absolute`, and every other caller wraps it in a positioned box — the rail had
+     no artwork to pin it to, so it resolved against #rail itself and landed exactly on top
+     of the close button, swallowing the click. */
+  const runtime = fmtRuntime(e.runtimeSecs);
   body.innerHTML =
     `<h2 class="disp" style="margin:0"><a href="${epLink}">${esc(e.title || "Untitled episode")}</a></h2>
-     <div class="credits">${esc(e.people.join(" · ") || "Panel unknown")}</div>
-     ${priceBox(e)}
+     <div class="credits">${esc(e.people.join(" · ") || "Panel unknown")}${runtime ? ` · ${esc(runtime)}` : ""}</div>
      ${list === null
         ? `<p class="lead">Loading the comics for this one…</p>`
         : readAlong(mine, byKey, gap)}

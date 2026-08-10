@@ -35,8 +35,8 @@ test("panelist facet filters and marks itself current", async ({ page }) => {
   await expect(page.locator('.railbox.who .facet[aria-current="true"]')).toHaveCount(1);
 });
 
-test("the cap is honest about what it hides", async ({ page }) => {
-  // The cap counts episodes now, so the line it prints has to as well.
+test("the first page is honest about what it has not shown yet", async ({ page }) => {
+  // The page size counts episodes, so the line beside it has to as well.
   await page.goto("/#/search?q=batman");
   /* `.count()` is the one locator call that does not retry, and the view paints only after
      three chunks land. Without this wait the count is 0 under a loaded runner while
@@ -51,17 +51,44 @@ test("the cap is honest about what it hides", async ({ page }) => {
   // read as an honest total and be short by 74 on this query.
   expect(episodes).toBeGreaterThan(shown);
   if (episodes > 36) {
-    await expect(page.locator(".sec.mentions .lead"))
+    await expect(page.locator(".sec.mentions .pagern"))
       .toContainText(new RegExp(`Showing 36 of ${episodes.toLocaleString("en-US")} episodes`));
   }
   // The regroup must not have quietly turned the mention total into a card count.
   expect(mentions).toBeGreaterThan(episodes);
 });
 
-test("empty query shows newest episodes", async ({ page }) => {
+test("empty query shows newest episodes, and pages through the whole dated run", async ({ page }) => {
   await page.goto("/#/search");
   await expect(page.getByRole("heading", { name: /newest episodes/i })).toBeVisible();
-  await expect(page.locator(".panels .panel")).toHaveCount(8);
+  await expect(page.locator(".panels .panel")).toHaveCount(12);
+
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const dated = core.episodes.filter(e => e.date).length;
+  await expect(page.locator(".pagern")).toContainText(`of ${dated.toLocaleString("en-US")} episodes`);
+
+  await page.locator(".pagemore").click();
+  await expect(page.locator(".panels .panel")).toHaveCount(24);
+  // The count is the honest total, and it has to move with what is on screen.
+  await expect(page.locator(".pagern")).toContainText(`Showing 24 of ${dated.toLocaleString("en-US")}`);
+});
+
+test("paging the results reaches every matched episode, and the total never moves", async ({ page }) => {
+  await page.goto("/#/search?q=batman");
+  await page.waitForSelector(".sec.mentions .epcard");
+  const before = await page.locator(".honest-count").innerText();
+  const total = Number(before.match(/ in ([\d,]+) episode/)[1].replace(/,/g, ""));
+  expect(total).toBeGreaterThan(36);
+
+  await expect(page.locator(".sec.mentions .epcard")).toHaveCount(36);
+  // Click through to the end — the cap is a page size now, not a ceiling.
+  for (let guard = 0; guard < 20 && await page.locator(".pagemore").count(); guard++) {
+    await page.locator(".pagemore").click();
+  }
+  await expect(page.locator(".sec.mentions .epcard")).toHaveCount(total);
+  await expect(page.locator(".pagemore")).toHaveCount(0);
+  // Paging must not have quietly rewritten the mention total.
+  expect(await page.locator(".honest-count").innerText()).toBe(before);
 });
 
 test("a query with no matches says so instead of rendering nothing", async ({ page }) => {

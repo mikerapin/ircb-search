@@ -34,7 +34,13 @@ type ViewResult = [html: string, label: string, after?: () => void];
 async function view(r: Route, data: CoreData): Promise<ViewResult> {
   const [head, rest] = [r.seg[0], r.seg[1] ?? ""];
   switch (head) {
-    case "search": return [await viewSearch(r.qs), "The Page"];
+    case "search": {
+      const v = await viewSearch(r.qs);
+      return [v.html, "The Page", () => {
+        const view = document.getElementById("view");
+        if (view) v.wire(view);
+      }];
+    }
     case "ep": {
       const v = await viewEpisode(rest);
       return [v.html, "The Episode", v.after];

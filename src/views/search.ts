@@ -112,22 +112,80 @@ function episodeCard(g: EpisodeGroup): string {
   return episodePanel(g.ep, { extra: `<div class="ra-list">${rows}</div>` });
 }
 
-export async function viewSearch(qs: URLSearchParams): Promise<string> {
+/**
+ * Both lists on this page dead-ended, and search was the only way on: the results stopped at
+ * the cap with a line saying how many you could not see, and the newest list stopped at
+ * eight. They page in place now.
+ *
+ * A button rather than a shareable `?n=` link, which was the tempting version: every hash
+ * navigation runs `setView`, which scrolls to 0, so each "load more" would have thrown the
+ * reader back to the top of the page they were reading.
+ */
+interface Pager { html: string; wire: (view: HTMLElement) => void }
+
+function pager(items: string[], size: number, cls: string, noun: string): Pager {
+  const rest = items.slice(size);
+  const shown = items.length - rest.length;
+  const html = `<div class="${cls}" data-list>${items.slice(0, size).join("")}</div>` +
+    (rest.length
+      ? `<div class="pager"><button class="pagemore" type="button" data-act="more">` +
+        `Load ${nf(Math.min(size, rest.length))} more</button>` +
+        `<span class="pagern" role="status">Showing ${nf(shown)} of ${nf(items.length)} ${noun}</span></div>`
+      : "");
+
+  const wire = (view: HTMLElement): void => {
+    const list = view.querySelector<HTMLElement>("[data-list]");
+    const btn = view.querySelector<HTMLButtonElement>(".pagemore");
+    const count = view.querySelector<HTMLElement>(".pagern");
+    if (!list || !btn || !count) return;
+    let at = size;
+    btn.addEventListener("click", () => {
+      const next = items.slice(at, at + size);
+      at += next.length;
+      const before = list.children.length;
+      list.insertAdjacentHTML("beforeend", next.join(""));
+      const left = items.length - at;
+      count.textContent = `Showing ${nf(at)} of ${nf(items.length)} ${noun}`;
+      if (left) btn.textContent = `Load ${nf(Math.min(size, left))} more`;
+      /* The control that had focus is about to be removed. Hand focus to the first thing
+         it just added, or the reader lands on <body> with nothing announced — the same
+         trap the rail close and closeMenu both guard against. */
+      else {
+        const first = list.children[before];
+        if (first instanceof HTMLElement) { first.tabIndex = -1; first.focus({ preventScroll: true }); }
+        btn.remove();
+      }
+    });
+  };
+
+  return { html, wire };
+}
+
+/* 12 rather than the old flat 8: it divides evenly into the 2-, 3- and 4-column grids this
+   list runs at, so a page never ends on a ragged half-row. */
+const NEWEST_PAGE = 12;
+
+export async function viewSearch(qs: URLSearchParams): Promise<{ html: string; wire: (view: HTMLElement) => void }> {
   const q = readQuery(qs);
   const d = await searchData();
   const byKey = new Map(d.core.episodes.map(e => [e.key, e]));
+  let page: Pager = { html: "", wire: () => { /* no list to page */ } };
 
   if (!q.q.trim() && !q.who && !q.guest) {
-    const latest = d.core.episodes.filter(e => e.artwork && e.date).sort(byDateDesc).slice(0, 8);
-    return `<div class="pagehead"><div class="eyebrow">Episodes &amp; search</div>` +
+    /* Every dated episode, not just the 546 with artwork. The artwork filter predates the
+       generated plate `art()` falls back to, and with paging it would have stopped the list
+       106 short of the run with nothing on screen saying so. */
+    const latest = d.core.episodes.filter(e => e.date).sort(byDateDesc);
+    page = pager(latest.map(e => episodePanel(e)), NEWEST_PAGE, "panels", "episodes");
+    return { wire: page.wire, html: `<div class="pagehead"><div class="eyebrow">Episodes &amp; search</div>` +
       `<h1 class="disp">Search the archive</h1>` +
       // Not "timestamped": most logged comics carry no minute. About the Data quotes the split.
       `<p>${nf(d.core.stats.mentions)} comic mentions across ${nf(d.core.stats.indexedEpisodes)} indexed episodes. ` +
       `Type in the yellow band above, or hit <b>/</b> from anywhere, and suggestions open as you type.</p>` +
       `<div class="chips" style="padding:0">${SUGGESTIONS.map(t =>
         `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div></div>` +
-      `<section class="sec"><div class="sec-head"><h2 class="disp">Newest Episodes</h2></div>` +
-        `<div class="panels">${latest.map(e => episodePanel(e)).join("")}</div></section>`;
+      `<section class="sec"><div class="sec-head"><h2 class="disp">Newest Episodes</h2>` +
+        `<span class="note">The whole dated run, newest first</span></div>${page.html}</section>` };
   }
 
   const res = runSearch(q, d);
@@ -136,17 +194,19 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
      WITHOUT it, so clicking a facet landed on a smaller result than the count promised. */
   const whoBase = runSearch({ ...q, who: null }, d);
 
-  /* SEARCH_CAP now caps cards rather than mentions, so the page shows 36 episodes, not the
-     36 mentions those episodes happened to contribute. `res.mentionTotal` is untouched by
-     the regroup and stays the number the header reports. */
+  /* SEARCH_CAP pages cards rather than mentions, so a page is 36 episodes, not the 36
+     mentions those episodes happened to contribute. `res.mentionTotal` is untouched by the
+     regroup and stays the number the header reports. */
   const groups = groupByEpisode(res.all, byKey);
-  const cards = groups.slice(0, SEARCH_CAP);
-  const carded = new Set(cards.map(g => g.ep.key));
-  /* Both sections render an episode panel now, so an episode matched on its comics AND on
-     its title would appear twice. Only the ones actually carded are excluded — an episode
-     past the cap can still turn up below rather than vanishing from the page. */
+  /* SEARCH_CAP is the page size now, not a ceiling — every matched episode is reachable
+     from the page it was found on. `carded` still has to be every one of them, or an
+     episode paged into view further down would also be sitting in "Episodes About It". */
+  const carded = new Set(groups.map(g => g.ep.key));
+  /* Both sections render an episode panel, so an episode matched on its comics AND on its
+     title would otherwise appear twice. */
   const eps = res.episodes.filter(e => !carded.has(e.key)).slice(0, 6);
   const inEps = groups.length;
+  page = pager(groups.map(episodeCard), SEARCH_CAP, "panels cards", "episodes");
 
   const head = `<div class="crumb"><a href="${href("/")}">← The Cover</a>` +
       (q.who ? ` · <a href="${href("/who/" + encodeURIComponent(q.who))}">${esc(q.who)}</a>` : "") + `</div>` +
@@ -157,20 +217,16 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
       `${nf(res.playable)} of them you can jump straight into.</p></div>`;
 
   if (!res.mentionTotal && !eps.length) {
-    return head + `<div class="empty"><b>No panel for that.</b> Nothing in the index matches. Try one of these:</div>` +
+    return { wire: () => { /* nothing paged on the empty state */ },
+      html: head + `<div class="empty"><b>No panel for that.</b> Nothing in the index matches. Try one of these:</div>` +
       `<div class="chips" style="padding-top:14px">${SUGGESTIONS.map(t =>
-        `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div>`;
+        `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div>` };
   }
 
   let results = `<div>`;
-  if (cards.length) {
+  if (groups.length) {
     results += `<section class="sec mentions"><div class="sec-head"><h2 class="disp">We Read It Here</h2>` +
-      `<span class="note">Matched on the comics we logged</span></div>` +
-      `<div class="panels cards">${cards.map(episodeCard).join("")}</div>`;
-    if (groups.length > SEARCH_CAP) {
-      results += `<p class="lead" style="padding-top:16px;margin-bottom:0">Showing ${SEARCH_CAP} of ${nf(groups.length)} episodes.</p>`;
-    }
-    results += `</section>`;
+      `<span class="note">Matched on the comics we logged</span></div>${page.html}</section>`;
   }
   if (eps.length) {
     results += `<section class="sec episodes"><div class="sec-head"><h2 class="disp">Episodes About It</h2>` +
@@ -179,5 +235,5 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
   }
   results += `</div>`;
 
-  return head + `<div class="split">${rail(q, whoBase.all, byKey)}${results}</div>`;
+  return { wire: page.wire, html: head + `<div class="split">${rail(q, whoBase.all, byKey)}${results}</div>` };
 }

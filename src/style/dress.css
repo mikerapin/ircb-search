@@ -191,7 +191,11 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
 .bv-d{position:absolute; left:6%; right:6%; top:42%; font-family:var(--disp);
   font-variation-settings:"wdth" 100,"wght" 800; text-transform:uppercase; font-size:12cqw; line-height:.92; letter-spacing:.02em; opacity:.85}
 
-/* the price box, re-labeled: a comic cover carries a price, an episode carries a runtime */
+/* The price box, re-labeled: a comic cover carries a price, an episode carries a runtime.
+   It is absolutely positioned, so it MUST be dropped inside a `position:relative` box —
+   .epw-art, .hero-art and .issue-head .art all provide one. The Wall's rail did not, and
+   the badge resolved against #rail and sat on top of the close button, eating every click
+   on it. If there is no artwork to pin to, render the runtime as text instead. */
 .pricebox{
   position:absolute; right:0; top:0; z-index:2; background:var(--paper); color:var(--ink);
   border:var(--rule) solid var(--ink); border-top:0; border-right:0; padding:3px 7px 3px 8px;
@@ -850,6 +854,17 @@ html[data-neg] .chip:hover{color:#14120F}
 /* The count matches the span directly, so it survives the hover repaint and sat at 1.9:1
    on the blue ground. Inherit instead of restating the colour for each plate. */
 .chip:hover .n{color:inherit}
+/* "Load more" under a paged list. The count beside it is the honest total, and it is a live
+   region so paging announces itself instead of silently growing the page. */
+.pager{display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:18px var(--pad) 0}
+.split .pager{padding:18px 0 0}
+.pagemore{border:var(--rule) solid var(--ink); background:var(--ink); color:var(--paper); cursor:pointer;
+  padding:11px 18px; min-height:44px; font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800;
+  font-size:13px; letter-spacing:.06em; text-transform:uppercase}
+html[data-neg] .pagemore{color:#14120F}
+.pagemore:hover{background:var(--red-deep); color:var(--paper)}
+.pagern{font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
+  color:color-mix(in srgb, var(--ink) 68%, var(--paper))}
 .kv{display:grid; grid-template-columns:1fr; gap:0; border:var(--rule) solid var(--ink); margin:0 var(--pad)}
 .kv>div{display:grid; grid-template-columns:1fr; gap:2px; padding:11px 12px; border-top:var(--rule) solid var(--ink)}
 .kv>div:first-child{border-top:0}

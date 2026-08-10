@@ -55,8 +55,19 @@ test("years group in order and the counts on each row are real", async ({ page }
     cells: el.querySelectorAll(".cell").length,
   })));
   expect(rows.length).toBeGreaterThan(1);
-  expect(rows.map(r => r.year)).toEqual([...rows.map(r => r.year)].sort());
+  // Reverse chronological: newest year at the top.
+  expect(rows.map(r => r.year)).toEqual([...rows.map(r => r.year)].sort().reverse());
   for (const r of rows) expect(r.label, `row ${r.year}`).toBe(r.cells);
+
+  /* Only the stack of years reversed. Inside a row the run still reads left to right,
+     oldest first — check it against the dates, not the rendering. */
+  const keys = await page.locator(".yrow").first().locator(".cell").evaluateAll(els =>
+    els.map(e => e.dataset.cell));
+  const core = await data(page);
+  const dateOf = new Map(core.episodes.map(e => [e.key, e.date]));
+  const dates = keys.map(k => dateOf.get(k));
+  expect(dates.length).toBeGreaterThan(1);
+  expect(dates).toEqual([...dates].sort());
 });
 
 test("searching lights the wall instead of filtering it away", async ({ page }) => {
@@ -117,7 +128,12 @@ test("a square opens the episode in the rail, and the rail closes cleanly", asyn
   await expect(page.locator("#railbody h2")).not.toBeEmpty();
   await expect(page.locator("#railbody a[href^='#/ep/']").first()).toBeVisible();
 
-  await page.locator("#rail-x").click();
+  /* The close button has to actually be clickable. `.pricebox` is position:absolute, and the
+     rail rendered it with no positioned box to pin to, so it resolved against #rail and sat
+     exactly on top of this button — every click bounced off the runtime badge. Only showed
+     up once the newest year moved to the top, because the 2015 episodes it used to click
+     carry no runtime and so rendered no badge at all. */
+  await page.locator("#rail-x").click({ timeout: 5000 });
   await expect(page.locator("#rail")).toBeHidden();
   // Hiding a container that holds focus strands the reader on <body>.
   expect(await page.evaluate(() => document.activeElement?.id)).toBe("view");
