@@ -41,7 +41,12 @@ export function cover(title: string, extraClass: string, seed: string | null, no
   const f = plateFor(seed == null ? s : seed);
   const words = s.split(/\s+/).filter(Boolean);
   let longest = 1;
-  for (const w of words) for (const p of w.split("/")) longest = Math.max(longest, p.length);
+  /* Split *after* the slash so it stays on the segment it will actually render with: the
+     <wbr> below goes after the "/", so "Superman/Batman" wraps as "Superman/" + "Batman"
+     and the widest line is 9 characters, not the 8 that splitting on "/" reported. One
+     character of under-measurement was enough for `overflow-wrap:break-word` to break the
+     word mid-letter on the plates that have a slash. */
+  for (const w of words) for (const p of w.split(/(?<=\/)/)) longest = Math.max(longest, p.length);
   let size = Math.max(7, Math.min(20, 92 / Math.max(longest, 3)));
   if (words.length >= 5) size = Math.min(size, 10);
   else if (words.length === 4) size = Math.min(size, 12);
