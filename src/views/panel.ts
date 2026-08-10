@@ -1,6 +1,6 @@
 import { core } from "../data/load";
 import { guestNames, peopleStats, sharePct } from "../data/people";
-import { ALIASED_REGULARS, ROSTER } from "../data/roster";
+import { ROSTER } from "../data/roster";
 import { azBuckets } from "../lib/az";
 import { esc, fmtShortDate, nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -24,9 +24,10 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
     `<div class="pagehead"><div class="eyebrow">Index</div><h1 class="disp">Panelists &amp; Guests</h1>
       <p>${nf(ROSTER.length)} regulars, with portraits and taglines. Everyone else is a name the index knows —
       a creator who came on, a friend who filled a chair. Everybody gets a page.</p>
+      // The alias note that sat here explained a data discrepancy no visitor asked about.
+      // Cut per Mike 2026-08-09; About the Data is where that belongs, if anywhere.
       <div class="statline" style="max-width:none"><b>${nf(data.stats.people)}</b> names in the archive ·
-        <b>${nf(ROSTER.length)}</b> on the roster · <b>${nf(guests.length)}</b> guests
-        <span class="note">(${ALIASED_REGULARS} regulars are credited by a short name in some episodes; those fold into one page)</span></div></div>` +
+        <b>${nf(ROSTER.length)}</b> on the roster · <b>${nf(guests.length)}</b> guests</div></div>` +
 
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">The Regulars</h2>

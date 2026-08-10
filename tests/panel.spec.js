@@ -35,11 +35,15 @@ test("every regular carries a portrait, a tagline and a link to their page", asy
   }
 });
 
-test("regulars credited by a short name are folded, and the fold is disclosed", async ({ page }) => {
+test("regulars credited by a short name are folded, and the fold is disclosed on About", async ({ page }) => {
   await page.goto("/#/panel");
   await page.waitForSelector(".azrow");
-  const text = await page.locator("#view").innerText();
-  expect(text).toMatch(/\([^)]*credited by a short name[^)]*\)/i);
+
+  /* The disclosure used to be a parenthetical in this page's statline. Mike cut it on
+     2026-08-09: it explained a data discrepancy no visitor asked about. The fold still has
+     to be disclosed *somewhere*, so the assertion moved to About rather than being dropped —
+     silently folding two spellings into one person is the thing that would need admitting. */
+  await expect(page.locator("#view .statline")).not.toContainText("short name");
 
   // None of the folded spellings may sit in the guest list as their own person, and no
   // regular may appear there under any spelling.
@@ -47,6 +51,11 @@ test("regulars credited by a short name are folded, and the fold is disclosed", 
   for (const n of ["Danny Martinez", "Daniel Martinez", "Nick", "Nick White", "Paul", "Paul Jaissle", "Kate", "Kate Skocelas"]) {
     expect(names).not.toContain(n);
   }
+
+  // ...and About still owns the admission.
+  await page.goto("/#/about");
+  await expect(page.locator(".sparse")).toBeVisible();
+  await expect(page.locator("#view")).toContainText(/short name/i);
 });
 
 test("a folded short name lands on the regular's page, not a guest page", async ({ page }) => {
