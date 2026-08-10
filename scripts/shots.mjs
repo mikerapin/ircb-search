@@ -82,6 +82,20 @@ for (const [suffix, width, height, neg] of VIEWPORTS) {
       }
       window.scrollTo(0, 0);
     });
+    /* The scroll pass is not enough on its own. Every episode artwork is `loading="lazy"`,
+       and episode-led search runs past 16,000px, so scrolling triggers only the images the
+       observer happens to catch and the shot fires before they land — 24 of 36 art slots
+       came out empty, which reads as broken artwork rather than an unfinished screenshot.
+       Force them eager and wait for the last one to decode. */
+    await page.evaluate(async () => {
+      for (const i of document.images) if (i.loading === "lazy") i.loading = "eager";
+      const settled = Promise.all([...document.images]
+        .map(i => (i.complete ? null : i.decode().catch(() => null))));
+      await Promise.race([settled, new Promise(r => setTimeout(r, 15000))]);
+    });
+    const unloaded = await page.evaluate(
+      () => [...document.images].filter(i => !i.complete || !i.naturalWidth).length);
+    if (unloaded) problems.push(`${name}-${suffix}: ${unloaded} image(s) never loaded`);
     await page.waitForTimeout(500);
 
     const file = `${OUT}/${name}-${suffix}.png`;
