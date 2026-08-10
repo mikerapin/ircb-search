@@ -28,15 +28,22 @@ function art(e: EpisodeCore): string {
     `<img src="${esc(e.artwork)}" alt="" loading="lazy">${priceBox(e)}</a>`;
 }
 
-export function episodePanel(e: EpisodeCore): string {
+/**
+ * `extra` is dropped in under the panel line — the search card uses it to list the comics
+ * that matched, so an episode-led result is this same panel rather than a second one.
+ * It is an options object rather than a second positional argument on purpose: a bare
+ * `.map(episodePanel)` would otherwise hand it the array index.
+ */
+export function episodePanel(e: EpisodeCore, opts?: { extra?: string }): string {
   const n = e.mentionCount;
-  return `<article class="panel" data-ep="${esc(e.key)}"><div class="epw">` +
+  return `<article class="panel${opts?.extra ? " epcard" : ""}" data-ep="${esc(e.key)}"><div class="epw">` +
     art(e) +
     `<div class="pbody">` +
       `<div class="micro" style="opacity:.7">${esc(fmtDate(e.date) || "Date unknown")} · ${n} comic${pl(n)}</div>` +
       `<h3 class="disp" style="font-size:17px;margin:0;line-height:1.05">` +
         `<a href="${epHref(e)}" style="color:inherit">${esc(e.title || "Untitled episode")}</a></h3>` +
       `<div class="credits">${esc(e.people.join(", ") || "Panel unknown")}</div>` +
+      (opts?.extra ?? "") +
       `<div class="spacer"></div>` +
       `<a class="ts dark" href="${epHref(e)}"><span class="tri">▤</span>Open the episode` +
         `<span class="lab">${n} moment${pl(n)}</span></a>` +

@@ -34,21 +34,39 @@ export function raToggle(): string {
   `</div>`;
 }
 
-function raListRow(m: Mention, ep: EpisodeCore | undefined, until: number | null): string {
+/**
+ * One timestamp row. Shared by the episode read-along, the Wall's rail and the episode-led
+ * search card, so how a logged minute is offered is one function everywhere.
+ *
+ * `withDate` is off wherever the container already states the date — a search card names it
+ * once at the top, and repeating it under every comic is noise, not information.
+ */
+export function raListRow(
+  m: Mention,
+  ep: EpisodeCore | undefined,
+  until: number | null,
+  opts?: { withDate?: boolean },
+): string {
   const can = jumpable(m, ep);
-  const meta = [m.segment, ep?.date ? fmtDate(ep.date) : null].filter(Boolean).join(" · ");
+  const date = opts?.withDate === false ? null : (ep?.date ? fmtDate(ep.date) : null);
+  const meta = [m.segment, date].filter(Boolean).join(" · ");
   const body =
     `<span class="t${can ? "" : " none"}">${can ? esc(fmtRuntime(m.secs)) : "—:——"}</span>` +
     `<span><span class="cm">${esc(m.comic)}</span>${meta ? `<span class="mt">${esc(meta)}</span>` : ""}</span>` +
     `<span class="cue">${can ? "▶ Play" : "Open →"}</span>`;
+  /* Identity rides on every row, playable or not. The segment handover only ever walks rows
+     that also carry a `.cutslot`, so a dead row still cannot be handed the tape — but now
+     anything reading the page can tell which mention a refusal belongs to, which is what a
+     test needs to decide each row against the data rather than trusting the markup. */
+  const id = `data-ep="${esc(m.epKey)}" data-secs="${m.secs ?? ""}" data-comic="${esc(m.comic)}"`;
   if (can && ep?.enclosure) {
-    return `<div class="rawrap panel" data-ep="${esc(m.epKey)}" data-secs="${m.secs}" data-comic="${esc(m.comic)}"${until != null ? ` data-until="${until}"` : ""}>` +
+    return `<div class="rawrap panel" ${id}${until != null ? ` data-until="${until}"` : ""}>` +
       `<button class="ra-row" type="button" data-act="cut">${body}</button><div class="cutslot"></div></div>`;
   }
   /* Reached only when the row is not playable, since `can` implies an enclosure. The
      Simplecast fallback that used to sit here was unreachable for the same reason. */
   const dest = href("/ep/" + encodeURIComponent(m.epKey));
-  return `<div class="rawrap"><a class="ra-row" href="${esc(dest)}">${body}</a></div>`;
+  return `<div class="rawrap" ${id}><a class="ra-row" href="${esc(dest)}">${body}</a></div>`;
 }
 
 /* A logged minute starts a segment; the next one ends it. Only the read-along knows this,

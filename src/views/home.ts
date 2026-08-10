@@ -55,7 +55,7 @@ export async function viewHome(): Promise<{ html: string; after: () => void }> {
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">Recent Episodes</h2>
         <span class="note">Newest in the index<br><a href="${href("/search")}">Search all ${nf(stats.episodes)} episodes →</a></span></div>
-      <div class="panels">${recent.map(episodePanel).join("")}</div>
+      <div class="panels">${recent.map(e => episodePanel(e)).join("")}</div>
     </section>` +
     patreonAd(data) +
     subscribeCoupon();

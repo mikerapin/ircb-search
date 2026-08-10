@@ -275,6 +275,10 @@ html[data-neg] .player .pp{border-color:#14120F}
 .gc-t{position:absolute; left:6%; right:6%; top:19%; font-family:var(--disp);
   font-variation-settings:"wdth" 125,"wght" 900; text-transform:uppercase;
   line-height:.86; letter-spacing:-.005em; overflow-wrap:break-word; hyphens:none}
+/* Scoped to the segment, not the whole title: the title still wraps between words and at the
+   <wbr> after a slash, but never inside "X-Men". overflow-wrap stays free to break a single
+   segment that fitPlates could not shrink to fit. */
+.gc-t .nb{white-space:nowrap}
 .gc-no{position:absolute; right:5%; bottom:5%; min-width:22%; text-align:center;
   background:var(--gc-t); color:var(--gc-f); border:2px solid var(--gc-t);
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 900; font-size:12px; padding:2px 4px}
@@ -449,6 +453,19 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 html[data-neg] .ra-row.on{color:#14120F}
 .ra-row.on .t,.ra-row.on .cue{color:var(--yellow); opacity:1}
 .ra-list .cutslot:not(:empty){padding:0 12px 12px; border-top:var(--rule) solid var(--ink)}
+
+/* ---------- episode-led search cards ---------- */
+/* A search result is an episode panel with the comics that matched listed inside it. The
+   row grid is a 66px stamp plus a name plus a cue and it crushes below about 260px, so
+   these take two columns where a grid of plates takes four. */
+.panels.cards{grid-template-columns:1fr}
+@media(min-width:760px){ .panels.cards{grid-template-columns:repeat(2,1fr)} }
+.split .panels.cards{grid-template-columns:1fr}
+@media(min-width:1240px){ .split .panels.cards{grid-template-columns:repeat(2,1fr)} }
+/* .pbody already spaces its children; 3px against the card's own 2px border reads as a
+   mistake at this size, where in a full-width read-along it matches the section rule. */
+.epcard .ra-list{margin:0; border-width:var(--rule)}
+.epcard .ra-row.more .cm{font-weight:500}
 
 /* ---------- episode view ---------- */
 .issue-head{display:grid; grid-template-columns:1fr; border:var(--rule) solid var(--ink); margin:0 var(--pad) var(--sec)}

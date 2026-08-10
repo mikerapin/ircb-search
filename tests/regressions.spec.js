@@ -186,10 +186,10 @@ test("search results start above the fold at 390", async ({ page }) => {
      horizontal strips at this width now. Mike's note, 2026-08-09. */
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/#/search?q=batman");
-  await page.waitForSelector(".sec.mentions .panel");
+  await page.waitForSelector(".sec.mentions .epcard");
   const m = await page.evaluate(() => ({
     rail: Math.round(document.querySelector(".rail").getBoundingClientRect().height),
-    firstResult: Math.round(document.querySelector(".sec.mentions .panel").getBoundingClientRect().top),
+    firstResult: Math.round(document.querySelector(".sec.mentions .epcard").getBoundingClientRect().top),
     hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   }));
   expect(m.firstResult, "first result is below the fold").toBeLessThan(844);

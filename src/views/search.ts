@@ -1,13 +1,22 @@
 import { core, details, mentions as loadMentions } from "../data/load";
 import { ROSTER_MAP, isRoster, panelistNames } from "../data/roster";
 import type { EpisodeCore, Mention } from "../data/types";
-import { esc, fmtDate, nf, pl } from "../lib/html";
+import { esc, nf, pl } from "../lib/html";
 import { href } from "../router";
-import { SEARCH_CAP, jumpable, runSearch, type SearchData, type SearchQuery } from "../search/engine";
-import { byDateDesc, episodePanel, mentionPanel } from "./components";
-import { cover, num } from "./cover";
+import {
+  SEARCH_CAP, groupByEpisode, runSearch,
+  type EpisodeGroup, type SearchData, type SearchQuery,
+} from "../search/engine";
+import { byDateDesc, episodePanel } from "./components";
+import { raListRow } from "./readalong";
 
 const SUGGESTIONS = ["Saga", "Batman", "X-Men", "Ice Cream Man", "Giant Days", "Sweet Tooth"];
+
+/* How many matched comics a card lists before it stops. Measured against the real hits: for
+   anything a reader types this never fires — batman's busiest episode matched four comics,
+   x-men's seven. It exists for a query like "a", where one episode matched forty-four and a
+   single card would otherwise be taller than the screen. */
+const CARD_ROWS = 6;
 
 let data: SearchData | null = null;
 async function searchData(): Promise<SearchData> {
@@ -81,6 +90,28 @@ function rail(q: SearchQuery, all: Mention[], byKey: Map<string, EpisodeCore>): 
   `</aside>`;
 }
 
+/**
+ * A result is an episode, not a comic.
+ *
+ * Mike, on the review shots: the same plate over and over reads as one repeated result when
+ * it is really 75 different comics, and the thing a reader is being sent to is the episode.
+ * So the episode leads — its own artwork, title, date and panel — and the comics that matched
+ * are the timestamp rows inside it, each keeping the jump it already had.
+ */
+function episodeCard(g: EpisodeGroup): string {
+  const shown = g.mentions.slice(0, CARD_ROWS);
+  const rest = g.mentions.length - shown.length;
+  const epLink = href("/ep/" + encodeURIComponent(g.ep.key));
+  const rows = shown.map(m => raListRow(m, g.ep, null, { withDate: false })).join("") +
+    (rest
+      ? `<div class="rawrap"><a class="ra-row more" href="${epLink}">` +
+          `<span class="t none">+${nf(rest)}</span>` +
+          `<span><span class="cm">more match${rest === 1 ? "" : "es"} in this episode</span></span>` +
+          `<span class="cue">Open →</span></a></div>`
+      : "");
+  return episodePanel(g.ep, { extra: `<div class="ra-list">${rows}</div>` });
+}
+
 export async function viewSearch(qs: URLSearchParams): Promise<string> {
   const q = readQuery(qs);
   const d = await searchData();
@@ -96,7 +127,7 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
       `<div class="chips" style="padding:0">${SUGGESTIONS.map(t =>
         `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div></div>` +
       `<section class="sec"><div class="sec-head"><h2 class="disp">Newest Episodes</h2></div>` +
-        `<div class="panels">${latest.map(episodePanel).join("")}</div></section>`;
+        `<div class="panels">${latest.map(e => episodePanel(e)).join("")}</div></section>`;
   }
 
   const res = runSearch(q, d);
@@ -104,8 +135,18 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
      meant that with the guest filter on, every panelist count was the number you'd get
      WITHOUT it, so clicking a facet landed on a smaller result than the count promised. */
   const whoBase = runSearch({ ...q, who: null }, d);
-  const eps = res.episodes.slice(0, 6);
-  const inEps = new Set(res.all.map(m => m.epKey)).size;   // honest, not the capped 36
+
+  /* SEARCH_CAP now caps cards rather than mentions, so the page shows 36 episodes, not the
+     36 mentions those episodes happened to contribute. `res.mentionTotal` is untouched by
+     the regroup and stays the number the header reports. */
+  const groups = groupByEpisode(res.all, byKey);
+  const cards = groups.slice(0, SEARCH_CAP);
+  const carded = new Set(cards.map(g => g.ep.key));
+  /* Both sections render an episode panel now, so an episode matched on its comics AND on
+     its title would appear twice. Only the ones actually carded are excluded — an episode
+     past the cap can still turn up below rather than vanishing from the page. */
+  const eps = res.episodes.filter(e => !carded.has(e.key)).slice(0, 6);
+  const inEps = groups.length;
 
   const head = `<div class="crumb"><a href="${href("/")}">← The Cover</a>` +
       (q.who ? ` · <a href="${href("/who/" + encodeURIComponent(q.who))}">${esc(q.who)}</a>` : "") + `</div>` +
@@ -122,19 +163,19 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
   }
 
   let results = `<div>`;
-  if (res.mentionTotal) {
-    results += `<section class="sec mentions"><div class="sec-head"><h2 class="disp">The Page</h2>` +
-      `<span class="note">Plate ink is keyed to the year</span></div>` +
-      `<div class="panels">${res.mentions.map(m => mentionPanel(m, byKey.get(m.epKey))).join("")}</div>`;
-    if (res.mentionTotal > SEARCH_CAP) {
-      results += `<p class="lead" style="padding-top:16px;margin-bottom:0">Showing ${SEARCH_CAP} of ${nf(res.mentionTotal)}.</p>`;
+  if (cards.length) {
+    results += `<section class="sec mentions"><div class="sec-head"><h2 class="disp">We Read It Here</h2>` +
+      `<span class="note">Matched on the comics we logged</span></div>` +
+      `<div class="panels cards">${cards.map(episodeCard).join("")}</div>`;
+    if (groups.length > SEARCH_CAP) {
+      results += `<p class="lead" style="padding-top:16px;margin-bottom:0">Showing ${SEARCH_CAP} of ${nf(groups.length)} episodes.</p>`;
     }
     results += `</section>`;
   }
   if (eps.length) {
     results += `<section class="sec episodes"><div class="sec-head"><h2 class="disp">Episodes About It</h2>` +
       `<span class="note">Matched on title, show notes and tags</span></div>` +
-      `<div class="panels">${eps.map(episodePanel).join("")}</div></section>`;
+      `<div class="panels">${eps.map(e => episodePanel(e)).join("")}</div></section>`;
   }
   results += `</div>`;
 

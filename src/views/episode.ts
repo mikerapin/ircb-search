@@ -136,7 +136,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
     (rel.length
       ? `<section class="sec">
           <div class="sec-head"><h2 class="disp">If You Liked This One</h2><span class="note">Shared books &amp; shared panel</span></div>
-          <div class="panels">${rel.map(episodePanel).join("")}</div>
+          <div class="panels">${rel.map(e => episodePanel(e)).join("")}</div>
         </section>`
       : "") +
     subscribeCoupon();

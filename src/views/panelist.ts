@@ -118,7 +118,7 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
     (recent.length
       ? `<section class="sec"><div class="sec-head"><h2 class="disp">On the Panel</h2>
           <span class="note">Newest first · ${nf(nEps)} total</span></div>
-          <div class="panels">${recent.map(episodePanel).join("")}</div></section>`
+          <div class="panels">${recent.map(e => episodePanel(e)).join("")}</div></section>`
       : "") +
     `</div>`;
 

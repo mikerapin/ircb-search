@@ -144,6 +144,42 @@ function rankByRelevance(
     .map(r => r.m);
 }
 
+export interface EpisodeGroup { ep: EpisodeCore; mentions: Mention[] }
+
+/**
+ * Ranked mentions → one card per episode.
+ *
+ * A group takes the position its best mention already had rather than being scored again:
+ * the list arrives in rank order, so first-seen order is best-first by construction. Any
+ * second scoring pass here would be a copy of rankByRelevance to keep in step with it.
+ *
+ * Inside a group the order is the episode's, not the query's — earliest logged minute first,
+ * unstamped comics after. That is the order the episode's own read-along uses, and it keeps
+ * the rows you can actually play above whatever cut the card applies.
+ */
+export function groupByEpisode(mentions: Mention[], byKey: Map<string, EpisodeCore>): EpisodeGroup[] {
+  const out: EpisodeGroup[] = [];
+  const at = new Map<string, EpisodeGroup>();
+  for (const m of mentions) {
+    let g = at.get(m.epKey);
+    if (!g) {
+      const ep = byKey.get(m.epKey);
+      /* A mention whose episode is missing from core has nothing to render on. It is dropped
+         here, which is why the page counts groups rather than distinct epKeys — counting the
+         keys would promise a card that does not exist. */
+      if (!ep) continue;
+      at.set(m.epKey, (g = { ep, mentions: [] }));
+      out.push(g);
+    }
+    g.mentions.push(m);
+  }
+  // MAX_SAFE_INTEGER rather than Infinity: Infinity - Infinity is NaN, and a NaN comparator
+  // leaves the array in whatever order the engine felt like.
+  const at_ = (m: Mention): number => m.secs ?? Number.MAX_SAFE_INTEGER;
+  for (const g of out) g.mentions.sort((a, b) => at_(a) - at_(b));
+  return out;
+}
+
 /** dir -1 = newest first. Episodes with no air date always sort last. */
 function byDate(dir: number) {
   return (a: EpisodeCore, b: EpisodeCore): number => {

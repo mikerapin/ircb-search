@@ -55,7 +55,16 @@ export function cover(title: string, extraClass: string, seed: string | null, no
   if (words.length >= 5) size = Math.min(size, 10);
   else if (words.length === 4) size = Math.min(size, 12);
   else if (words.length === 3) size = Math.min(size, 15);
-  const marked = esc(s).replace(/(\/)/g, "$1<wbr>");
+  /* Each break-segment is wrapped so the browser cannot split it at an internal hyphen.
+     `hyphens:none` only disables automatic hyphenation — a hyphen already in the text stays a
+     break opportunity, and the greedy line-filler takes it whenever it packs the line better,
+     which set "Age of X-Man: Prisoner X" as "AGE OF X-" / "MAN:". A segment is exactly the
+     unit fitPlates sizes to fit, so what is measured is now what cannot be broken, and the
+     <wbr> after a slash is still the one place a long title may wrap inside a word. */
+  const marked = s.split(/(\s+)/).map(part =>
+    /^\s*$/.test(part) ? esc(part)
+      : part.split(/(?<=\/)/).map(seg => `<span class="nb">${esc(seg)}</span>`).join("<wbr>")
+  ).join("");
   return `<span class="gc ${extraClass}" style="--gc-f:${f[0]};--gc-t:${f[1]}" aria-hidden="true">` +
     `<span class="gc-bar"></span><span class="gc-screen"></span>` +
     `<span class="gc-t" style="font-size:${size.toFixed(1)}cqw">${marked}</span>` +
@@ -99,7 +108,10 @@ export function fitPlates(root: ParentNode): void {
     probe.style.letterSpacing = cs.letterSpacing;
     probe.style.textTransform = cs.textTransform;
     let widest = 0;
-    for (const t of (el.textContent ?? "").split(/[\s/]+/)) {
+    /* Split *after* the slash, matching the segments cover() marks nowrap — measuring
+       "Superman" where the page renders an unbreakable "Superman/" leaves the plate a slash
+       narrower than the text it has to hold. */
+    for (const t of (el.textContent ?? "").split(/\s+/).flatMap(w => w.split(/(?<=\/)/))) {
       if (!t) continue;
       probe.textContent = t;
       // Fractional width: offsetWidth rounds to an integer, so a word that is really

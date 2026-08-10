@@ -109,10 +109,21 @@ test("generated plate titles never break mid-word", async ({ page }) => {
   await page.waitForSelector(".rack .slot");
   expect(await midWordBreaks(page, ".rack .gc-t")).toEqual([]);
 
-  // Search results carry the same plates over titles the rack's top 18 never include.
-  await page.goto("/#/search?q=batman");
-  await page.waitForSelector(".panels .panel .gc-t");
-  expect(await midWordBreaks(page, ".panels .gc-t")).toEqual([]);
+  /* The rack is eighteen series. Search used to be the second sweep, but a search result is
+     an episode card now and carries no plate. The read-along still does, so the widest set of
+     generated titles is the busiest episodes' own comic lists — 144 distinct titles across
+     these three, four of them with a slash, against the 36 the search sweep reached. */
+  const keys = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    return core.episodes.slice()
+      .sort((a, b) => b.mentionCount - a.mentionCount).slice(0, 3).map(e => e.key);
+  });
+  expect(keys).toHaveLength(3);
+  for (const key of keys) {
+    await page.goto("/#/ep/" + encodeURIComponent(key));
+    await page.waitForSelector("#readalong .gc-t");
+    expect(await midWordBreaks(page, "#readalong .gc-t"), key).toEqual([]);
+  }
 });
 
 test("first paint fetches core.json only", async ({ page }) => {
