@@ -538,6 +538,20 @@ html[data-neg] .railbox .rh{color:#14120F}
    facet is 2px inside the rail, so the ring was cut off. Inset it, as .blurb input and
    .azsec>h2 already do. */
 .facet:focus-visible{outline-offset:-3px}
+/* Below the two-column breakpoint the rail stacks ABOVE the results, and stacked vertically
+   it ran 807px at 390 — "Who was on mic" alone was 632px of it — which put the first result
+   1,234px down, a viewport and a half. Lay each box out as one horizontal strip instead:
+   the controls stay visible and discoverable, and the results start above the fold. The
+   focus ring is already inset above, which these scrollers need for the same reason. */
+@media(max-width:979px){
+  .railbox .rb.rows{flex-direction:row; overflow-x:auto; overscroll-behavior-x:contain}
+  .railbox .rb.rows>.facet{
+    width:auto; flex:0 0 auto; white-space:nowrap; min-height:36px; padding:6px 10px;
+    border-top:0; border-left:var(--rule) solid var(--ink);
+  }
+  .railbox .rb.rows>.facet:first-child{border-left:0}
+  .railbox.who .facet .n{margin-left:6px}
+}
 .facet img,.facet .ph{width:24px; height:24px; flex:0 0 auto; object-fit:cover; border:1.5px solid var(--ink);
   background:var(--paper-2); background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:4px 4px}
 /* currentColor so it tracks every state, instead of an opacity that survived the
@@ -572,6 +586,11 @@ html[data-neg] .checklist .hd{color:#14120F}
 .nomin:hover{color:var(--blue)}
 
 /* the index: Overstreet price-guide density */
+/* The A-Z bar is chrome, not a section, so it doesn't need a section's run-up. At 390 it
+   wraps to three rows, and a full --sec above it on top of that pushed the first index row
+   past half the viewport with nothing in the gap. `:has(+ .azbar)` rather than a class on
+   the markup: the rule is about what follows the pagehead, not about which page it is. */
+@media(max-width:759px){ .pagehead:has(+ .azbar){margin-bottom:10px} }
 .azbar{display:flex; flex-wrap:wrap; gap:4px; padding:10px var(--pad) 12px; position:sticky; top:var(--dress-h,118px); z-index:20;
   background:var(--paper); padding-top:10px; border-bottom:var(--rule) solid var(--ink); margin-bottom:20px}
 .azbar a,.azbar button{border:1.5px solid var(--ink); min-width:30px; text-align:center; padding:5px 6px; font-size:11px;

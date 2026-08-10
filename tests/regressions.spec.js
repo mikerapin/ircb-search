@@ -180,6 +180,45 @@ test("the seek slider's spoken position matches its thumb", async ({ page }) => 
   expect(s.spoken).toBe(s.expect);
 });
 
+test("search results start above the fold at 390", async ({ page }) => {
+  /* Stacked vertically the rail ran 807px at 390 — "Who was on mic" alone was 632px of it —
+     which put the first result 1,234px down, a viewport and a half. Both boxes are
+     horizontal strips at this width now. Mike's note, 2026-08-09. */
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#/search?q=batman");
+  await page.waitForSelector(".sec.mentions .panel");
+  const m = await page.evaluate(() => ({
+    rail: Math.round(document.querySelector(".rail").getBoundingClientRect().height),
+    firstResult: Math.round(document.querySelector(".sec.mentions .panel").getBoundingClientRect().top),
+    hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  }));
+  expect(m.firstResult, "first result is below the fold").toBeLessThan(844);
+  expect(m.rail, "the rail is back to a tall stacked column").toBeLessThan(300);
+  expect(m.hScroll, "the strips made the page scroll sideways").toBe(false);
+});
+
+test("the two-column rail is untouched at desktop width", async ({ page }) => {
+  // The strip layout is a narrow-width affordance; above the breakpoint the rail is a column.
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#/search?q=batman");
+  await page.waitForSelector(".rail .facet");
+  const dir = await page.evaluate(() =>
+    getComputedStyle(document.querySelector(".railbox .rb.rows")).flexDirection);
+  expect(dir).toBe("column");
+});
+
+test("the index doesn't open with a band of dead space at 390", async ({ page }) => {
+  /* The A-Z bar is chrome, not a section, and at 390 it wraps to three rows. A full --sec
+     above it left an empty band between the summary and the first index block. */
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#/index");
+  await page.waitForSelector(".azrow");
+  const gap = await page.evaluate(() =>
+    Math.round(document.querySelector(".azbar").getBoundingClientRect().top
+      - document.querySelector(".statline").getBoundingClientRect().bottom));
+  expect(gap, "empty space between the summary block and the A-Z bar").toBeLessThan(28);
+});
+
 test("the generated plate's publisher line carries no element opacity", async ({ page }) => {
   /* House rule 1. Element opacity on small text has failed AA seven times because it
      composites over whichever of the eight plate pairs the hash picked — .gc-pub at 7.5px
