@@ -21,6 +21,7 @@ import { viewEpisode } from "./views/episode";
 import { viewHome } from "./views/home";
 import { viewPanel } from "./views/panel";
 import { viewPanelist } from "./views/panelist";
+import { initRail, viewWall } from "./views/wall";
 import { viewSearch } from "./views/search";
 import { viewSubscribe } from "./views/subscribe";
 import { viewIndex } from "./views/index-view";
@@ -62,14 +63,10 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       const v = await viewSubscribe();
       return [v.html, "Subscribe", v.after];
     }
-    /* The last placeholder in the build. Plan 3 owns the wall; until then the route says
-       so on the page rather than painting an empty grid. */
-    case "wall": return [`<section class="sec">
-      <div class="pagehead"><span class="eyebrow">All ${nf(data.stats.episodes)} episodes</span>
-        <h1 class="disp">The Wall</h1>
-        <p>Eleven years as one grid, lit up by whatever you search. It isn&rsquo;t built yet —
-        <a href="${href("/search")}">search the index</a> in the meantime.</p></div>
-    </section>`, "The Wall"];
+    case "wall": {
+      const v = await viewWall(r.qs);
+      return [v.html, "The Wall", v.after];
+    }
     default: {
       const h = await viewHome();
       /* The newest episode's real feed number, not the record count. Many of the
@@ -92,6 +89,10 @@ document.getElementById("sform")?.addEventListener("submit", ev => {
   go("/search", { q });
 });
 initChrome();
+/* The Wall's detail rail lives in the shell, not the view, so opening it never re-renders
+   the grid. Wire it at module scope for the same reason the search band is wired here:
+   behind core() it would be dead until the data landed. */
+initRail();
 const box = document.getElementById("q");
 if (box instanceof HTMLInputElement) initTypeahead(box);
 

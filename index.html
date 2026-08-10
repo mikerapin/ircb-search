@@ -87,6 +87,16 @@
   <button class="x" id="mb-x" type="button" aria-label="Stop and close">✕</button>
 </div>
 
+<!-- The Wall's episode detail: a bottom sheet on phones, its own column from 1000px up.
+     Lives in the shell rather than the view so opening and closing it never re-renders
+     the grid underneath. Hidden from AT until it holds something. -->
+<div class="scrim" id="scrim" hidden></div>
+<div id="rail" role="dialog" aria-modal="false" aria-labelledby="railk" hidden>
+  <div class="railhead"><span class="k" id="railk">Episode</span>
+    <button class="x" id="rail-x" type="button" aria-label="Close">✕</button></div>
+  <div id="railbody" class="railbody"></div>
+</div>
+
 <!-- preload="none" and no autoplay attribute: a page visit must not register as a download,
      and playback only ever follows a click. See final-spec §9. -->
 <audio id="au" preload="none"></audio>

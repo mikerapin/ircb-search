@@ -689,7 +689,10 @@ html[data-neg] .pface[aria-pressed=true]{color:#14120F}
 .wrack{display:flex; flex-wrap:wrap; gap:6px}
 .wchip{border:1.5px solid var(--ink); padding:5px 9px; font-size:11px; font-weight:700; letter-spacing:.04em;
   text-transform:uppercase; color:var(--ink); background:var(--paper); display:inline-flex; gap:7px; align-items:center; min-height:34px}
-.wchip b{font-weight:800; opacity:.55; font-feature-settings:"tnum"}
+/* House rule 1 — no element opacity on small text. At 11px, .55 measured 4.00:1 against
+   paper, under the 4.5 floor. Dim by colour so it cannot compound, and at a weight that
+   actually clears. */
+.wchip b{font-weight:800; color:color-mix(in srgb, currentColor 72%, transparent); font-feature-settings:"tnum"}
 .wchip:hover,.wchip[aria-pressed=true]{background:var(--ink); color:var(--paper); text-decoration:none}
 html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#14120F}
 .wchip[aria-pressed=true] b{opacity:.8}
@@ -700,7 +703,10 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
 .wall{border:var(--rule) solid var(--ink); padding:12px; background:var(--paper)}
 .yrow{display:grid; grid-template-columns:3.1rem minmax(0,1fr); align-items:center; gap:0 10px; margin-bottom:5px}
 .ylab{font-size:11px; font-weight:800; letter-spacing:.04em; text-align:right; user-select:none; font-feature-settings:"tnum"; line-height:1.25}
-.ylab .cnt{display:block; font-size:8.5px; font-weight:600; opacity:.55; letter-spacing:.06em; text-transform:uppercase}
+/* House rule 1 again: .55 at this size measured 4.00:1. Colour, not opacity, and enough
+   of it to clear the floor. */
+.ylab .cnt{display:block; font-size:8.5px; font-weight:600;
+  color:color-mix(in srgb, currentColor 72%, transparent); letter-spacing:.06em; text-transform:uppercase}
 .ycells{display:grid; grid-template-columns:repeat(var(--cols,63),minmax(0,1fr)); gap:2px}
 .cell{aspect-ratio:1/1; border:1px solid var(--ink); background:var(--paper); padding:0; min-width:0; transition:opacity .12s,background .12s}
 .cell.n0{background:var(--paper); border-style:dashed; opacity:.55}
@@ -746,6 +752,10 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
 /* episode rail / bottom sheet */
 .scrim{position:fixed; inset:0; background:rgba(20,18,16,.55); z-index:90; opacity:0; pointer-events:none; transition:opacity .16s}
 body.rail-open .scrim{opacity:1; pointer-events:auto}
+/* [hidden] is display:none in the UA sheet, which a display:flex rule silently beats.
+   Without this the rail is only ever translated off-screen: still in the tab order,
+   still read by AT, and never actually closed. */
+#rail[hidden],.scrim[hidden]{display:none}
 #rail{
   position:fixed; left:0; right:0; bottom:0; z-index:95; max-height:82vh; display:flex; flex-direction:column;
   background:var(--paper); border-top:3px solid var(--ink); transform:translateY(101%); transition:transform .2s ease;
@@ -846,5 +856,6 @@ html[data-neg] .roll:hover{color:#14120F}
    Blue on paper is 2.26:1 against body ink — not distinguishable by hue alone, so any link
    sitting inside a sentence gets an underline. Chrome links (chips, facets, panels, nav)
    are their own visual objects and are deliberately not in this list. */
-.statline a,.lead a,.empty a,.kv a,.sparse a,.notes a,.railnote a,.indicia a,.artcap a,.pagehead p a{
+.statline a,.lead a,.empty a,.kv a,.sparse a,.notes a,.railnote a,.indicia a,.artcap a,.pagehead p a,
+.walllegend a{
   text-decoration:underline; text-underline-offset:2px}
