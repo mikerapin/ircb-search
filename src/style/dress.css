@@ -624,6 +624,11 @@ html[data-neg] .azbar a:hover,html[data-neg] .azbar button:hover{color:#14120F}
 @media(min-width:1000px){ .azgrid{columns:3} }
 @media(min-width:1300px){ .azgrid{columns:4} }
 .azsec{break-inside:avoid-column; margin-bottom:16px; border:var(--rule) solid var(--ink); background:var(--paper)}
+/* Do not put `content-visibility:auto` on these. It was tried and measured: `.azgrid` is a
+   multi-column container, and multicol has to fragment every child to balance the columns,
+   so nothing gets skipped — the page got 15,000px TALLER (the intrinsic-size estimates
+   replaced real heights) and the A–Z jump landed 196px behind the sticky bar at 390,
+   because scrollIntoView resolved against estimates that then changed under it. */
 /* h2 on the Index, h3 on the panel directory — there the buckets sit inside a "Guests" section. */
 .azsec>h2,.azsec>h3{margin:0; background:var(--ink); color:var(--paper); font-family:var(--disp);
   font-variation-settings:"wdth" 125,"wght" 900; font-size:15px; padding:4px 9px; display:flex;

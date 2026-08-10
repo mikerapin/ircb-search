@@ -38,6 +38,11 @@ test("panelist facet filters and marks itself current", async ({ page }) => {
 test("the cap is honest about what it hides", async ({ page }) => {
   // The cap counts episodes now, so the line it prints has to as well.
   await page.goto("/#/search?q=batman");
+  /* `.count()` is the one locator call that does not retry, and the view paints only after
+     three chunks land. Without this wait the count is 0 under a loaded runner while
+     `headline()` — which auto-waits — reads the real figures, so the test fails claiming the
+     page showed a number it never showed. Every other count() in the suite waits first. */
+  await page.waitForSelector(".sec.mentions .epcard");
   const shown = await page.locator(".sec.mentions .epcard").count();
   const { mentions, episodes } = await headline(page);
   expect(shown).toBeLessThanOrEqual(36);

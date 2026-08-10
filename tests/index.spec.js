@@ -16,6 +16,24 @@ test("the index lists every series, A to Z", async ({ page }) => {
   expect(bucketTotal).toBe(core.stats.series);
 });
 
+test("the index renders from its own chunk, never the mention list", async ({ page }) => {
+  const chunks = [];
+  page.on("request", r => {
+    const m = r.url().match(/\/d\/([\w.-]+)$/);
+    if (m) chunks.push(m[1]);
+  });
+  await page.goto("/#/index");
+  await page.waitForSelector(".azrow");
+  // Absence needs a settle, or a late fetch lands after the assertion and the test passes
+  // for the wrong reason.
+  await page.waitForLoadState("networkidle").catch(() => {});
+
+  expect(chunks).toContain("index.json");
+  // 574K raw / 90K gzipped, for a table that needs none of the fields on a mention. The
+  // Index used to derive itself from it, and could paint nothing until it had all arrived.
+  expect(chunks).not.toContain("mentions.json");
+});
+
 test("buckets are sorted and rows sorted within them", async ({ page }) => {
   await page.goto("/#/index");
   await page.waitForSelector(".azrow");

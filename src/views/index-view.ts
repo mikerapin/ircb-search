@@ -1,13 +1,19 @@
-import { core, mentions as loadMentions } from "../data/load";
-import { seriesRows } from "../data/series-index";
+import { core, seriesIndex } from "../data/load";
 import { azBuckets } from "../lib/az";
 import { esc, nf, pl } from "../lib/html";
 import { href } from "../router";
 
+/* Rough painted height of one bucket, used only as the placeholder size for a section the
+   browser has not laid out yet. `contain-intrinsic-size: auto` replaces the guess with the
+   real measurement the first time a section renders, so this only has to be close enough
+   that the scrollbar does not lurch and the A–Z jump lands on its heading. Rows are one
+   line at every width the design ships; long names ellipsize rather than wrap. */
+const ROW_PX = 29;
+const HEAD_PX = 56;
+
 export async function viewIndex(): Promise<{ html: string; after: () => void }> {
-  const data = await core();
-  const men = await loadMentions();
-  const buckets = azBuckets(seriesRows(men), r => r.name);
+  const [data, rows] = await Promise.all([core(), seriesIndex()]);
+  const buckets = azBuckets(rows, r => r.name);
   const s = data.stats;
 
   const html =
@@ -20,9 +26,13 @@ export async function viewIndex(): Promise<{ html: string; after: () => void }> 
        Buttons say what they do and keep the route intact. */
     `<div class="azbar">${buckets.map(b =>
       `<button type="button" data-jump="az-${b.letter}" aria-label="Jump to ${b.letter}">${b.letter}</button>`).join("")}</div>` +
-    /* tabindex=-1 so the jump can move focus to the heading, not just the viewport. */
+    /* tabindex=-1 so the jump can move focus to the heading, not just the viewport.
+       Every row is in the DOM — the honest count depends on it, and so does the A–Z jump —
+       but `content-visibility` (in dress.css) lets the browser skip laying out and painting
+       the sections nobody is looking at. */
     `<div class="azgrid">${buckets.map(b =>
-      `<div class="azsec"><h2 id="az-${b.letter}" tabindex="-1">${b.letter}<span>${nf(b.rows.length)}</span></h2>` +
+      `<div class="azsec" style="contain-intrinsic-size:auto ${HEAD_PX + b.rows.length * ROW_PX}px">` +
+        `<h2 id="az-${b.letter}" tabindex="-1">${b.letter}<span>${nf(b.rows.length)}</span></h2>` +
         b.rows.map(r =>
           `<a class="azrow" href="${href("/series/" + encodeURIComponent(r.name))}">` +
             `<span class="nm">${esc(r.name)}</span>` +
