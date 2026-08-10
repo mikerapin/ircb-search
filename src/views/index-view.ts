@@ -12,7 +12,8 @@ export async function viewIndex(): Promise<{ html: string; after: () => void }> 
 
   const html =
     `<div class="pagehead"><div class="eyebrow">Back of the book</div><h1 class="disp">The Index</h1>
-      <p>Every series the show has ever named, A to Z — how many times it came up, and in how many episodes.</p>
+      <p>Every series we&rsquo;ve ever named on the show, A to Z, with how many times it came up and how many
+      episodes it turned up in.</p>
       <div class="statline" style="max-width:none"><b>${nf(s.series)}</b> series · <b>${nf(s.mentions)}</b> mentions · ` +
         `<b>${nf(s.uniqueComics)}</b> distinct item strings · <a href="${href("/about")}">how the names were normalized →</a></div></div>` +
     /* The hash is the router, so a fragment link here would navigate instead of scrolling.

@@ -16,7 +16,7 @@ test("dress label and footer counts come from the data", async ({ page }) => {
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   await expect(page.locator("#dressno")).toHaveText(/^EP\. \d{3}$/);
-  // Not "timestamped": only 1,916 of the 4,857 carry a minute, so the indicia says "mentions".
+  // Not "timestamped": most logged comics carry no minute, so the indicia says "mentions".
   await expect(page.locator("#foot-legal")).toContainText(/\d[\d,]* episodes and [\d,]+ comic mentions/);
 });
 

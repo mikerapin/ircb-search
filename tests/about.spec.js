@@ -25,7 +25,8 @@ test("about renders all five sections", async ({ page }) => {
   await expect(page.locator("#dressno")).toHaveText("About the Data");
   await expect(page.locator(".pagehead h1")).toHaveText("About the Data");
   // Scoped to #view: the footer also carries a "Sources" heading.
-  for (const h of ["Sources", "The Three Eras", "Series Normalization", "Known Gaps", "What’s In This Build"]) {
+  for (const h of ["Where All This Came From", "The Show Is Older Than The Feed",
+    "What’s Missing", "Why The Comic Names Look Like That"]) {
     await expect(page.locator("#view").getByRole("heading", { name: h, exact: true })).toBeVisible();
   }
 });
@@ -46,9 +47,9 @@ test("every figure on the page matches the data", async ({ page }) => {
   // The gaps are the point of the page — they have to be the real ones.
   expect(text).toContain(nf(core.episodes.filter(e => !e.date).length));
   expect(text).toContain(nf(noMinute));
-  // "Only N can be jumped into" must be the jumpable count, not merely the with-a-minute
-  // count — those differ by one, and the page is claiming what the play controls honour.
-  expect(text).toMatch(new RegExp(`Only ${nf(canJump)} can be jumped into`));
+  // The jumpable figure must be the jumpable count, not merely the with-a-minute count —
+  // those differ, and the page is claiming what the play controls actually honour.
+  expect(text).toMatch(new RegExp(`${nf(canJump)} can actually be jumped into`));
   expect(text).toContain(`${nf(s.indexedEpisodes)} episodes indexed`);
 });
 
@@ -69,10 +70,10 @@ test("the three eras partition the archive", async ({ page }) => {
     })));
 
   const eps = core.episodes;
-  expect(counts["The feed era"]).toBe(eps.filter(e => e.showId).length);
+  expect(counts["In the feed"]).toBe(eps.filter(e => e.showId).length);
   expect(counts["Before the feed"]).toBe(eps.filter(e => !e.showId && !e.patreonUrl).length);
   expect(counts["The Patreon shelf"]).toBe(eps.filter(e => !e.showId && e.patreonUrl).length);
-  expect(counts["The feed era"] + counts["Before the feed"] + counts["The Patreon shelf"])
+  expect(counts["In the feed"] + counts["Before the feed"] + counts["The Patreon shelf"])
     .toBe(core.stats.episodes);
   // Every record lands in exactly one bucket — the property the sum only implies.
   expect(eps.filter(e => [!!e.showId, !e.showId && !e.patreonUrl, !e.showId && !!e.patreonUrl]
@@ -84,11 +85,11 @@ test("the sources block credits each source with what it actually supplies", asy
   await expect(page.locator(".sparse")).toBeVisible();
   const { core } = await data(page);
   const dd = await page.locator("#view .kv > div", { hasText: /^Episodes/ }).locator("dd").innerText();
-  // The RSS feed carries 568 of the 798 records and supplies none of the titles, dates or
+  // The RSS feed carries only some of the records and supplies none of the titles, dates or
   // panel — export_data.py takes those from the spreadsheet and merges only player_id,
   // summary, enclosure, artwork and duration off the feed.
   expect(dd).toContain(nf(core.episodes.filter(e => e.showId).length));
-  expect(dd).toMatch(/titles, air dates and panel for all [\d,]+ records/);
+  expect(dd).toMatch(/titles, air dates and who was on the panel for all [\d,]+ records/);
   expect(dd).not.toMatch(/feed[^.]*titles/i);
 });
 
@@ -99,7 +100,7 @@ test("the sample-data claim is gone", async ({ page }) => {
   // The prototype claimed "complete coverage for twelve showcase series" — true of the
   // pitch's sample cut, false here, and exactly the pre-launch language the spec forbids.
   expect(text).not.toMatch(/showcase series|twelve showcase|sample|prototype|pitch|round [12]\b/i);
-  expect(text).toMatch(/every one of the [\d,]+ mentions/i);
+  expect(text).toMatch(/every one of the [\d,]+ comics we\s+logged/i);
 });
 
 test("the published normalization rules describe what the code actually does", async ({ page }) => {

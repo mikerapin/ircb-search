@@ -68,7 +68,7 @@ export function readAlong(
 ): string {
   if (!mentions.length) {
     const missing = gap.episodes - gap.indexed;
-    return `<p class="lead">Nobody logged the comics for this one — it&rsquo;s one of the ${nf(missing)} episode${pl(missing)} the mention index never reached.</p>`;
+    return `<p class="lead">Nobody logged the comics for this one. It&rsquo;s one of ${nf(missing)} episode${pl(missing)} we never got around to indexing.</p>`;
   }
   const mode = raMode();
   if (mode === "list") {

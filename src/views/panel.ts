@@ -22,8 +22,8 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
 
   const html =
     `<div class="pagehead"><div class="eyebrow">Index</div><h1 class="disp">Panelists &amp; Guests</h1>
-      <p>${nf(ROSTER.length)} regulars, with portraits and taglines. Everyone else is a name the index knows —
-      a creator who came on, a friend who filled a chair. Everybody gets a page.</p>
+      <p>${nf(ROSTER.length)} regulars, with portraits and taglines. Everyone else turned up in our credits at
+      least once: a creator who came on, a friend who filled a chair. Everybody gets a page.</p>
       // The alias note that sat here explained a data discrepancy no visitor asked about.
       // Cut per Mike 2026-08-09; About the Data is where that belongs, if anywhere.
       <div class="statline" style="max-width:none"><b>${nf(data.stats.people)}</b> names in the archive ·
@@ -45,8 +45,8 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
 
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">Guests</h2>
-        <span class="note">${nf(guests.length)} names in the panel field</span></div>
-      <p class="lead">Creators, friends of the show and one-off chairs — counted straight off the credits of
+        <span class="note">${nf(guests.length)} who aren&rsquo;t regulars</span></div>
+      <p class="lead">Creators, friends of the show and one-off chairs, counted straight off the credits of
       all ${nf(data.stats.episodes)} episodes. The number is how many times they sat in.</p>
       <div class="azgrid">${buckets.map(b =>
         `<div class="azsec"><h3>${b.letter}<span>${nf(b.rows.length)}</span></h3>` +

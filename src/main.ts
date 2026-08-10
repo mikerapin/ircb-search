@@ -72,7 +72,7 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
     </section>`, "The Wall"];
     default: {
       const h = await viewHome();
-      /* The newest episode's real feed number, not the record count — 230 of the 798
+      /* The newest episode's real feed number, not the record count. Many of the
          records were never numbered feed episodes. */
       const nos = feedNumbers(data.episodes);
       const newest = data.episodes.reduce<EpisodeCore | null>(

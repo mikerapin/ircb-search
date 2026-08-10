@@ -21,7 +21,8 @@ export function statement(core: CoreData): string {
   const newest = core.episodes.reduce<string | null>((d, e) => (e.date && (!d || e.date > d) ? e.date : d), null);
   const tiles: Array<[value: string, label: string]> = [
     [nf(s.episodes), "Episodes published"],
-    // Not "timestamped": only 1,916 of the 4,857 carry a minute. About the Data says so.
+    // Not "timestamped": most logged comics carry no minute. About the Data quotes the
+    // live split; don't copy a figure here, it goes stale the week the data refreshes.
     [nf(s.mentions), "Comics logged"],
     [nf(s.series), "Distinct series"],
     [nf(s.people), "Panelists &amp; guests"],
@@ -133,7 +134,7 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
 
   return `<section class="sec">
     <div class="sec-head"><h2 class="disp">The Shuffle</h2>
-      <span class="note">Three at random from eleven years<br>Reload for another draw</span></div>
+      <span class="note">Three we pulled at random<br>Reload if you want three more</span></div>
     <div class="threeup">
 
       <div class="sh"><div class="shh">A panelist<span class="dice" aria-hidden="true">⚄</span></div>

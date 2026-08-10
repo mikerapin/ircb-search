@@ -7,7 +7,8 @@ import AxeBuilder from "@axe-core/playwright";
 test("search url state round-trips", async ({ page }) => {
   await page.goto("/#/search?q=batman&sort=recent");
   await expect(page.locator(".sec.mentions .panel").first()).toBeVisible();
-  await expect(page.locator(".honest-count")).toContainText(/[\d,]+ mentions? in [\d,]+ episodes? — [\d,]+ you can jump to/);
+  await expect(page.locator(".honest-count"))
+    .toContainText(/[\d,]+ mentions? in [\d,]+ episodes?\. [\d,]+ of them you can jump straight into/);
   await page.locator(".rail .facet", { hasText: "Newest first" }).click();
   await expect(page).toHaveURL(/sort=recent/);
 });

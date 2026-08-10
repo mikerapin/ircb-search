@@ -42,12 +42,12 @@ function volumeYear(comic: string): string | null {
  * Titles where a volume year is doing real work — the same title was written under two or
  * more different years, so folding them would put two different books on one page.
  *
- * Deliberately not "every heading with a year in it". 59 of the 4,353 headings carry one,
- * and preserving all of them would split 23 titles that are plainly a single run written
- * two ways ("Daredevil" and "Daredevil (1998)"). Four titles earn the split today —
- * Fantastic Four, The Eternals, Generation X and Mister Miracle. Trading four wrong merges
- * for twenty-three wrong splits is not a fix. `scripts/series-report.mjs` is the source of
- * truth for these counts; re-run it rather than trusting this comment.
+ * Deliberately not "every heading with a year in it". Only a handful of headings carry a
+ * year, and preserving all of them would split many titles that are plainly a single run
+ * written two ways ("Daredevil" and "Daredevil (1998)"). Far fewer titles genuinely need
+ * the split, so trading those wrong merges for a pile of wrong splits is not a fix.
+ * `scripts/series-report.mjs` prints the real counts and which titles earn it; re-run it
+ * rather than trusting a number written here, which is how this comment went stale before.
  */
 export function yearSensitiveKeys(comics: string[]): Set<string> {
   const byTitle = new Map<string, Set<string>>();

@@ -80,7 +80,7 @@ test("rack and shuffle hydrate after first paint", async ({ page }) => {
 /* Reading only `el.firstChild` covered one text node per plate. cover.ts inserts a <wbr>
    after every "/", so on the 49 headings that contain one, everything past the first slash
    lives in a later text node the scan never reached. Walk them all — and run the same scan
-   on a route that renders mention plates, since the rack is 18 of 3,016 series and the same
+   on a route that renders mention plates, since the rack is a handful of series and the same
    generated plates appear on every search result and read-along panel. */
 async function midWordBreaks(page, selector) {
   await page.evaluate(() => document.fonts.ready);
@@ -155,7 +155,7 @@ test("the hero wears a real feed number, not the record count", async ({ page })
 
   const micro = await page.locator(".hero-side .micro").innerText();
   expect(micro).toContain(`EP. ${feed.length}`);
-  // 230 of the 798 records were never numbered feed episodes, so the total must not appear.
+  // Many records were never numbered feed episodes, so the total must not appear.
   expect(feed.length).toBeLessThan(core.stats.episodes);
   expect(micro).not.toContain(String(core.stats.episodes));
   await expect(page.locator("#dressno")).toHaveText(`EP. ${feed.length.toLocaleString("en-US")}`);

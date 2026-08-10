@@ -83,7 +83,7 @@ export async function viewSeries(name: string): Promise<{ html: string; after: (
     sfx(`${nf(total)} mention${pl(total)}`) +
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">The Checklist</h2>
-        <span class="note">Oldest first · every logged appearance of this exact heading</span></div>
+        <span class="note">Oldest first · every time we wrote it exactly this way</span></div>
       <div class="checklist">
         <div class="hd"><span>Item &amp; where it came up</span><span class="r">${nf(rows.length)} row${pl(rows.length)}</span></div>
         ${rows.map(m => checklistRow(m, byKey.get(m.epKey))).join("")}

@@ -90,9 +90,9 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
     const latest = d.core.episodes.filter(e => e.artwork && e.date).sort(byDateDesc).slice(0, 8);
     return `<div class="pagehead"><div class="eyebrow">Episodes &amp; search</div>` +
       `<h1 class="disp">Search the archive</h1>` +
-      // Not "timestamped": only 1,916 of the 4,857 carry a minute. About the Data says so.
+      // Not "timestamped": most logged comics carry no minute. About the Data quotes the split.
       `<p>${nf(d.core.stats.mentions)} comic mentions across ${nf(d.core.stats.indexedEpisodes)} indexed episodes. ` +
-      `Type in the yellow band above — or hit <b>/</b> from anywhere — and suggestions open as you type.</p>` +
+      `Type in the yellow band above, or hit <b>/</b> from anywhere, and suggestions open as you type.</p>` +
       `<div class="chips" style="padding:0">${SUGGESTIONS.map(t =>
         `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div></div>` +
       `<section class="sec"><div class="sec-head"><h2 class="disp">Newest Episodes</h2></div>` +
@@ -112,8 +112,8 @@ export async function viewSearch(qs: URLSearchParams): Promise<string> {
     `<div class="pagehead"><div class="eyebrow">Episodes &amp; search</div>` +
       `<h1 class="disp">${esc(q.q || (q.who ?? "Guest episodes"))}</h1>` +
       `<p class="honest-count">${nf(res.mentionTotal)} mention${pl(res.mentionTotal)} in ${nf(inEps)} episode${pl(inEps)}` +
-      `${q.who ? `, filtered to ${esc(q.who)}` : ""}${q.guest ? ", guest episodes only" : ""} — ` +
-      `${nf(res.playable)} you can jump to.</p></div>`;
+      `${q.who ? `, filtered to ${esc(q.who)}` : ""}${q.guest ? ", guest episodes only" : ""}. ` +
+      `${nf(res.playable)} of them you can jump straight into.</p></div>`;
 
   if (!res.mentionTotal && !eps.length) {
     return head + `<div class="empty"><b>No panel for that.</b> Nothing in the index matches. Try one of these:</div>` +

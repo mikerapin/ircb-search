@@ -36,7 +36,7 @@ test("episode page shows artwork, credits, notes and read-along", async ({ page 
 
 test("keyword tags search, and the crew links to panelists", async ({ page }) => {
   /* Was `if (await tag.count())` around every assertion, run against whatever the newest
-     feed episode happens to be — and 292 of the 798 records carry no keywords, so episode.ts
+     feed episode happens to be, and plenty of records carry no keywords at all, so episode.ts
      renders no .tags block at all and a normal week could switch the whole test off. Pick an
      episode that has them, and fail rather than skip if the archive somehow has none. */
   await page.goto("/");
@@ -208,7 +208,7 @@ test("the read-along really is in broadcast order", async ({ page }) => {
 });
 
 test("a read-along row with no logged minute refuses honestly", async ({ page }) => {
-  // 2,941 of 4,857 mentions carry no minute, but every episode test ran on the newest
+  // Most mentions carry no minute, but every episode test ran on the newest
   // episode, whose rows are all playable — so this branch was never rendered once.
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");

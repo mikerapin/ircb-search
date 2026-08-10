@@ -90,7 +90,7 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
               `<span class="st"><b>${share < 1 ? share.toFixed(1) : Math.round(share)}%</b> · ${nf(n)} ep${pl(n)} together</span></a>`;
           }).join("")}</div>` +
           (coOthers > 0
-            ? `<p class="lead" style="margin:14px 0 0">Plus ${nf(coOthers)} guest${pl(coOthers)} who&rsquo;ve shared the mic with ${esc(firstName(name))} — they&rsquo;re all in the credits on their episode pages.</p>`
+            ? `<p class="lead" style="margin:14px 0 0">Plus ${nf(coOthers)} guest${pl(coOthers)} who&rsquo;ve shared the mic with ${esc(firstName(name))}. They&rsquo;re all in the credits on their episode pages.</p>`
             : "") +
         `</section>`
       : "") +
@@ -111,7 +111,7 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
               `<span class="mt">${esc(e.people.filter(p => p !== name).join(" · ")) || "Solo"}</span></span>` +
               `<span class="cue">Open →</span></a></div>`).join("")}</div>` +
           (nEps - dated.length > 0
-            ? `<p style="margin:12px 0 0;font-size:12px">${nf(nEps - dated.length)} of their records carry no air date.</p>`
+            ? `<p style="margin:12px 0 0;font-size:12px">${nf(nEps - dated.length)} of their episodes have no air date.</p>`
             : "") +
           `</div></details></section>`
       : "") +
@@ -138,7 +138,7 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
         </div></div>`
       : "") +
     (roster ? "" : `<div class="railbox"><div class="rh">Guest record</div>
-      <div class="railnote" style="border:0">They&rsquo;re in the episode credits but not on the roster, so there&rsquo;s no portrait or tagline — just the record.</div></div>`) +
+      <div class="railnote" style="border:0">They&rsquo;re in our episode credits but not on the roster, so we have no portrait or tagline for them.</div></div>`) +
   `</aside>`;
 
   const html = crumb() +

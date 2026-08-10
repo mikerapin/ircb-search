@@ -52,7 +52,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
     if (!list) byEp.set(m.epKey, (list = []));
     list.push(m);
   }
-  /* Un-timestamped mentions sort last, not first. `a.secs ?? 0` collapsed all 2,941 of
+  /* Un-timestamped mentions sort last, not first. `a.secs ?? 0` collapsed every one of
      them to zero, so a heading that reads "in broadcast order" led with every comic whose
      minute was never logged. */
   for (const list of byEp.values()) {
@@ -111,7 +111,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
           `<a href="${href("/who/" + encodeURIComponent(p))}">${avatar(p)}${esc(p)}</a>`).join("")}</div>
         ${detail?.summary
           ? `<p class="notes">${esc(detail.summary)}</p>`
-          : `<p class="notes">No show notes on file for this episode.</p>`}
+          : `<p class="notes">We didn&rsquo;t write show notes for this one.</p>`}
         ${detail?.keywords.length
           ? `<div class="tags">${detail.keywords.slice(0, 10).map(k =>
               `<a class="tag" href="${href("/search", { q: k })}">${esc(k)}</a>`).join("")}</div>`

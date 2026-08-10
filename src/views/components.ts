@@ -89,7 +89,7 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { u
   const noLab = no === "—" && yr ? yr : null;
   /* The band's badge is the issue/volume slot, so it renders only when one was actually
      parsed. Gating on the heading merely containing "#", "vol" or "book" printed a bare
-     em-dash — num()'s can't-parse glyph — as though it were an issue number, on 47
+     em-dash, num()'s can't-parse glyph, as though it were an issue number on dozens of
      mentions. Accepting num()'s year fallback here is no better: it would badge
      "2000 AD Prog 2368" as "2000", and the plate already carries the year. */
   const issue = /^[#V]/.test(no) ? no : null;

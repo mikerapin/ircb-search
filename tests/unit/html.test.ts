@@ -3,9 +3,9 @@ import { esc, fmtDate, fmtRuntime, fmtShortDate, nf, pl } from "../../src/lib/ht
 
 /**
  * `esc` is the single escaping boundary for every innerHTML in the codebase, and it had no
- * unit test at all. It guards 3,016 series names and 4,353 comic titles scraped out of show
+ * unit test at all. It guards every series name and comic title scraped out of show
  * notes — tests/unit/series.test.ts already proves fragments like
- * `Wonder Woman Special #1.</P><P><STRONG` reach the pipeline, and 21 headings begin with a
+ * `Wonder Woman Special #1.</P><P><STRONG` reach the pipeline, and headings begin with a
  * quote character, which flows into `data-comic="…"`, `title="…"` and
  * `aria-label="Play … at …"` in views/components.ts. Every Playwright assertion on a
  * timestamp is a shape regex (/\d+:\d\d/), never a value, so the formatters were unheld too.
