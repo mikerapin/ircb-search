@@ -4,8 +4,19 @@ name: Deploy to Pages
 # regenerates data/*.json into public/d/*.json and emits hashed assets. Pages must publish
 # that artifact, so the repo's Pages source has to be set to "GitHub Actions".
 #
-# public/CNAME carries search.ircbpodcast.com into dist/ — without it the custom domain
-# drops on the first artifact deploy.
+# The custom domain is a REPO SETTING, not something the artifact carries. This comment used
+# to say public/CNAME was what kept search.ircbpodcast.com alive across an artifact deploy;
+# that was tested at the merge and is false. With the Pages setting cleared, a deploy whose
+# dist/ contained a correct CNAME file did NOT restore the domain — the file is just served
+# at /CNAME. Restoring it took `gh api -X PUT .../pages -f cname=search.ircbpodcast.com`.
+#
+# Keep the file and the assertion below anyway: it costs nothing, it is what the legacy
+# branch builder read, and a missing CNAME in dist is still a signal the build went wrong.
+# But do not believe it will save the domain.
+#
+# Re-adding the domain is also what finally provisioned TLS. The cert had never been issued
+# (https_certificate was null, https_enforced false, and the site was HTTP-only); clearing
+# and re-setting cname moved it to authorization_pending → approved within minutes.
 
 on:
   push:
