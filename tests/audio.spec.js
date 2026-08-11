@@ -70,11 +70,21 @@ const seekLanded = (page, want, tol = 1.5) =>
  */
 test("the browser can actually play audio at all", async ({ page }) => {
   await page.setContent(`<audio id="canary" src="${SILENT_WAV_URI}"></audio>`);
+  /* Poll rather than sleep once. A first cut slept 1.2s and demanded 0.2s of progress, which
+     failed at 0.11 on a runner busy with the rest of the suite — audio was fine, the clock was
+     just running slow under load. That is a different animal from the real failure, where it
+     sits frozen with `paused` true however long you wait. Give slowness room; a dead audio
+     stack still never moves. */
   const moved = await page.evaluate(async () => {
     const a = document.getElementById("canary");
     try { await a.play(); } catch (e) { return `play() rejected: ${e.name}`; }
-    await new Promise(r => setTimeout(r, 1200));
-    return a.currentTime > 0.2 ? true : `play() resolved but the clock sat at ${a.currentTime}`;
+    const start = a.currentTime;
+    const deadline = Date.now() + 8000;
+    while (Date.now() < deadline) {
+      await new Promise(r => setTimeout(r, 200));
+      if (a.currentTime > start + 0.5) return true;
+    }
+    return `the clock sat at ${a.currentTime.toFixed(3)} for 8s (paused=${a.paused})`;
   });
   expect(moved, "Chromium is not rendering audio — the tape specs below cannot pass").toBe(true);
 });

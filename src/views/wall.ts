@@ -282,7 +282,46 @@ function openRail(
   rail.hidden = false;
   if (scrim) scrim.hidden = false;
   document.body.classList.add("rail-open");
+  lockPage();
   document.getElementById("rail-x")?.focus();
+}
+
+/**
+ * Below the desktop breakpoint the rail is a bottom sheet over the whole viewport, and the
+ * page behind it used to keep scrolling — the scrim covered the wall but did not hold it
+ * still. Above the breakpoint the rail is deliberately non-modal and the wall MUST stay
+ * scrollable, or the squares it overlays become unreachable; hence the media query rather
+ * than an unconditional lock.
+ *
+ * The offset is pinned rather than just hiding overflow: a non-scrollable <body> has its
+ * scroll position clamped, so plain `overflow:hidden` jumped the wall on open and lost the
+ * reader's place. Restored exactly on close.
+ */
+const SHEET = "(max-width: 999px)";
+let lockedAt: number | null = null;
+
+function lockPage(): void {
+  if (lockedAt !== null || !window.matchMedia(SHEET).matches) return;
+  lockedAt = window.scrollY;
+  document.body.style.top = `-${lockedAt}px`;
+  document.body.classList.add("rail-locked");
+}
+
+function unlockPage(): void {
+  if (lockedAt === null) return;
+  const y = lockedAt;
+  lockedAt = null;
+  document.body.classList.remove("rail-locked");
+  document.body.style.top = "";
+  /* Force layout before restoring. While <body> is position:fixed it is out of flow and the
+     document has no height to scroll through, so a scrollTo issued in the same task lands at
+     0 and the reader is thrown to the top of the wall on close. Reading offsetHeight flushes
+     the reflow that gives the page its height back. */
+  void document.body.offsetHeight;
+  /* Instant, against the global `scroll-behavior:smooth` — the same trap the A–Z jump hit.
+     A restore that animates is a restore the reader watches slide, and anything reading the
+     position straight after gets a number from the middle of the animation. */
+  window.scrollTo({ top: y, behavior: "instant" });
 }
 
 export function initRail(): void {
@@ -295,6 +334,7 @@ export function initRail(): void {
     if (rail) rail.hidden = true;
     if (scrim) scrim.hidden = true;
     document.body.classList.remove("rail-open");
+    unlockPage();
   };
   document.getElementById("rail-x")?.addEventListener("click", close);
   scrim?.addEventListener("click", close);

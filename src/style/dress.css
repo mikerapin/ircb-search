@@ -799,6 +799,19 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
 /* episode rail / bottom sheet */
 .scrim{position:fixed; inset:0; background:rgba(20,18,16,.55); z-index:90; opacity:0; pointer-events:none; transition:opacity .16s}
 body.rail-open .scrim{opacity:1; pointer-events:auto}
+/* The scrim covered the page but did not stop it moving: a drag anywhere outside the sheet
+   scrolled the wall behind it, and a flick inside the sheet chained to the page once the
+   sheet hit its end. `touch-action:none` stops the first, `overscroll-behavior:contain` the
+   second, and `overflow:hidden` catches the non-touch ways in (wheel, space, arrows) now
+   that focus sits inside the sheet. Only below the desktop breakpoint — above it the rail is
+   deliberately non-modal, the scrim is inert, and the wall is supposed to stay scrollable so
+   a reader can walk square to square with it open. */
+body.rail-open .scrim{touch-action:none}
+.railbody{overscroll-behavior:contain}
+/* Applied by wall.ts, and only below the desktop breakpoint — see lockPage(). `overflow:hidden`
+   alone was tried first and is wrong: making <body> non-scrollable clamps the scroll position,
+   so opening the sheet threw the wall from 900px back to 437px before it locked anything. */
+body.rail-locked{position:fixed; left:0; right:0; width:100%; overflow:hidden}
 /* [hidden] is display:none in the UA sheet, which a display:flex rule silently beats.
    Without this the rail is only ever translated off-screen: still in the tab order,
    still read by AT, and never actually closed. */

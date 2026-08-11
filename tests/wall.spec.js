@@ -238,3 +238,64 @@ test("the rail lists its markers rather than sliding them sideways", async ({ pa
   const overflows = await page.locator("#railbody").evaluate(el => el.scrollWidth > el.clientWidth + 1);
   expect(overflows, "the rail scrolls sideways").toBe(false);
 });
+
+test("the drawer locks the page behind it on mobile, and does not on desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#/wall");
+  await page.waitForSelector("#wrack .wchip");
+
+  // Get some scroll range under us, then open the drawer from where we are.
+  await page.mouse.wheel(0, 900);
+  await page.waitForFunction(() => window.scrollY > 100, null, { timeout: 10000 });
+
+  /* Click a square that is ALREADY on screen, from inside the page. `locator.click()` scrolls
+     its target into view first, which moved the page out from under this test before the lock
+     even ran — the lock then correctly captured the new position and the assertion compared
+     against the old one. */
+  const before = await page.evaluate(() => {
+    const onScreen = [...document.querySelectorAll(".cell")].find(c => {
+      const r = c.getBoundingClientRect();
+      return r.top > 120 && r.bottom < window.innerHeight - 60;
+    });
+    if (!onScreen) throw new Error("no square on screen to click");
+    // Read first: the click handler is synchronous, so it locks the page — and a locked
+    // <body> reports scrollY 0 — before this function could return.
+    const y = window.scrollY;
+    onScreen.click();
+    return y;
+  });
+  expect(before).toBeGreaterThan(100);
+  await expect(page.locator("#rail")).toBeVisible();
+
+  /* The scrim covered the page but did not stop it moving — a drag outside the sheet
+     scrolled the wall behind it. Assert on where the wall SITS, not on window.scrollY:
+     the lock pins <body>, so scrollY reads 0 while it holds and would "pass" for a page
+     that had been thrown back to the top, which is the bug the first attempt introduced. */
+  const wallTop = () => page.locator("#wall").evaluate(el => Math.round(el.getBoundingClientRect().top));
+  const parkedAt = await wallTop();
+  await page.mouse.wheel(0, 800);
+  await page.waitForTimeout(300);
+  expect(await wallTop(), "the wall moved behind the open sheet").toBe(parkedAt);
+
+  // ...and it has to give the reader their place back, exactly.
+  await page.locator("#rail-x").click();
+  await expect(page.locator("#rail")).toBeHidden();
+  expect(await page.evaluate(() => window.scrollY)).toBe(before);
+  await page.mouse.wheel(0, 400);
+  await page.waitForFunction(y => window.scrollY > y, before, { timeout: 10000 });
+
+  /* Desktop is deliberately the opposite: the rail is non-modal there, so the wall must
+     stay scrollable with it open or you cannot reach the squares it is covering. */
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#/wall");
+  await page.waitForSelector("#wrack .wchip");
+  /* `goto` to the same hash URL is a same-document navigation, so the scroll position from
+     the mobile half above survives it — and at 1440 the page is short enough that it landed
+     at max scroll, leaving nothing to move and making the assertion below unfalsifiable. */
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.locator(".cell").first().click();
+  await expect(page.locator("#rail")).toBeVisible();
+  const deskBefore = await page.evaluate(() => window.scrollY);
+  await page.mouse.wheel(0, 800);
+  await page.waitForFunction(y => window.scrollY > y, deskBefore, { timeout: 10000 });
+});
