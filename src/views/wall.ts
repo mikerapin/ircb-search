@@ -276,7 +276,7 @@ function openRail(
      <div class="credits">${esc(e.people.join(" · ") || "Panel unknown")}${runtime ? ` · ${esc(runtime)}` : ""}</div>
      ${list === null
         ? `<p class="lead">Loading the comics for this one…</p>`
-        : readAlong(mine, byKey, gap)}
+        : readAlong(mine, byKey, gap, { mode: "list" })}
      <p style="margin:0"><a href="${epLink}">Open the full episode →</a></p>`;
 
   rail.hidden = false;

@@ -79,16 +79,24 @@ function boundary(list: Mention[], i: number): number | null {
   return null;
 }
 
+/**
+ * `mode` overrides the reader's saved layout, for a container that cannot honour it. The
+ * Wall's rail is 392px wide, and `strip` — the default — is a horizontal scroller sized for
+ * a full-width page; in the rail it became a one-card-wide sideways slider inside a slide-out
+ * panel. A layout preference set on the episode page should not follow the reader into a
+ * column that has no room for it.
+ */
 export function readAlong(
   mentions: Mention[],
   byKey: Map<string, EpisodeCore>,
   gap: { episodes: number; indexed: number },
+  opts?: { mode?: RaMode },
 ): string {
   if (!mentions.length) {
     const missing = gap.episodes - gap.indexed;
     return `<p class="lead">Nobody logged the comics for this one. It&rsquo;s one of ${nf(missing)} episode${pl(missing)} we never got around to indexing.</p>`;
   }
-  const mode = raMode();
+  const mode = opts?.mode ?? raMode();
   if (mode === "list") {
     return `<div class="ra-list">${mentions.map((m, i) => raListRow(m, byKey.get(m.epKey), boundary(mentions, i))).join("")}</div>`;
   }

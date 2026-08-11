@@ -804,9 +804,11 @@ body.rail-open #rail{transform:translateY(0)}
   #rail{left:auto; top:0; bottom:0; width:392px; max-height:none; border-top:0; border-left:3px solid var(--ink); transform:translateX(101%)}
   body.rail-open #rail{transform:translateX(0)}
   body.rail-open .scrim{opacity:0; pointer-events:none}
-  /* the rail takes its own column instead of covering the wall */
-  body.rail-open{padding-right:392px}
-  body.rail-open #minibar{right:392px}
+  /* The rail overlays the right edge; it does NOT take a column. Reserving one meant
+     `padding-right` on <body>, so opening a square shifted the header, the wall and the
+     footer sideways — the whole page moved to show one episode. It is non-modal by design
+     (`aria-modal="false"`, and the scrim stays off at this width) so the wall underneath
+     stays live: clicking square after square walks the rail along without closing it. */
 }
 @media(prefers-reduced-motion:reduce){ #rail{transition:none} }
 .railhead{display:flex; align-items:center; gap:10px; background:var(--ink); color:var(--paper); padding:8px 12px; flex:0 0 auto}

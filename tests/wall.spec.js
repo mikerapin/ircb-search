@@ -177,3 +177,64 @@ test("the wall is axe clean on both plates with no console errors", async ({ pag
     await ctx.close();
   }
 });
+
+test("the rail overlays the wall instead of shoving it sideways", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#/wall");
+  await page.waitForSelector("#wrack .wchip");
+
+  const box = sel => page.locator(sel).first().evaluate(el => {
+    const r = el.getBoundingClientRect();
+    return { left: Math.round(r.left), width: Math.round(r.width) };
+  });
+  const before = { head: await box(".dress"), grid: await box("#wall"), foot: await box("footer") };
+
+  await page.locator(".cell").first().click();
+  await expect(page.locator("#rail")).toBeVisible();
+  const after = { head: await box(".dress"), grid: await box("#wall"), foot: await box("footer") };
+
+  /* `padding-right` on <body> reserved a column for the rail, so opening one square moved
+     the header, the wall and the footer. Nothing outside the rail may move. */
+  expect(after).toEqual(before);
+
+  /* Non-modal, and that is the point of the overlay: the wall underneath stays live, so a
+     reader walks square to square and the rail follows without a close in between. The
+     scrim is `inset:0` at z-index 90, so what matters is whether it swallows clicks —
+     `toBeVisible` would not tell us, since Playwright counts an opacity:0 element as
+     visible. Read the computed style, then prove it by clicking through. */
+  expect(await page.locator(".scrim").evaluate(el => {
+    const cs = getComputedStyle(el);
+    return { opacity: cs.opacity, pointerEvents: cs.pointerEvents };
+  })).toEqual({ opacity: "0", pointerEvents: "none" });
+  const second = page.locator(".cell").nth(40);
+  const key = await second.getAttribute("data-cell");
+  await second.click();
+  await expect(page.locator("#rail")).toBeVisible();
+  await expect(page.locator(`#railbody a[href="#/ep/${encodeURIComponent(key)}"]`).first()).toBeVisible();
+});
+
+test("the rail lists its markers rather than sliding them sideways", async ({ page }) => {
+  await page.goto("/#/wall");
+  await page.waitForSelector("#wrack .wchip");
+  // The saved episode-page preference must not follow the reader into a 392px column.
+  await page.evaluate(() => localStorage.setItem("ircb.readalong", "strip"));
+  await page.reload();
+  await page.waitForSelector("#wrack .wchip");
+
+  /* Pick a square with comics logged, or the rail renders the "nobody indexed this" line
+     and there is no layout to judge. */
+  const key = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    return core.episodes.filter(e => e.date && e.mentionCount > 2)
+      .sort((a, b) => b.mentionCount - a.mentionCount)[0].key;
+  });
+  // No CSS.escape here — this runs in node, not the browser. A quoted attribute value
+  // handles the `:` and `|` in a synthetic episode key on its own.
+  await page.locator(`.cell[data-cell="${key}"]`).click();
+  await expect(page.locator("#railbody .ra-list")).toBeVisible();
+  await expect(page.locator("#railbody .ra-strip")).toHaveCount(0);
+
+  // A horizontal scroller in a 392px panel is the thing being fixed.
+  const overflows = await page.locator("#railbody").evaluate(el => el.scrollWidth > el.clientWidth + 1);
+  expect(overflows, "the rail scrolls sideways").toBe(false);
+});
