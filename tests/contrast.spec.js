@@ -23,8 +23,16 @@ const parse = c => {
 };
 const lin = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
 const lum = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-const ratio = (fg, bg) => {
-  const f = parse(fg), g = parse(bg), a = f[3];
+/**
+ * `opacity` is the second way text fades, and for a long time this harness could not see it.
+ * It composited the colour's own alpha and read `cs.color`, which element opacity does not
+ * change — so a rule like `.menu a:hover .sub{opacity:.78}` rendered at 78% of a colour that
+ * was already `color-mix(...75%)` and measured as though it were at full strength. That is
+ * why the standing rule is color-mix over opacity: color-mix puts the fade somewhere this
+ * can measure. Fold it in so the rule is enforced rather than merely written down.
+ */
+const ratio = (fg, bg, opacity = 1) => {
+  const f = parse(fg), g = parse(bg), a = f[3] * opacity;
   const over = [0, 1, 2].map(i => f[i] * a + g[i] * (1 - a));
   const [hi, lo] = [lum(over), lum(g)].sort((x, y) => y - x);
   return +(((hi + 0.05) / (lo + 0.05)).toFixed(2));
@@ -50,7 +58,19 @@ async function sample(page, selector, { hover = false, focus = false } = {}) {
   return el.evaluate(new Function("el", `
     const ground = ${GROUND};
     const cs = getComputedStyle(el);
-    return { fg: cs.color, bg: ground(el), outline: cs.outlineColor, outlineW: cs.outlineWidth };
+    /* Multiply every opacity between the text and the box that paints its ground. Stopping
+       at the ground is deliberate: an opacity further up fades the background with the text
+       and does not reduce the contrast between them. */
+    let opacity = 1;
+    for (let n = el; n; n = n.parentElement) {
+      const s = getComputedStyle(n);
+      const o = Number(s.opacity);
+      if (Number.isFinite(o)) opacity *= o;
+      const b = s.backgroundColor;
+      if (n !== el && b && !/rgba\\(0, 0, 0, 0\\)|transparent/.test(b)) break;
+    }
+    return { fg: cs.color, bg: ground(el), outline: cs.outlineColor, outlineW: cs.outlineWidth,
+             opacity, px: parseFloat(cs.fontSize) };
   `));
 }
 
@@ -62,6 +82,19 @@ const TEXT_CASES = [
   ["facet count (hover)", "/#/search?q=batman", ".facet .n", { hover: true }],
   ["read-along meta (hover)", "/#/search?q=batman", ".panel .credits", { hover: true }],
   ["menu sub-label (hover)", "/", ".menu a .sub", { hover: true }],
+  /* The three element-opacity survivors of Task 5. Each compounds `opacity` on top of a
+     colour that is already mixed toward the ground, and each sits on text under 13px. */
+  ["menu sub-label (rest)", "/", ".menu a .sub", {}],
+  ["masthead micro", "/", ".dress-meta .micro", {}],
+  ["typeahead meta (hover)", "/", ".ta-opt .mt", { hover: true }],
+  /* The read-along row repaints to the fixed yellow on hover and fades three labels with
+     `opacity:.85` — the same shape as the two above, on 10px and 10.5px type. */
+  ["read-along cue (hover)", "/#/search?q=batman", ".ra-row .cue", { hover: true }],
+  /* `.mt` is in the same declaration as these two — same colour, same opacity, same
+     repainted ground — so its ratio is theirs. It is not listed because it does not render
+     on a search card (no segment, and the card states the date once at the top), and a case
+     whose selector matches nothing is a reported failure here, not a silent skip. */
+  ["read-along stamp (hover)", "/#/search?q=batman", ".ra-row .t", { hover: true }],
 ];
 
 for (const plate of ["light", "negative"]) {
@@ -72,13 +105,20 @@ for (const plate of ["light", "negative"]) {
       await page.goto(route);
       await page.waitForSelector("body[data-ready]");
       if (selector.startsWith(".menu")) await page.locator("#navbtn").click();
+      if (selector.startsWith(".ta-opt")) {
+        await page.locator("#q").fill("batman");
+        await page.waitForSelector(".ta-opt", { timeout: 15000 });
+      }
       await page.waitForTimeout(250);
       const s = await sample(page, selector, state);
       // A silent `continue` here meant a case whose selector stopped matching vanished from
       // the sweep and reported success. Rename a class and the check disappears with it.
       if (!s) { bad.push(`${label}: selector "${selector}" matched nothing on ${route}`); continue; }
-      const r = ratio(s.fg, s.bg);
-      if (r < 4.5) bad.push(`${label}: ${r}:1  (${s.fg} on ${s.bg})`);
+      const r = ratio(s.fg, s.bg, s.opacity);
+      if (r < 4.5) {
+        const fade = s.opacity < 1 ? `, opacity ${s.opacity.toFixed(2)}` : "";
+        bad.push(`${label}: ${r}:1  (${s.fg} on ${s.bg}${fade}, ${s.px}px)`);
+      }
     }
     expect(bad, `${plate} plate`).toEqual([]);
   });
