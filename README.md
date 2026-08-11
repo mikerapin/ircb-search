@@ -1,55 +1,94 @@
 # IRCB Search
 
-Episode and comic search tool for [I Read Comic Books](https://ircbpodcast.simplecast.com) — a weekly podcast covering 794+ episodes of comic book discussion.
+A search index for [I Read Comic Books](https://ircbpodcast.com) — every comic the show has
+named, every episode it was named in, and the minute it came up.
 
-Live at **[mikerapin.github.io/ircb-search/](https://mikerapin.github.io/ircb-search/)**
+Live at **[search.ircbpodcast.com](https://search.ircbpodcast.com)**
 
 ## What it does
 
-- Search comic titles, topics, keywords, episode titles, and **show notes** across the full episode archive
-- Comic series are grouped automatically ("Batman" unifies all individual issues)
-- Filter by panelist, guest episodes, or search mode (All / Comics Only / Topics Only)
-- Click trending chips to explore the most-discussed comics of all time or the past 12 months
-- Play episodes inline via the embedded Simplecast player
-- Expand show notes to read episode summaries and discover **related episodes**
-- Browse panelist pages with their episode history and most-discussed comics
+- Search comics, episode titles, show notes, keywords and panelists at once, with a typeahead
+- Results lead with the **episode**: one card per matching episode, with the comics that
+  matched listed inside it
+- **Jump Cut** — a logged minute plays the episode from that minute, in the page. A mini-bar
+  inherits playback when navigation destroys the panel, and the OS lock screen shows what is
+  playing
+- **The Wall** — the whole run as a grid, a square per dated episode, inked by how many comics
+  were logged. Search lights it up; a panelist filters it
+- Per-episode read-alongs, per-series runs and checklists, panelist pages, a full A–Z index,
+  and a panel directory
+- A light and a negative plate, remembered across visits
 
 ## Dev
 
 ```bash
 npm install
-npm run dev        # serves at http://localhost:3000
-npm test           # Playwright tests (77 tests, Chromium)
-npm run check      # TypeScript type-check (tsc --noEmit, no build output)
+npm run dev          # vite dev server
+npm run check        # tsc --noEmit — must be green before every commit
+npm run test:unit    # vitest
+npm test             # Playwright (Chromium), pinned to port 5183
+npm run build        # tsc --noEmit + build-data.mjs + vite build → dist/
+npm run preview      # serve the built bundle
 ```
+
+Judge these by exit code. `rtk` will print reassuring text for a command that exited 1.
 
 ## Architecture
 
-The app is plain ES modules served as-is — no bundler, no transpile step. `index.html`
-loads `js/app.js` as `<script type="module">`; the modules split by responsibility:
+Vite + TypeScript (`strict`), no framework. Views are functions returning HTML strings; a hash
+router swaps them into `#view`.
 
-| File | Responsibility |
+| Path | Responsibility |
 |------|----------------|
-| `js/format.js`    | Pure formatting / escaping / parsing helpers |
-| `js/panelists.js` | Canonical panelist roster + name resolution |
-| `js/state.js`     | Single shared mutable `state` object |
-| `js/render.js`    | HTML builders, card renderers, state templates |
-| `js/actions.js`   | Search execution, embeds, navigation handlers |
-| `js/app.js`       | Boot/data load, derived indexes, event wiring |
+| `src/main.ts`      | Route table, boot, chrome wiring |
+| `src/router.ts`    | Hash routing and link building |
+| `src/shell.ts`     | The persistent dress — header, menu, view swap |
+| `src/data/`        | Loading, shaping, types, the panelist roster |
+| `src/search/`      | Fuse.js ranking, grouping, typeahead |
+| `src/views/`       | One module per route, plus shared components |
+| `src/audio/`       | The single `<audio>` element, segments, Media Session |
+| `src/style/`       | `tokens.css` (the two plates) and `dress.css` |
 
-Type safety comes from `// @ts-check` + JSDoc against `js/types.d.ts` (verified with
-`npm run check`). Fuse.js (`vendor/fuse.min.js`) is loaded as a classic global script.
+**Data is chunked per route.** `core.json` rides the first paint; `mentions.json`,
+`detail.json` and `index.json` are fetched only when a route needs them, and each loader
+memoises the request but never a failure.
+
+**Two rules this codebase keeps re-learning**, both enforced by tests rather than convention:
+
+- Small text fades with `color-mix`, never element `opacity` — `opacity` does not change the
+  computed colour, so a measurement reads it at full strength. `tests/contrast.spec.js` walks
+  hover and focus in both plates and folds opacity in.
+- Comments and copy must not quote data counts. They go stale silently; `scripts/series-report.mjs`
+  prints the current ones.
+
+## Audio, and why it is careful
+
+Playback is native `<audio>` pointed at the published enclosure. Four rules come from
+Blubrry's stats requirements and are asserted in `tests/audio.spec.js` — breaking any of them
+misreports the show's downloads:
+
+1. no `autoplay` attribute; playback only ever follows a gesture
+2. `preload="none"`, so a page visit is not a download
+3. seek with `currentTime` — never append a parameter to the enclosure URL
+4. never proxy or rehost the media
+
+The audio specs serve generated silence and assert on the URL requested. A suite that really
+streamed the enclosure would inflate the very numbers it exists to protect.
 
 ## Update data
 
-Data is exported from [sshugars/ircb](https://github.com/sshugars/ircb) via a Python script:
+Source data comes from [sshugars/ircb](https://github.com/sshugars/ircb):
 
 ```bash
-npm run export     # runs export_data.py → data/comics.json + data/episodes.json
+npm run export       # export_data.py → data/comics.json + data/episodes.json
+npm run build        # → public/d/*.json, the chunks the app actually loads
 ```
 
-Or trigger the GitHub Actions workflow manually (`workflow_dispatch` on `update-data.yml`). It runs automatically every Thursday at 3am UTC after the Wednesday episode drops.
+`update-data.yml` runs the export every Thursday at 3am UTC, after the Wednesday episode
+drops, and commits the result.
 
 ## Deploy
 
-Static site — no build step. GitHub Actions pushes updated data files; GitHub Pages serves `index.html` directly from `main`.
+`deploy.yml` builds on push to `main` and publishes `dist/` to GitHub Pages. The job asserts
+`dist/CNAME` and `dist/d/core.json` exist before publishing — an artifact deploy carries no
+repo-root `CNAME`, so it lives in `public/` and the custom domain would drop without it.

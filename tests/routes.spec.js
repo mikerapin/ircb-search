@@ -122,3 +122,28 @@ test("no route leaks pre-launch process language", async ({ page }) => {
    tells them apart. Each view's own spec asserts its figures against core.json instead —
    about.spec (all six stats), panel.spec (roster + guests = people), index.spec (rows =
    series), home.spec (the Statement tiles). */
+
+test("production is indexable — nothing tells a crawler to go away", async ({ page }) => {
+  /* The prototype was served link-only from Cloudflare Pages behind a deny-all robots.txt,
+     a `noindex` meta and an X-Robots-Tag. None of that ever lived in this repo — it is in
+     the pitch-hosting folder — but shipping any of it here would quietly delist a site that
+     is supposed to be found, and nothing else would notice. */
+  const res = await page.request.get("/robots.txt");
+  if (res.ok()) {
+    const body = await res.text();
+    // A robots.txt is fine; one that disallows the whole site is not.
+    expect(body, "robots.txt disallows the site").not.toMatch(/^\s*Disallow:\s*\/\s*$/im);
+  }
+  expect(res.headers()["x-robots-tag"] ?? "").not.toMatch(/noindex/i);
+
+  const routes = routeList(await sampleKeys(page)).map(([, path]) => path);
+  const blocked = [];
+  for (const path of routes) {
+    await gotoRoute(page, path);
+    const robots = await page.evaluate(() =>
+      [...document.querySelectorAll('meta[name="robots"], meta[name="googlebot"]')]
+        .map(m => m.getAttribute("content") ?? "").join(" "));
+    if (/noindex|nofollow|none/i.test(robots)) blocked.push(`${path} → "${robots}"`);
+  }
+  expect(blocked).toEqual([]);
+});
