@@ -73,6 +73,11 @@ async function axeSweep(page, routes) {
 }
 
 test("every route is axe clean and free of console errors", async ({ page }) => {
+  /* Genuinely long: axe analyses 19 routes, twice over for the two plates. ~15s on this
+     machine and past the 30s default on a GitHub runner, where both of these timed out the
+     first time CI actually ran the e2e suite. Slow because of what it covers, not because
+     anything is wrong — say so rather than raising the default for every test. */
+  test.slow();
   const routes = routeList(await sampleKeys(page));
   const errors = [];
   page.on("pageerror", e => errors.push(String(e)));
@@ -81,6 +86,11 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
 });
 
 test("every route is axe clean on the negative plate too", async ({ page }) => {
+  /* Genuinely long: axe analyses 19 routes, twice over for the two plates. ~15s on this
+     machine and past the 30s default on a GitHub runner, where both of these timed out the
+     first time CI actually ran the e2e suite. Slow because of what it covers, not because
+     anything is wrong — say so rather than raising the default for every test. */
+  test.slow();
   const routes = routeList(await sampleKeys(page));
   // The inline <head> script reads this before first paint, so every navigation below
   // renders dark from the start rather than flipping after the axe run.
