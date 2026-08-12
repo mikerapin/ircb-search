@@ -1,0 +1,9060 @@
+{
+ "1963": {
+  "type": "series",
+  "episodes": 1,
+  "series": "1963"
+ },
+ "2023": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "#1 comics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "#lorddaddy": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "007": {
+  "type": "series",
+  "episodes": 2,
+  "series": "007"
+ },
+ "123 go publications": {
+  "type": "publisher",
+  "episodes": 1
+ },
+ "13th moon": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "1990s": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "2000ad": {
+  "type": "publisher",
+  "episodes": 7
+ },
+ "2000s": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "3m": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "4 kids walk into a bank": {
+  "type": "series",
+  "episodes": 1,
+  "series": "4 Kids Walk Into a Bank"
+ },
+ "83 days in mariupol: a war diary": {
+  "type": "series",
+  "episodes": 1,
+  "series": "83 Days in Mariupol: A War Diary"
+ },
+ "90s comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "a better batmobile": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "a boxer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Boxer"
+ },
+ "a christmas for shacktown": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Christmas For Shacktown"
+ },
+ "a city inside": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A City Inside"
+ },
+ "a condition called love": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Condition Called Love"
+ },
+ "a dark interlude": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Dark Interlude"
+ },
+ "a drifting life": {
+  "type": "series",
+  "episodes": 2,
+  "series": "A Drifting Life"
+ },
+ "a flag to fly": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Flag To Fly"
+ },
+ "a frog in the fall": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Frog in the Fall"
+ },
+ "a girl called echo": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "a neverending adventure": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "a righteous thirst for vengeance": {
+  "type": "series",
+  "episodes": 3,
+  "series": "A Righteous Thirst for Vengeance"
+ },
+ "a star called the sun": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Star Called the Sun"
+ },
+ "a strange world: a book of poorly drawn lines": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "a town called terror": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Town Called Terror"
+ },
+ "a very dc valentine's special": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Very DC Valentine’s Special"
+ },
+ "a wizard of earthsea": {
+  "type": "series",
+  "episodes": 1,
+  "series": "A Wizard of Earthsea"
+ },
+ "a.c. ironside": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "abbot: 1979": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "absolute batman": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Absolute Batman"
+ },
+ "absolute green arrow": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Absolute Green Arrow"
+ },
+ "absolute green lantern": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Absolute Green Lantern"
+ },
+ "absolute martian manhunter": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Absolute Martian Manhunter"
+ },
+ "absolute wonder woman": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Absolute Wonder Woman"
+ },
+ "accessibility": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "accidental czar: the life and lies of vladimir putin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Accidental Czar: The Life and Lies of Vladimir Putin"
+ },
+ "action comics": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Action Comics"
+ },
+ "action figures": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "action in comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "adam ferris": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "adam smit": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "adaptations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "adapted comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "adrift on the painted sea": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "adventure comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "aeon 6": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "after god": {
+  "type": "series",
+  "episodes": 1,
+  "series": "After God"
+ },
+ "age of rebellion": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Age of Rebellion"
+ },
+ "age of rebellion heroes and villains": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "age of resistance": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Age of Resistance"
+ },
+ "age of x": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Age of X"
+ },
+ "age of x-man": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "age of x-man: next gen": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "age of x-man: the marvelous x-men": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Age of X-Man: The Marvelous X-Men"
+ },
+ "age of x-man: the x-tremists": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Age Of X-Man: The X-Tremists"
+ },
+ "agents of slam": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Agents of Slam"
+ },
+ "ahoy comics": {
+  "type": "publisher",
+  "episodes": 1
+ },
+ "al ewing": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "ala": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "alan moore": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "alex de campi": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "alex di campi": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "alexis ziritt": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "alice ever after": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alice Ever After"
+ },
+ "alien": {
+  "type": "series",
+  "episodes": 7,
+  "series": "Alien"
+ },
+ "alien 3": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "alien: black white and blood": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alien: Black, White, and Blood"
+ },
+ "alien: icarus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alien: Icarus"
+ },
+ "alien: paradiso": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alien: Paradiso"
+ },
+ "alienated": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alienated"
+ },
+ "aliens": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Aliens"
+ },
+ "aliens dead orbit": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Aliens: Dead Orbit"
+ },
+ "aliens franchise": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "aliens rescue": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Aliens Rescue"
+ },
+ "aliens vs. avengers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Aliens vs. Avengers"
+ },
+ "all of the house of x": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "all star superman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "All-Star Superman"
+ },
+ "all talk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "All Talk"
+ },
+ "all-star superman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "All-Star Superman"
+ },
+ "allyship": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "alpha flight": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alpha Flight"
+ },
+ "alphabet squadron": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alphabet Squadron"
+ },
+ "altamont": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Altamont"
+ },
+ "am i actually the strongest": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Am I Actually The Strongest?"
+ },
+ "amazing spider-man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Amazing Spider-Man"
+ },
+ "american caper": {
+  "type": "series",
+  "episodes": 1,
+  "series": "American Caper"
+ },
+ "american library association": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "american nature presents": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "amethyst": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "amie wright": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "anaïs nin: a sea of lies": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Anaïs Nin: A Sea of Lies"
+ },
+ "anakin skywalker": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "and we love you": {
+  "type": "series",
+  "episodes": 1,
+  "series": "And We Love You"
+ },
+ "android milk": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "andworld design": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "angel and spike": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Angel and Spike"
+ },
+ "animal hospital": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "animal man": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Animal Man"
+ },
+ "animal man (1988) #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Animal Man"
+ },
+ "animals": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "animated comic books": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "anime": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "anniversary": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "anniversary comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "anniversary episode": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "annotated comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "annual": {
+  "type": "topic",
+  "episodes": 5
+ },
+ "ant-man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ant Man"
+ },
+ "anthologies": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "anthology": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "anthony ramos": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "anthropomorphized characters": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "apocalypse comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "aquaman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Aquaman"
+ },
+ "aquaman/jabberjaw": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "arca": {
+  "type": "series",
+  "episodes": 1,
+  "series": "ARCA"
+ },
+ "arcadia": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Arcadia"
+ },
+ "archaic press": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "archie comics": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Archie Comics"
+ },
+ "archie meets riverdale": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Archie Meets Riverdale"
+ },
+ "archie vs predator": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Archie vs Predator"
+ },
+ "archie vs. predator": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Archie vs Predator"
+ },
+ "are you listening": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Are You Listening"
+ },
+ "ari gross": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "arkham asylum": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "armorclads": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Armorclads"
+ },
+ "armstrong and the vault of spirits": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Armstrong and the Vault of Spirits"
+ },
+ "arrowkey studio": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "art": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "art book": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "art brut": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Art Brut"
+ },
+ "art media": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ash's cabin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ash’s Cabin"
+ },
+ "asia simone": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "assassination classroom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Assassination Classroom"
+ },
+ "assassinistas": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Assassinistas"
+ },
+ "assorted crisis events": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Assorted Crisis Events"
+ },
+ "aster of pan": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Aster of Pan"
+ },
+ "aubrey lyn jeppson": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "aubrey lyn jepson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "austin danger podcast": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "austindangerpod": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "autumn": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "autumnal comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "avengers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Avengers"
+ },
+ "avengers inc": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Avengers Inc."
+ },
+ "avengers vs x-men": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "avery hill publishing": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "avx": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ax-weilder jon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "axe cop": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Axe Cop"
+ },
+ "axe judgement day": {
+  "type": "series",
+  "episodes": 1,
+  "series": "AXE Judgement Day"
+ },
+ "baby blue": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Baby Blue"
+ },
+ "back to school": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "backlog comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "backlog of comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "backstagers": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "bad girls": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bad Girls"
+ },
+ "bad karmad": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bande dessinee": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "banned books": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "banned comic books": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "barbaric: axe to grind": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Barbaric: Axe to Grind"
+ },
+ "bargain bin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "baseball": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "batfam": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "batgirl": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "batman": {
+  "type": "series",
+  "episodes": 23,
+  "series": "Batman"
+ },
+ "batman / deadpool": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman / Deadpool"
+ },
+ "batman / dylan dog": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman/Dylan Dog"
+ },
+ "batman & robin: year one": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman & Robin Year One"
+ },
+ "batman & scooby-doo mysteries": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman & Scooby-Doo Mysteries"
+ },
+ "batman annual #12": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Annual"
+ },
+ "batman black and white": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Black and White"
+ },
+ "batman catwoman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Catwoman"
+ },
+ "batman returns": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Returns"
+ },
+ "batman the barbarian": {
+  "type": "series",
+  "episodes": 1,
+  "series": "BATMAN THE BARBARIAN"
+ },
+ "batman the detective": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Batman The Detective"
+ },
+ "batman the long halloween": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: The Long Halloween"
+ },
+ "batman universe": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Universe"
+ },
+ "batman year one": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Year One"
+ },
+ "batman: city of madness": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: City of Madness"
+ },
+ "batman: off world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: Off-World"
+ },
+ "batman: one bad day": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "batman: one bad day - ra's al ghul": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: One Bad Day: Ra's Al Ghul"
+ },
+ "batman: one dark knight": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: One Dark Knight"
+ },
+ "batman: secret files": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: Secret Files"
+ },
+ "batman/catwoman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman Catwoman"
+ },
+ "batman/spawn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman/Spawn"
+ },
+ "batman/superman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman/Superman"
+ },
+ "batmansplaining": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "batmobile": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "battletech": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "batwoman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batwoman"
+ },
+ "beast of boriken": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "beastars": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beastars"
+ },
+ "beastlands": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "beat it rufus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beat It, Rufus"
+ },
+ "beautiful darkness": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beautiful Darkness"
+ },
+ "becky cloonan": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "beetle and the hollowbones": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beetle and the Hollowbones"
+ },
+ "bellboy and the bprd": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bellboy: the bones of giants": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "below ambition": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Below Ambition"
+ },
+ "ben saunders": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "beneath the trees where nobody sees: rites of spring": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beneath the Trees Where Nobody Sees: Rites of Spring"
+ },
+ "beowulf": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bes of 2021": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "best of": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "best of 2000ad": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "best of 2019": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "best of 2020": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "best of 2023": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "best of 2025": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "beta ray bill": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beta Ray Bill"
+ },
+ "betty": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "betty & veronica": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Betty & Veronica"
+ },
+ "betty and veronica": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Betty and Veronica"
+ },
+ "big 2 comics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "big ass sword": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Big Ass Sword"
+ },
+ "bijhan agha": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "biography": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bionicles": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "birds of prey": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Birds of Prey"
+ },
+ "bitcoin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bites of terror": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bites of Terror!"
+ },
+ "bitter root": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Bitter Root"
+ },
+ "bl metamorphosis": {
+  "type": "series",
+  "episodes": 1,
+  "series": "BL Metamorphosis"
+ },
+ "black": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black"
+ },
+ "black and white": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "black badge": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Badge"
+ },
+ "black canary": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "black cat": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Cat"
+ },
+ "black cloak": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Black Cloak"
+ },
+ "black cloak #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Cloak"
+ },
+ "black clover": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Black Clover"
+ },
+ "black hammer": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Black Hammer"
+ },
+ "black hammer reborn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Hammer Reborn"
+ },
+ "black magick": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Magick"
+ },
+ "black mask": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "black monday murders": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Black Monday Murders"
+ },
+ "black punk": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "black sheep": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Sheep"
+ },
+ "black stars above": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Black Stars Above"
+ },
+ "black white and green": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "black widow": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Black Widow"
+ },
+ "blacking out": {
+  "type": "series",
+  "episodes": 1,
+  "series": "BLACKING OUT"
+ },
+ "blade": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blade"
+ },
+ "blade #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blade"
+ },
+ "blade of the immortal": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "blankets": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blankets"
+ },
+ "bleeding hearts": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bleeding Hearts"
+ },
+ "blink and you'll miss it": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blink and You’ll Miss It"
+ },
+ "blockbuster movies": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "blood & thunder": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blood & Thunder"
+ },
+ "blood of the virgin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blood of the Virgin"
+ },
+ "blood stained teeth": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Blood Stained Teeth"
+ },
+ "bloodborne": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bloodborne"
+ },
+ "bloodhunt": {
+  "type": "series",
+  "episodes": 1,
+  "series": "BloodHunt"
+ },
+ "bloodshot": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bloodshot"
+ },
+ "bloodshot reborn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bloodshot Reborn"
+ },
+ "blossoms 666": {
+  "type": "series",
+  "episodes": 1,
+  "series": "BLOSSOMS 666"
+ },
+ "blow away": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "blue book": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blue Book"
+ },
+ "blue box": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blue Box"
+ },
+ "blurry": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Blurry"
+ },
+ "bog myrtle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bog Myrtle"
+ },
+ "bone": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bone"
+ },
+ "bone orchard mythos": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "bonus episode": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bonus minisode": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "book bans": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "book club": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "book vs book": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "boom studios": {
+  "type": "publisher",
+  "episodes": 4
+ },
+ "booster gold": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Booster Gold"
+ },
+ "box brown": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "boy i love you": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Boy I Love You"
+ },
+ "brandon graham": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "brandon ingram": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "brazen: rebel ladies who rocked the world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Brazen: Rebel Ladies Who Rocked the World"
+ },
+ "brian": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "brian lee o'malley": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "brian mccray": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "brian michael bendis": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "briar": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Briar"
+ },
+ "bring me the head of susan lomond": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bring Me The Head of Susan Lomond"
+ },
+ "britannia: lost eagles of rome": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Britannia: Lost Eagles of Rome"
+ },
+ "british ice": {
+  "type": "series",
+  "episodes": 1,
+  "series": "British Ice"
+ },
+ "bryan lee o'malley": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "brzrkr": {
+  "type": "series",
+  "episodes": 2,
+  "series": "BRZRKR"
+ },
+ "bubble": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Bubble"
+ },
+ "buckhead": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Buckhead"
+ },
+ "buffy the vampire slayer": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Buffy the Vampire Slayer"
+ },
+ "bug ego": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "bug wars": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Bug Wars"
+ },
+ "bumblebee": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "burn man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Burn Man"
+ },
+ "burn the witch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Burn The Witch"
+ },
+ "buster moody": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "c": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "c2e2": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "cab": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "caleb goellner": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "calvin and hobbes": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Calvin and Hobbes"
+ },
+ "camp spirit": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Camp Spirit"
+ },
+ "candybar antlerboy": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "cannon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cannon"
+ },
+ "captain america": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Captain America"
+ },
+ "captain carter: woman out of time": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Captain Carter: Woman Out of Time"
+ },
+ "captain henry and the graveyard of time": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Captain Henry and the Graveyard of Time"
+ },
+ "captain marvel": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Captain Marvel"
+ },
+ "captain planet": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Captain Planet"
+ },
+ "carlos garzon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "carnage": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "carnet de voyage": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Carnet de Voyage"
+ },
+ "carola borelli": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "caroline cash": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "castle full of blackbirds": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Castle Full of Blackbirds"
+ },
+ "castle in the stars": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Castle in the Stars"
+ },
+ "cat massage therapy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cat Massage Therapy"
+ },
+ "cat's eye": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cat’s Eye"
+ },
+ "catboy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Catboy"
+ },
+ "catwoman": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Catwoman"
+ },
+ "catwoman: lonely city": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Catwoman: Lonely City"
+ },
+ "cavan scott": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "cave carson has an interstellar eye": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cave Carson Has an Interstellar Eye"
+ },
+ "celebrated summer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Celebrated Summer"
+ },
+ "chahu": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "chainsaw man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Chainsaw Man"
+ },
+ "charles shulz": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "charlie brown": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "charlie chan hock chye": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Charlie Chan Hock Chye"
+ },
+ "cheer up": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "cheetah & chesire rob the justice league": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "cheetos": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cheez-its": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "chef's kiss": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Chef's Kiss"
+ },
+ "chefel peterson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "chew": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Chew"
+ },
+ "child star": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Child Star"
+ },
+ "children of the atom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Children of the Atom"
+ },
+ "chilling adventures of salem": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Chilling Adventures of Salem"
+ },
+ "chip mosher": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "chip zdarsky": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "chris condon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "chris o'hallaran": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "chris o'halloran": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "chris o’halloran": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "chris sebela": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "chris solis": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "christian ward": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "christmas": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "christopher sebela": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Christopher Sebela"
+ },
+ "chromatic fantasy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Chromatic Fantasy"
+ },
+ "chronophage": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Chronophage"
+ },
+ "city hunter": {
+  "type": "series",
+  "episodes": 1,
+  "series": "City Hunter"
+ },
+ "ck carpenter": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "ck lawson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "claire connelly": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "class act": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "clementine": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Clementine"
+ },
+ "cliffhangers": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "clue": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Clue"
+ },
+ "clyde fans": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Clyde Fans"
+ },
+ "coda": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Coda"
+ },
+ "cogman": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "coimics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cold iron": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cold Iron"
+ },
+ "collections": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "colonel weird: cosmagog": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Colonel Weird: Cosmagog"
+ },
+ "coloring": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "coloring comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "come into me": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Come Into Me"
+ },
+ "comic adapatations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic adaptations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book adaptation": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book adaptations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book annoyances": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book artist": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book bands": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book collecting": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book comfort food": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book covers": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book dads": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book discussion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book education": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book endings": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book letters": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book logo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book movie": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comic book movies": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comic book recommendations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic book review": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comic book reviews": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comic book time machine": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "comic booksc": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic buying guide": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic collecting": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "comic convention": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic conventions": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comic covers": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic discussion": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comic endings": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic firsts": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic friends": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic gifts": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic grievances": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic logo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic recommendations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic resolutions": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic strips": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic tea pairing": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic vbooks": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic voices": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comic writing": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comics books": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comics distribution": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comics history": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "comics marketing": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comics media": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comix": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "comixology": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "comixology originals": {
+  "type": "publisher",
+  "episodes": 3
+ },
+ "commissioned episode": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "conquest movie": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "constantine": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "convert": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Convert"
+ },
+ "cook korean": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "cook like your ancestors": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cook Like Your Ancestors"
+ },
+ "cooper anderson": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "corto maltese": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "cosmoknights": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cosmoknights"
+ },
+ "cosplayers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cosplayers"
+ },
+ "cover art": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "covid chronicles: a comics anthology": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Covid Chronicles: A Comics Anthology"
+ },
+ "cozy comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "crater city": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Crater City"
+ },
+ "creating comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "crime comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "criminal": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Criminal"
+ },
+ "crimson fall": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "crisis zone": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Crisis Zone"
+ },
+ "crocodile baron": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Crocodile Baron"
+ },
+ "cross game": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "crossover": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Crossover"
+ },
+ "crossover events": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "crowded": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Crowded"
+ },
+ "crownsville": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Crownsville"
+ },
+ "cruel kingdom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cruel Kingdom"
+ },
+ "cruel universe": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cruel Universe"
+ },
+ "crumble": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cryomemory": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cryomemory"
+ },
+ "crypt of shadows": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Crypt of Shadows"
+ },
+ "cryptid club": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cryptid Club"
+ },
+ "cryptids": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "crypto": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cryptocurrency": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cuddlesandrage": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cullen bunn": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "current events": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "curse words": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Curse Words"
+ },
+ "cutting season": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Cutting Season"
+ },
+ "cw": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "cyberpunk": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "d&d": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dai dark": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dai Dark"
+ },
+ "damian wayne": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dan jurgens": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "danadan": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dandadan": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dandadan"
+ },
+ "danger and other unknown risks": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Danger and Other Unknown Risks"
+ },
+ "danger street": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Danger Street"
+ },
+ "daniel clowes": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "daniel vozzo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "daniel warren johnson": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "dante's inferno": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dante's Inferno"
+ },
+ "daredevil": {
+  "type": "series",
+  "episodes": 7,
+  "series": "Daredevil"
+ },
+ "dark crisis": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dark Crisis"
+ },
+ "dark droids": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dark horse": {
+  "type": "publisher",
+  "episodes": 5
+ },
+ "dark knights of steel": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dark Knights of Steel"
+ },
+ "dark patterns": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dark regards": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dark Regards"
+ },
+ "dark souls": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dark spaces: wildfire": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dark Spaces: Wildfire"
+ },
+ "darkhold": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "darkhorse": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "darling": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Darling"
+ },
+ "darryl openworld": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Darryl Openworld"
+ },
+ "darth maul": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Darth Maul"
+ },
+ "darth maul: black white red": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "darth vader": {
+  "type": "series",
+  "episodes": 7,
+  "series": "Darth Vader"
+ },
+ "darwyn cooke": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dave baker": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "david aja": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "david lafuente": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "david pepose": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "dawnrunner": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Dawnrunner"
+ },
+ "daytripper": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Daytripper"
+ },
+ "dc comics": {
+  "type": "publisher",
+  "episodes": 9
+ },
+ "dc first issue special": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DC First Issue Special"
+ },
+ "dc ko": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dc love is a battlefield": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DC Love is a Battlefield"
+ },
+ "dc manga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dc mech": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DC Mech"
+ },
+ "dc price": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dc universe": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dc: the doomed and the damned": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DC: The Doomed and the Damned"
+ },
+ "dc: the new frontier": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DC: The New Frontier"
+ },
+ "dceased": {
+  "type": "series",
+  "episodes": 3,
+  "series": "DCeased"
+ },
+ "dceased: dead planet": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DCeased Dead Planet"
+ },
+ "dceased: unkillables": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DCeased: Unkillables"
+ },
+ "dceased: war of the undead gods": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DCeased: War of the Undead Gods"
+ },
+ "dcu": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dead dog's bite": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dead Dog’s Bite"
+ },
+ "dead dogs bite": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dead Dog’s Bite"
+ },
+ "dead x-menf": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "deadly class": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Deadly Class"
+ },
+ "deadman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Deadman"
+ },
+ "deadpool": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "deadpool samurai": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Deadpool: Samurai"
+ },
+ "dear body": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dear Body"
+ },
+ "death": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "death defying devil": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DEATH DEFYING DEVIL"
+ },
+ "death fight forever": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Death Fight Forever"
+ },
+ "death of the author": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "death of the silver surfer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Death of the Silver Surfer"
+ },
+ "death of the venomverse": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Death of the Venomverse"
+ },
+ "death transit tanager": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Death Transit Tanager"
+ },
+ "deathbed": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Deathbed"
+ },
+ "decorum": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Decorum"
+ },
+ "deep cuts": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Deep Cuts"
+ },
+ "deep roots": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Deep Roots"
+ },
+ "defenders": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Defenders"
+ },
+ "delicious in dungeon": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Delicious in Dungeon"
+ },
+ "demon slayer": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "demon summoner gash gash": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Demon Summoner Gash Gash"
+ },
+ "deniz camp": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "department of truth": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Department of Truth"
+ },
+ "derf backderf": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "descender": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Descender"
+ },
+ "destination kill": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "destroy all monsters": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Destroy All Monsters"
+ },
+ "detective comics": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Detective Comics"
+ },
+ "diamond previews": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dick grayson": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "did you hear what eddie gein done": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Did You Hear What Eddie Gein Done?"
+ },
+ "did you hear what eddie gein done?": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Did You Hear What Eddie Gein Done?"
+ },
+ "die": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Die"
+ },
+ "die comic": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "die: loaded": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DIE: Loaded"
+ },
+ "digital comic books": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "digital comics": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "dinosaur sanctuary": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dinosaur Sanctuary"
+ },
+ "director's cut": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "disability pride": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dismay avenue": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Dismay Avenue"
+ },
+ "dismay comics": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "disney": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "disney manga": {
+  "type": "publisher",
+  "episodes": 1
+ },
+ "disney manga: stitch and the samurai": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "disney movies": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "disney+": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "djeliya": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Djeliya"
+ },
+ "dnd": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "do a powerbomb": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Do A Powerbomb"
+ },
+ "doc ock": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "doctgor aphra": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "doctor doom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Doctor Doom"
+ },
+ "doctor octopus": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "doctor strange": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "documentary": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "dog days": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dog Days"
+ },
+ "dogecoin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dogsred": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dominic archer": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "domino": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Domino"
+ },
+ "donny cates": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "doom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "DOOM"
+ },
+ "doom patrol": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Doom Patrol"
+ },
+ "doug braithwaite": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "doughnuts under a crescent moon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dr strange": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "dr. aphra": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dr. octopus": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dr. werthless": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dr. Werthless"
+ },
+ "dracula": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dragon ball": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dragon Ball"
+ },
+ "dragon ball super": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dragon Ball Super"
+ },
+ "dragon ball z": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dragon Ball Z"
+ },
+ "dragonball": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "drawn & quarterly": {
+  "type": "publisher",
+  "episodes": 1
+ },
+ "dread the halls": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dread the Halls"
+ },
+ "drome": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Drome"
+ },
+ "dtar wars": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ducks: two years in the oil sands": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ducks: Two Years in the Oil Sands"
+ },
+ "dumb comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dune": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dungeon cralwer carl": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dust to dust": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Dust to Dust"
+ },
+ "dynamite comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "dystopian comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "eartha": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Eartha"
+ },
+ "earthdivers": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Earthdivers"
+ },
+ "east of west": {
+  "type": "series",
+  "episodes": 2,
+  "series": "East of West"
+ },
+ "ec comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ec outlaw showdown": {
+  "type": "series",
+  "episodes": 1,
+  "series": "EC Outlaw Showdown"
+ },
+ "eccc": {
+  "type": "topic",
+  "episodes": 5
+ },
+ "ed brubaker": {
+  "type": "creator",
+  "episodes": 3
+ },
+ "eddie brock": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "edgar wright": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "education": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "eerie archives": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Eerie Archives"
+ },
+ "eisner awards": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "el deafo": {
+  "type": "series",
+  "episodes": 1,
+  "series": "El Deafo"
+ },
+ "el torres": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "elegant yokai apartment life": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Elegant Yokai Apartment Life"
+ },
+ "elfquest": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Elfquest"
+ },
+ "elsa charretier": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "embroideries": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Embroideries"
+ },
+ "emerald city comic con": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "emily pearson": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "end of life": {
+  "type": "series",
+  "episodes": 1,
+  "series": "End of Life"
+ },
+ "endeavour": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Endeavour"
+ },
+ "endings": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "epitaphs from the abyss": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Epitaphs from the Abyss"
+ },
+ "eric rezsnyak": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "eric stephenson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "erica schultz": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "essential judge death": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "essential rogue trooper": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Essential Rogue Trooper"
+ },
+ "essex city": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "eternals": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Eternals"
+ },
+ "eternity girl": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Eternity Girl"
+ },
+ "ethan nicolle": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ether": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ether"
+ },
+ "ethereum": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ethics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "etrigan the demon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "euthanauts": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Euthanauts"
+ },
+ "everyday hero machine boy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Everyday Hero Machine Boy"
+ },
+ "everyone loves a jewel thief": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Everyone Loves A Jewel Thief"
+ },
+ "ex utero": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ex Utero"
+ },
+ "excellence": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Excellence"
+ },
+ "exclusive series": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "exquisite corpses": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Exquisite Corpses"
+ },
+ "extra life": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "extremity": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Extremity"
+ },
+ "f": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fables": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Fables"
+ },
+ "factory summers": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Factory Summers"
+ },
+ "faith erin hicks": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "falcon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fall through": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fall Through"
+ },
+ "fall vibes": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fallen world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fallen World"
+ },
+ "family tree": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "fan fiction": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fangs": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fangs"
+ },
+ "fantagraphics": {
+  "type": "publisher",
+  "episodes": 7
+ },
+ "fantastic four": {
+  "type": "series",
+  "episodes": 9,
+  "series": "Fantastic Four"
+ },
+ "fantasy comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "far sector": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Far Sector"
+ },
+ "farel dalrymple": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "farmhand": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Farmhand"
+ },
+ "fashion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "faster": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Faster"
+ },
+ "fatale": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fatale"
+ },
+ "father's day": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fcbd": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "fear case": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fear Case"
+ },
+ "fela kuti": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "feminism": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fence": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Fence"
+ },
+ "feral": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Feral"
+ },
+ "ff": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fictionalitea": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "final crisis": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Final Crisis"
+ },
+ "final cut": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Final Cut"
+ },
+ "final episode": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "final issues": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "finger guns": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Finger Guns"
+ },
+ "fiona staples": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "fire & stone": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fire & Stone"
+ },
+ "fire force": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fire Force"
+ },
+ "fire punch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fire Punch"
+ },
+ "firefly": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Firefly"
+ },
+ "firefly new sheriff in the verse": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Firefly New Sheriff in the Verse"
+ },
+ "firefly: the sting": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Firefly: The Sting"
+ },
+ "flamer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Flamer"
+ },
+ "flight": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Flight"
+ },
+ "flung out of space": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "flux house": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fml": {
+  "type": "series",
+  "episodes": 2,
+  "series": "FML"
+ },
+ "food": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "food comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "food manga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fool knight": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "footnotes in gaza": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Footnotes in Gaza"
+ },
+ "for molly": {
+  "type": "series",
+  "episodes": 1,
+  "series": "For Molly"
+ },
+ "forever evil": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Forever Evil"
+ },
+ "fox maidens": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Fox Maidens"
+ },
+ "franco-belgian comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "frank herbert's dune": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "frankenstein": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "frankenstein: agent of shade": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Frankenstein: Agent of SHADE"
+ },
+ "frankenstein: the unconquered": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Frankenstein: The Unconquered"
+ },
+ "frazer irving": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "fred c. stresing": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "freddie the fix": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Freddie The Fix"
+ },
+ "fredric wertham": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "free for all": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Free For All"
+ },
+ "friday": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Friday"
+ },
+ "friday comic": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "friday: book 2": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Friday"
+ },
+ "frieren: beyond journey's end": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Frieren: Beyond Journey's End"
+ },
+ "frizzy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Frizzy"
+ },
+ "from under mountains": {
+  "type": "series",
+  "episodes": 1,
+  "series": "From Under Mountains"
+ },
+ "frontier": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Frontier"
+ },
+ "fun home": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Fun Home"
+ },
+ "future shock": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "future state: dark detective": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Future State: Dark Detective"
+ },
+ "future state: immortal wonder woman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Future State: Immortal Wonder Woman"
+ },
+ "g.i. joe": {
+  "type": "series",
+  "episodes": 1,
+  "series": "G.I. Joe"
+ },
+ "gab contreras": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gabe cheng": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "gaëtan brizzi": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "galactus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Galactus"
+ },
+ "gambit": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Gambit"
+ },
+ "gamma flight": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Gamma Flight"
+ },
+ "garfield": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "gargoyles": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "gender queer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Gender Queer"
+ },
+ "genderqueer": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "genius isolated: the life and art of alex toth": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Genius, Isolated: The Life and Art of Alex Toth"
+ },
+ "geoff johns": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ghost cage": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ghost Cage"
+ },
+ "ghost world": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Ghost World"
+ },
+ "ghostbox": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ghostbox"
+ },
+ "gi joe": {
+  "type": "series",
+  "episodes": 1,
+  "series": "GI Joe"
+ },
+ "giant days": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Giant Days"
+ },
+ "gideon falls": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Gideon Falls"
+ },
+ "giedon falls": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gift for a ghost": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gift guide": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gimmicks": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ginseng roots": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ginseng Roots"
+ },
+ "girl comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "globalcomix": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "gloomhaven": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "gncrt": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "go-bots": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Go-Bots"
+ },
+ "god hates astronauts": {
+  "type": "series",
+  "episodes": 2,
+  "series": "God Hates Astronauts"
+ },
+ "godshaper": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Godshaper"
+ },
+ "godzilla": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "godzilla vs america: boston": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "godzilla vs america: chicago": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Godzilla vs America: Chicago"
+ },
+ "godzilla’s monsterpiece theatre": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Godzilla’s Monsterpiece Theatre"
+ },
+ "gohan": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "going to the chapel": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Going to the Chapel"
+ },
+ "goku": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "golden gold": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Golden Gold"
+ },
+ "golden rage": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Golden Rage"
+ },
+ "good ol' neon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "good old neon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "good ole neon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "goodreads": {
+  "type": "topic",
+  "episodes": 49
+ },
+ "gotham academy": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "gotham city year one": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Gotham City Year One"
+ },
+ "grant morrison": {
+  "type": "creator",
+  "episodes": 5
+ },
+ "graphic novels and comics round table": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "grass kings": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Grass Kings"
+ },
+ "gravity tide": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Gravity Tide"
+ },
+ "great chicago firw": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "greatly they dared": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Greatly They Dared"
+ },
+ "green arrow": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Green Arrow"
+ },
+ "green lantern": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Green Lantern"
+ },
+ "green river killer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Green River Killer"
+ },
+ "greg & fake": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "greg rucka": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "grim": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Grim"
+ },
+ "grimes": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "groupies": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Groupies"
+ },
+ "grrl scouts": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "guest": {
+  "type": "topic",
+  "episodes": 6
+ },
+ "guest episode": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "guilty pleasure": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gumroad": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gunpla": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "gus": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "guts": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Guts"
+ },
+ "gwenpool": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Gwenpool"
+ },
+ "hades": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "haha": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Haha"
+ },
+ "haikyu": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Haikyu!!"
+ },
+ "haikyu!!": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Haikyu!!"
+ },
+ "hairball": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hairball"
+ },
+ "hairball #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hairball"
+ },
+ "hakim's odyssey": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hakim's Odyssey"
+ },
+ "halloween": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "hangout": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "hapi mari: happy marriage?": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hapi Mari: Happy Marriage?"
+ },
+ "hard boiled cop and dolphin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hard-Boiled Cop and Dolphin"
+ },
+ "harley quinn": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Harley Quinn"
+ },
+ "harpy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Harpy"
+ },
+ "hawkeye": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Hawkeye"
+ },
+ "heathen": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Heathen"
+ },
+ "heaven’s official blessings": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "heavenly delusion": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Heavenly Delusion"
+ },
+ "heavy metal": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Heavy Metal"
+ },
+ "heavy vinyl": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Heavy Vinyl"
+ },
+ "hecate's will": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hecate's Will"
+ },
+ "hedra": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Hedra"
+ },
+ "helen of wyndhorn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Helen of Wyndhorn"
+ },
+ "hell is a squared circle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hell is a Squared Circle"
+ },
+ "hellblazer: dead in america": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hellboy": {
+  "type": "series",
+  "episodes": 10,
+  "series": "Hellboy"
+ },
+ "hellboy and the bprd": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "hellboy: seed of destruction": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hellboy: Seed of Destruction"
+ },
+ "hellfire gala": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hellions": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hellions"
+ },
+ "helllions": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hellraiser": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "helm greycastle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Helm Greycastle"
+ },
+ "helter skelter": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "henry barajas": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "here comes chelsey": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hex americana": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hex Americana"
+ },
+ "hexagon bridge": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Hexagon Bridge"
+ },
+ "high evolutionary": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "high strangeness": {
+  "type": "series",
+  "episodes": 1,
+  "series": "High Strangeness"
+ },
+ "hilda and the troll": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hilda and the Troll"
+ },
+ "hiroto wada": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hobbies": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hogbook and lazer eyes": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hogbook and Lazer Eyes"
+ },
+ "hogwarts": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "holiday comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "holiday special": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hollow": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hollow"
+ },
+ "hollow heart": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hollow Heart"
+ },
+ "home": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Home"
+ },
+ "home sick pilots": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Home Sick Pilots"
+ },
+ "homestuck": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Homestuck"
+ },
+ "homunculus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Homunculus"
+ },
+ "hoopla": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hope": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hope"
+ },
+ "hope nicholson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "horror": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "horror comics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "horseriding": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "house of m": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "house of x": {
+  "type": "series",
+  "episodes": 4,
+  "series": "House of X"
+ },
+ "houses with a story": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Houses with a Story"
+ },
+ "how do we relationship": {
+  "type": "series",
+  "episodes": 1,
+  "series": "How Do We Relationship?"
+ },
+ "how to talk to girls at parties": {
+  "type": "series",
+  "episodes": 1,
+  "series": "How To Talk To Girls At Parties"
+ },
+ "howard chaykin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hox/pox": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "hoxpox": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "hulk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hulk"
+ },
+ "human target": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Human Target"
+ },
+ "hunt for the skinwalker": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Hunt for the Skinwalker"
+ },
+ "i am a cat barista": {
+  "type": "series",
+  "episodes": 1,
+  "series": "I Am A Cat Barista"
+ },
+ "i became a boy for revenge (i promise!)": {
+  "type": "series",
+  "episodes": 1,
+  "series": "I Became a Boy For Revenge (I Promise!)"
+ },
+ "i can sell you a body": {
+  "type": "series",
+  "episodes": 1,
+  "series": "I Can Sell You A Body"
+ },
+ "i hate this place": {
+  "type": "series",
+  "episodes": 1,
+  "series": "I Hate This Place"
+ },
+ "i heart skull-crusher": {
+  "type": "series",
+  "episodes": 1,
+  "series": "I Heart Skull Crusher!"
+ },
+ "iban coello": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ice cream man": {
+  "type": "series",
+  "episodes": 19,
+  "series": "Ice Cream Man"
+ },
+ "ice haven": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "iceman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Iceman"
+ },
+ "ichi the witch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ichi The Witch"
+ },
+ "idw": {
+  "type": "publisher",
+  "episodes": 4
+ },
+ "if destruction be our lot": {
+  "type": "series",
+  "episodes": 1,
+  "series": "IF DESTRUCTION BE OUR LOT"
+ },
+ "if you find this i'm already dead": {
+  "type": "series",
+  "episodes": 1,
+  "series": "If You Find This, I'm Already Dead"
+ },
+ "ignition press": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ike perlmutter": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "image comics": {
+  "type": "publisher",
+  "episodes": 28
+ },
+ "immortal hulk": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Immortal Hulk"
+ },
+ "immortal iron fist": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Immortal Iron Fist"
+ },
+ "immortal x-men": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Immortal X-Men"
+ },
+ "imperial": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Imperial"
+ },
+ "in memoriam": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "in the pines": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "incursion": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Incursion"
+ },
+ "independent comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "indiana jones": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "indie comics": {
+  "type": "topic",
+  "episodes": 7
+ },
+ "infidel": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Infidel"
+ },
+ "infinite frontier": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Infinite Frontier"
+ },
+ "infinity gauntlet": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Infinity Gauntlet"
+ },
+ "infinity wars": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Infinity Wars"
+ },
+ "inner workings": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Inner Workings"
+ },
+ "interior art": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "interview": {
+  "type": "topic",
+  "episodes": 36
+ },
+ "into the wilderness": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Into The Wilderness"
+ },
+ "invincible": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Invincible"
+ },
+ "invisible kingdom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Invisible Kingdom"
+ },
+ "ionheart": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ionheart"
+ },
+ "ircb movie club": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "iron fist": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Iron Fist"
+ },
+ "iron fist: heart of the dragon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Iron Fist: Heart of the Dragon"
+ },
+ "iron or after the was": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "isola": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Isola"
+ },
+ "issak": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Issak"
+ },
+ "it killed everyone but me": {
+  "type": "series",
+  "episodes": 1,
+  "series": "It Killed Everyone But Me"
+ },
+ "it's all greek": {
+  "type": "series",
+  "episodes": 1,
+  "series": "It’s All Greek"
+ },
+ "ivan fiorelli": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jack kirby": {
+  "type": "creator",
+  "episodes": 3
+ },
+ "jacob phillips": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "james bond: 007": {
+  "type": "series",
+  "episodes": 1,
+  "series": "James Bond 007"
+ },
+ "james stokoe": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "james tynion iv": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "james tyrion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jamie mckelvie": {
+  "type": "creator",
+  "episodes": 6
+ },
+ "jamsheed studios": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jason todd": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "jay & silent bob": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "jeff elmira": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jeff lemire": {
+  "type": "creator",
+  "episodes": 17
+ },
+ "jenn doyle": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jenny frison": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jerry craft new kid": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jesse lonergan": {
+  "type": "creator",
+  "episodes": 4
+ },
+ "jesus aburtov": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jill and the killers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Jill and the Killers"
+ },
+ "jim campbell": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jinxworld": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jla/doom patrol": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "joe rogan": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "john allison": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "john constantine": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "john constantine: hellblazer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "John Constantine: Hellblazer"
+ },
+ "john nyberg": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "john workman": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "johnny cash": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "johnny storm": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jojo’s bizarre adventure": {
+  "type": "series",
+  "episodes": 2,
+  "series": "JoJo’s Bizarre Adventure"
+ },
+ "joker": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jon bois": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "jonathan hickman": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "jonna and the unpossible monsters": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Jonna and the Unpossible Monsters"
+ },
+ "josei": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "josei manga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "journey to star wars: the rise of skywalker - allegiance": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Journey to Star Wars: The Rise Of Skywalker — Allegiance"
+ },
+ "joyama": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Joyama"
+ },
+ "judge death": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "judge dread": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "judge dredd": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Judge Dredd"
+ },
+ "judging comic covers": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "jughead": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Jughead"
+ },
+ "jughead's time police": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Jughead’s Time Police"
+ },
+ "julio anta": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "juni ba": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "junkwraith": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Junkwraith"
+ },
+ "justice league": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Justice League"
+ },
+ "justice league unlimited": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Justice League Unlimited"
+ },
+ "k manga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "k. lynn smith": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kanan jarrus": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "karmen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Karmen"
+ },
+ "kate brown": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kaya": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Kaya"
+ },
+ "keeping two": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Keeping Two"
+ },
+ "kelly fitzpatrick": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "kelly thompson": {
+  "type": "creator",
+  "episodes": 3
+ },
+ "kent state": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kent State"
+ },
+ "kevin dillon": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "kevin maher": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "kevin o'neill": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kevin wada": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kevvo": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "kickstarter": {
+  "type": "topic",
+  "episodes": 34
+ },
+ "kid lobotomy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kid Lobotomy"
+ },
+ "kieron gillen": {
+  "type": "creator",
+  "episodes": 5
+ },
+ "kill all immortals": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kill All Immortals"
+ },
+ "kill them all": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kill Them All"
+ },
+ "kill train": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kill Train"
+ },
+ "killers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Killers"
+ },
+ "kim & kim": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "king of the comics: 100 years of kings features syndicate": {
+  "type": "series",
+  "episodes": 1,
+  "series": "King of the Comics: 100 Years of Kings Features Syndicate"
+ },
+ "kingdom hearts": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "kingsman": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "klaus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Klaus"
+ },
+ "knitting": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "know your station": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Know Your Station"
+ },
+ "kobra olympus": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "kochab": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kochab"
+ },
+ "kodansha": {
+  "type": "publisher",
+  "episodes": 3
+ },
+ "kodi": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kodi"
+ },
+ "kody chamberlain": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kraven": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "kraven the hunter": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "kraven's last hunt": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kraven’s Last Hunt"
+ },
+ "kris anka": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kroma": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kroma"
+ },
+ "krypton": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "kwanza osajyefo": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "kylo ren": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "la voz de m.a.y.o.: tata rambo": {
+  "type": "series",
+  "episodes": 1,
+  "series": "La Voz De M.A.Y.O.: Tata Rambo"
+ },
+ "lady mechanika": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Lady Mechanika"
+ },
+ "lampblack": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lampblack"
+ },
+ "lando": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lando calrissian": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "language": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "last comic book on the left": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Last Comic Book on the Left"
+ },
+ "lauira kinny": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "laura dean keeps breaking up with me": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Laura Dean Keeps Breaking Up With Me"
+ },
+ "laura kinny wolverine": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "law & order": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "layoffs": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lazarus": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Lazarus"
+ },
+ "lazarus risen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lazarus Risen"
+ },
+ "lazarus: risen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lazarus Risen"
+ },
+ "lcs": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lee garbett": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "left turns": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Left Turns"
+ },
+ "legacy characters": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "legacy of vader": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "legion x": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lego": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lego leak": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lego leaks": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "leila del duca": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "let this one be a devil": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Let This One Be a Devil"
+ },
+ "lettering": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "letters": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "leviathan": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Leviathan"
+ },
+ "lgbt": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lgbtqia+": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "libraries": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "life cereal": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "life drawing": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Life Drawing"
+ },
+ "life is strange": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Life Is Strange"
+ },
+ "life is strange: forget-me-not": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Life is Strange: Forget-Me-Not"
+ },
+ "life is strange: partners in time": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Life is Strange: Partners in Time"
+ },
+ "life is strange: settling dust": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Life is Strange: Settling Dust"
+ },
+ "lilo and stitch": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "limerance": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lisa tremain": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "little monsters": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "little white duck": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "lizzo": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "lobo": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lobo"
+ },
+ "lobster is the best medicine": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "local comic shop": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "local comic shops": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "local libraries": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "local man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Local Man"
+ },
+ "locke & key": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Locke & Key"
+ },
+ "lockjaw and the pet avengers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lockjaw and the Pet Avengers"
+ },
+ "loki": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Loki"
+ },
+ "loki: agent of asgard": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Loki: Agent of Asgard"
+ },
+ "long walk to valhalla": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Long Walk To Valhalla"
+ },
+ "loot": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Loot"
+ },
+ "lord of the rings": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Lord of the Rings"
+ },
+ "lore olympus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lore Olympus"
+ },
+ "lost fantasy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lost Fantasy"
+ },
+ "lost marvels": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "love": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "love & rockets": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Love & Rockets"
+ },
+ "love and pom poms": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "love and rockets": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Love and Rockets"
+ },
+ "love and war": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Love and War"
+ },
+ "love at first bite": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Love at First Bite"
+ },
+ "love everlasting": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Love Everlasting"
+ },
+ "lovelace and babbage": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lovelace and Babbage"
+ },
+ "loving ohio": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Loving, Ohio"
+ },
+ "luchadore": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "lucy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lucy"
+ },
+ "lucy knisley": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "lumberjanes": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Lumberjanes"
+ },
+ "lumberjanes/gotham academy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lumberjanes/Gotham Academy"
+ },
+ "luna": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Luna"
+ },
+ "lupin iii: greatest heists": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lupin III: Greatest Heists"
+ },
+ "m1: monster racing league": {
+  "type": "series",
+  "episodes": 1,
+  "series": "M1: Monster Racing League"
+ },
+ "mad cave studios": {
+  "type": "publisher",
+  "episodes": 4
+ },
+ "mad dog morgan": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mad Dog Morgan"
+ },
+ "madam satan": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "madbomb saga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "madi: once upon a time in the future": {
+  "type": "series",
+  "episodes": 1,
+  "series": "MADI: Once Upon A Time In The Future"
+ },
+ "magdalene visaggio": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "maggie the mechanic": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Maggie the Mechanic"
+ },
+ "magic": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Magic"
+ },
+ "magical beatdown": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Magical Beatdown"
+ },
+ "magical girl comics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "magical girls": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "magnetic press": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "malachai nicolle": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "malachi ward": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "man of steel": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Man of Steel"
+ },
+ "man's best": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Man’s Best"
+ },
+ "mandalorian": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "manga": {
+  "type": "topic",
+  "episodes": 36
+ },
+ "manga discussion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "manga plus": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "manga recommendations": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "manga review": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "manhattan projects": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mansplaining": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "marauders": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Marauders"
+ },
+ "marc casili": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "marcos martin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "marguerite sauvage": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "marian heretic": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Marian Heretic"
+ },
+ "mariasara miotti": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mark wahlberg": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mark waid": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "martian manhunter": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Martian Manhunter"
+ },
+ "martin morazzo": {
+  "type": "creator",
+  "episodes": 7
+ },
+ "martín morazzo": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "marvel": {
+  "type": "publisher",
+  "episodes": 14
+ },
+ "marvel cinematic universe": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "marvel team up": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Marvel Team-Up"
+ },
+ "marvel team-up": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Marvel Team-Up"
+ },
+ "marvel: demon wars": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Marvel: Demon Wars"
+ },
+ "mary elizabeth winstead": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mary tyler moorehawk": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Mary Tyler MooreHawk"
+ },
+ "mass effect": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "masterpiece": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Masterpiece"
+ },
+ "matt burbridge": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "matt fraction": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "matt hollingsworth": {
+  "type": "creator",
+  "episodes": 3
+ },
+ "matt kindt": {
+  "type": "creator",
+  "episodes": 3
+ },
+ "matt wilson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "matthew fox": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "maus": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "maxwell's demons": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Maxwell’s Demons"
+ },
+ "mcmlxxv": {
+  "type": "series",
+  "episodes": 1,
+  "series": "MCMLXXV"
+ },
+ "mcu": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "meat eaters": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "media properties": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "megahex": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Megahex"
+ },
+ "megan rae": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "megatron": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "megg & mogg": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "megg and mogg": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "memoir": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "memoirs of giselle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Memoirs of Giselle"
+ },
+ "mental illness": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "merch": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mermaid town": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mermaid Town"
+ },
+ "merry x-men": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "metal gear solid": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "metamorpho the element man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Metamorpho The Element Man"
+ },
+ "michael bay": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "michael cera": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "michael garland": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "michael gaydos": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "michele wolfman": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "middle-grade comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "migrate": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Migrate"
+ },
+ "mike": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mike mignola": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "mike rooth": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "milf manor": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "minions": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Minions"
+ },
+ "miniseries": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "minisode": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "minor arcana": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Minor Arcana"
+ },
+ "minor threads": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "miquel muerto": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "miss fury": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Miss Fury"
+ },
+ "miss truesdale and the fall of hyperborea": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Miss Truesdale and the Fall of Hyperborea"
+ },
+ "miss truesdale and the rise of man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Miss Truesdale and the Rise of Man"
+ },
+ "mister miracle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mister Miracle"
+ },
+ "mixed feelings": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mixed Feelings"
+ },
+ "mob psycho 100": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mob Psycho 100"
+ },
+ "mobile suit gundam": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mobile Suit Gundam"
+ },
+ "mocca fest": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "money shot": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Money Shot"
+ },
+ "monica": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Monica"
+ },
+ "monkey meat": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Monkey Meat"
+ },
+ "monkey meat: the summer batch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Monkey Meat: The Summer Batch"
+ },
+ "monster matador": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "monster of frankenstein": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "monstress": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Monstress"
+ },
+ "moomin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "moon girl & devil dinosaur": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "moon knight": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Moon Knight"
+ },
+ "moon man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Moon Man"
+ },
+ "mooncakes": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Mooncakes"
+ },
+ "mosely": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mosely"
+ },
+ "mother's day": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "motion comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "motor crush": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Motor Crush"
+ },
+ "motor girl": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Motor Girl"
+ },
+ "mountain": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Mountain"
+ },
+ "mouse guard": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mouse Guard"
+ },
+ "movie adaptation": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "movie adaptations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "movie club": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "movie discussion": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "movie review": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "movies": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "mr. & mrs. x": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mr. & Mrs. X"
+ },
+ "mr. muffins: defender of the stars": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "mtv": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "mugshots": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Mugshots"
+ },
+ "muppets": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "murder falcon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Murder Falcon"
+ },
+ "music": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "musketeers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Musketeers"
+ },
+ "my androgynous boyfriend": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "my body unspooling": {
+  "type": "series",
+  "episodes": 1,
+  "series": "My Body Unspooling"
+ },
+ "my comic shop country": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "my friend dahmer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "My Friend Dahmer"
+ },
+ "my hero academia": {
+  "type": "series",
+  "episodes": 2,
+  "series": "My Hero Academia"
+ },
+ "my heroes have always been junkies": {
+  "type": "series",
+  "episodes": 1,
+  "series": "My Heroes Have Always Been Junkies"
+ },
+ "my lesbian experience with loneliness": {
+  "type": "series",
+  "episodes": 1,
+  "series": "My Lesbian Experience with Loneliness"
+ },
+ "my neighbor totoro": {
+  "type": "series",
+  "episodes": 1,
+  "series": "My Neighbor Totoro"
+ },
+ "mythology": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "nagata kabi": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "nana": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nana"
+ },
+ "nancy": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Nancy"
+ },
+ "naruto": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Naruto"
+ },
+ "nascar": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "natasha alterici": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "nate powell": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "navigating with you": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Navigating With You"
+ },
+ "ncbd": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "negalyod: the god network": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Negalyod: The God Network"
+ },
+ "neighborhood watch": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Neighborhood Watch"
+ },
+ "neil gaiman": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "nerd fashion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "nerd inferno": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "nerds": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "netflix": {
+  "type": "topic",
+  "episodes": 16
+ },
+ "new 52": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "new champions": {
+  "type": "series",
+  "episodes": 1,
+  "series": "New Champions"
+ },
+ "new comic books": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "new masters": {
+  "type": "series",
+  "episodes": 1,
+  "series": "New Masters"
+ },
+ "new mutants": {
+  "type": "series",
+  "episodes": 2,
+  "series": "New Mutants"
+ },
+ "new year's resolutions": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "news from the fallout": {
+  "type": "series",
+  "episodes": 1,
+  "series": "News From The Fallout"
+ },
+ "newspaper comics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "nfts": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "nice house on the lake": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nice House on the Lake"
+ },
+ "night fever": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Night Fever"
+ },
+ "night hunters": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Night Hunters"
+ },
+ "night of the living cat": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Night of the Living Cat"
+ },
+ "nights with a cat": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nights with a Cat"
+ },
+ "nightwing": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Nightwing"
+ },
+ "nimona": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Nimona"
+ },
+ "nine dragon's ball parade": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nine Dragons' Ball Parade"
+ },
+ "ninja-k": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ninja-K"
+ },
+ "nodame cantabile": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nodame Cantabile"
+ },
+ "noir: a collection of crime comics": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Noir: A Collection of Crime Comics"
+ },
+ "non-human comic characters": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "norse mythology": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Norse Mythology"
+ },
+ "nostalgia": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "november": {
+  "type": "series",
+  "episodes": 1,
+  "series": "November"
+ },
+ "nuclear winter": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nuclear Winter"
+ },
+ "nuff said": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Nuff Said"
+ },
+ "numb to this: memoir of a mass shooting": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Numb to This: Memoir of a Mass Shooting"
+ },
+ "nycc": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "obi-wan": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "obi-wan and anakin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Obi-Wan and Anakin"
+ },
+ "oblivion song": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Oblivion Song"
+ },
+ "occulted": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Occulted"
+ },
+ "odin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Odin"
+ },
+ "of thieves and elves": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Of Thieves and Elves"
+ },
+ "of thunder & lightning": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Of Thunder & Lightning"
+ },
+ "off-menu": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Off-Menu"
+ },
+ "okinawa": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Okinawa"
+ },
+ "old boy": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Old Boy"
+ },
+ "old dog": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Old Dog"
+ },
+ "olly moss": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "omac": {
+  "type": "series",
+  "episodes": 1,
+  "series": "OMAC"
+ },
+ "omnibus": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "omvpodcast": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "on a sunbeam": {
+  "type": "series",
+  "episodes": 1,
+  "series": "On a Sunbeam"
+ },
+ "once and future": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Once and Future"
+ },
+ "one for sorrow": {
+  "type": "series",
+  "episodes": 2,
+  "series": "One for Sorrow"
+ },
+ "one hand": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "one piece": {
+  "type": "series",
+  "episodes": 3,
+  "series": "One Piece"
+ },
+ "one punch man": {
+  "type": "series",
+  "episodes": 2,
+  "series": "One Punch Man"
+ },
+ "oni press": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "only the savage are left": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Only The Savage Are Left"
+ },
+ "onward towards our noble deaths": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Onward Towards Our Noble Deaths"
+ },
+ "opposable plagarism": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "optimus prime": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "oracle": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "orange": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "orcs in space": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Orcs in Space"
+ },
+ "orlando": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Orlando"
+ },
+ "oscar osorio": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "otherworldly izakaya nobu": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Otherworldly Izakaya Nobu"
+ },
+ "our blood oath": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Our Blood Oath"
+ },
+ "our bones dust": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Our Bones Dust"
+ },
+ "our not-so-lonely planet travel guide": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Our Not So Lonely Planet Travel Guide"
+ },
+ "our soot stained hearts": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "out of alcatraz": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Out of Alcatraz"
+ },
+ "outer darkness": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Outer Darkness"
+ },
+ "outer lands": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Outer Lands"
+ },
+ "outerdarkness": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "over the garden wall": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Over the Garden Wall"
+ },
+ "over the wall": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Over the Wall"
+ },
+ "oversized comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "palestine": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "panda delivery service": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Panda Delivery Service"
+ },
+ "panel syndicate": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "panelist series": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "panels": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "paper girls": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Paper Girls"
+ },
+ "parasocial": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Parasocial"
+ },
+ "parasomnia": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Parasomnia"
+ },
+ "passport": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Passport"
+ },
+ "pat shand": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "path of the pale rider": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Path of the Pale Rider"
+ },
+ "patreon": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "patreon exclusive": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "paul brizzi": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "paul riser": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "peacemaker": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "peacemaker tries hard": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Peacemaker Tries Hard"
+ },
+ "peanuts": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Peanuts"
+ },
+ "pearl": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "peepee poopoo": {
+  "type": "series",
+  "episodes": 1,
+  "series": "PeePee PooPoo"
+ },
+ "peow": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "persephone": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "persepolis": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Persepolis"
+ },
+ "pet peeves": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Pet Peeves"
+ },
+ "peter parker": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "petrol head": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Petrol Head"
+ },
+ "phantom of the opera": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Phantom of the Opera"
+ },
+ "phoebe xavier": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "phonogram": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Phonogram"
+ },
+ "photography": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "piccolo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "pilu of the woods": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Pilu of the Woods"
+ },
+ "pine & merrimac": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Pine & Merrimac"
+ },
+ "pink": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Pink"
+ },
+ "planetary": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Planetary"
+ },
+ "plastic man": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "plastic man no more": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Plastic Man No More!"
+ },
+ "plume": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Plume"
+ },
+ "politics in comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "popcasting": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "poverty": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "power man and iron fist": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "powers": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "powers of x": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Powers of X"
+ },
+ "precious rubbish": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Precious Rubbish"
+ },
+ "predator": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Predator"
+ },
+ "pride and shame": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "primordial": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Primordial"
+ },
+ "prince of cats": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "princeless: find yourself": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Princeless Find Yourself"
+ },
+ "princess jellyfish": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Princess Jellyfish"
+ },
+ "priya puts herself first": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Priya Puts Herself First"
+ },
+ "proctor valley road": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Proctor Valley Road"
+ },
+ "professional wrestling": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "psi-force": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Psi-Force"
+ },
+ "psi-lords": {
+  "type": "series",
+  "episodes": 1,
+  "series": "PSI Lords"
+ },
+ "pull list": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "pulp": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Pulp"
+ },
+ "pulp city comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "pumpkinheads": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Pumpkinheads"
+ },
+ "punk rock karaoke": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Punk Rock Karaoke"
+ },
+ "punk’n heads": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "q&a": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "quantum and woody": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Quantum and Woody"
+ },
+ "quarantine": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "question": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "rabbits": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "radiant black": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Radiant Black"
+ },
+ "radio spaceman": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Radio Spaceman"
+ },
+ "raging clouds": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Raging Clouds"
+ },
+ "raina telgemeier": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "raised by ghosts": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Raised by Ghosts"
+ },
+ "ram v": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "ran and the gray world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ran and the Gray World"
+ },
+ "rare flavours": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rare Flavours"
+ },
+ "rat city": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rat City"
+ },
+ "rat queens": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Rat Queens"
+ },
+ "reading challenge": {
+  "type": "topic",
+  "episodes": 9
+ },
+ "reading comics": {
+  "type": "topic",
+  "episodes": 5
+ },
+ "reading habits": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "reality tv": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rebellion comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "reckless": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Reckless"
+ },
+ "reckless: friend of the devil": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Reckless: Friend of the Devil"
+ },
+ "recommendations": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "red before black": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Red Before Black"
+ },
+ "red book": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Red Book"
+ },
+ "red roots": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Red Roots"
+ },
+ "red sonja / tarzan": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Red Sonja Tarzan"
+ },
+ "red sonja: birth of the she-devil": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Red Sonja Birth of the She-Devil"
+ },
+ "red sonja: the price of blood": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Red Sonja: The Price of Blood"
+ },
+ "redlands": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Redlands"
+ },
+ "reed richards": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "relics of youth": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Relics of Youth"
+ },
+ "religion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "religion in comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rereading comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "restaurant to another world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Restaurant to Another World"
+ },
+ "resurrection man": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "retcons": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "review": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "revival": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Revival"
+ },
+ "reza farazmand": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rian hughes": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "richard case": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rick & morty": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rick & Morty"
+ },
+ "ridiculous city": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rin-ne": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rin-Ne"
+ },
+ "rise of skywalker": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rise of the beasts": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "river's edge": {
+  "type": "series",
+  "episodes": 1,
+  "series": "River’s Edge"
+ },
+ "riverdale": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Riverdale"
+ },
+ "ro stein": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "roaming": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Roaming"
+ },
+ "rob guillory": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "robin": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rock candy mountain": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rock Candy Mountain"
+ },
+ "rocket power": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rogue": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "rogue & gambit": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Rogue & Gambit"
+ },
+ "rogue planet": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rogue Planet"
+ },
+ "rogues": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rogues"
+ },
+ "roman ritual": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "romance": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "roxy - romance reborn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Roxy - Romance Reborn!"
+ },
+ "royal city": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Royal City"
+ },
+ "ruination": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ruination"
+ },
+ "runaways": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Runaways"
+ },
+ "rust": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Rust"
+ },
+ "ryan browne": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "ryan north": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sabretooth": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sabretooth"
+ },
+ "saga": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Saga"
+ },
+ "sailor moon": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Sailor Moon"
+ },
+ "sailor twain": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "saimon hanselmann": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "saint for rent": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Saint For Rent"
+ },
+ "sakamoto days": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sakamoto Days"
+ },
+ "salt magic": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Salt Magic"
+ },
+ "sam raimi": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "santos sisters": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Santos Sisters"
+ },
+ "sarah andersen": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sarah anderson": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "savage #3": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Savage"
+ },
+ "savage sword of conan": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Savage Sword of Conan"
+ },
+ "savage wizard": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Savage Wizard"
+ },
+ "scarlet witch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Scarlet Witch"
+ },
+ "scene of the crime": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Scene of the Crime"
+ },
+ "science writing": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "scott hanna": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "scott pilgrim": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Scott Pilgrim"
+ },
+ "scott pilgrim vs the world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Scott Pilgrim vs. the World"
+ },
+ "scott snyder": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "scout comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sean phillips": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "search & destroy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Search & Destroy"
+ },
+ "seaside stranger": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Seaside Stranger"
+ },
+ "second shift": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Second Shift"
+ },
+ "secret histories of nerd mysteries": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "secret invasion": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Secret Invasion"
+ },
+ "seek you": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "sennen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sennen"
+ },
+ "sensational she-hulk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sensational She-Hulk"
+ },
+ "sentinels": {
+  "type": "series",
+  "episodes": 1,
+  "series": "SENTINELS"
+ },
+ "serenity": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "sex criminals": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sex Criminals"
+ },
+ "shade the changing girl": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shade the Changing Girl"
+ },
+ "shadow of the golden crane": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shadow of the Golden Crane"
+ },
+ "shadow service": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shadow Service"
+ },
+ "shadowman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shadowman"
+ },
+ "shakespeare": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "shan murphy": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "shanghai red": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Shanghai Red"
+ },
+ "shatterstar": {
+  "type": "series",
+  "episodes": 1,
+  "series": "SHATTERSTAR"
+ },
+ "she hulk": {
+  "type": "series",
+  "episodes": 2,
+  "series": "She-Hulk"
+ },
+ "she likes to cook she likes to eat": {
+  "type": "series",
+  "episodes": 1,
+  "series": "She Likes to Cook, She Likes to Eat"
+ },
+ "she loves to cook and she loves to eat": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "she-hulk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "She-Hulk"
+ },
+ "she's running on fumes": {
+  "type": "series",
+  "episodes": 2,
+  "series": "She’s Running on Fumes"
+ },
+ "shia labeouf": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "shojo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "shojo manga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "shonen jump": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "shrink: story of a fat girl": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shrink: Story of a Fat Girl"
+ },
+ "shubiek lubeik": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "shuna's journey": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shuna's Journey"
+ },
+ "sidequests": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sidequests"
+ },
+ "silent comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "silver sprocket": {
+  "type": "publisher",
+  "episodes": 4
+ },
+ "silver surfer": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Silver Surfer"
+ },
+ "simone di meo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "single issues": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sins of sinister": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Sins of Sinister"
+ },
+ "sith": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sithrah": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sithrah"
+ },
+ "six fingers": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sixth gun": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sketchy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sketchy"
+ },
+ "skin police": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Skin Police"
+ },
+ "skinbreaker": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Skinbreaker"
+ },
+ "skybound": {
+  "type": "publisher",
+  "episodes": 1
+ },
+ "skybound entertainment": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "slash-fic": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sleep": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sleep"
+ },
+ "slightly exaggerated": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Slightly Exaggerated"
+ },
+ "small bites": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Small Bites"
+ },
+ "smile": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Smile"
+ },
+ "snacks": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "snap flash hustle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Snap Flash Hustle"
+ },
+ "snapdragon": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Snapdragon"
+ },
+ "snow blind": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Snow Blind"
+ },
+ "snow white": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Snow White"
+ },
+ "soft": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Soft"
+ },
+ "solo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "solo leveling": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Solo Leveling"
+ },
+ "solo: a star wars story": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Solo: A Star Wars Story"
+ },
+ "something epic": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Something Epic"
+ },
+ "something is killing the children": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Something is Killing the Children"
+ },
+ "song about green": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Song About Green"
+ },
+ "sonic": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "soul plumber": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Soul Plumber"
+ },
+ "sound effects": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "source point press": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sp4rx": {
+  "type": "series",
+  "episodes": 2,
+  "series": "SP4RX"
+ },
+ "space": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "space captain: captain of space": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Space Captain: Captain of Space"
+ },
+ "space comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "space mullet": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Space Mullet"
+ },
+ "space opera xanadax across the unknown dimensions of the galaxy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Space Opera XANADAX Across the Unknown Dimensions of the Galaxy"
+ },
+ "spawn": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Spawn"
+ },
+ "speak": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Speak"
+ },
+ "special edition comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "specter inspectors": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Specter Inspectors"
+ },
+ "spectrum": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spectrum"
+ },
+ "spencer & locke": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spencer & Locke"
+ },
+ "spider-geddon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spider-Geddon"
+ },
+ "spider-gwen": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "spider-man": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Spider-Man"
+ },
+ "spider-man: blue": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spider-Man: Blue"
+ },
+ "spider-man: spider's shadow": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spider-Man: Spider’s Shadow"
+ },
+ "spider-punk": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "spider-verse": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "spider's shadow": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spider’s Shadow"
+ },
+ "spinning": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spinning"
+ },
+ "spirit of the shadows": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spirit of the Shadows"
+ },
+ "spoilers": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "spooky comics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "sport horses": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sports is hell": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sports is Hell"
+ },
+ "spy island": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "spy superb": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Spy Superb"
+ },
+ "spy x family": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Spy x Family"
+ },
+ "squad": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Squad"
+ },
+ "squire": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Squire"
+ },
+ "stains;gate": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "stan lee": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "star trek": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Star Trek"
+ },
+ "star trek: lower decks": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Trek: Lower Decks"
+ },
+ "star wars": {
+  "type": "series",
+  "episodes": 23,
+  "series": "Star Wars"
+ },
+ "star wars legends": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "star wars resistance: kylo ren": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars Resistance: Kylo Ren"
+ },
+ "star wars tag & bink": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars Tag & Bink"
+ },
+ "star wars tie fighter": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars: Tie Fighter"
+ },
+ "star wars visions": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars Visions"
+ },
+ "star wars: doctor aphra": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars: Doctor Aphra"
+ },
+ "star wars: lost stars": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars: Lost Stars"
+ },
+ "star wars: the high republic": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Star Wars: The High Republic"
+ },
+ "star wars: the high republic adventures": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "star wars: thrawn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Wars: Thrawn"
+ },
+ "starfinder": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Starfinder"
+ },
+ "starman (1988-1992) #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Starman (1988-1992)"
+ },
+ "stars in their eyes": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Stars in Their Eyes"
+ },
+ "starscream": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "starship godzilla": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Starship Godzilla"
+ },
+ "state of digital comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "steam": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Steam"
+ },
+ "steins;gate": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "step by bloody step": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Step by Bloody Step"
+ },
+ "stephanie hans": {
+  "type": "creator",
+  "episodes": 3
+ },
+ "stephanie phillips": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "stillwater": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Stillwater"
+ },
+ "stitch": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "stone hearted": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Stone Hearted"
+ },
+ "storm and the brotherhood of mutants": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Storm and the Brotherhood of Mutants"
+ },
+ "storygraph": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "strange adventures": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Strange Adventures"
+ },
+ "stranger things: six": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Stranger Things: Six"
+ },
+ "stray": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Stray"
+ },
+ "street sharks": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Street Sharks"
+ },
+ "strontium dog": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Strontium Dog"
+ },
+ "studio ghibli": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "stumptown": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Stumptown"
+ },
+ "subscriptions": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "substack": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sue richards": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "summer reading": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "sunday o. schrauwen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sunday O. Schrauwen"
+ },
+ "super hero ethics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "super hero stories": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "super pets": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "super sons": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Super Sons"
+ },
+ "supergirl": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Supergirl"
+ },
+ "superior spider-man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superior Spider-Man"
+ },
+ "superman": {
+  "type": "series",
+  "episodes": 10,
+  "series": "Superman"
+ },
+ "superman meshi": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman Meshi"
+ },
+ "superman: american alien": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman: American Alien"
+ },
+ "superman: lost": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman: Lost"
+ },
+ "superman: space age": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman: Space Age"
+ },
+ "superman: the kryptonite spectrum": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Superman: The Kryptonite Spectrum"
+ },
+ "superman: the last days of lex luthor": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman: The Last Days of Lex Luthor"
+ },
+ "superman: the warworld": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "superman: up in the sky": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman: Up In The Sky"
+ },
+ "superman/batman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Superman/Batman"
+ },
+ "supreme": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "survival street": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Survival Street"
+ },
+ "surviving the city": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Surviving The City"
+ },
+ "sussex": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Sussex"
+ },
+ "swamp thing": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Swamp Thing"
+ },
+ "swamp thing: green hell": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Swamp Thing: Green Hell"
+ },
+ "sweet tooth": {
+  "type": "series",
+  "episodes": 15,
+  "series": "Sweet Tooth"
+ },
+ "sweet tooth: the return": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sweet Tooth: The Return"
+ },
+ "swim team": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Swim Team"
+ },
+ "sword": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "takahashi from the bike shop": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Takahashi From the Bike Shop"
+ },
+ "tales from the cloakroom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tales from the Cloakroom"
+ },
+ "tales from the loop": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tales of carnival row": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tales of Carnival Row"
+ },
+ "tales of steel streets": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tales of the human target": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tales of The Human Target"
+ },
+ "talking to my father’s ghost": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Talking To My Father’s Ghost"
+ },
+ "tartarus": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tartarus"
+ },
+ "task force rad squad": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "taylor wells": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tea": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ted brandt": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "teen titans": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "teenage mutant ninja turtles": {
+  "type": "series",
+  "episodes": 4,
+  "series": "Teenage Mutant Ninja Turtles"
+ },
+ "teenage mutant ninja turtles: the last ronin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Teenage Mutant Ninja Turtles: The Last Ronin"
+ },
+ "teenage mutant turtles": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "television": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "terry moore": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tess stone": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "thanos": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "that texas blood": {
+  "type": "series",
+  "episodes": 2,
+  "series": "That Texas Blood"
+ },
+ "the adventure of herge": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the amory wars": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the baker and the bard: a cozy fantasy adventure": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Baker and the Bard: A Cozy Fantasy Adventure"
+ },
+ "the best we could do: an illustrated memoir": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Best We Could Do: An Illustrated Memoir"
+ },
+ "the black ghost": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Black Ghost"
+ },
+ "the butcher of paris": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Butcher of Paris"
+ },
+ "the butterfly effect": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Butterfly Effect"
+ },
+ "the carter family: don't forget this song": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the changeling": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the chorus wave": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the chronicles of narnia": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the comic book history of animation": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Comic Book History of Animation"
+ },
+ "the comics journal": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the con artists": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Con Artists"
+ },
+ "the crimson cage": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Crimson Cage"
+ },
+ "the crown": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the cull": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Cull"
+ },
+ "the cursed earth": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the day the law died": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Day the Law Died"
+ },
+ "the deadliest bouquet": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Deadliest Bouquet"
+ },
+ "the deep dark": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Deep Dark"
+ },
+ "the demon: hell's hitman": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Demon: Hell’s Hitman"
+ },
+ "the department of truth": {
+  "type": "series",
+  "episodes": 3,
+  "series": "The Department of Truth"
+ },
+ "the devil that wears my face": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the displaced": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Displaced"
+ },
+ "the dragon prince": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Dragon Prince"
+ },
+ "the drifting classroom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Drifting Classroom"
+ },
+ "the end of the fucking world": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The End of the Fucking World"
+ },
+ "the essential dykes to watch out for": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Essential Dykes to Watch Out For"
+ },
+ "the far side": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the fifth beatle": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the final cut": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Final Cut"
+ },
+ "the flash": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Flash"
+ },
+ "the florida hippopotamus cocaine massacre": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Florida Hippopotamus Cocaine Massacre"
+ },
+ "the forged": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Forged"
+ },
+ "the fourth father": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Fourth Father"
+ },
+ "the ghost in you": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Ghost In You"
+ },
+ "the girl from the other side": {
+  "type": "series",
+  "episodes": 3,
+  "series": "The Girl from the Other Side"
+ },
+ "the goddamned": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Goddamned"
+ },
+ "the golem of venice beach": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Golem of Venice Beach"
+ },
+ "the grand odalisque": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Grand Odalisque"
+ },
+ "the great beyond": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Great Beyond"
+ },
+ "the great british bump off": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Great British Bump-Off"
+ },
+ "the green lantern": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Green Lantern"
+ },
+ "the gulf": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Gulf"
+ },
+ "the hidden witch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Hidden Witch"
+ },
+ "the hills of estlla roja": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the holy roller": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Holy Roller"
+ },
+ "the house of lost horizons: a sarah jewell mystery": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The House of Lost Horizons: A Sarah Jewell Mystery"
+ },
+ "the house of lowther": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The House of Lowther"
+ },
+ "the hulk": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the human target": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Human Target"
+ },
+ "the humans": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Humans"
+ },
+ "the hunger and the dusk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Hunger and the Dusk"
+ },
+ "the immortal hulk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Immortal Hulk"
+ },
+ "the infinite loop": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Infinite Loop"
+ },
+ "the invisible man": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the jellyfish": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Jellyfish"
+ },
+ "the kryptonite spectrum": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the last american": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the last mermaid": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Last Mermaid"
+ },
+ "the league of extraordinary gentlemen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The League of Extraordinary Gentlemen"
+ },
+ "the love bunglers": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Love Bunglers"
+ },
+ "the love she offered": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Love She Offered"
+ },
+ "the lucky devils": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Lucky Devils"
+ },
+ "the magicians": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Magicians"
+ },
+ "the many deaths of laila starr": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Many Deaths of Laila Starr"
+ },
+ "the mask": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the me you love in the dark": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The me you love in the Dark"
+ },
+ "the midnight": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the midnight: shadows": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Midnight: Shadows"
+ },
+ "the mortal instruments": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the mortal thor": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Mortal Thor"
+ },
+ "the mythmakers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Mythmakers"
+ },
+ "the new gods": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The New Gods"
+ },
+ "the new space age": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The New Space Age"
+ },
+ "the nice house on the lake": {
+  "type": "series",
+  "episodes": 3,
+  "series": "The Nice House on the Lake"
+ },
+ "the o.z.": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The O.Z."
+ },
+ "the old geezers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Old Geezers"
+ },
+ "the old guard": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Old Guard"
+ },
+ "the old republic": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Old Republic"
+ },
+ "the one hand": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The One Hand"
+ },
+ "the one hand and the six fingers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The One Hand and The Six Fingers"
+ },
+ "the order of the nun-ya": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the phantom of the opera": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "the phantom twin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Phantom Twin"
+ },
+ "the photographer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Photographer"
+ },
+ "the picture of everything else": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Picture of Everything Else"
+ },
+ "the power fantasy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Power Fantasy"
+ },
+ "the prince in the basement": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Prince In The Basement"
+ },
+ "the princess and the grilled cheese sandwich": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Princess and the Grilled Cheese Sandwich"
+ },
+ "the principles of necromancy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Principles of Necromancy"
+ },
+ "the problem with parallels": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Problem With Parallels"
+ },
+ "the promised neverland": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Promised Neverland"
+ },
+ "the quarry": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Quarry"
+ },
+ "the raven boys": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the return of snow white and the seven dwarfs": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Return of Snow White and the Seven Dwarfs"
+ },
+ "the rocketeer": {
+  "type": "topic",
+  "episodes": 2,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the rocketeer breaks free": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Rocketeer Breaks Free"
+ },
+ "the rocketeer: the great race": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Rocketeer: The Great Race"
+ },
+ "the saga of the swamp thing": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "the schlub": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Schlub"
+ },
+ "the seasons": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Seasons"
+ },
+ "the secret history of black punk: record zero": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Secret History of Black Punk: Record Zero"
+ },
+ "the sentry": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Sentry"
+ },
+ "the silver coin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Silver Coin"
+ },
+ "the six fingers": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Six Fingers"
+ },
+ "the sky is blue with a single cloud": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Sky Is Blue With a Single Cloud"
+ },
+ "the smart division": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Smart Division"
+ },
+ "the smell of starving boys": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Smell of Starving Boys"
+ },
+ "the space between": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Space Between"
+ },
+ "the star wars": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the starwell foundation": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The StarWell Foundation"
+ },
+ "the sword daughter": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the tea dragon society": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Tea Dragon Society"
+ },
+ "the terminator": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Terminator"
+ },
+ "the terrifcs": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the thing": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Thing"
+ },
+ "the transformers": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the transformers vs the terminator": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Transformers vs The Terminator"
+ },
+ "the twilight man": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "the twilight zone": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Twilight Zone"
+ },
+ "the ultimates": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Ultimates"
+ },
+ "the unbelieveable unteens": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "the vanishing of lake peigneur": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Vanishing of Lake Peigneur"
+ },
+ "the visitor": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Visitor"
+ },
+ "the walking dead": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "the way of the househusband": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Way of the Househusband"
+ },
+ "the weatherman": {
+  "type": "series",
+  "episodes": 2,
+  "series": "The Weatherman"
+ },
+ "the wicked + the divine": {
+  "type": "series",
+  "episodes": 11,
+  "series": "The Wicked + The Divine"
+ },
+ "the wild storm": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Wild Storm"
+ },
+ "the wilds": {
+  "type": "series",
+  "episodes": 3,
+  "series": "The Wilds"
+ },
+ "the winter king": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Winter King"
+ },
+ "the wrestler": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Wrestler"
+ },
+ "the wrong earth": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "theme of the month": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "they called us enemy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "They Called Us Enemy"
+ },
+ "thing": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "this beautiful": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "this is not an interview": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "this seems normal": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "thor": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Thor"
+ },
+ "thor & loki: double trouble": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Thor & Loki: Double Trouble"
+ },
+ "thor: the mighty avenger": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Thor: The Mighty Avenger"
+ },
+ "those not afraid": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Those Not Afraid"
+ },
+ "through the woods": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Through the Woods"
+ },
+ "thundercats": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Thundercats"
+ },
+ "tia vasiliou": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "tillie walden": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "time before time": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Time Before Time"
+ },
+ "time wars": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "tin can society": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tin Can Society"
+ },
+ "tintin": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Tintin"
+ },
+ "tiny onion": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "titan comics": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "tlc": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tmnt": {
+  "type": "series",
+  "episodes": 8,
+  "series": "TMNT"
+ },
+ "tmnt: the last ronin": {
+  "type": "series",
+  "episodes": 1,
+  "series": "TMNT: The Last Ronin"
+ },
+ "today is the last day of the rest of your life": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Today is the Last Day of the Rest of Your Life"
+ },
+ "todd hunt": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "todd mcfarlane": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "tokyo alien bros": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tokyo Alien Bros"
+ },
+ "tokyo these days": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Tokyo These Days"
+ },
+ "tom king": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "tom muller": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tomb of dracula": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tomb of Dracula"
+ },
+ "tomo-chan is a girl": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tomo-Chan is a Girl!"
+ },
+ "tony stark": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tower dungeon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tower Dungeon"
+ },
+ "toxic man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Toxic Man"
+ },
+ "trailer": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "transformers": {
+  "type": "series",
+  "episodes": 5,
+  "series": "Transformers"
+ },
+ "translated comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "trash boys": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "travis smith": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "trese": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Trese"
+ },
+ "trickster: native american tales a graphic collection": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Trickster: Native American Tales, A Graphic Collection"
+ },
+ "triscuits": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "trunks": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tsunami": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Tsunami"
+ },
+ "ttrpg": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ttrpgs": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tula lotay": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tv and comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "tv show": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "tv show adaptation": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "twilight": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "twilight: the graphic novels": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "two graves": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Two Graves"
+ },
+ "two-face": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Two-Face"
+ },
+ "tyler jenkins": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "ultimate black panther": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ultimate Black Panther"
+ },
+ "ultimate hawkeye": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ultimate Hawkeye"
+ },
+ "ultimate invasion": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ultimate Invasion"
+ },
+ "ultimate spider-man": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Ultimate Spider-Man"
+ },
+ "ultimate wolverine": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Ultimate Wolverine"
+ },
+ "ultimates": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "ultimatum": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Ultimatum"
+ },
+ "ultramega": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Ultramega"
+ },
+ "uncanny spider-man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Uncanny Spider-Man"
+ },
+ "uncanny x-men": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Uncanny X-Men"
+ },
+ "uncanny x-men annual": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Uncanny X-Men Annual"
+ },
+ "uncle pogo's so-so stories": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Uncle Pogo’s So-So Stories"
+ },
+ "uncle scrooge": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "uncle scrooge: the golden nugget boat": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Uncle Scrooge: The Golden Nugget Boat"
+ },
+ "underwinter: field of feathers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Underwinter: Field of Feathers"
+ },
+ "undiscovered country": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Undiscovered Country"
+ },
+ "unearthly comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "unicorns": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "universal monsters": {
+  "type": "topic",
+  "episodes": 4,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "universal monsters: frankenstein": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Universal Monsters: Frankenstein"
+ },
+ "unnatural": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Unnatural"
+ },
+ "usagi yojimbo": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Usagi Yojimbo"
+ },
+ "vagabond": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vagrant queen": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Vagrant Queen"
+ },
+ "valiant comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vampires": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vampironica": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Vampironica"
+ },
+ "vanish": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Vanish"
+ },
+ "variant covers": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "vault comics": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "vault of spiders": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Vault of Spiders"
+ },
+ "vc’s joe caramagna": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vegeta": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "venom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Venom"
+ },
+ "veronica": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vertigo": {
+  "type": "publisher",
+  "episodes": 3
+ },
+ "vertigo comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vicere": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "video games": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "villains": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "vinland saga": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Vinland Saga"
+ },
+ "violence in comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "violent flowers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Violent Flowers"
+ },
+ "viz": {
+  "type": "publisher",
+  "episodes": 2
+ },
+ "voice actors": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "void rivals": {
+  "type": "series",
+  "episodes": 3,
+  "series": "Void Rivals"
+ },
+ "vox machina": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "w maxwell prince": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "w. maxwell prince": {
+  "type": "creator",
+  "episodes": 6
+ },
+ "w0rldtr33": {
+  "type": "series",
+  "episodes": 1,
+  "series": "W0rldtr33"
+ },
+ "wake now in the fire: a story of censorship": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "walt disney's uncle scrooge: only a poor old man": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "war of the bounty hunters": {
+  "type": "series",
+  "episodes": 1,
+  "series": "War of the Bounty Hunters"
+ },
+ "wasted space": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wasted Space"
+ },
+ "watership down": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Watership Down"
+ },
+ "waves": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Waves"
+ },
+ "we called them giants": {
+  "type": "series",
+  "episodes": 1,
+  "series": "We Called Them Giants"
+ },
+ "we only find them when they're dead": {
+  "type": "series",
+  "episodes": 4,
+  "series": "We Only Find Them When They’re Dead"
+ },
+ "we're howling at the moon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "we’re taking everyone down with us": {
+  "type": "series",
+  "episodes": 1,
+  "series": "We’re Taking Everyone Down With Us"
+ },
+ "wealth inequality": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "webcomic": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "webcomics": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "webtoon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "webtoons": {
+  "type": "topic",
+  "episodes": 3
+ },
+ "wednesday warrior": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "weird manga": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "weird shaped comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "werewolf at dusk": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "werewolf jones": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Werewolf Jones"
+ },
+ "werther dell’edera": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "what if": {
+  "type": "series",
+  "episodes": 2,
+  "series": "What If"
+ },
+ "what if aliens": {
+  "type": "series",
+  "episodes": 1,
+  "series": "What If…? Aliens"
+ },
+ "what the font": {
+  "type": "series",
+  "episodes": 1,
+  "series": "What the Font?!"
+ },
+ "what's the furthest place from here": {
+  "type": "series",
+  "episodes": 2,
+  "series": "What's the Furthest Place from Here"
+ },
+ "when i lay my vengeance upon thee": {
+  "type": "series",
+  "episodes": 1,
+  "series": "When I Lay My Vengeance Upon Thee"
+ },
+ "where the body was": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Where The Body Was"
+ },
+ "white ash": {
+  "type": "series",
+  "episodes": 1,
+  "series": "White Ash"
+ },
+ "whitney cogar": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "whoa nellie": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Whoa, Nellie!"
+ },
+ "why art": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "why she wrote": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Why She Wrote"
+ },
+ "wild's end": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wild's End"
+ },
+ "william of newbury": {
+  "type": "series",
+  "episodes": 1,
+  "series": "William of Newbury"
+ },
+ "wimbledon green": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Wimbledon Green"
+ },
+ "wist": {
+  "type": "series",
+  "episodes": 1,
+  "series": "WIST"
+ },
+ "witch comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "witch hat atelier": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Witch Hat Atelier"
+ },
+ "witchblood": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Witchblood"
+ },
+ "witchcraft": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Witchcraft"
+ },
+ "witches": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Witches"
+ },
+ "witches of brooklyn": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Witches of Brooklyn"
+ },
+ "witchlight": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Witchlight"
+ },
+ "witchy": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Witchy"
+ },
+ "wolves": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "women in comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "women's month": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "wonder twins": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wonder Twins"
+ },
+ "wonder woman": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Wonder Woman"
+ },
+ "wonder woman historia": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wonder Woman: Historia"
+ },
+ "wonder woman: dead earth": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Wonder Woman: Dead Earth"
+ },
+ "wonder woman: death earth": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wonder Woman: Death Earth"
+ },
+ "wonder woman: historia": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wonder Woman: Historia"
+ },
+ "wonder woman: love is a battlefield": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wonder Woman: Love is a Battlefield"
+ },
+ "wonder woman: tempest tossed": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wonder Woman: Tempest Tossed"
+ },
+ "working in comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "world without end": {
+  "type": "series",
+  "episodes": 1,
+  "series": "World Without End"
+ },
+ "worldbuilding": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "wrestle heist": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wrestle Heist"
+ },
+ "wrestlemania": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "wrestling": {
+  "type": "topic",
+  "episodes": 4
+ },
+ "writing comics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "x of swords": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X of Swords"
+ },
+ "x-23": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-23"
+ },
+ "x-factor": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-Factor"
+ },
+ "x-manhunt": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-Manhunt"
+ },
+ "x-men": {
+  "type": "series",
+  "episodes": 29,
+  "series": "X-Men"
+ },
+ "x-men '97": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "x-men cartoon": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "x-men legacy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-Men Legacy"
+ },
+ "x-men: gold": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-Men Gold"
+ },
+ "x-men: lifedeath": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-Men: Lifedeath"
+ },
+ "x-men: red": {
+  "type": "series",
+  "episodes": 1,
+  "series": "X-Men Red"
+ },
+ "yokohama kaidashi kikou": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Yokohama Kaidashi Kikou"
+ },
+ "you can try again": {
+  "type": "series",
+  "episodes": 1,
+  "series": "You Can Try Again"
+ },
+ "you'll do bad things": {
+  "type": "series",
+  "episodes": 1,
+  "series": "You’ll Do Bad Things"
+ },
+ "young hellboy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Young Hellboy"
+ },
+ "youth group": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Youth Group"
+ },
+ "yusagi yojimbo": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "z class": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "z class: trix": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
+ "zack kaplan": {
+  "type": "creator",
+  "episodes": 2
+ },
+ "zanne domoney-lyttle": {
+  "type": "creator",
+  "episodes": 1
+ },
+ "zatanna": {
+  "type": "series",
+  "episodes": 2,
+  "series": "Zatanna"
+ },
+ "zelda twilight princess": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Zelda Twilight Princess"
+ },
+ "zero issues": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "zero year": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "zine": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "zines": {
+  "type": "topic",
+  "episodes": 2
+ },
+ "zombies": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "zoop": {
+  "type": "topic",
+  "episodes": 1
+ }
+}
