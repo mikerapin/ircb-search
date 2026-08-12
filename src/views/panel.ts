@@ -24,8 +24,6 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
     `<div class="pagehead"><div class="eyebrow">Index</div><h1 class="disp">Panelists &amp; Guests</h1>
       <p>${nf(ROSTER.length)} regulars, with portraits and taglines. Everyone else turned up in our credits at
       least once: a creator who came on, a friend who filled a chair. Everybody gets a page.</p>
-      // The alias note that sat here explained a data discrepancy no visitor asked about.
-      // Cut per Mike 2026-08-09; About the Data is where that belongs, if anywhere.
       <div class="statline" style="max-width:none"><b>${nf(data.stats.people)}</b> names in the archive ·
         <b>${nf(ROSTER.length)}</b> on the roster · <b>${nf(guests.length)}</b> guests</div></div>` +
 
