@@ -90,7 +90,7 @@ export function readAlong(
   mentions: Mention[],
   byKey: Map<string, EpisodeCore>,
   gap: { episodes: number; indexed: number },
-  opts?: { mode?: RaMode },
+  opts?: { mode?: RaMode; withDate?: boolean },
 ): string {
   if (!mentions.length) {
     const missing = gap.episodes - gap.indexed;
@@ -98,7 +98,8 @@ export function readAlong(
   }
   const mode = opts?.mode ?? raMode();
   if (mode === "list") {
-    return `<div class="ra-list">${mentions.map((m, i) => raListRow(m, byKey.get(m.epKey), boundary(mentions, i))).join("")}</div>`;
+    return `<div class="ra-list">${mentions.map((m, i) =>
+      raListRow(m, byKey.get(m.epKey), boundary(mentions, i), { withDate: opts?.withDate })).join("")}</div>`;
   }
   const cls = mode === "stack" ? "ra-stack" : "ra-strip";
   return `<div class="${cls}">${mentions.map((m, i) => mentionPanel(m, byKey.get(m.epKey), { until: boundary(mentions, i) })).join("")}</div>`;

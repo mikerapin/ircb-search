@@ -299,3 +299,28 @@ test("the drawer locks the page behind it on mobile, and does not on desktop", a
   await page.mouse.wheel(0, 800);
   await page.waitForFunction(y => window.scrollY > y, deskBefore, { timeout: 10000 });
 });
+
+test("the rail names the date once, not again under every marker", async ({ page }) => {
+  await page.goto("/#/wall");
+  await page.waitForSelector("#wrack .wchip");
+  const key = await page.evaluate(async () => {
+    const core = await fetch("d/core.json").then(r => r.json());
+    return core.episodes.filter(e => e.date && e.mentionCount > 3)
+      .sort((a, b) => b.mentionCount - a.mentionCount)[0].key;
+  });
+  await page.locator(`.cell[data-cell="${key}"]`).click();
+  await page.waitForSelector("#railbody .ra-list");
+
+  // The railhead states it, once, above the list.
+  const stated = (await page.locator("#railk").innerText()).trim();
+  expect(stated).toMatch(/\d{4}/);
+
+  /* Every row is the same episode, so repeating its date under each comic is noise — the
+     same reason the search card turned `withDate` off. The rows still carry their segment
+     when they have one, which is why this asserts on the date and not on `.mt` existing. */
+  const metas = await page.locator("#railbody .ra-row .mt").allInnerTexts();
+  for (const m of metas) {
+    expect(m.toLowerCase(), "a marker row repeats the date the railhead already gave")
+      .not.toContain(stated.toLowerCase());
+  }
+});
