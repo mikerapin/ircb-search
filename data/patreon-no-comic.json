@@ -1,0 +1,45 @@
+{
+  "_note": "Patreon posts with no comic behind them: trailers, series intros, Q&As, live shows, film discussions. Keyed by numeric Patreon post id. seriesPatterns excludes a whole run. Reviewed 2026-08-12.",
+  "seriesPatterns": [
+    {
+      "pattern": "candybar\\s*ant",
+      "name": "Candybar Antlerboy",
+      "why": "a series about a Netflix TV show, never about a comic"
+    }
+  ],
+  "posts": {
+    "30737408": {
+      "title": "Microsode 1 | The Wic+Div Wake"
+    },
+    "23464953": {
+      "title": "Minisode 22 | 2018, Memoriam"
+    },
+    "60102703": {
+      "title": "IRCB Ep 300 Full Interviews"
+    },
+    "60159837": {
+      "title": "Episode 300 Live Q&A"
+    },
+    "64554314": {
+      "title": "IRCB - The Phantom Menace (IRCB Audio Only)"
+    },
+    "69190337": {
+      "title": "IRCB - Attack of the Clones (IRCB Audio Only)"
+    },
+    "70456126": {
+      "title": "IRCB - Revenge of the Sith (IRCB Audio Only)"
+    },
+    "76522613": {
+      "title": "IRCB - The Princess Bride (1987)"
+    },
+    "77662829": {
+      "title": "IRCB Episode 357 Q&A"
+    },
+    "95136385": {
+      "title": "IRCB comiXology Memoriam"
+    },
+    "118922509": {
+      "title": "Kraven the Hunter (2024)"
+    }
+  }
+}

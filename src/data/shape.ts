@@ -84,8 +84,75 @@ export function shapeEpisodes(raw: unknown[]): EpisodeCore[] {
       playerId: text(e["player_id"]),
       simplecastUrl: text(e["simplecast_url"]),
       patreonUrl: text(e["patreon_url"]),
+      parentKey: null,
     };
   });
+}
+
+/**
+ * The 146 undated, id-less rows in the upstream table are the hand-maintained Patreon shelf.
+ * `fetch_patreon.py` reads the same episodes out of the Secret Feed with real dates, artwork
+ * and links, and finds 300 rather than 146, so the shelf is replaced rather than merged.
+ *
+ * The pre-feed back catalogue also has no Simplecast id, but it does have dates, which is
+ * what separates the two groups.
+ */
+export function isPatreonShelfRow(e: EpisodeCore): boolean {
+  return e.showId === null && e.date === null;
+}
+
+/**
+ * Fold a title down to letters and digits for matching across the two feeds.
+ *
+ * `get_episodes.py` keeps only the half after the pipe, so the table holds "Go Look At A Real
+ * Boob" where the Patreon feed names "Episode 399 | Not Legally A Weatherperson". Strip that
+ * prefix, then drop punctuation, because the two feeds also disagree about smart quotes.
+ */
+function titleKey(title: string): string {
+  return title
+    .replace(/^\s*episode\s+\d+\s*[|:]\s*/i, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+/** Patreon-only episodes from data/patreon.json, keyed `p:<numeric patreon post id>`. */
+export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): EpisodeCore[] {
+  const byTitle = new Map<string, string>();
+  for (const e of published) if (e.title) byTitle.set(titleKey(e.title), e.key);
+
+  return raw.map(r => {
+    const e = rec(r);
+    const parentTitle = text(e["parentTitle"]);
+    return {
+      key: "p:" + text(e["guid"]),
+      showId: null,
+      title: text(e["title"]) ?? "",
+      date: toIsoDate(e["date"]),
+      people: [],                       // the feed credits nobody; the schedule sheet will
+      runtimeSecs: num(e["durationSecs"]),
+      mentionCount: 0,
+      artwork: text(e["artwork"]),
+      enclosure: null,                  // per-patron and signed, so it never ships
+      playerId: null,
+      simplecastUrl: null,
+      patreonUrl: text(e["url"]),
+      parentKey: parentTitle ? byTitle.get(titleKey(parentTitle)) ?? null : null,
+    };
+  });
+}
+
+/** One mention per comic named on a Patreon episode. No timestamp: none was ever logged. */
+export function shapePatreonMentions(raw: unknown[]): Mention[] {
+  const out: Mention[] = [];
+  for (const r of raw) {
+    const e = rec(r);
+    const key = "p:" + text(e["guid"]);
+    for (const c of Array.isArray(e["comics"]) ? e["comics"] : []) {
+      const comic = clean(c);
+      if (comic) out.push({ comic, series: normalizeSeries(comic), epKey: key, segment: null, secs: null });
+    }
+  }
+  return out;
 }
 
 export function shapeDetails(raw: unknown[]): EpisodeDetail[] {

@@ -6,9 +6,21 @@ const shape = await vite.ssrLoadModule("/src/data/shape.ts");
 const seriesIndex = await vite.ssrLoadModule("/src/data/series-index.ts");
 
 const epsRaw = JSON.parse(readFileSync("data/episodes.json", "utf8"));
-const eps = shape.shapeEpisodes(epsRaw);
 const det = shape.shapeDetails(epsRaw);
-const men = shape.shapeMentions(JSON.parse(readFileSync("data/comics.json", "utf8")), eps);
+
+/* The upstream table's Patreon shelf is 146 hand-typed rows with no date, no link and no
+   comics. data/patreon.json holds the same shelf read out of the Secret Feed — 300 episodes
+   with real dates, artwork, public post URLs and, where anything states one, comics. Drop the
+   shelf and use the feed. Everything else in the table is untouched. */
+const published = shape.shapeEpisodes(epsRaw).filter(e => !shape.isPatreonShelfRow(e));
+const patreonRaw = JSON.parse(readFileSync("data/patreon.json", "utf8")).episodes;
+const patreon = shape.shapePatreonEpisodes(patreonRaw, published);
+const eps = [...published, ...patreon];
+
+const men = [
+  ...shape.shapeMentions(JSON.parse(readFileSync("data/comics.json", "utf8")), eps),
+  ...shape.shapePatreonMentions(patreonRaw),
+];
 shape.attachMentionCounts(eps, men);
 
 // Keys are route parameters. A collision would silently merge two episodes into one page.

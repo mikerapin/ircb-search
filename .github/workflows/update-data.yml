@@ -24,11 +24,25 @@ jobs:
       - name: Export data
         run: python export_data.py
 
+      # The Secret Feed URL is per-patron: it is a credential, so it lives in repository
+      # secrets and never in the tree. Skip rather than fail when it is absent, so a fork or a
+      # run before the secret exists still refreshes the public half instead of going red.
+      # data/patreon.json stays at whatever was last committed in that case.
+      - name: Export Patreon episodes
+        env:
+          PATREON_RSS_URL: ${{ secrets.PATREON_RSS_URL }}
+        run: |
+          if [ -z "$PATREON_RSS_URL" ]; then
+            echo "PATREON_RSS_URL is not set — keeping the committed data/patreon.json"
+          else
+            python fetch_patreon.py
+          fi
+
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/comics.json data/episodes.json
+          git add data/comics.json data/episodes.json data/patreon.json
           # NO [skip ci] HERE. It was correct when the site was "deploy from a branch" and the
           # raw files in the repo *were* the site, so a data commit updated it with no build.
           # The site is a Vite build now: `npm run build` runs scripts/build-data.mjs, and

@@ -15,11 +15,17 @@ test("a square for every dated episode, and none for the undated", async ({ page
   const dated = core.episodes.filter(e => e.date);
 
   await expect(page.locator(".cell")).toHaveCount(dated.length);
-  expect(dated.length).toBeLessThan(core.stats.episodes);   // there really are undated ones
 
-  // ...and the legend says how many are missing rather than leaving it to be noticed.
-  await expect(page.locator(".walllegend")).toContainText(
-    String(core.stats.episodes - dated.length));
+  /* Every episode carries an air date now that the Patreon feed replaced the undated shelf,
+     so the exclusion below has nothing to exclude today. It stays because it is the rule the
+     Wall is built on: the day a dateless record comes back, this is what catches it dropping
+     off the grid silently. The legend only speaks when it has something to report. */
+  const missing = core.stats.episodes - dated.length;
+  if (missing > 0) {
+    await expect(page.locator(".walllegend")).toContainText(String(missing));
+  } else {
+    await expect(page.locator(".walllegend")).not.toContainText("carry no air date");
+  }
 
   const keys = await page.locator(".cell").evaluateAll(els => els.map(e => e.dataset.cell));
   const undated = new Set(core.episodes.filter(e => !e.date).map(e => e.key));

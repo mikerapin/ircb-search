@@ -65,12 +65,17 @@ export function wallGrid(episodes: EpisodeCore[], opts?: { only?: Set<string>; m
       `<div class="ycells">${eps.map(cell).join("")}</div></div>`;
   }).join("");
 
+  /* Since the Patreon feed replaced the undated shelf every episode has an air date, so this
+     note would read "0 episodes carry no air date" — a sentence about something that does not
+     happen. Say it only when there is something to say. */
+  const missing = undated === 0 ? "" :
+    `<span style="margin-left:auto">${nf(undated)} episode${pl(undated)} carry no air date, so they have ` +
+    `no square here. They&rsquo;re all still in <a href="${href("/search")}">search</a>.</span>`;
+
   const legend = opts?.mini ? "" :
     `<div class="walllegend"><span><i class="s0"></i>Not logged</span>` +
     `<span><i class="s2"></i>Some comics</span><span><i class="s4"></i>A full pull list</span>` +
-    `<span><i class="sh"></i>Matches your search</span>` +
-    `<span style="margin-left:auto">${nf(undated)} episode${pl(undated)} carry no air date, so they have ` +
-    `no square here. They&rsquo;re all still in <a href="${href("/search")}">search</a>.</span></div>`;
+    `<span><i class="sh"></i>Matches your search</span>${missing}</div>`;
 
   return `<div class="${opts?.mini ? "wall mini" : "wall"}" id="wall" style="--cols:${cols}">${body}${legend}</div>`;
 }

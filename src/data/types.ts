@@ -11,6 +11,10 @@ export interface EpisodeCore {
   playerId: string | null;
   simplecastUrl: string | null;
   patreonUrl: string | null;
+  /* The episode a Patreon post-credits segment belongs to. Those segments are loose chatter
+     recorded after a taping, so they carry no mentions of their own — attaching the parent's
+     would claim they discussed books they never named. The link is the honest version. */
+  parentKey: string | null;
 }
 
 export interface EpisodeDetail { key: string; summary: string | null; keywords: string[] }

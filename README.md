@@ -77,15 +77,41 @@ streamed the enclosure would inflate the very numbers it exists to protect.
 
 ## Update data
 
-Source data comes from [sshugars/ircb](https://github.com/sshugars/ircb):
+Two sources. The public run comes from [sshugars/ircb](https://github.com/sshugars/ircb); the
+Patreon-only episodes come from the IRCB Secret Feed.
 
 ```bash
-npm run export       # export_data.py → data/comics.json + data/episodes.json
-npm run build        # → public/d/*.json, the chunks the app actually loads
+npm run export           # export_data.py  → data/comics.json + data/episodes.json
+npm run export:patreon   # fetch_patreon.py → data/patreon.json
+npm run build            # → public/d/*.json, the chunks the app actually loads
 ```
 
-`update-data.yml` runs the export every Thursday at 3am UTC, after the Wednesday episode
-drops, and commits the result.
+`update-data.yml` runs both every Thursday at 3am UTC, after the Wednesday episode drops, and
+commits the result.
+
+### The Patreon half
+
+`fetch_patreon.py` needs `PATREON_RSS_URL` — in the environment, in a gitignored `.env`, or as
+a repository secret in CI. The feed URL is per-patron, so it is a credential.
+
+The feed carries 742 items, but 442 are the public episodes served ad-free. Those already
+arrive from Simplecast, so only the 300 Patreon-only ones are kept. They replace the 146
+hand-typed rows the upstream table used to hold, which had no date, no link and no comics.
+
+**Its `<enclosure>` never ships.** The URL embeds a per-patron signature
+(`/api/rss/u/<token>/e/<id>.mp3?sig=…`) and publishing one would hand a private feed to anyone
+reading the site. Only `<link>` goes out, which is the public `patreon.com/ircbpodcast/posts/…`
+page. `tests/unit/patreon.test.ts` asserts both the null field and the absence of the pattern
+anywhere in the built chunk.
+
+Comics are attached by rule, in order: `data/patreon-comics.json` (hand-checked overrides),
+`data/patreon-no-comic.json` (trailers, Q&As, film episodes, and the whole Candybar Antlerboy
+run), the read-along's subject, the monthly Goodreads pick named after a colon in the title,
+and the two books in a `X vs Y` title. An episode nothing matches is still a real episode; it
+just carries no mention.
+
+Post-credits segments link to the episode they follow via `parentKey` and carry **no** mentions.
+Copying the parent's comics onto them would claim they discussed books they never named.
 
 ## Deploy
 

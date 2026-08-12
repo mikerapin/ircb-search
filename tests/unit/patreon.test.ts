@@ -4,48 +4,77 @@ import { describe, expect, it } from "vitest";
 import type { CoreData } from "../../src/data/types";
 
 /**
- * `data/patreon-series.json` is seven hand-written pattern → URL entries, and it is the only
- * thing that turns a Patreon-only episode into a link. It covers all 146 today. Nothing tells
- * anyone when it stops covering them.
+ * The Patreon shelf used to be 146 hand-typed rows in the upstream table with no date and no
+ * link, and the test here watched for a new spin-off arriving unmatched by
+ * `data/patreon-series.json`. `fetch_patreon.py` reads the Secret Feed directly now, so every
+ * Patreon episode arrives with its own date and its own post URL and that failure mode is
+ * gone. What replaces it is a sharper worry.
  *
- * An episode that never appeared in the Simplecast sheet has no date — that is what the Wall's
- * legend counts, and it is exactly the shape of a Patreon spin-off. So the day a new series
- * launches, its episodes arrive dateless and unmatched, get no "Listen on Patreon" link, and
- * the site quietly says nothing about where to hear them. This is the thing that notices.
+ * The feed's `<enclosure>` embeds a per-patron signature — `/api/rss/u/<token>/e/<id>.mp3?sig=`
+ * — and publishing one would hand a private feed to anyone who read the built site. The fetch
+ * drops it and `shapePatreonEpisodes` sets `enclosure: null`, so two separate things have to
+ * stay right. This is what notices if either stops.
  *
- * It reads the built chunk on purpose: the pattern list is only wrong relative to real data,
- * so a fixture could not fail for the reason this exists.
+ * It reads the built chunk on purpose: a fixture cannot leak a real token, so it could not
+ * fail for the reason this exists.
  */
 
 const PATH = "public/d/core.json";
 
-describe("the Patreon shelf", () => {
-  it("has a collection link for every episode that lives only on Patreon", () => {
-    expect(existsSync(PATH), `${PATH} is generated — run \`npm run build\` first`).toBe(true);
-    const core = JSON.parse(readFileSync(PATH, "utf8")) as CoreData;
+function core(): CoreData {
+  expect(existsSync(PATH), `${PATH} is generated — run \`npm run build\` first`).toBe(true);
+  return JSON.parse(readFileSync(PATH, "utf8")) as CoreData;
+}
 
-    /* One record carries no title at all, and no pattern can ever match nothing. It is a known
-       hole in the source data rather than a missing series, so it is excluded by name here —
-       if a second one shows up, that is worth hearing about. */
-    const titleless = core.episodes.filter(e => !e.date && !e.title);
-    expect(titleless.length, "more than one undated episode has no title").toBeLessThanOrEqual(1);
+const patreonOnly = (data: CoreData) => data.episodes.filter(e => e.key.startsWith("p:"));
 
-    const unlinked = core.episodes
-      .filter(e => !e.date && e.title && !e.patreonUrl)
-      .map(e => e.title);
+describe("the Patreon feed", () => {
+  it("never ships a per-patron media URL", () => {
+    const data = core();
+    const leaked = patreonOnly(data).filter(e => e.enclosure !== null);
+    expect(leaked.map(e => e.title), "enclosure must stay null on Patreon episodes").toEqual([]);
 
-    expect(unlinked, "add the series to data/patreon-series.json").toEqual([]);
+    /* Belt and braces, against the whole file rather than one field: the signature pattern
+       must not appear anywhere, however it got there. */
+    expect(readFileSync(PATH, "utf8")).not.toMatch(/\/api\/rss\/u\/[^/]+\/e\//);
   });
 
-  it("every pattern still matches something, so a renamed series is noticed too", () => {
-    const core = JSON.parse(readFileSync(PATH, "utf8")) as CoreData;
-    const dead = core.patreonSeries
-      .filter(s => !core.episodes.some(e => e.title?.includes(s.pattern)))
-      .map(s => s.pattern);
+  it("gives every Patreon episode a public post page to link to", () => {
+    const unlinked = patreonOnly(core())
+      .filter(e => !e.patreonUrl?.startsWith("https://www.patreon.com/ircbpodcast/posts/"))
+      .map(e => e.title);
+    expect(unlinked, "every Patreon episode needs its own post URL").toEqual([]);
+  });
 
-    /* The other direction, and the quieter one: a pattern that matches nothing is either a
-       series that was renamed upstream or a typo, and either way some episodes lost their
-       link without anything going obviously wrong. */
+  it("points every post-credits segment at an episode that exists", () => {
+    const data = core();
+    const keys = new Set(data.episodes.map(e => e.key));
+    const dangling = patreonOnly(data)
+      .filter(e => e.parentKey !== null && !keys.has(e.parentKey))
+      .map(e => e.title);
+    expect(dangling, "parentKey must resolve; the two feeds title episodes differently").toEqual([]);
+  });
+
+  it("gives post-credits segments no mentions of their own", () => {
+    /* They are chatter recorded after a taping. Copying the parent episode's comics onto them
+       would assert they discussed books they never named, and those false mentions would then
+       inflate every series page and panelist percentage that counts them. */
+    const withMentions = patreonOnly(core())
+      .filter(e => e.parentKey !== null && e.mentionCount > 0)
+      .map(e => e.title);
+    expect(withMentions).toEqual([]);
+  });
+
+  it("has replaced the undated shelf rather than adding to it", () => {
+    const stranded = core().episodes.filter(e => !e.showId && !e.date && !e.patreonUrl);
+    expect(stranded.map(e => e.title), "the hand-typed shelf should be gone").toEqual([]);
+  });
+
+  it("every series pattern still matches something, so a rename is noticed", () => {
+    const data = core();
+    const dead = data.patreonSeries
+      .filter(s => !data.episodes.some(e => e.title?.includes(s.pattern)))
+      .map(s => s.pattern);
     expect(dead, "these patterns no longer match any episode").toEqual([]);
   });
 });

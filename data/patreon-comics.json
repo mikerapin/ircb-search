@@ -1,0 +1,84 @@
+{
+  "_note": "Comics named by Mike for Patreon posts whose description does not state them plainly enough to parse. Keyed by the numeric Patreon post id, which survives title and description edits. Reviewed 2026-08-12.",
+  "posts": {
+    "52781216": {
+      "title": "Giant Days of Our Lives - Episode 15: Extra Credit",
+      "comics": [
+        "Giant Days: Extra Credit"
+      ]
+    },
+    "39788732": {
+      "title": "July 2020 Goodreads Book of the Month: Strange Fruit: Uncelebrated Narratives from Black History",
+      "comics": [
+        "Strange Fruit"
+      ]
+    },
+    "42096725": {
+      "title": "September 2020 Goodreads Book of the Month: Snow, Glass, Apples",
+      "comics": [
+        "Snow, Glass, Apples"
+      ]
+    },
+    "44348441": {
+      "title": "November 2020 Goodreads Book of the Month: Marvel 1602",
+      "comics": [
+        "Marvel 1602"
+      ]
+    },
+    "49213537": {
+      "title": "March 2021 Goodreads Book of the Month: Superman Smashes The Klan",
+      "comics": [
+        "Superman Smashes The Klan"
+      ]
+    },
+    "59254253": {
+      "title": "November 2021 Goodreads Book of the Month: House of X / Powers of X",
+      "comics": [
+        "House of X",
+        "Powers of X"
+      ]
+    },
+    "64636254": {
+      "title": "March 2022 Goodreads Book of the Month: Run",
+      "comics": [
+        "Run"
+      ]
+    },
+    "110989356": {
+      "title": "The Comics That We Love - Bucky Barnes: The Winter Soldier",
+      "comics": [
+        "Bucky Barnes: The Winter Soldier"
+      ]
+    },
+    "153789421": {
+      "title": "Patreon Exclusive! Comics Adapted from Novels",
+      "comics": [
+        "All You Need is Kill",
+        "The Hedge Knight",
+        "Song of the Lioness"
+      ],
+      "from": "description prose"
+    },
+    "80536571": {
+      "title": "A Better Batmobile S02E01: The Untold Legend of the Batman",
+      "comics": [
+        "The Untold Legend of the Batman"
+      ],
+      "from": "title"
+    },
+    "162272835": {
+      "title": "I Read Star Wars Comic Books: Maul Rats",
+      "comics": [
+        "Star Wars: Darth Maul #1-5"
+      ],
+      "from": "Mike; the description names the series but not the issue range"
+    },
+    "81901237": {
+      "title": "Mike's X-Men Blind Box (Pilot)",
+      "comics": [
+        "X-Men: Golgotha"
+      ],
+      "from": "description prose"
+    }
+  }
+}

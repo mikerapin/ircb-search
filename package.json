@@ -9,6 +9,7 @@
     "test": "playwright test",
     "test:unit": "vitest run",
     "export": "python export_data.py",
+    "export:patreon": "python fetch_patreon.py",
     "check": "tsc --noEmit"
   },
   "devDependencies": {
