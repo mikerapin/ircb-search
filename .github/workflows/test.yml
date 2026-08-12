@@ -22,5 +22,16 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
-      - name: Run tests
+      # `public/d/*.json` is gitignored — it is generated, not committed — so a fresh checkout
+      # has no data at all and every route paints the offline message. This step was missing,
+      # and the whole e2e suite had been failing on every push since the app became a build.
+      # `npm run build` is also the typecheck (`tsc --noEmit`) and the data generation.
+      - name: Build
+        run: npm run build
+
+      # The 80 unit tests were never run in CI. Only `npm test` was, which is Playwright alone.
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: End-to-end tests
         run: npm test
