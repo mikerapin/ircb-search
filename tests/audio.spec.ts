@@ -510,8 +510,17 @@ test("the lock screen is told what is playing, and told when it stops", async ({
   // The comic leads, because a jump plays a comic, not a whole episode.
   expect(on.title).toBe(comic);
   expect(on.album).toBe("I Read Comic Books");
-  // The state the OS is shown has to be the state the element is actually in.
-  expect(on.state).toBe(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).paused ? "paused" : "playing"));
+  /* The state the OS is shown has to be the state the element is actually in.
+     Both halves are read in ONE evaluate on purpose. Reading the session and then the element
+     in two round-trips compares two different moments of a tape that is moving, and under CI
+     load the gap is wide enough for playback to flip between them — this assertion failed
+     that way on bf9e3dd and again on b5f64e8, passing in isolation both times. The invariant
+     is that the pair agrees at an instant, so the pair has to be sampled at one. */
+  const shown = await page.evaluate(() => ({
+    state: navigator.mediaSession.playbackState,
+    paused: (document.getElementById("au") as HTMLAudioElement).paused,
+  }));
+  expect(shown.state).toBe(shown.paused ? "paused" : "playing");
   /* The episode title and panel are the second line — read from core.json, not the heading,
      which the stylesheet renders uppercase and innerText returns transformed. */
   expect(on.artist).toContain(ep!.title);
