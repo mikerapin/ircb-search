@@ -72,9 +72,42 @@ describe("the Patreon feed", () => {
 
   it("every series pattern still matches something, so a rename is noticed", () => {
     const data = core();
+    const loose = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
     const dead = data.patreonSeries
-      .filter(s => !data.episodes.some(e => e.title?.includes(s.pattern)))
+      .filter(s => !data.episodes.some(e => loose(e.title ?? "").includes(loose(s.pattern))))
       .map(s => s.pattern);
     expect(dead, "these patterns no longer match any episode").toEqual([]);
+  });
+
+  it("notices a run in the feed that the house ad does not promote", () => {
+    /* The ad is editorial — data/patreon-series.json decides what gets sold — but it went
+       stale silently: it named seven runs covering 150 of 300 episodes, and the JLI series
+       launched in July invisible to it. Nothing failed, because the old guard only checked
+       that listed patterns still matched.
+
+       This looks the other way. Titles are clustered on their opening words, and a cluster
+       big enough to be a run rather than a one-off has to be either promoted or deliberately
+       left off. Adding it to patreon-series.json is the fix. */
+    const data = core();
+    const loose = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    const patterns = data.patreonSeries.map(s => loose(s.pattern));
+
+    /* Cluster on the opening words, but judge coverage by whether the episodes themselves
+       match a promoted pattern. Comparing the stem to the pattern looks equivalent and is
+       not: "Mike & Paul Read Doom Patrol Part 6" stems to "mike paul read", which contains
+       no pattern even though the episode is promoted under "Doom Patrol". */
+    const clusters = new Map<string, string[]>();
+    for (const e of patreonOnly(data)) {
+      const stem = loose(e.title).split(" ").slice(0, 3).join(" ");
+      if (stem.length < 6) continue;
+      (clusters.get(stem) ?? clusters.set(stem, []).get(stem)!).push(e.title);
+    }
+
+    const covered = (title: string) => patterns.some(p => loose(title).includes(p));
+    const unpromoted = [...clusters]
+      .filter(([, titles]) => titles.length >= 4 && !titles.some(covered))
+      .map(([stem, titles]) => `${stem} (${titles.length})`);
+
+    expect(unpromoted, "add these to data/patreon-series.json, or widen a pattern").toEqual([]);
   });
 });

@@ -74,16 +74,21 @@ export function panelGrid(core: CoreData): string {
 export function patreonAd(core: CoreData): string {
   const runs = core.patreonSeries;
   if (!runs.length) return "";
+
+  /* Episodes, not series, is the honest size of the thing being sold: the runs listed here
+     used to cover half the shelf while the ad implied they were all of it. */
+  const total = core.episodes.filter(e => e.key.startsWith("p:")).length;
+
   return `<section class="sec"><div class="housead">
     <div class="hh"><span class="k">Only on Patreon</span>
-      <span class="s">${runs.length} bonus series · house ad</span></div>
+      <span class="s">${runs.length} runs · ${nf(total)} episodes · house ad</span></div>
     <div class="hb">
       <p>Some episodes are only available to those willing to toss a few bucks to us, all on Patreon.</p>
       <div class="adgrid">${runs.map(p =>
         `<a class="adslot" href="${esc(p.url)}" style="container-type:inline-size">` +
           cover(p.name, "", p.name, "PAT") +
           `<span class="nm">${esc(p.name)}</span>` +
-          `<span class="go">Members only →</span></a>`).join("")}</div>
+          `<span class="go">${nf(p.episodes)} episode${pl(p.episodes)} →</span></a>`).join("")}</div>
       <div class="linkrow"><a href="${SUBSCRIBE.patreon}">patreon.com/ircbpodcast →</a></div>
     </div>
   </div></section>`;

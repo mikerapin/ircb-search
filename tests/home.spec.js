@@ -59,7 +59,19 @@ test("patreon house ad lists the bonus runs with real collection links", async (
   for (const href of await slots.evaluateAll(els => els.map(a => a.getAttribute("href")))) {
     expect(href).toMatch(/^https:\/\/(www\.)?patreon\.com\//);
   }
-  await expect(page.locator(".housead .hh .s")).toContainText(`${n} bonus series`);
+  await expect(page.locator(".housead .hh .s")).toContainText(`${n} runs`);
+
+  /* The ad quotes episode counts now, and they are the whole reason the section is worth
+     more than a list of names. Anchor them on the data too: the header total is every
+     Patreon-only episode, and each slot carries its own run's size. */
+  const total = core.episodes.filter(e => e.key.startsWith("p:")).length;
+  expect(total).toBeGreaterThan(n);
+  await expect(page.locator(".housead .hh .s")).toContainText(`${total} episodes`);
+
+  const shown = await slots.locator(".go").evaluateAll(els =>
+    els.map(e => Number(e.textContent.replace(/[^0-9]/g, ""))));
+  expect(shown).toEqual(core.patreonSeries.map(s => s.episodes));
+  expect(shown.every(v => v > 0)).toBe(true);
 });
 
 test("coupon carries the locked wording", async ({ page }) => {

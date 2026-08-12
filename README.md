@@ -113,6 +113,13 @@ just carries no mention.
 Post-credits segments link to the episode they follow via `parentKey` and carry **no** mentions.
 Copying the parent's comics onto them would claim they discussed books they never named.
 
+`data/patreon-series.json` still decides which runs the home page promotes — that is an
+editorial call — but their episode counts and their fallback links are counted from the feed
+at build time, so neither can go stale. A run with no Patreon collection page links to its
+newest post instead. `tests/unit/patreon.test.ts` clusters feed titles and fails when a run
+large enough to matter is missing from that file, which is how the JLI series stayed invisible
+after launching in July.
+
 ## Deploy
 
 `deploy.yml` builds on push to `main` and publishes `dist/` to GitHub Pages. The job asserts

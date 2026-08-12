@@ -30,6 +30,14 @@ export interface Stats {
   people: number;
 }
 
-export interface PatreonSeries { pattern: string; name: string; url: string }
+export interface PatreonSeries {
+  pattern: string;
+  name: string;
+  /* The Patreon collection page when one exists, else the newest post in the run — a real
+     page either way. Some series have never been collected, and linking them at the campaign
+     root told a reader nothing about what they were being sold. */
+  url: string;
+  episodes: number;      // counted from the feed at build time, so it cannot go stale
+}
 
 export interface CoreData { stats: Stats; episodes: EpisodeCore[]; patreonSeries: PatreonSeries[] }

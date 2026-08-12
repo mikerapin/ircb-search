@@ -1,4 +1,4 @@
-import type { EpisodeCore, EpisodeDetail, Mention, Stats } from "./types";
+import type { EpisodeCore, EpisodeDetail, Mention, PatreonSeries, Stats } from "./types";
 import { ALIASES } from "./roster";
 import { clean, normalizeSeries, pickDisplayNames, seriesKey, yearSensitiveKeys } from "./series";
 
@@ -139,6 +139,39 @@ export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): 
       parentKey: parentTitle ? byTitle.get(titleKey(parentTitle)) ?? null : null,
     };
   });
+}
+
+/** Punctuation and case folded away, so "Book vs Book" finds "Book vs. Book 11". */
+function loose(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+/**
+ * Count each promoted Patreon run against the feed, and give it something real to link to.
+ *
+ * The counts used to be absent and the list hand-maintained, so the house ad named seven runs
+ * covering 150 of the 300 Patreon episodes and said nothing about how big any of them were.
+ * `data/patreon-series.json` still decides what gets promoted — that is an editorial call —
+ * but existence, size and the fallback link are read from the feed.
+ */
+export function buildPatreonSeries(raw: unknown[], curated: unknown[]): PatreonSeries[] {
+  const episodes = raw.map(r => rec(r));
+  const out: PatreonSeries[] = [];
+
+  for (const c of curated.map(rec)) {
+    const pattern = text(c["pattern"]);
+    const name = text(c["name"]);
+    if (!pattern || !name) continue;
+    const needle = loose(pattern);
+    const hits = episodes.filter(e => loose(String(e["title"] ?? "")).includes(needle));
+    if (!hits.length) continue;                 // a renamed run, caught by patreon.test.ts
+
+    /* Newest first is how fetch_patreon.py sorts, so the first hit is the latest post. */
+    const url = text(c["url"]) ?? text(hits[0]?.["url"]);
+    if (url) out.push({ pattern, name, url, episodes: hits.length });
+  }
+
+  return out.sort((a, b) => b.episodes - a.episodes || a.name.localeCompare(b.name));
 }
 
 /** One mention per comic named on a Patreon episode. No timestamp: none was ever logged. */
