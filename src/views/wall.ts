@@ -44,10 +44,10 @@ function cell(e: EpisodeCore): string {
   const when = fmtDate(e.date);
   const title = e.title || "Untitled episode";
   const what = e.mentionCount ? `${e.mentionCount} comic${pl(e.mentionCount)} discussed` : "comics not logged";
-  const who = e.people.length ? `Panel: ${e.people.join(", ")}` : "Panel unknown";
+  const who = e.people.length ? ` Panel: ${e.people.join(", ")}.` : "";
   return `<button class="cell n${ramp(e.mentionCount)}" type="button" data-cell="${esc(e.key)}"` +
     ` title="${esc(`${when} — ${title}`)}"` +
-    ` aria-label="${esc(`${when}. ${title}. ${what}. ${who}`)}"></button>`;
+    ` aria-label="${esc(`${when}. ${title}. ${what}.${who}`)}"></button>`;
 }
 
 /** Shared with the panelist mini-wall, which passes `only`. */
@@ -278,7 +278,7 @@ function openRail(
   const runtime = fmtRuntime(e.runtimeSecs);
   body.innerHTML =
     `<h2 class="disp" style="margin:0"><a href="${epLink}">${esc(e.title || "Untitled episode")}</a></h2>
-     <div class="credits">${esc(e.people.join(" · ") || "Panel unknown")}${runtime ? ` · ${esc(runtime)}` : ""}</div>
+     <div class="credits">${esc([...e.people, runtime].filter(Boolean).join(" · "))}</div>
      ${list === null
         ? `<p class="lead">Loading the comics for this one…</p>`
         : readAlong(mine, byKey, gap, { mode: "list", withDate: false })}

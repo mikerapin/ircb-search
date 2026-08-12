@@ -14,12 +14,13 @@ const det = shape.shapeDetails(epsRaw);
    shelf and use the feed. Everything else in the table is untouched. */
 const published = shape.shapeEpisodes(epsRaw).filter(e => !shape.isPatreonShelfRow(e));
 const patreonRaw = JSON.parse(readFileSync("data/patreon.json", "utf8")).episodes;
-const patreon = shape.shapePatreonEpisodes(patreonRaw, published);
+const patreon = shape.dropUnreleased(shape.shapePatreonEpisodes(patreonRaw, published));
 const eps = [...published, ...patreon];
 
+const live = new Set(patreon.map(e => e.key));
 const men = [
   ...shape.shapeMentions(JSON.parse(readFileSync("data/comics.json", "utf8")), eps),
-  ...shape.shapePatreonMentions(patreonRaw),
+  ...shape.shapePatreonMentions(patreonRaw).filter(m => live.has(m.epKey)),
 ];
 shape.attachMentionCounts(eps, men);
 

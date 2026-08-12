@@ -117,18 +117,22 @@ function titleKey(title: string): string {
 
 /** Patreon-only episodes from data/patreon.json, keyed `p:<numeric patreon post id>`. */
 export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): EpisodeCore[] {
-  const byTitle = new Map<string, string>();
-  for (const e of published) if (e.title) byTitle.set(titleKey(e.title), e.key);
+  const byTitle = new Map<string, EpisodeCore>();
+  for (const e of published) if (e.title) byTitle.set(titleKey(e.title), e);
 
   return raw.map(r => {
     const e = rec(r);
     const parentTitle = text(e["parentTitle"]);
+    const parent = parentTitle ? byTitle.get(titleKey(parentTitle)) : undefined;
     return {
       key: "p:" + text(e["guid"]),
       showId: null,
       title: text(e["title"]) ?? "",
       date: toIsoDate(e["date"]),
-      people: [],                       // the feed credits nobody; the schedule sheet will
+      /* The feed credits nobody, so a post-credits segment read "Panel unknown" beside the
+         episode it was recorded straight after, by the same people. Borrow theirs. A run with
+         no parent still has no panel, and the card says nothing rather than saying that. */
+      people: parent?.people ?? [],
       runtimeSecs: num(e["durationSecs"]),
       mentionCount: 0,
       artwork: text(e["artwork"]),
@@ -136,9 +140,42 @@ export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): 
       playerId: null,
       simplecastUrl: null,
       patreonUrl: text(e["url"]),
-      parentKey: parentTitle ? byTitle.get(titleKey(parentTitle)) ?? null : null,
+      parentKey: parent?.key ?? null,
     };
   });
+}
+
+const POST_CREDITS = /post[\s-]*credits?/i;
+
+/**
+ * Hold back a regular episode that reached Patreon before the public feed, and its
+ * post-credits with it.
+ *
+ * Patrons get the week's episode early, so between the Patreon drop and the Wednesday
+ * release the pair sits in the Secret Feed and nowhere else. Publishing them then means a
+ * card with no panel, no comics and no minutes — the show's own listing spoiling a title
+ * before it airs. They arrive properly on the next refresh once Simplecast has them.
+ *
+ * The tell is structural rather than a date window: a post-credits segment whose parent is
+ * not a public episode, but IS another item in this same feed. A genuine Patreon-only run
+ * never has that shape.
+ */
+export function dropUnreleased(patreon: EpisodeCore[]): EpisodeCore[] {
+  const byTitle = new Map<string, EpisodeCore>();
+  for (const e of patreon) if (e.title) byTitle.set(titleKey(e.title), e);
+
+  const held = new Set<string>();
+  for (const e of patreon) {
+    if (e.parentKey || !POST_CREDITS.test(e.title)) continue;
+    const stem = e.title.replace(POST_CREDITS, "").replace(/^[\s:\-–—|]+|[\s:\-–—|]+$/g, "");
+    const sibling = stem ? byTitle.get(titleKey(stem)) : undefined;
+    if (sibling) {
+      held.add(e.key);
+      held.add(sibling.key);
+    }
+  }
+
+  return patreon.filter(e => !held.has(e.key));
 }
 
 /** Punctuation and case folded away, so "Book vs Book" finds "Book vs. Book 11". */

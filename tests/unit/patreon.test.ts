@@ -28,6 +28,10 @@ function core(): CoreData {
 
 const patreonOnly = (data: CoreData) => data.episodes.filter(e => e.key.startsWith("p:"));
 
+/** Same folding the shaper uses to match a segment to its episode across the two feeds. */
+const titleish = (t: string) =>
+  t.replace(/^\s*episode\s+\d+\s*[|:]\s*/i, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+
 describe("the Patreon feed", () => {
   it("never ships a per-patron media URL", () => {
     const data = core();
@@ -53,6 +57,35 @@ describe("the Patreon feed", () => {
       .filter(e => e.parentKey !== null && !keys.has(e.parentKey))
       .map(e => e.title);
     expect(dangling, "parentKey must resolve; the two feeds title episodes differently").toEqual([]);
+  });
+
+  it("borrows the panel from the episode a post-credits segment follows", () => {
+    /* The feed credits nobody, so these read "Panel unknown" beside the episode they were
+       recorded straight after, by the same three people. */
+    const data = core();
+    const byKey = new Map(data.episodes.map(e => [e.key, e]));
+    const wrong = patreonOnly(data)
+      .filter(e => e.parentKey)
+      .filter(e => {
+        const parent = byKey.get(e.parentKey!);
+        return parent && parent.people.join("|") !== e.people.join("|");
+      })
+      .map(e => e.title);
+    expect(wrong, "a segment's panel should match its episode's").toEqual([]);
+  });
+
+  it("holds back an episode that reached Patreon before the public feed", () => {
+    /* Patrons get the week's episode early. Publishing it then means a card with no panel,
+       no comics and no minutes, spoiling a title before it airs. The pair returns on the
+       refresh after Simplecast has it. The tell is a post-credits segment whose parent is
+       not public but is another item in the same feed. */
+    const data = core();
+    const shown = new Set(patreonOnly(data).map(e => titleish(e.title)));
+    const early = patreonOnly(data)
+      .filter(e => !e.parentKey && /post[\s-]*credits?/i.test(e.title))
+      .filter(e => shown.has(titleish(e.title.replace(/post[\s-]*credits?/i, ""))))
+      .map(e => e.title);
+    expect(early, "these and their episode should wait for the public release").toEqual([]);
   });
 
   it("gives post-credits segments no mentions of their own", () => {

@@ -36,17 +36,25 @@ function art(e: EpisodeCore): string {
  */
 export function episodePanel(e: EpisodeCore, opts?: { extra?: string }): string {
   const n = e.mentionCount;
+
+  /* A post-credits segment logs no comics and no minutes, so this card used to read
+     "0 comics", "Panel unknown" and "0 moments" — three labels announcing three absences.
+     Say nothing instead: a count of zero is not information a reader needs. */
+  const micro = [fmtDate(e.date) || "Date unknown", n ? `${n} comic${pl(n)}` : ""]
+    .filter(Boolean).join(" · ");
+  const panel = e.people.join(", ");
+
   return `<article class="panel${opts?.extra ? " epcard" : ""}" data-ep="${esc(e.key)}"><div class="epw">` +
     art(e) +
     `<div class="pbody">` +
-      `<div class="micro" style="opacity:.7">${esc(fmtDate(e.date) || "Date unknown")} · ${n} comic${pl(n)}</div>` +
+      `<div class="micro" style="opacity:.7">${esc(micro)}</div>` +
       `<h3 class="disp" style="font-size:17px;margin:0;line-height:1.05">` +
         `<a href="${epHref(e)}" style="color:inherit">${esc(e.title || "Untitled episode")}</a></h3>` +
-      `<div class="credits">${esc(e.people.join(", ") || "Panel unknown")}</div>` +
+      (panel ? `<div class="credits">${esc(panel)}</div>` : "") +
       (opts?.extra ?? "") +
       `<div class="spacer"></div>` +
       `<a class="ts dark" href="${epHref(e)}"><span class="tri">▤</span>Open the episode` +
-        `<span class="lab">${n} moment${pl(n)}</span></a>` +
+        (n ? `<span class="lab">${n} moment${pl(n)}</span>` : "") + `</a>` +
     `</div>` +
   `</div></article>`;
 }
