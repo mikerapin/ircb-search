@@ -6,6 +6,12 @@ __pycache__/
 # Node
 node_modules/
 
+# Secrets. The Patreon RSS URL is per-patron and the Spotify pair is a live credential,
+# so neither may ever reach a commit. CI reads them from repository secrets instead.
+.env
+.env.*
+!.env.example
+
 # Playwright output
 test-results/
 playwright-report/
