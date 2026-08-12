@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import type { Page } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
 // The prototype names these .cover-hero / .panels > .panel — the plan's .hero/.plate
 // were approximations, and the prototype's markup is the authority.
@@ -24,10 +26,10 @@ test("hero links to a real episode and counts are honest", async ({ page }) => {
 
 test("statement of circulation matches the data exactly", async ({ page }) => {
   await page.goto("/");
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
   const tiles = page.locator(".stats .st");
   await expect(tiles).toHaveCount(4);
-  const nf = n => n.toLocaleString("en-US");
+  const nf = (n: number) => n.toLocaleString("en-US");
   await expect(tiles.nth(0).locator(".n")).toHaveText(nf(core.stats.episodes));
   await expect(tiles.nth(1).locator(".n")).toHaveText(nf(core.stats.mentions));
   await expect(tiles.nth(2).locator(".n")).toHaveText(nf(core.stats.series));
@@ -52,7 +54,7 @@ test("patreon house ad lists the bonus runs with real collection links", async (
      from the same runs.length in blocks.ts, so reading n off the rendered slots and then
      comparing it to the rendered header could only ever detect a mismatch it also caused.
      tests/subscribe.spec.js already anchors on the data this way. */
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
   const n = core.patreonSeries.length;
   expect(n).toBeGreaterThan(0);
   await expect(slots).toHaveCount(n);
@@ -94,7 +96,7 @@ test("rack and shuffle hydrate after first paint", async ({ page }) => {
    lives in a later text node the scan never reached. Walk them all — and run the same scan
    on a route that renders mention plates, since the rack is a handful of series and the same
    generated plates appear on every search result and read-along panel. */
-async function midWordBreaks(page, selector) {
+async function midWordBreaks(page: Page, selector: string) {
   await page.evaluate(() => document.fonts.ready);
   return page.locator(selector).evaluateAll(els => {
     const bad = [];
@@ -126,7 +128,7 @@ test("generated plate titles never break mid-word", async ({ page }) => {
      generated titles is the busiest episodes' own comic lists — 144 distinct titles across
      these three, four of them with a slash, against the 36 the search sweep reached. */
   const keys = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     return core.episodes.slice()
       .sort((a, b) => b.mentionCount - a.mentionCount).slice(0, 3).map(e => e.key);
   });
@@ -139,7 +141,7 @@ test("generated plate titles never break mid-word", async ({ page }) => {
 });
 
 test("first paint fetches core.json only", async ({ page }) => {
-  const data = [];
+  const data: string[] = [];
   page.on("request", r => {
     const u = new URL(r.url());
     if (u.pathname.startsWith("/d/")) data.push(u.pathname);
@@ -159,7 +161,7 @@ test("first paint fetches core.json only", async ({ page }) => {
 });
 
 test("home is axe clean with no console errors", async ({ page }) => {
-  const errors = [];
+  const errors: Error[] = [];
   page.on("pageerror", e => errors.push(e));
   await page.goto("/");
   await expect(page.locator(".cover-hero")).toBeVisible();
@@ -175,10 +177,10 @@ test("the hero wears the show's own episode number, not a count of anything", as
   // comes from the episode record, and the two counts it must NOT equal are asserted by name.
   await page.goto("/");
   await page.waitForSelector(".cover-hero");
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
   const feed = core.episodes.filter(e => e.showId && e.date)
-    .sort((a, b) => a.date.localeCompare(b.date));
-  const newest = feed[feed.length - 1];
+    .sort((a, b) => (a.date ?? "").localeCompare(b.date ?? ""));
+  const newest = feed[feed.length - 1]!;
 
   expect(newest.ep).toBeGreaterThan(0);
   const micro = await page.locator(".hero-side .micro").innerText();
@@ -187,9 +189,9 @@ test("the hero wears the show's own episode number, not a count of anything", as
   expect(newest.ep).toBeLessThan(feed.length);
   expect(micro).not.toContain(String(core.stats.episodes));
   expect(micro).not.toContain(`EP. ${feed.length}`);
-  await expect(page.locator("#dressno")).toHaveText(`EP. ${newest.ep.toLocaleString("en-US")}`);
+  await expect(page.locator("#dressno")).toHaveText(`EP. ${newest.ep!.toLocaleString("en-US")}`);
   expect(newest.key).toBe(await page.locator(".hero-title a").getAttribute("href")
-    .then(h => decodeURIComponent(h.replace("#/ep/", ""))));
+    .then(h => decodeURIComponent((h ?? "").replace("#/ep/", ""))));
 });
 
 test("nothing inside an episode panel escapes its own border", async ({ page }) => {
@@ -206,9 +208,9 @@ test("nothing inside an episode panel escapes its own border", async ({ page }) 
     await page.waitForTimeout(600);
     const escaped = await page.evaluate(() => {
       const out = [];
-      for (const panel of document.querySelectorAll(".panel")) {
+      for (const panel of document.querySelectorAll<HTMLElement>(".panel")) {
         const pb = panel.getBoundingClientRect();
-        for (const el of panel.querySelectorAll("*")) {
+        for (const el of panel.querySelectorAll<HTMLElement>("*")) {
           const b = el.getBoundingClientRect();
           if (!b.width) continue;
           const over = Math.max(b.right - pb.right, b.bottom - pb.bottom, pb.left - b.left, pb.top - b.top);
@@ -231,8 +233,8 @@ test("every homepage section keeps its air", async ({ page }) => {
   // The Shuffle and the Spinner Rack are injected into wrapper divs, which made their
   // lone section :last-child and zeroed the bottom margin — the next heading sat flush.
   const gaps = await page.evaluate(() => {
-    const headOf = t => [...document.querySelectorAll(".sec-head")].find(h => h.textContent.includes(t));
-    const gap = (sel, t) => {
+    const headOf = (t: string) => [...document.querySelectorAll<HTMLElement>(".sec-head")].find(h => h.textContent?.includes(t));
+    const gap = (sel: string, t: string) => {
       const a = document.querySelector(sel), h = headOf(t);
       return a && h ? Math.round(h.getBoundingClientRect().top - a.getBoundingClientRect().bottom) : null;
     };

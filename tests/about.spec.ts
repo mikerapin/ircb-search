@@ -1,12 +1,14 @@
 import { test, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import type { CoreData, Mention } from "../src/data/types";
 
-const nf = n => n.toLocaleString("en-US");
+const nf = (n: number) => n.toLocaleString("en-US");
 
-async function data(page) {
+async function data(page: Page) {
   return page.evaluate(async () => {
     const [core, men] = await Promise.all([
-      fetch("d/core.json").then(r => r.json()),
-      fetch("d/mentions.json").then(r => r.json()),
+      fetch("d/core.json").then(r => r.json() as Promise<CoreData>),
+      fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>),
     ]);
     /* jumpable() re-implemented from its documented rule rather than imported, so a silent
        change to the rule in engine.ts shows up here as a failure instead of agreeing with
@@ -63,17 +65,17 @@ test("the three eras partition the archive", async ({ page }) => {
   await expect(page.locator(".sparse")).toBeVisible();
   const { core } = await data(page);
   const counts = await page.evaluate(() =>
-    Object.fromEntries([...document.querySelectorAll("#view .kv > div")].flatMap(row => {
-      const dt = row.querySelector("dt")?.textContent?.trim();
-      const n = row.querySelector("dd")?.textContent?.trim().match(/^([\d,]+)/);
-      return dt && n ? [[dt, Number(n[1].replace(/,/g, ""))]] : [];
+    Object.fromEntries([...document.querySelectorAll<HTMLElement>("#view .kv > div")].flatMap(row => {
+      const dt = row.querySelector<HTMLElement>("dt")?.textContent?.trim();
+      const n = row.querySelector<HTMLElement>("dd")?.textContent?.trim().match(/^([\d,]+)/);
+      return dt && n?.[1] ? [[dt, Number(n[1].replace(/,/g, ""))]] : [];
     })));
 
   const eps = core.episodes;
   expect(counts["In the feed"]).toBe(eps.filter(e => e.showId).length);
   expect(counts["Before the feed"]).toBe(eps.filter(e => !e.showId && !e.patreonUrl).length);
   expect(counts["The Patreon shelf"]).toBe(eps.filter(e => !e.showId && e.patreonUrl).length);
-  expect(counts["In the feed"] + counts["Before the feed"] + counts["The Patreon shelf"])
+  expect((counts["In the feed"] ?? 0) + (counts["Before the feed"] ?? 0) + (counts["The Patreon shelf"] ?? 0))
     .toBe(core.stats.episodes);
   // Every record lands in exactly one bucket — the property the sum only implies.
   expect(eps.filter(e => [!!e.showId, !e.showId && !e.patreonUrl, !e.showId && !!e.patreonUrl]
@@ -115,15 +117,15 @@ test("the published normalization rules describe what the code actually does", a
   expect(text).toMatch(/chapter/i);          // manga chapters are stripped too
 
   // ...and the claims hold against the real index.
-  const { core } = await page.evaluate(async () => ({ core: await fetch("d/core.json").then(r => r.json()) }));
-  const men = await page.evaluate(() => fetch("d/mentions.json").then(r => r.json()));
+  const { core } = await page.evaluate(async () => ({ core: await fetch("d/core.json").then(r => r.json() as Promise<CoreData>) }));
+  const men = await page.evaluate(() => fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>));
   const names = new Set(men.map(m => m.series));
   const folded = new Set(men.filter(m => /Star Wars.{0,3}Visions/i.test(m.comic)).map(m => m.series));
   if (folded.size) expect(folded.size).toBe(1);        // one run, not two
   // Was `expect(true).toBe(true)`. The page claims these are kept apart; prove it.
   expect(names.has("Monster")).toBe(true);
   expect(names.has("Monsters")).toBe(true);
-  const runFor = t => [...new Set(men.filter(m => m.comic.trim().toLowerCase() === t).map(m => m.series))];
+  const runFor = (t: string) => [...new Set(men.filter(m => m.comic.trim().toLowerCase() === t).map(m => m.series))];
   expect(runFor("monster")).toEqual(["Monster"]);
   expect(runFor("monsters")).toEqual(["Monsters"]);
   expect(core.stats.uniqueComics).toBeGreaterThan(core.stats.series);

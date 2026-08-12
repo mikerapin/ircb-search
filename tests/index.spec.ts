@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
 test("the index lists every series, A to Z", async ({ page }) => {
   await page.goto("/#/index");
   await page.waitForSelector(".azrow");
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
 
   // Every heading is on the page — no silent truncation.
   await expect(page.locator(".azrow")).toHaveCount(core.stats.series);
@@ -17,10 +18,10 @@ test("the index lists every series, A to Z", async ({ page }) => {
 });
 
 test("the index renders from its own chunk, never the mention list", async ({ page }) => {
-  const chunks = [];
+  const chunks: string[] = [];
   page.on("request", r => {
     const m = r.url().match(/\/d\/([\w.-]+)$/);
-    if (m) chunks.push(m[1]);
+    if (m?.[1]) chunks.push(m[1]);
   });
   await page.goto("/#/index");
   await page.waitForSelector(".azrow");
@@ -38,7 +39,7 @@ test("buckets are sorted and rows sorted within them", async ({ page }) => {
   await page.goto("/#/index");
   await page.waitForSelector(".azrow");
   const letters = await page.locator(".azsec > h2").evaluateAll(els =>
-    els.map(e => e.firstChild.textContent.trim()));
+    els.map(e => e.firstChild?.textContent?.trim() ?? ""));
   expect(letters).toEqual([...letters].sort());
 
   const first = await page.locator(".azsec").first().locator(".azrow .nm").evaluateAll(els =>
@@ -52,7 +53,7 @@ test("a row opens its series page", async ({ page }) => {
   const name = await page.locator(".azrow .nm").first().textContent();
   await page.locator(".azrow").first().click();
   await expect(page).toHaveURL(/#\/series\//);
-  await expect(page.locator(".issue-head h1")).toHaveText(name);
+  await expect(page.locator(".issue-head h1")).toHaveText(name ?? "");
 });
 
 test("the A-Z bar scrolls without hijacking the route", async ({ page }) => {
@@ -66,8 +67,8 @@ test("the A-Z bar scrolls without hijacking the route", async ({ page }) => {
   const r = await page.evaluate(() => {
     const h = document.getElementById("az-S");
     return {
-      top: h.getBoundingClientRect().top,
-      barBottom: document.querySelector(".azbar").getBoundingClientRect().bottom,
+      top: h!.getBoundingClientRect().top,
+      barBottom: document.querySelector<HTMLElement>(".azbar")!.getBoundingClientRect().bottom,
       vh: window.innerHeight,
       focused: document.activeElement?.id,
     };

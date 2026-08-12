@@ -1,12 +1,14 @@
 import { test, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import type { CoreData } from "../src/data/types";
 
 /**
  * The Wall is a calendar, so the thing worth asserting hardest is what is NOT on it: an
  * episode with no air date has no square, because there is nowhere honest to put it.
  */
 
-const data = page => page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+const data = (page: Page) => page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
 
 test("a square for every dated episode, and none for the undated", async ({ page }) => {
   await page.goto("/#/wall");
@@ -29,17 +31,17 @@ test("a square for every dated episode, and none for the undated", async ({ page
 
   const keys = await page.locator(".cell").evaluateAll(els => els.map(e => e.dataset.cell));
   const undated = new Set(core.episodes.filter(e => !e.date).map(e => e.key));
-  expect(keys.filter(k => undated.has(k))).toEqual([]);
+  expect(keys.filter(k => undated.has(k ?? ""))).toEqual([]);
 });
 
 test("the ink ramp actually varies with how many comics were logged", async ({ page }) => {
   await page.goto("/#/wall");
   await page.waitForSelector(".cell");
   const buckets = await page.locator(".cell").evaluateAll(els => {
-    const out = {};
+    const out: Record<string, number> = {};
     for (const e of els) {
       const m = e.className.match(/\bn(\d)\b/);
-      if (m) out[m[1]] = (out[m[1]] ?? 0) + 1;
+      if (m?.[1]) out[m[1]] = (out[m[1]] ?? 0) + 1;
     }
     return out;
   });
@@ -56,9 +58,9 @@ test("years group in order and the counts on each row are real", async ({ page }
   await page.goto("/#/wall");
   await page.waitForSelector(".yrow");
   const rows = await page.locator(".yrow").evaluateAll(els => els.map(el => ({
-    year: el.querySelector(".ylab").firstChild.textContent.trim(),
-    label: Number((el.querySelector(".cnt").textContent.match(/\d+/) ?? [0])[0]),
-    cells: el.querySelectorAll(".cell").length,
+    year: el.querySelector<HTMLElement>(".ylab")!.firstChild?.textContent?.trim() ?? "",
+    label: Number((el.querySelector<HTMLElement>(".cnt")!.textContent.match(/\d+/) ?? [0])[0]),
+    cells: el.querySelectorAll<HTMLElement>(".cell").length,
   })));
   expect(rows.length).toBeGreaterThan(1);
   // Reverse chronological: newest year at the top.
@@ -71,7 +73,7 @@ test("years group in order and the counts on each row are real", async ({ page }
     els.map(e => e.dataset.cell));
   const core = await data(page);
   const dateOf = new Map(core.episodes.map(e => [e.key, e.date]));
-  const dates = keys.map(k => dateOf.get(k));
+  const dates = keys.map(k => dateOf.get(k ?? ""));
   expect(dates.length).toBeGreaterThan(1);
   expect(dates).toEqual([...dates].sort());
 });
@@ -118,7 +120,7 @@ test("a panelist filter needs no comic data and marks itself pressed", async ({ 
   const hits = await page.locator(".cell.hit").count();
   const core = await data(page);
   // Panel membership lives in core.json, so this must work whether or not mentions loaded.
-  const expected = core.episodes.filter(e => e.date && e.people.includes(who)).length;
+  const expected = core.episodes.filter(e => e.date && e.people.includes(who ?? "")).length;
   expect(hits).toBe(expected);
 
   await face.click();
@@ -150,7 +152,7 @@ test("?e= centres a square and fires the arrival cue once", async ({ page }) => 
   await page.waitForSelector(".cell");
   const key = await page.locator(".cell").nth(200).getAttribute("data-cell");
 
-  await page.goto("/#/wall?e=" + encodeURIComponent(key));
+  await page.goto("/#/wall?e=" + encodeURIComponent(key ?? ""));
   const cell = page.locator(`.cell[data-cell="${key}"]`);
   await expect(cell).toHaveClass(/\bcurrent\b/);
   // The swirl is one-time: it plays and removes itself, leaving the steady outline.
@@ -165,7 +167,7 @@ test("no sideways scroll at 390, and the phone grid is the 13-column one", async
   expect(await page.evaluate(() =>
     document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
   const cols = await page.evaluate(() =>
-    getComputedStyle(document.querySelector(".ycells")).gridTemplateColumns.split(" ").length);
+    getComputedStyle(document.querySelector<HTMLElement>(".ycells")!).gridTemplateColumns.split(" ").length);
   expect(cols).toBe(13);
 });
 
@@ -173,8 +175,8 @@ test("the wall is axe clean on both plates with no console errors", async ({ pag
   for (const neg of [false, true]) {
     const ctx = await page.context().newPage();
     if (neg) await ctx.addInitScript(() => localStorage.setItem("ircb.neg", "1"));
-    const errors = [];
-    ctx.on("pageerror", e => errors.push(String(e)));
+    const errors: Error[] = [];
+    ctx.on("pageerror", e => errors.push(e));
     await ctx.goto("/#/wall");
     await ctx.waitForSelector("#wrack .wchip");
     const axe = await new AxeBuilder({ page: ctx }).analyze();
@@ -189,7 +191,7 @@ test("the rail overlays the wall instead of shoving it sideways", async ({ page 
   await page.goto("/#/wall");
   await page.waitForSelector("#wrack .wchip");
 
-  const box = sel => page.locator(sel).first().evaluate(el => {
+  const box = (sel: string) => page.locator(sel).first().evaluate(el => {
     const r = el.getBoundingClientRect();
     return { left: Math.round(r.left), width: Math.round(r.width) };
   });
@@ -216,7 +218,7 @@ test("the rail overlays the wall instead of shoving it sideways", async ({ page 
   const key = await second.getAttribute("data-cell");
   await second.click();
   await expect(page.locator("#rail")).toBeVisible();
-  await expect(page.locator(`#railbody a[href="#/ep/${encodeURIComponent(key)}"]`).first()).toBeVisible();
+  await expect(page.locator(`#railbody a[href="#/ep/${encodeURIComponent(key ?? "")}"]`).first()).toBeVisible();
 });
 
 test("the rail lists its markers rather than sliding them sideways", async ({ page }) => {
@@ -230,9 +232,9 @@ test("the rail lists its markers rather than sliding them sideways", async ({ pa
   /* Pick a square with comics logged, or the rail renders the "nobody indexed this" line
      and there is no layout to judge. */
   const key = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     return core.episodes.filter(e => e.date && e.mentionCount > 2)
-      .sort((a, b) => b.mentionCount - a.mentionCount)[0].key;
+      .sort((a, b) => b.mentionCount - a.mentionCount)[0]!.key;
   });
   // No CSS.escape here — this runs in node, not the browser. A quoted attribute value
   // handles the `:` and `|` in a synthetic episode key on its own.
@@ -259,7 +261,7 @@ test("the drawer locks the page behind it on mobile, and does not on desktop", a
      even ran — the lock then correctly captured the new position and the assertion compared
      against the old one. */
   const before = await page.evaluate(() => {
-    const onScreen = [...document.querySelectorAll(".cell")].find(c => {
+    const onScreen = [...document.querySelectorAll<HTMLElement>(".cell")].find(c => {
       const r = c.getBoundingClientRect();
       return r.top > 120 && r.bottom < window.innerHeight - 60;
     });
@@ -310,9 +312,9 @@ test("the rail names the date once, not again under every marker", async ({ page
   await page.goto("/#/wall");
   await page.waitForSelector("#wrack .wchip");
   const key = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     return core.episodes.filter(e => e.date && e.mentionCount > 3)
-      .sort((a, b) => b.mentionCount - a.mentionCount)[0].key;
+      .sort((a, b) => b.mentionCount - a.mentionCount)[0]!.key;
   });
   await page.locator(`.cell[data-cell="${key}"]`).click();
   await page.waitForSelector("#railbody .ra-list");

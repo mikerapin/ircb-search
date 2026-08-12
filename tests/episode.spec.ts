@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import type { Page } from "@playwright/test";
+import type { CoreData, EpisodeDetail, Mention } from "../src/data/types";
 
 // Real classes from the prototype: .issue-head / .art / .meta / .crew / .notes / .tags,
 // and .togg / .ra-list / .ra-row for the read-along.
 
-async function openNewestEpisode(page) {
+async function openNewestEpisode(page: Page) {
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   await page.locator(".cover-hero .big-play").click();
@@ -23,7 +25,7 @@ test("episode page shows artwork, credits, notes and read-along", async ({ page 
   // Row count matches the count the page itself claims, now stated in the hero colophon.
   // /i because .artcap is text-transform:uppercase and innerText returns rendered text.
   const colo = await page.locator(".colo").innerText();
-  const claimed = Number(colo.match(/(\d+) indexed/i)[1]);
+  const claimed = Number(colo.match(/(\d+) indexed/i)?.[1] ?? "0");
   await expect(page.locator("#readalong .panel")).toHaveCount(claimed);
 
   /* The colophon states "N playable" only when some comics cannot be played — saying
@@ -43,12 +45,12 @@ test("keyword tags search, and the crew links to panelists", async ({ page }) =>
   await page.waitForSelector("body[data-ready]");
   const key = await page.evaluate(async () => {
     // detail.json is an array of {key, summary, keywords}, not a map.
-    const det = await fetch("d/detail.json").then(r => r.json());
+    const det = await fetch("d/detail.json").then(r => r.json() as Promise<EpisodeDetail[]>);
     return det.find(d => (d?.keywords ?? []).length > 0)?.key ?? null;
   });
   expect(key, "no episode in detail.json carries keywords").not.toBeNull();
 
-  await page.goto("/#/ep/" + encodeURIComponent(key));
+  await page.goto("/#/ep/" + encodeURIComponent(key ?? ""));
   await expect(page.locator(".issue-head h1")).not.toBeEmpty();
 
   /* The crew clause of this test's own name, which was only ever asserted as an href
@@ -92,8 +94,8 @@ test("timestamp rows are honest about what cannot be played", async ({ page }) =
   await expect(rows.first()).toBeVisible();
   // Every row either offers a real minute or says plainly that it has none.
   const bad = await rows.evaluateAll(els => els.filter(el => {
-    const t = el.querySelector(".t")?.textContent ?? "";
-    const cue = el.querySelector(".cue")?.textContent ?? "";
+    const t = el.querySelector<HTMLElement>(".t")?.textContent ?? "";
+    const cue = el.querySelector<HTMLElement>(".cue")?.textContent ?? "";
     const playable = /\d+:\d\d/.test(t);
     return playable ? !cue.includes("Play") : !(t.includes("—") && cue.includes("Open"));
   }).length);
@@ -104,12 +106,12 @@ test("the strip scrolls itself and never the page", async ({ page }) => {
   await openNewestEpisode(page);
   await page.waitForSelector("#readalong .ra-strip");
   const r = await page.evaluate(() => {
-    const s = document.querySelector(".ra-strip");
-    s.scrollLeft = s.scrollWidth;
-    const last = s.lastElementChild.getBoundingClientRect();
+    const s = document.querySelector<HTMLElement>(".ra-strip");
+    s!.scrollLeft = s!.scrollWidth;
+    const last = s!.lastElementChild!.getBoundingClientRect();
     return {
-      overflowX: getComputedStyle(s).overflowX,
-      lastReachable: last.right <= s.getBoundingClientRect().right + 2,
+      overflowX: getComputedStyle(s!).overflowX,
+      lastReachable: last.right <= s!.getBoundingClientRect().right + 2,
       pageScrollsSideways: document.documentElement.scrollWidth > document.documentElement.clientWidth,
     };
   });
@@ -137,17 +139,17 @@ test("an episode with no artwork gets a blank variant plate", async ({ page }) =
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   const key = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     return core.episodes.find(e => !e.artwork && e.title)?.key ?? null;
   });
   test.skip(!key, "every episode has artwork");
-  await page.goto("/#/ep/" + encodeURIComponent(key));
+  await page.goto("/#/ep/" + encodeURIComponent(key ?? ""));
   await expect(page.locator(".art .gc.blank")).toBeVisible();
   await expect(page.locator(".art .gc-pub")).toHaveText("No artwork on file");
 });
 
 test("episode page is axe clean with no console errors", async ({ page }) => {
-  const errors = [];
+  const errors: Error[] = [];
   page.on("pageerror", e => errors.push(e));
   await openNewestEpisode(page);
   await expect(page.locator("#readalong")).toBeVisible();
@@ -180,7 +182,7 @@ test("the page leads with in-page playback, not with the off-site link", async (
 
   // The play control is the last thing in the reading column, after the notes and tags.
   const order = await page.evaluate(() => {
-    const kids = [...document.querySelector(".meta").children];
+    const kids = [...document.querySelector<HTMLElement>(".meta")!.children];
     return {
       play: kids.findIndex(k => k.classList.contains("big-play")),
       tags: kids.findIndex(k => k.classList.contains("tags")),
@@ -214,8 +216,8 @@ test("a read-along row with no logged minute refuses honestly", async ({ page })
   await page.waitForSelector("body[data-ready]");
   const key = await page.evaluate(async () => {
     const [core, men] = await Promise.all([
-      fetch("d/core.json").then(r => r.json()),
-      fetch("d/mentions.json").then(r => r.json()),
+      fetch("d/core.json").then(r => r.json() as Promise<CoreData>),
+      fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>),
     ]);
     const byKey = new Map(core.episodes.map(e => [e.key, e]));
     const byEp = new Map();
@@ -226,21 +228,21 @@ test("a read-along row with no logged minute refuses honestly", async ({ page })
     // An episode that has audio and mixes logged and unlogged minutes.
     for (const [k, list] of byEp) {
       const e = byKey.get(k);
-      if (e?.enclosure && list.some(m => m.secs == null) && list.some(m => m.secs != null)) return k;
+      if (e?.enclosure && list.some((m: Mention) => m.secs == null) && list.some((m: Mention) => m.secs != null)) return k;
     }
     return null;
   });
   test.skip(!key, "no episode mixes logged and unlogged minutes");
 
-  await page.goto("/#/ep/" + encodeURIComponent(key));
+  await page.goto("/#/ep/" + encodeURIComponent(key ?? ""));
   await page.getByRole("button", { name: "Timestamps" }).click();
   await page.waitForSelector("#readalong .ra-row");
 
   const rows = await page.locator("#readalong .rawrap").evaluateAll(els => els.map(el => ({
-    playable: !!el.querySelector("button.ra-row[data-act=cut]"),
-    stamp: el.querySelector(".t")?.textContent ?? "",
-    cue: el.querySelector(".cue")?.textContent ?? "",
-    href: el.querySelector("a.ra-row")?.getAttribute("href") ?? null,
+    playable: !!el.querySelector<HTMLElement>("button.ra-row[data-act=cut]"),
+    stamp: el.querySelector<HTMLElement>(".t")?.textContent ?? "",
+    cue: el.querySelector<HTMLElement>(".cue")?.textContent ?? "",
+    href: el.querySelector<HTMLAnchorElement>("a.ra-row")?.getAttribute("href") ?? null,
   })));
   const dead = rows.filter(r => !r.playable);
   expect(dead.length).toBeGreaterThan(0);

@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio } from "./fake-audio.js";
+import { stubAudio } from "./fake-audio";
+import type { Page } from "@playwright/test";
+import type { CoreData, Mention } from "../src/data/types";
 
 /**
  * Regression tests for fixes that shipped with nothing holding them in place.
@@ -10,7 +12,7 @@ import { stubAudio } from "./fake-audio.js";
  * a revert. Each test below was verified by mutation — revert the fix, the test fails.
  */
 
-async function openEpisode(page) {
+async function openEpisode(page: Page) {
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   await page.locator(".cover-hero .big-play").click();
@@ -18,12 +20,12 @@ async function openEpisode(page) {
 }
 
 /* Compress the first two segments into the stub's runtime, the way audio.spec does. */
-async function shortSegment(page, len = 6) {
+async function shortSegment(page: Page, len = 6) {
   return page.evaluate(l => {
-    const [first, second] = document.querySelectorAll("#readalong .panel");
-    first.dataset.secs = "2";
-    first.dataset.until = String(2 + l);
-    first.querySelector("[data-act=cut]").dataset.secs = "2";
+    const [first, second] = document.querySelectorAll<HTMLElement>("#readalong .panel");
+    first!.dataset.secs = "2";
+    first!.dataset.until = String(2 + l);
+    first!.querySelector<HTMLElement>("[data-act=cut]")!.dataset.secs = "2";
     if (second) { second.dataset.secs = String(2 + l); second.dataset.until = String(2 + l * 2); }
     return { secs: 2, until: 2 + l };
   }, len);
@@ -41,12 +43,12 @@ test("dragging the seek slider past the segment end does not rewind you to it", 
      opt-out, the next timeupdate read this drag as a completed segment: paused, handed over
      to the next panel and seeked backwards to that panel's start. */
   await page.evaluate(() => {
-    const s = document.querySelector(".panel.playing .player [data-role=seek]");
-    s.value = "45";
-    s.dispatchEvent(new Event("input", { bubbles: true }));
+    const s = document.querySelector<HTMLInputElement>(".panel.playing .player [data-role=seek]");
+    s!.value = "45";
+    s!.dispatchEvent(new Event("input", { bubbles: true }));
   });
   await page.waitForTimeout(700);
-  const t = await page.evaluate(() => document.getElementById("au").currentTime);
+  const t = await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).currentTime);
   expect(t, `rewound to the segment boundary at ${seg.until}s`).toBeGreaterThan(20);
 });
 
@@ -124,18 +126,18 @@ test("two comics logged at the same minute hand over forwards, not backwards", a
      The bug only shows when playback STARTS on the first of the twins, so panel 1 is the
      one clicked and panel 2 is its twin. Panel 3 is the correct target. */
   const ok = await page.evaluate(() => {
-    const p = [...document.querySelectorAll("#readalong .panel")];
+    const p = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
     if (p.length < 4) return false;
-    const set = (el, secs, until) => {
+    const set = (el: HTMLElement, secs: number, until: number) => {
       el.dataset.secs = String(secs);
       if (until == null) delete el.dataset.until; else el.dataset.until = String(until);
-      const b = el.querySelector("[data-act=cut]");
+      const b = el.querySelector<HTMLElement>("[data-act=cut]");
       if (b) b.dataset.secs = String(secs);
     };
-    set(p[0], 1, 2);
-    set(p[1], 2, 8);       // clicked; its segment ends at 8, skipping the twin
-    set(p[2], 2, 8);       // the twin — same minute, must NOT be handed to
-    set(p[3], 8, 20);      // the real next segment
+    set(p[0]!, 1, 2);
+    set(p[1]!, 2, 8);       // clicked; its segment ends at 8, skipping the twin
+    set(p[2]!, 2, 8);       // the twin — same minute, must NOT be handed to
+    set(p[3]!, 8, 20);      // the real next segment
     return true;
   });
   test.skip(!ok, "episode has fewer than four panels");
@@ -143,14 +145,14 @@ test("two comics logged at the same minute hand over forwards, not backwards", a
   await page.locator("#readalong .panel").nth(1).locator("[data-act=cut]").click();
   // Ride past the boundary at 8s; the handover must skip the twin and land on panel 3.
   await page.waitForFunction(() => {
-    const p = [...document.querySelectorAll("#readalong .panel")];
-    return p.indexOf(document.querySelector("#readalong .panel.playing")) !== 1;
+    const p = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
+    return p.indexOf(document.querySelector<HTMLElement>("#readalong .panel.playing")!) !== 1;
   }, null, { timeout: 20000 });
 
   const landed = await page.evaluate(() => {
-    const p = [...document.querySelectorAll("#readalong .panel")];
-    const playing = document.querySelector("#readalong .panel.playing");
-    return { idx: p.indexOf(playing), secs: Number(playing.dataset.secs), t: document.getElementById("au").currentTime };
+    const p = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
+    const playing = document.querySelector<HTMLElement>("#readalong .panel.playing");
+    return { idx: p.indexOf(playing!), secs: Number(playing!.dataset.secs), t: (document.getElementById("au") as HTMLAudioElement).currentTime };
   });
   expect(landed.idx, "handed over to the twin, which shares the minute just played").toBe(3);
   expect(landed.secs).toBe(8);
@@ -169,12 +171,12 @@ test("the seek slider's spoken position matches its thumb", async ({ page }) => 
      instants up to 14 seconds apart. */
   await page.waitForTimeout(400);
   const s = await page.evaluate(() => {
-    const el = document.querySelector(".panel.playing .player [data-role=seek]");
-    const clock = n => {
+    const el = document.querySelector<HTMLInputElement>(".panel.playing .player [data-role=seek]");
+    const clock = (n: number) => {
       const x = Math.floor(n), h = Math.floor(x / 3600), m = Math.floor((x % 3600) / 60), sec = x % 60;
       return (h ? h + ":" + String(m).padStart(2, "0") : String(m)) + ":" + String(sec).padStart(2, "0");
     };
-    return { value: Number(el.value), step: el.step, spoken: el.getAttribute("aria-valuetext"), expect: clock(Number(el.value)) };
+    return { value: Number(el!.value), step: el!.step, spoken: el!.getAttribute("aria-valuetext"), expect: clock(Number(el!.value)) };
   });
   expect(Number(s.value) % Number(s.step)).toBe(0);   // the browser really does snap
   expect(s.spoken).toBe(s.expect);
@@ -188,8 +190,8 @@ test("search results start above the fold at 390", async ({ page }) => {
   await page.goto("/#/search?q=batman");
   await page.waitForSelector(".sec.mentions .epcard");
   const m = await page.evaluate(() => ({
-    rail: Math.round(document.querySelector(".rail").getBoundingClientRect().height),
-    firstResult: Math.round(document.querySelector(".sec.mentions .epcard").getBoundingClientRect().top),
+    rail: Math.round(document.querySelector<HTMLElement>(".rail")!.getBoundingClientRect().height),
+    firstResult: Math.round(document.querySelector<HTMLElement>(".sec.mentions .epcard")!.getBoundingClientRect().top),
     hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   }));
   expect(m.firstResult, "first result is below the fold").toBeLessThan(844);
@@ -203,7 +205,7 @@ test("the two-column rail is untouched at desktop width", async ({ page }) => {
   await page.goto("/#/search?q=batman");
   await page.waitForSelector(".rail .facet");
   const dir = await page.evaluate(() =>
-    getComputedStyle(document.querySelector(".railbox .rb.rows")).flexDirection);
+    getComputedStyle(document.querySelector<HTMLElement>(".railbox .rb.rows")!).flexDirection);
   expect(dir).toBe("column");
 });
 
@@ -214,8 +216,8 @@ test("the index doesn't open with a band of dead space at 390", async ({ page })
   await page.goto("/#/index");
   await page.waitForSelector(".azrow");
   const gap = await page.evaluate(() =>
-    Math.round(document.querySelector(".azbar").getBoundingClientRect().top
-      - document.querySelector(".statline").getBoundingClientRect().bottom));
+    Math.round(document.querySelector<HTMLElement>(".azbar")!.getBoundingClientRect().top
+      - document.querySelector<HTMLElement>(".statline")!.getBoundingClientRect().bottom));
   expect(gap, "empty space between the summary block and the A-Z bar").toBeLessThan(28);
 });
 
@@ -240,8 +242,8 @@ test("a mention whose stamp runs past its episode says so, instead of 'no minute
   await page.waitForSelector("body[data-ready]");
   const hit = await page.evaluate(async () => {
     const [core, men] = await Promise.all([
-      fetch("d/core.json").then(r => r.json()),
-      fetch("d/mentions.json").then(r => r.json()),
+      fetch("d/core.json").then(r => r.json() as Promise<CoreData>),
+      fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>),
     ]);
     const byKey = new Map(core.episodes.map(e => [e.key, e]));
     const m = men.find(x => {
@@ -252,9 +254,9 @@ test("a mention whose stamp runs past its episode says so, instead of 'no minute
   });
   test.skip(!hit, "no mention carries a stamp past its runtime");
 
-  await page.goto("/#/ep/" + encodeURIComponent(hit.key));
+  await page.goto("/#/ep/" + encodeURIComponent(hit!.key));
   await page.waitForSelector("#readalong .panel");
-  const row = page.locator("#readalong .panel", { hasText: hit.comic }).locator(".ts.dead").first();
+  const row = page.locator("#readalong .panel", { hasText: hit!.comic }).locator(".ts.dead").first();
   await expect(row).toContainText("Timestamp out of range");
   await expect(row).not.toContainText("No minute logged");
 });

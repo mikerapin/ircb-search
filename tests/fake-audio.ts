@@ -1,3 +1,5 @@
+import type { Page, Route } from "@playwright/test";
+
 /**
  * Test doubles for the podcast audio.
  *
@@ -29,7 +31,7 @@ function silentWav(seconds = SECONDS, rate = RATE) {
   h.writeUInt16LE(8, 34);
   h.write("data", 36);
   h.writeUInt32LE(data.length, 40);
-  return Buffer.concat([h, data]);
+  return Buffer.concat([h as unknown as Uint8Array, data as unknown as Uint8Array]);
 }
 
 const BODY = silentWav();
@@ -43,9 +45,9 @@ export const SILENT_WAV_URI = "data:audio/wav;base64," + silentWav(5).toString("
  * Serves the silence with range support, and records every URL the page asked for.
  * Returns the recorder so a spec can assert the enclosure went out untouched.
  */
-export async function stubAudio(page) {
-  const requested = [];
-  await page.route(/blubrry\.com|podtrac\.com|\.mp3|simplecastcdn\.com\/media/, async route => {
+export async function stubAudio(page: Page) {
+  const requested: string[] = [];
+  await page.route(/blubrry\.com|podtrac\.com|\.mp3|simplecastcdn\.com\/media/, async (route: Route) => {
     requested.push(route.request().url());
     const range = route.request().headers()["range"];
     const m = range && /bytes=(\d+)-(\d*)/.exec(range);

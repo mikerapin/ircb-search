@@ -57,7 +57,7 @@ test("the plate choice survives a reload and a route change", async ({ page }) =
 });
 
 test("no console errors, axe clean", async ({ page }) => {
-  const errors = [];
+  const errors: Error[] = [];
   page.on("pageerror", e => errors.push(e));
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");

@@ -1,9 +1,11 @@
 import { test, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
-const nf = n => n.toLocaleString("en-US");
+const nf = (n: number) => n.toLocaleString("en-US");
 
-async function coreData(page) {
-  return page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+async function coreData(page: Page) {
+  return page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
 }
 
 test("the directory accounts for every name in the archive", async ({ page }) => {
@@ -62,7 +64,7 @@ test("a folded short name lands on the regular's page, not a guest page", async 
   for (const [alias, display] of [["Nick", "Nick White"], ["Paul", "Paul Jaissle"], ["Kate", "Kate Skocelas"], ["Danny%20Martinez", "Daniel Martinez"]]) {
     await page.goto(`/#/who/${alias}`);
     await page.waitForSelector(".credit-head h1");
-    await expect(page.locator(".credit-head h1")).toHaveText(display);
+    await expect(page.locator(".credit-head h1")).toHaveText(display ?? "");
     // A guest page has no portrait or tagline; landing on one would mean the fold missed.
     await expect(page.locator(".credit-head .tagline")).toBeVisible();
   }
@@ -73,7 +75,7 @@ test("guests bucket A-Z and the counts add up", async ({ page }) => {
   await page.waitForSelector(".azrow");
 
   const letters = await page.locator(".azsec > h3").evaluateAll(els =>
-    els.map(e => e.firstChild.textContent.trim()));
+    els.map(e => e.firstChild?.textContent?.trim() ?? ""));
   expect(letters).toEqual([...letters].sort());
 
   const bucketTotal = await page.locator(".azsec > h3 > span").evaluateAll(els =>
@@ -87,7 +89,7 @@ test("a guest row opens their credits", async ({ page }) => {
   const name = await page.locator(".azrow .nm").first().textContent();
   await page.locator(".azrow").first().click();
   await expect(page).toHaveURL(/#\/who\//);
-  await expect(page.locator(".credit-head h1")).toHaveText(name);
+  await expect(page.locator(".credit-head h1")).toHaveText(name ?? "");
 });
 
 test("the panel grid on home links through to the directory", async ({ page }) => {

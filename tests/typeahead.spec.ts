@@ -56,7 +56,7 @@ test("slash is ignored while typing in a field", async ({ page }) => {
 });
 
 test("typeahead is axe clean with the popover open", async ({ page }) => {
-  const errors = [];
+  const errors: Error[] = [];
   page.on("pageerror", e => errors.push(e));
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");

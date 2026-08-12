@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import type { Mention } from "../src/data/types";
 
 test("series page: hero, honest counts, checklist oldest first", async ({ page }) => {
   await page.goto("/#/series/Saga");
@@ -7,7 +8,8 @@ test("series page: hero, honest counts, checklist oldest first", async ({ page }
   await expect(page.locator("#dressno")).toHaveText("The Run");
 
   // The headline count and the checklist row count are the same number.
-  const claimed = Number((await page.locator(".statline").textContent()).match(/^([\d,]+) mention/)[1].replace(/,/g, ""));
+  const claimed = Number(((await page.locator(".statline").textContent()) ?? "")
+    .match(/^([\d,]+) mention/)?.[1]?.replace(/,/g, "") ?? "0");
   await expect(page.locator(".checklist .clrow")).toHaveCount(claimed);
   await expect(page.locator(".checklist .hd .r")).toContainText(`${claimed} row`);
 
@@ -21,7 +23,7 @@ test("checklist rows offer a jump or say plainly they have none", async ({ page 
   await page.goto("/#/series/Batman");
   await expect(page.locator(".checklist .clrow").first()).toBeVisible();
   const bad = await page.locator(".checklist .clrow").evaluateAll(els => els.filter(el => {
-    const ts = el.querySelector(".ts"), no = el.querySelector(".nomin");
+    const ts = el.querySelector<HTMLElement>(".ts"), no = el.querySelector<HTMLElement>(".nomin");
     if (ts) return !/\d+:\d\d/.test(ts.textContent);          // a jump must show a real minute
     return !(no && /no minute logged|no audio/.test(no.textContent));
   }).length);
@@ -45,7 +47,7 @@ test("a one-mention series reads in the singular", async ({ page }) => {
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   const name = await page.evaluate(async () => {
-    const men = await fetch("d/mentions.json").then(r => r.json());
+    const men = await fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>);
     const count = new Map();
     for (const m of men) count.set(m.series, (count.get(m.series) || 0) + 1);
     return [...count].find(([, n]) => n === 1)?.[0] ?? null;
@@ -71,7 +73,7 @@ test("no pre-launch process language on a series page", async ({ page }) => {
 });
 
 test("series page is axe clean with no console errors", async ({ page }) => {
-  const errors = [];
+  const errors: Error[] = [];
   page.on("pageerror", e => errors.push(e));
   await page.goto("/#/series/Saga");
   await expect(page.locator(".checklist")).toBeVisible();

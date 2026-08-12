@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { stubAudio } from "./fake-audio.js";
+import { stubAudio } from "./fake-audio";
+import type { Page } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
 // Facets are links, not buttons — the URL is the only state, so every control is navigable
 // and shareable. That also means aria-current, not aria-pressed.
@@ -8,11 +10,11 @@ import { stubAudio } from "./fake-audio.js";
 /* A result is an episode. `.epcard` is the card; the matched comics inside it are `.rawrap`
    rows, and a playable one carries `.panel` too — so `.sec.mentions .panel` matches both the
    card and its own rows, and anything counting results has to say `.epcard`. */
-const headline = async page => {
+const headline = async (page: Page) => {
   const t = await page.locator(".honest-count").innerText();
   return {
-    mentions: Number(t.match(/^([\d,]+) mention/)[1].replace(/,/g, "")),
-    episodes: Number(t.match(/ in ([\d,]+) episode/)[1].replace(/,/g, "")),
+    mentions: Number(t.match(/^([\d,]+) mention/)?.[1]?.replace(/,/g, "") ?? "0"),
+    episodes: Number(t.match(/ in ([\d,]+) episode/)?.[1]?.replace(/,/g, "") ?? "0"),
   };
 };
 
@@ -28,7 +30,7 @@ test("search url state round-trips", async ({ page }) => {
 test("panelist facet filters and marks itself current", async ({ page }) => {
   await page.goto("/#/search?q=batman");
   const facet = page.locator('.railbox.who .facet[href*="who="]').first();
-  const name = (await facet.textContent()).replace(/\d[\d,]*$/, "").trim();
+  const name = ((await facet.textContent()) ?? "").replace(/\d[\d,]*$/, "").trim();
   await facet.click();
   await expect(page).toHaveURL(/who=/);
   await expect(page.locator(".honest-count")).toContainText(`filtered to ${name}`);
@@ -63,7 +65,7 @@ test("empty query shows newest episodes, and pages through the whole dated run",
   await expect(page.getByRole("heading", { name: /newest episodes/i })).toBeVisible();
   await expect(page.locator(".panels .panel")).toHaveCount(12);
 
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
   const dated = core.episodes.filter(e => e.date).length;
   await expect(page.locator(".pagern")).toContainText(`of ${dated.toLocaleString("en-US")} episodes`);
 
@@ -77,7 +79,7 @@ test("paging the results reaches every matched episode, and the total never move
   await page.goto("/#/search?q=batman");
   await page.waitForSelector(".sec.mentions .epcard");
   const before = await page.locator(".honest-count").innerText();
-  const total = Number(before.match(/ in ([\d,]+) episode/)[1].replace(/,/g, ""));
+  const total = Number(before.match(/ in ([\d,]+) episode/)?.[1]?.replace(/,/g, "") ?? "0");
   expect(total).toBeGreaterThan(36);
 
   await expect(page.locator(".sec.mentions .epcard")).toHaveCount(36);
@@ -107,17 +109,17 @@ test("a matched comic carries a jump or an honest refusal, and the data decides 
   expect(seen, "no comic rows to judge").toBeGreaterThan(0);
 
   const bad = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     const byKey = new Map(core.episodes.map(e => [e.key, e]));
     const wrong = [];
-    for (const row of document.querySelectorAll(".sec.mentions .epcard .rawrap[data-comic]")) {
-      const ep = byKey.get(row.dataset.ep);
+    for (const row of document.querySelectorAll<HTMLElement>(".sec.mentions .epcard .rawrap[data-comic]")) {
+      const ep = byKey.get(row.dataset.ep ?? "");
       const secs = row.dataset.secs === "" ? null : Number(row.dataset.secs);
       // jumpable(): a minute, audio on file, and a stamp inside the runtime.
       const canJump = secs != null && secs > 0 && !!ep?.enclosure
         && (ep.runtimeSecs == null || secs < ep.runtimeSecs);
-      const live = row.querySelector("button.ra-row[data-act='cut']");
-      const dead = row.querySelector("a.ra-row");
+      const live = row.querySelector<HTMLElement>("button.ra-row[data-act='cut']");
+      const dead = row.querySelector<HTMLAnchorElement>("a.ra-row");
       if (canJump && !live) wrong.push(`${row.dataset.comic}: jumpable but no play control`);
       if (!canJump && !dead) wrong.push(`${row.dataset.comic}: not jumpable but offered a jump`);
       if (live && dead) wrong.push(`${row.dataset.comic}: both`);
@@ -172,9 +174,9 @@ test("a card stops at six comics and says how many it held back", async ({ page 
   await page.waitForSelector(".sec.mentions .epcard");
   const cards = await page.locator(".sec.mentions .epcard").evaluateAll(els => els.map(el => ({
     ep: el.dataset.ep,
-    rows: el.querySelectorAll(".rawrap[data-comic]").length,
-    more: el.querySelector(".ra-row.more")?.textContent ?? null,
-    href: el.querySelector(".ra-row.more")?.getAttribute("href") ?? null,
+    rows: el.querySelectorAll<HTMLElement>(".rawrap[data-comic]").length,
+    more: el.querySelector<HTMLElement>(".ra-row.more")?.textContent ?? null,
+    href: el.querySelector<HTMLElement>(".ra-row.more")?.getAttribute("href") ?? null,
   })));
   expect(cards.length).toBeGreaterThan(0);
   for (const c of cards) expect(c.rows, `card ${c.ep}`).toBeLessThanOrEqual(6);
@@ -184,7 +186,7 @@ test("a card stops at six comics and says how many it held back", async ({ page 
   for (const c of capped) {
     expect(c.rows).toBe(6);
     expect(c.more).toMatch(/^\+[\d,]+more match/);
-    expect(c.href, "the overflow has to lead somewhere the rest can be read").toContain(encodeURIComponent(c.ep));
+    expect(c.href, "the overflow has to lead somewhere the rest can be read").toContain(encodeURIComponent(c.ep ?? ""));
   }
 });
 
@@ -200,7 +202,7 @@ test("a matched comic plays inside its own card", async ({ page }) => {
 });
 
 test("panelist avatars are self-hosted and actually load", async ({ page }) => {
-  const foreign = [];
+  const foreign: string[] = [];
   page.on("request", r => {
     if (r.resourceType() !== "image") return;
     const h = new URL(r.url()).host;
@@ -213,14 +215,14 @@ test("panelist avatars are self-hosted and actually load", async ({ page }) => {
   expect(foreign.filter(h => h.includes("squarespace"))).toEqual([]);
   // They are lazy-loaded, so wait for decode rather than sampling mid-flight.
   await page.waitForFunction(
-    () => [...document.querySelectorAll(".railbox.who .facet img")].every(i => i.complete),
+    () => [...document.querySelectorAll<HTMLElement>(".railbox.who .facet img")].every(i => (i as HTMLImageElement).complete),
     null, { timeout: 10000 });
-  const broken = await avatars.evaluateAll(els => els.filter(i => i.naturalWidth === 0).map(i => i.src));
+  const broken = await avatars.evaluateAll(els => (els as HTMLImageElement[]).filter(i => i.naturalWidth === 0).map(i => i.src));
   expect(broken).toEqual([]);
 });
 
 test("search is axe clean with no console errors", async ({ page }) => {
-  const errors = [];
+  const errors: Error[] = [];
   page.on("pageerror", e => errors.push(e));
   await page.goto("/#/search?q=batman");
   await expect(page.locator(".rail")).toBeVisible();
@@ -234,14 +236,14 @@ test("a facet count is what clicking that facet delivers, guest filter included"
   await page.goto("/#/search?q=batman&guest=1");
   await page.waitForSelector(".railbox.who .facet");
   const rows = await page.locator(".railbox.who .facet").evaluateAll(els =>
-    els.map(a => ({ href: a.getAttribute("href"), n: a.querySelector(".n")?.textContent }))
+    els.map(a => ({ href: a.getAttribute("href"), n: a.querySelector<HTMLElement>(".n")?.textContent }))
        .filter(r => r.n));
   expect(rows.length).toBeGreaterThan(0);
 
   for (const r of rows.slice(0, 3)) {
-    await page.goto(r.href);
+    await page.goto(r.href ?? "");
     await page.waitForSelector(".honest-count");
-    const claimed = (await page.locator(".honest-count").innerText()).match(/^([\d,]+) mention/)[1];
+    const claimed = (await page.locator(".honest-count").innerText()).match(/^([\d,]+) mention/)?.[1] ?? "0";
     expect(claimed).toBe(r.n);
   }
 });

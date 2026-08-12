@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio.js";
+import { stubAudio, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio";
+import type { Page } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
 /**
  * The rules asserted here are stats-correctness requirements from Blubrry's published player
@@ -10,7 +12,7 @@ import { stubAudio, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio.js";
  * enclosure would corrupt the very numbers these tests exist to protect.
  */
 
-async function openEpisode(page) {
+async function openEpisode(page: Page) {
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   await page.locator(".cover-hero .big-play").click();
@@ -22,17 +24,17 @@ async function openEpisode(page) {
  * so the handover lands inside the stub's runtime. Mirrors how real data chains: one
  * mention's `until` is the next mention's `secs`.
  */
-async function shortSegment(page, lengthSecs = 4) {
+async function shortSegment(page: Page, lengthSecs = 4) {
   return page.evaluate(len => {
-    const [first, second] = document.querySelectorAll("#readalong .panel");
-    const restamp = (panel, secs, until) => {
+    const [first, second] = document.querySelectorAll<HTMLElement>("#readalong .panel");
+    const restamp = (panel: HTMLElement, secs: number, until: number) => {
       panel.dataset.secs = String(secs);
       panel.dataset.until = String(until);
       // The click handler reads the button's own data-secs first, so it has to move too.
-      const btn = panel.querySelector("[data-act=cut]");
+      const btn = panel.querySelector<HTMLElement>("[data-act=cut]");
       if (btn) btn.dataset.secs = String(secs);
     };
-    restamp(first, 2, 2 + len);
+    restamp(first!, 2, 2 + len);
     if (second) restamp(second, 2 + len, 2 + len * 2);
     return { secs: 2, until: 2 + len };
   }, lengthSecs);
@@ -45,17 +47,17 @@ async function shortSegment(page, lengthSecs = 4) {
  * spent on elapsed wall-clock, so a loaded machine failed a correct seek. These values are
  * frozen when the `seeked` event fires, so the assertion is immune to how late it is read.
  */
-async function recordSeeks(page) {
+async function recordSeeks(page: Page) {
   await page.evaluate(() => {
-    const a = document.getElementById("au");
+    const a = document.getElementById("au") as HTMLAudioElement;
     window.__seeks = [];
-    a.addEventListener("seeked", () => window.__seeks.push(a.currentTime));
+    a.addEventListener("seeked", () => window.__seeks!.push(a.currentTime));
   });
 }
 
-const seekLanded = (page, want, tol = 1.5) =>
+const seekLanded = (page: Page, want: number, tol = 1.5) =>
   page.waitForFunction(([w, t]) => (window.__seeks ?? []).some(s => Math.abs(s - w) < t),
-    [want, tol], { timeout: 15000 });
+    [want, tol] as [number, number], { timeout: 15000 });
 
 /**
  * A canary, not a feature test — and the first thing to read when several specs below fail
@@ -76,8 +78,8 @@ test("the browser can actually play audio at all", async ({ page }) => {
      sits frozen with `paused` true however long you wait. Give slowness room; a dead audio
      stack still never moves. */
   const moved = await page.evaluate(async () => {
-    const a = document.getElementById("canary");
-    try { await a.play(); } catch (e) { return `play() rejected: ${e.name}`; }
+    const a = document.getElementById("canary") as HTMLAudioElement;
+    try { await a.play(); } catch (e) { return `play() rejected: ${(e as Error).name}`; }
     const start = a.currentTime;
     const deadline = Date.now() + 8000;
     while (Date.now() < deadline) {
@@ -103,10 +105,10 @@ test("a page visit downloads no audio", async ({ page }) => {
      invariant preload="none" actually buys. A timeout is right here: the claim is that
      nothing happens, and there is no state to wait for. */
   const enclosure = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
-    return core.episodes.find(e => e.enclosure).enclosure;
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
+    return core.episodes.find(e => e.enclosure)!.enclosure!;
   });
-  await page.evaluate(u => { document.getElementById("au").src = u; }, enclosure);
+  await page.evaluate(u => { (document.getElementById("au") as HTMLAudioElement).src = u!; }, enclosure);
   await page.waitForTimeout(500);
   expect(asked).toEqual([]);
 });
@@ -115,14 +117,14 @@ test("the enclosure URL goes out unmodified", async ({ page }) => {
   const asked = await stubAudio(page);
   await openEpisode(page);
   await page.locator("#readalong button.ts[data-act=cut]").first().click();
-  await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 15000 });
+  await page.waitForFunction(() => (document.getElementById("au") as HTMLAudioElement).readyState >= 1, null, { timeout: 15000 });
 
   expect(asked.length).toBeGreaterThan(0);
   // Blubrry keys episode identity on the exact URL — a ?t= would split one episode in two.
   for (const url of asked) expect(url).not.toMatch(/[?&]t=/);
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
   const enclosures = new Set(core.episodes.map(e => e.enclosure).filter(Boolean));
-  expect(enclosures.has(asked[0]), "must request an enclosure exactly as the feed publishes it").toBe(true);
+  expect(enclosures.has(asked[0]!), "must request an enclosure exactly as the feed publishes it").toBe(true);
 });
 
 test("jump plays in the page and seeks to the minute", async ({ page }) => {
@@ -132,12 +134,12 @@ test("jump plays in the page and seeks to the minute", async ({ page }) => {
   const btn = page.locator("#readalong .panel").first().locator("[data-act=cut]");
   const want = Number(await btn.getAttribute("data-secs"));
   await btn.click();
-  await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 15000 });
+  await page.waitForFunction(() => (document.getElementById("au") as HTMLAudioElement).readyState >= 1, null, { timeout: 15000 });
   await seekLanded(page, want);                     // seeked to the logged minute
 
   const s = await page.evaluate(() => ({
-    src: document.getElementById("au").src,
-    inline: !!document.querySelector(".panel.playing .player"),
+    src: (document.getElementById("au") as HTMLAudioElement).src,
+    inline: !!document.querySelector<HTMLElement>(".panel.playing .player"),
   }));
   expect(s.src).toBeTruthy();
   expect(s.inline).toBe(true);                      // the player opened in the clicked panel
@@ -147,19 +149,19 @@ test("playback survives navigation via the mini-bar", async ({ page }) => {
   await stubAudio(page);
   await openEpisode(page);
   await page.locator("#readalong button.ts[data-act=cut]").first().click();
-  await page.waitForFunction(() => !document.getElementById("au").paused, null, { timeout: 15000 });
+  await page.waitForFunction(() => !(document.getElementById("au") as HTMLAudioElement).paused, null, { timeout: 15000 });
   await expect(page.locator("#minibar")).not.toHaveClass(/\bon\b/);   // inline player is alive
 
-  const before = await page.evaluate(() => document.getElementById("au").currentTime);
+  const before = await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).currentTime);
   await page.locator(".crumb a").click();                             // navigate away
   /* Wait for the tape to actually advance rather than for a fixed 1.2s. Under full-suite
      load the timer expired before playback had moved, which read as a stall. */
-  await page.waitForFunction(t => document.getElementById("au").currentTime > t, before, { timeout: 15000 });
+  await page.waitForFunction(t => (document.getElementById("au") as HTMLAudioElement).currentTime > t, before, { timeout: 15000 });
 
   const after = await page.evaluate(() => ({
-    playing: !document.getElementById("au").paused,
-    t: document.getElementById("au").currentTime,
-    label: document.getElementById("mb-cm").textContent,
+    playing: !(document.getElementById("au") as HTMLAudioElement).paused,
+    t: (document.getElementById("au") as HTMLAudioElement).currentTime,
+    label: document.getElementById("mb-cm")!.textContent,
   }));
   expect(after.playing).toBe(true);
   expect(after.t).toBeGreaterThan(before);
@@ -171,16 +173,16 @@ test("the mini-bar can pause and close", async ({ page }) => {
   await stubAudio(page);
   await openEpisode(page);
   await page.locator("#readalong button.ts[data-act=cut]").first().click();
-  await page.waitForFunction(() => !document.getElementById("au").paused, null, { timeout: 15000 });
+  await page.waitForFunction(() => !(document.getElementById("au") as HTMLAudioElement).paused, null, { timeout: 15000 });
   await page.locator(".crumb a").click();
   await expect(page.locator("#minibar")).toHaveClass(/\bon\b/);
 
   await page.locator("#mb-pp").click();
-  await expect.poll(() => page.evaluate(() => document.getElementById("au").paused)).toBe(true);
+  await expect.poll(() => page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).paused)).toBe(true);
 
   await page.locator("#mb-x").click();
   await expect(page.locator("#minibar")).not.toHaveClass(/\bon\b/);
-  expect(await page.evaluate(() => document.getElementById("au").getAttribute("src"))).toBeNull();
+  expect(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).getAttribute("src"))).toBeNull();
 });
 
 test("an episode with no audio says so rather than offering a dead control", async ({ page }) => {
@@ -188,11 +190,12 @@ test("an episode with no audio says so rather than offering a dead control", asy
   /* No real record both lacks an enclosure and carries mentions, so this honest-refusal
      path — the one playAffordance() renders when ep.enclosure is null — had zero coverage
      and the guard that hunted for it could never be satisfied. Manufacture the case. */
-  let key = null;
+  let key: string | null = null;
   await page.route("**/d/core.json", async route => {
     const res = await route.fetch();
-    const core = await res.json();
+    const core = await res.json() as CoreData;
     const ep = core.episodes.find(e => e.enclosure && e.mentionCount > 2);
+    if (!ep) throw new Error("no episode with an enclosure and enough mentions to stub");
     key = ep.key;
     ep.enclosure = null;
     await route.fulfill({ response: res, json: core });
@@ -204,7 +207,7 @@ test("an episode with no audio says so rather than offering a dead control", asy
      for the interception itself. */
   await expect.poll(() => key, { timeout: 15000 }).not.toBeNull();
 
-  await page.goto("/#/ep/" + encodeURIComponent(key));
+  await page.goto("/#/ep/" + encodeURIComponent(key!));
   await page.waitForSelector("#readalong .panel");
   // Not one play control anywhere, and every row says why.
   expect(await page.locator("#readalong button[data-act=cut]").count()).toBe(0);
@@ -219,26 +222,26 @@ test("a segment stops at the next logged minute and hands over the player", asyn
   await openEpisode(page);
 
   const real = await page.evaluate(() =>
-    [...document.querySelectorAll("#readalong .panel")].map(el => ({ secs: el.dataset.secs, until: el.dataset.until })));
-  test.skip(real.length < 2 || !real[0].until, "episode has no second timestamp");
+    [...document.querySelectorAll<HTMLElement>("#readalong .panel")].map(el => ({ secs: el.dataset.secs, until: el.dataset.until })));
+  test.skip(real.length < 2 || !real[0]?.until, "episode has no second timestamp");
   // Each mention's segment really does end where the next one starts.
-  expect(Number(real[0].until)).toBe(Number(real[1].secs));
+  expect(Number(real[0]!.until)).toBe(Number(real[1]!.secs));
 
   await shortSegment(page);
   await page.locator("#readalong .panel").first().locator("[data-act=cut]").click();
 
   await page.waitForFunction(
-    () => document.getElementById("au").paused &&
-          [...document.querySelectorAll("#readalong .panel")].indexOf(document.querySelector("#readalong .panel.playing")) === 1,
+    () => (document.getElementById("au") as HTMLAudioElement).paused &&
+          [...document.querySelectorAll<HTMLElement>("#readalong .panel")].indexOf(document.querySelector<HTMLElement>("#readalong .panel.playing")!) === 1,
     null, { timeout: 20000 });
 
   const s = await page.evaluate(() => {
-    const playing = document.querySelector("#readalong .panel.playing");
+    const playing = document.querySelector<HTMLElement>("#readalong .panel.playing");
     return {
-      paused: document.getElementById("au").paused,
-      open: !!playing.querySelector(".player"),
-      seeked: Math.round(document.getElementById("au").currentTime),
-      expected: Number(playing.dataset.secs),
+      paused: (document.getElementById("au") as HTMLAudioElement).paused,
+      open: !!playing!.querySelector<HTMLElement>(".player"),
+      seeked: Math.round((document.getElementById("au") as HTMLAudioElement).currentTime),
+      expected: Number(playing!.dataset.secs),
     };
   });
   expect(s.paused).toBe(true);                 // stopped, per the segment boundary
@@ -250,7 +253,7 @@ test("the inline play/pause button tracks the audio state", async ({ page }) => 
   await stubAudio(page);
   await openEpisode(page);
   await page.locator("#readalong .panel").first().locator("[data-act=cut]").click();
-  await page.waitForFunction(() => !document.getElementById("au").paused, null, { timeout: 15000 });
+  await page.waitForFunction(() => !(document.getElementById("au") as HTMLAudioElement).paused, null, { timeout: 15000 });
 
   const pp = page.locator("#readalong .panel.playing .player .pp");
   await expect(pp).toHaveText("II");           // playing
@@ -276,10 +279,10 @@ test("Let it roll is off by default and keeps the tape running when ticked", asy
 
   // The UI walks to the next comic, and the audio never stops.
   await page.waitForFunction(
-    () => [...document.querySelectorAll("#readalong .panel")]
-      .indexOf(document.querySelector("#readalong .panel.playing")) === 1,
+    () => [...document.querySelectorAll<HTMLElement>("#readalong .panel")]
+      .indexOf(document.querySelector<HTMLElement>("#readalong .panel.playing")!) === 1,
     null, { timeout: 20000 });
-  expect(await page.evaluate(() => document.getElementById("au").paused)).toBe(false);
+  expect(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).paused)).toBe(false);
 });
 
 test("the roll preference persists", async ({ page }) => {
@@ -316,7 +319,7 @@ test("the last jump clicked is the one that plays", async ({ page }) => {
   await jumps.nth(1).click();
 
   await page.waitForFunction(() => {
-    const a = document.getElementById("au");
+    const a = document.getElementById("au") as HTMLAudioElement;
     return a && a.readyState >= 1;
   }, null, { timeout: 15000 });
   /* The seek is the assertion. A fixed 400ms then |t - wanted| < 2 raced the running tape,
@@ -377,16 +380,16 @@ test("Play from the top starts the episode at zero, from the published enclosure
   await page.locator(".meta .big-play").click();
   await expect(page.locator("#au")).toHaveJSProperty("paused", false);
 
-  expect(await page.evaluate(() => document.getElementById("au").currentTime)).toBeLessThan(2);
+  expect(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).currentTime)).toBeLessThan(2);
   await expect(page.locator(".meta .player")).toHaveCount(1);
 
   // Stats correctness: the enclosure must go out exactly as the feed publishes it.
   expect(asked.length).toBeGreaterThan(0);
   const enclosures = await page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     return core.episodes.map(e => e.enclosure).filter(Boolean);
   });
-  expect(new Set(enclosures).has(asked[0])).toBe(true);
+  expect(new Set(enclosures).has(asked[0]!)).toBe(true);
   for (const url of asked) expect(url).not.toMatch(/[?&]t=/);
 });
 
@@ -412,7 +415,7 @@ test("a dead enclosure says so, and the next click retries for real", async ({ p
   await expect(page.locator("#readalong .panel .player .note")).toContainText("didn’t load");
   await expect(page.locator("#readalong .panel.playing")).toHaveCount(0);
   await expect(page.locator("#minibar")).not.toHaveClass(/\bon\b/);
-  expect(await page.evaluate(() => document.getElementById("au").dataset.ep)).toBeUndefined();
+  expect(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).dataset.ep)).toBeUndefined();
 
   // ...and because dataset.ep was cleared, the same control loads the tape on a retry.
   await page.locator("#readalong button.ts[data-act=cut]").first().click();
@@ -431,8 +434,8 @@ test("a segment handover keeps focus on a player, not on <body>", async ({ page 
 
   // Ride past the boundary; the engine destroys this player and opens the next one.
   await page.waitForFunction(i => {
-    const panels = [...document.querySelectorAll("#readalong .panel")];
-    return panels.indexOf(document.querySelector("#readalong .panel.playing")) === i;
+    const panels = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
+    return panels.indexOf(document.querySelector<HTMLElement>("#readalong .panel.playing")!) === i;
   }, 1, { timeout: 20000 });
 
   // Focus used to land on <body>, mid-playback, with no way back to the controls.
@@ -447,7 +450,7 @@ test("a segment handover keeps focus on a player, not on <body>", async ({ page 
    Plan 3 Task 4 — Media Session and playhead sync.
    --------------------------------------------------------------------------------------- */
 
-const session = page => page.evaluate(() => {
+const session = (page: Page) => page.evaluate(() => {
   const ms = navigator.mediaSession;
   const m = ms?.metadata;
   return {
@@ -460,8 +463,8 @@ const session = page => page.evaluate(() => {
 });
 
 /** The episode record behind a panel, so assertions compare against the data, not the DOM. */
-const episodeOf = (page, key) => page.evaluate(async k => {
-  const core = await fetch("d/core.json").then(r => r.json());
+const episodeOf = (page: Page, key: string) => page.evaluate(async k => {
+  const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
   return core.episodes.find(e => e.key === k);
 }, key);
 
@@ -473,14 +476,14 @@ const episodeOf = (page, key) => page.evaluate(async k => {
  * before the page's own scripts run means the spec can invoke the exact function the OS
  * would, and assert where the tape actually landed.
  */
-async function captureTransport(page) {
+async function captureTransport(page: Page) {
   await page.addInitScript(() => {
     const ms = navigator.mediaSession;
     if (!ms?.setActionHandler) return;
     window.__transport = {};
     const real = ms.setActionHandler.bind(ms);
     ms.setActionHandler = (action, handler) => {
-      window.__transport[action] = handler;
+      window.__transport![action] = handler as (details?: { seekTime?: number }) => void;
       return real(action, handler);
     };
   });
@@ -503,23 +506,23 @@ test("the lock screen is told what is playing, and told when it stops", async ({
   await page.waitForSelector(".panel.playing .player");
 
   const on = await session(page);
-  const ep = await episodeOf(page, key);
+  const ep = await episodeOf(page, key!);
   // The comic leads, because a jump plays a comic, not a whole episode.
   expect(on.title).toBe(comic);
   expect(on.album).toBe("I Read Comic Books");
   // The state the OS is shown has to be the state the element is actually in.
-  expect(on.state).toBe(await page.evaluate(() => document.getElementById("au").paused ? "paused" : "playing"));
+  expect(on.state).toBe(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).paused ? "paused" : "playing"));
   /* The episode title and panel are the second line — read from core.json, not the heading,
      which the stylesheet renders uppercase and innerText returns transformed. */
-  expect(on.artist).toContain(ep.title);
-  expect(on.art).toBe(ep.artwork);
+  expect(on.artist).toContain(ep!.title);
+  expect(on.art).toBe(ep!.artwork);
 
-  await page.evaluate(() => { const a = document.getElementById("au"); a.pause(); a.dispatchEvent(new Event("pause")); });
+  await page.evaluate(() => { const a = document.getElementById("au") as HTMLAudioElement; a.pause(); a.dispatchEvent(new Event("pause")); });
   await expect.poll(async () => (await session(page)).state).toBe("paused");
 
   /* Stop from the OS itself. The mini-bar's ✕ is the other way in, but it only exists once
      navigation has eaten the inline player, and this is the path the lock screen uses. */
-  await page.evaluate(() => window.__transport.stop());
+  await page.evaluate(() => window.__transport!.stop!());
   // Never left claiming a session that ended — the lock screen would go on showing it.
   const off = await session(page);
   expect(off.title).toBeNull();
@@ -538,14 +541,14 @@ test("an OS seek moves the tape and never touches the enclosure URL", async ({ p
   /* The player opens synchronously, but the tape is not seekable until `loadedmetadata`
      lands — and `applyPending` then seeks it to the jump's own second. Riding before that
      means the engine overwrites the position under test. */
-  await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 20000 });
+  await page.waitForFunction(() => (document.getElementById("au") as HTMLAudioElement).readyState >= 1, null, { timeout: 20000 });
   await recordSeeks(page);
 
   const wired = await page.evaluate(() => Object.keys(window.__transport ?? {}));
   expect(wired).toEqual(expect.arrayContaining(["play", "pause", "seekto", "seekbackward", "seekforward"]));
 
   // Drive the handler the OS would call.
-  await page.evaluate(() => window.__transport.seekto({ seekTime: 120 }));
+  await page.evaluate(() => window.__transport!.seekto!({ seekTime: 120 }));
   await seekLanded(page, 120);
 
   /* Rule 3, and the whole reason the OS seek routes through the same `scrub()`: Blubrry
@@ -559,15 +562,15 @@ test("an OS seek moves the tape and never touches the enclosure URL", async ({ p
      actually rendering audio, and then it passes whether the opt-out exists or not. Without
      the opt-out this seek to 2:00, far past a 6-second segment, reads as a finished segment:
      the engine pauses and hands the player to the next panel. */
-  await page.evaluate(() => document.getElementById("au").dispatchEvent(new Event("timeupdate")));
+  await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).dispatchEvent(new Event("timeupdate")));
   const stayed = await page.evaluate(() => {
-    const panels = [...document.querySelectorAll("#readalong .panel")];
-    return panels.indexOf(document.querySelector("#readalong .panel.playing"));
+    const panels = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
+    return panels.indexOf(document.querySelector<HTMLElement>("#readalong .panel.playing")!);
   });
   expect(stayed).toBe(0);
-  expect(await page.evaluate(() => document.getElementById("au").currentTime)).toBeGreaterThan(100);
+  expect(await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).currentTime)).toBeGreaterThan(100);
 
-  await page.evaluate(() => window.__transport.pause());
+  await page.evaluate(() => window.__transport!.pause!());
   await expect(page.locator("#au")).toHaveJSProperty("paused", true);
 });
 
@@ -579,7 +582,7 @@ test("the read-along marks the comic the tape is actually on", async ({ page }) 
      keeps the segment machinery out of it, which is the point: this marker has to come
      from the playhead, not from a jump or a handover. */
   const stamps = await page.evaluate(() => {
-    const panels = [...document.querySelectorAll("#readalong .panel")];
+    const panels = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
     panels.forEach((p, i) => { p.dataset.secs = String(2 + i * 6); });
     return panels.map(p => Number(p.dataset.secs));
   });
@@ -591,24 +594,24 @@ test("the read-along marks the comic the tape is actually on", async ({ page }) 
   /* The player opens synchronously, but the tape is not seekable until `loadedmetadata`
      lands — and `applyPending` then seeks it to the jump's own second. Riding before that
      means the engine overwrites the position under test. */
-  await page.waitForFunction(() => document.getElementById("au").readyState >= 1, null, { timeout: 20000 });
+  await page.waitForFunction(() => (document.getElementById("au") as HTMLAudioElement).readyState >= 1, null, { timeout: 20000 });
   /* Then pause and drive the playhead by seeking. Riding a running tape would race the
      assertion — six seconds between stamps is less than a poll timeout, so a correct marker
      moves off the row under test before it can be read — and it is the playhead POSITION
      under test here, not whether the OS can render audio. */
-  await page.evaluate(() => document.getElementById("au").pause());
+  await page.evaluate(() => (document.getElementById("au") as HTMLAudioElement).pause());
 
   const marked = () => page.evaluate(() => {
-    const panels = [...document.querySelectorAll("#readalong .panel")];
-    return panels.indexOf(document.querySelector("#readalong .panel.now"));
+    const panels = [...document.querySelectorAll<HTMLElement>("#readalong .panel")];
+    return panels.indexOf(document.querySelector<HTMLElement>("#readalong .panel.now")!);
   });
-  const rideTo = async secs => page.evaluate(s => { document.getElementById("au").currentTime = s; }, secs);
+  const rideTo = async (secs: number) => page.evaluate(s => { (document.getElementById("au") as HTMLAudioElement).currentTime = s; }, secs);
 
-  await rideTo(stamps[1] + 1);
+  await rideTo(stamps[1]! + 1);
   await expect.poll(marked).toBe(1);
 
   // It moves back when the tape does. A marker that only ever advances is a latch.
-  await rideTo(stamps[0] + 1);
+  await rideTo(stamps[0]! + 1);
   await expect.poll(marked).toBe(0);
 
   /* Before the first logged minute nothing is claimed, rather than the first row by default.
@@ -619,7 +622,7 @@ test("the read-along marks the comic the tape is actually on", async ({ page }) 
   await expect(page.locator(".now")).toHaveCount(0);
 
   // Stopping clears it; a stale marker says the tape is somewhere it is not.
-  await rideTo(stamps[1] + 1);
+  await rideTo(stamps[1]! + 1);
   await expect.poll(marked).toBe(1);
   await page.goto("/#/wall");
   await page.waitForSelector(".cell");

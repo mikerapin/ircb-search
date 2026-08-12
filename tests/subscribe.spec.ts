@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
 const FEEDS = [
   "https://podcasts.apple.com/us/podcast/i-read-comic-books/id981964360",
@@ -20,18 +21,18 @@ test("subscribe offers every place to get the show", async ({ page }) => {
 test("the page's links are the same ones the footer carries", async ({ page }) => {
   await page.goto("/#/subscribe");
   await page.waitForSelector(".coupon");
-  const footer = await page.locator("footer a").evaluateAll(els => els.map(a => a.href));
-  const view = await page.locator("#view .coupon a").evaluateAll(els => els.map(a => a.href));
+  const footer = await page.locator("footer a").evaluateAll(els => (els as HTMLAnchorElement[]).map(a => a.href));
+  const view = await page.locator("#view .coupon a").evaluateAll(els => (els as HTMLAnchorElement[]).map(a => a.href));
   for (const url of view) expect(footer).toContain(url);
 });
 
 test("the Patreon shelf is real, not a placeholder", async ({ page }) => {
   await page.goto("/#/subscribe");
   await page.waitForSelector(".adslot");
-  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
+  const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json() as Promise<CoreData>));
   await expect(page.locator(".adslot")).toHaveCount(core.patreonSeries.length);
   const hrefs = await page.locator(".adslot").evaluateAll(els => els.map(a => a.getAttribute("href")));
-  expect(hrefs.every(h => /^https:\/\/(www\.)?patreon\.com\//.test(h))).toBe(true);
+  expect(hrefs.every(h => /^https:\/\/(www\.)?patreon\.com\//.test(h ?? ""))).toBe(true);
   // The episode count in the copy comes from the data, not from a number typed in 2026.
   await expect(page.locator(".pagehead")).toContainText(core.stats.episodes.toLocaleString("en-US"));
 });

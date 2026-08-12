@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 /**
  * Contrast of INTERACTIVE STATES, in both plates.
@@ -15,14 +16,16 @@ import { test, expect } from "@playwright/test";
 
 // getComputedStyle can return `color(srgb r g b / a)` with 0-1 channels rather than 0-255.
 // Parsing that as 8-bit gives numbers that look like failures and aren't — it cost an hour.
-const parse = c => {
+type Rgba = [number, number, number, number];
+
+const parse = (c: string): Rgba => {
   const n = (c.match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).map(Number);
-  if (/^color\(\s*srgb/i.test(c)) { const [r, g, b, a = 1] = n; return [r * 255, g * 255, b * 255, a]; }
-  const [r, g, b, a = 1] = n;
+  const [r = 0, g = 0, b = 0, a = 1] = n;
+  if (/^color\(\s*srgb/i.test(c)) return [r * 255, g * 255, b * 255, a];
   return [r, g, b, a];
 };
-const lin = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
-const lum = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+const lin = (v: number) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+const lum = ([r, g, b]: Rgba) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 /**
  * `opacity` is the second way text fades, and for a long time this harness could not see it.
  * It composited the colour's own alpha and read `cs.color`, which element opacity does not
@@ -31,10 +34,10 @@ const lum = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
  * why the standing rule is color-mix over opacity: color-mix puts the fade somewhere this
  * can measure. Fold it in so the rule is enforced rather than merely written down.
  */
-const ratio = (fg, bg, opacity = 1) => {
+const ratio = (fg: string, bg: string, opacity = 1) => {
   const f = parse(fg), g = parse(bg), a = f[3] * opacity;
-  const over = [0, 1, 2].map(i => f[i] * a + g[i] * (1 - a));
-  const [hi, lo] = [lum(over), lum(g)].sort((x, y) => y - x);
+  const over = [0, 1, 2].map(i => (f[i] as number) * a + (g[i] as number) * (1 - a)) as unknown as Rgba;
+  const [hi = 0, lo = 0] = [lum(over), lum(g)].sort((x, y) => y - x);
   return +(((hi + 0.05) / (lo + 0.05)).toFixed(2));
 };
 
@@ -49,7 +52,11 @@ const GROUND = `el => {
   return "rgb(255,255,255)";
 }`;
 
-async function sample(page, selector, { hover = false, focus = false } = {}) {
+interface Swatch { fg: string; bg: string; opacity: number; px: number;
+                   outline: string; outlineW: string }
+
+async function sample(page: Page, selector: string,
+                      { hover = false, focus = false }: TextState = {}): Promise<Swatch | null> {
   const el = page.locator(selector).first();
   if (!await el.count()) return null;
   if (hover) await el.hover();
@@ -71,11 +78,14 @@ async function sample(page, selector, { hover = false, focus = false } = {}) {
     }
     return { fg: cs.color, bg: ground(el), outline: cs.outlineColor, outlineW: cs.outlineWidth,
              opacity, px: parseFloat(cs.fontSize) };
-  `));
+  `) as unknown as (el: SVGElement | HTMLElement) => Swatch);
 }
 
 // [label, route, selector, state]
-const TEXT_CASES = [
+interface TextState { hover?: boolean; focus?: boolean }
+type TextCase = [label: string, route: string, selector: string, state?: TextState];
+
+const TEXT_CASES: TextCase[] = [
   ["panel tagline (hover)", "/#/panel", ".pblock .ptag", { hover: true }],
   ["index row count (hover)", "/#/index", ".azrow .n", { hover: true }],
   ["chip count (hover)", "/#/who/Mike%20Rapin", ".chip .n", { hover: true }],
@@ -100,7 +110,7 @@ const TEXT_CASES = [
 for (const plate of ["light", "negative"]) {
   test(`text stays legible in every interactive state — ${plate} plate`, async ({ page }) => {
     if (plate === "negative") await page.addInitScript(() => localStorage.setItem("ircb.neg", "1"));
-    const bad = [];
+    const bad: string[] = [];
     for (const [label, route, selector, state] of TEXT_CASES) {
       await page.goto(route);
       await page.waitForSelector("body[data-ready]");
@@ -125,8 +135,8 @@ for (const plate of ["light", "negative"]) {
 
   test(`focus rings are visible against their own ground — ${plate} plate`, async ({ page }) => {
     if (plate === "negative") await page.addInitScript(() => localStorage.setItem("ircb.neg", "1"));
-    const bad = [];
-    const cases = [
+    const bad: string[] = [];
+    const cases: [label: string, route: string, selector: string][] = [
       ["search field", "/", "#q"],
       ["search submit", "/", ".blurb .go"],
       ["A-Z heading", "/#/index", ".azsec > h2"],
@@ -180,9 +190,9 @@ test("generated cover plates are legible on both plates", async ({ page }) => {
       await ctx.waitForSelector(".gc", { timeout: 15000 }).catch(() => {});
       await ctx.waitForTimeout(400);
       Object.assign(seen, await ctx.evaluate(() => {
-        const out = {};
-        for (const gc of document.querySelectorAll(".gc")) {
-          const title = gc.querySelector(".gc-t");
+        const out: Record<string, { fg: string; bg: string; f: string; t: string }> = {};
+        for (const gc of document.querySelectorAll<HTMLElement>(".gc")) {
+          const title = gc.querySelector<HTMLElement>(".gc-t");
           if (!title) continue;
           const cs = getComputedStyle(gc);
           out[`${cs.getPropertyValue("--gc-t")} on ${cs.getPropertyValue("--gc-f")}`] = {
@@ -193,7 +203,7 @@ test("generated cover plates are legible on both plates", async ({ page }) => {
       }));
     }
     await ctx.close();
-    const combos = Object.values(seen);
+    const combos = Object.values(seen) as { fg: string; bg: string; f: string; t: string }[];
     /* One search page exercises only some of the eight pairs, because the field is picked by
        hashing the series name. Four is what /#/search?q=a actually renders — raising this
        needs sampling across several routes, which is the TODO in NOTES.md. */

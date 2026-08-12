@@ -1,24 +1,28 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import type { Page } from "@playwright/test";
+import type { CoreData } from "../src/data/types";
 
 /**
  * Plan 2 exit checks 3–6, run across the whole route list rather than on whichever pages
  * someone remembered to check. Add new routes to routeList() as they land.
  */
 
-async function sampleKeys(page) {
+async function sampleKeys(page: Page) {
   await page.goto("/");
   await page.waitForSelector("body[data-ready]");
   return page.evaluate(async () => {
-    const core = await fetch("d/core.json").then(r => r.json());
+    const core = await fetch("d/core.json").then(r => r.json() as Promise<CoreData>);
     return {
-      ep: core.episodes.find(e => e.artwork && e.enclosure)?.key,
-      undated: core.episodes.find(e => !e.date)?.key,
+      ep: core.episodes.find(e => e.artwork && e.enclosure)?.key ?? "",
+      undated: core.episodes.find(e => !e.date)?.key ?? "",
     };
   });
 }
 
-function routeList({ ep, undated }) {
+type Route = [name: string, path: string];
+
+function routeList({ ep, undated }: { ep: string; undated: string }): Route[] {
   return [
     ["home", "/"],
     ["search", "/#/search?q=batman"],
@@ -49,7 +53,7 @@ function routeList({ ep, undated }) {
  * holds no <a> and contributes no text — made all three sweeps below report success. Wait
  * for the view to actually paint, and fail loudly if it never does.
  */
-async function gotoRoute(page, path) {
+async function gotoRoute(page: Page, path: string) {
   await page.goto(path);
   await page.waitForSelector("body[data-ready]");
   await page.waitForFunction(
@@ -57,8 +61,8 @@ async function gotoRoute(page, path) {
     null, { timeout: 15000 });
 }
 
-async function axeSweep(page, routes) {
-  const failures = [];
+async function axeSweep(page: Page, routes: Route[]) {
+  const failures: string[] = [];
   for (const [name, path] of routes) {
     await gotoRoute(page, path);
     const r = await new AxeBuilder({ page }).analyze();
@@ -79,8 +83,8 @@ test("every route is axe clean and free of console errors", async ({ page }) => 
      anything is wrong — say so rather than raising the default for every test. */
   test.slow();
   const routes = routeList(await sampleKeys(page));
-  const errors = [];
-  page.on("pageerror", e => errors.push(String(e)));
+  const errors: Error[] = [];
+  page.on("pageerror", e => errors.push(e));
   expect(await axeSweep(page, routes)).toEqual([]);
   expect(errors).toEqual([]);
 });
@@ -105,7 +109,7 @@ test("no route renders a dead link", async ({ page }) => {
   const dead = [];
   for (const path of routes) {
     await gotoRoute(page, path);
-    dead.push(...await page.evaluate(p => [...document.querySelectorAll("#view a")]
+    dead.push(...await page.evaluate(p => [...document.querySelectorAll<HTMLElement>("#view a")]
       .map(a => a.getAttribute("href"))
       .filter(h => !h || h === "#" || h.includes("undefined") || h.includes("null"))
       .map(h => `${p} → ${h}`), path));
