@@ -26,9 +26,9 @@
   "episodes": 1
  },
  "13th moon": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "13th Moon Halloween Anthology"
  },
  "1990s": {
   "type": "topic",
@@ -105,9 +105,9 @@
   "series": "A Frog in the Fall"
  },
  "a girl called echo": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "A Girl Called Echo Omnibus"
  },
  "a neverending adventure": {
   "type": "topic",
@@ -250,9 +250,17 @@
   "series": "Age of X"
  },
  "age of x-man": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Age Of X-Man: Apocalypse and The X-Tracts",
+   "Age Of X-Man: The Amazing Nightcrawler",
+   "Age Of X-Man: The X-Tremists",
+   "Age of X-Man Alpha",
+   "Age of X-Man: Nextgen",
+   "Age of X-Man: Prisoner X",
+   "Age of X-Man: The Marvelous X-Men"
+  ]
  },
  "age of x-man: next gen": {
   "type": "topic",
@@ -532,9 +540,9 @@
   "series": "Aquaman"
  },
  "aquaman/jabberjaw": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Aquaman/Jabberjaw Special"
  },
  "arca": {
   "type": "series",
@@ -721,9 +729,12 @@
   "episodes": 1
  },
  "backstagers": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Backstagers Halloween Intermission",
+   "Backstagers Valentine’s Day Special"
+  ]
  },
  "bad girls": {
   "type": "series",
@@ -848,9 +859,14 @@
   "series": "Batman: Off-World"
  },
  "batman: one bad day": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Batman: One Bad Day: Bane",
+   "Batman: One Bad Day: Catwoman",
+   "Batman: One Bad Day: Ra's Al Ghul",
+   "Batman: One Bad Day: The Riddler"
+  ]
  },
  "batman: one bad day - ra's al ghul": {
   "type": "series",
@@ -909,9 +925,9 @@
   "series": "Beastars"
  },
  "beastlands": {
-  "type": "topic",
+  "type": "series",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Beastlands: Keeper of the Kingdom"
  },
  "beat it rufus": {
   "type": "series",
@@ -1065,9 +1081,13 @@
   "series": "Black Badge"
  },
  "black canary": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Black Canary (2015-2016)",
+   "Black Canary and Zatanna: Bloodspell",
+   "Black Canary: The Best of the Best"
+  ]
  },
  "black cat": {
   "type": "series",
@@ -1152,9 +1172,9 @@
   "series": "Blade"
  },
  "blade of the immortal": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Blade of the Immortal Vols 4 & 5"
  },
  "blankets": {
   "type": "series",
@@ -1216,9 +1236,9 @@
   "series": "BLOSSOMS 666"
  },
  "blow away": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Blow Away TP"
  },
  "blue book": {
   "type": "series",
@@ -1246,16 +1266,16 @@
   "series": "Bone"
  },
  "bone orchard mythos": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Bone Orchard Mythos: Tenement"
  },
  "bonus episode": {
   "type": "topic",
   "episodes": 1
  },
  "bonus minisode": {
-  "type": "topic",
+  "type": "showFormat",
   "episodes": 4
  },
  "book bans": {
@@ -1415,7 +1435,7 @@
   "series": "Camp Spirit"
  },
  "candybar antlerboy": {
-  "type": "topic",
+  "type": "showSeries",
   "episodes": 3
  },
  "cannon": {
@@ -1541,14 +1561,17 @@
   "series": "Charlie Chan Hock Chye"
  },
  "cheer up": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Cheer Up, Love and Pom Poms",
+   "Cheer Up: Love and PomPoms"
+  ]
  },
  "cheetah & chesire rob the justice league": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Cheetah & Chesire Rob the Justice League 1-6"
  },
  "cheetos": {
   "type": "topic",
@@ -1660,9 +1683,9 @@
   "episodes": 1
  },
  "class act": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Class Act by Jerry Craft"
  },
  "clementine": {
   "type": "series",
@@ -1932,9 +1955,9 @@
   "episodes": 1
  },
  "constantine": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Constantine: The Hellblazer"
  },
  "convert": {
   "type": "series",
@@ -1942,9 +1965,9 @@
   "series": "Convert"
  },
  "cook korean": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Cook Korean by Robin Ha"
  },
  "cook like your ancestors": {
   "type": "series",
@@ -1956,9 +1979,9 @@
   "episodes": 1
  },
  "corto maltese": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Corto Maltese, the Fable of Venice"
  },
  "cosmoknights": {
   "type": "series",
@@ -2002,9 +2025,12 @@
   "series": "Criminal"
  },
  "crimson fall": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Crimson Fall: Lambs of God",
+   "Crimson Fall: The Shore Tower"
+  ]
  },
  "crisis zone": {
   "type": "series",
@@ -2360,9 +2386,14 @@
   "series": "Deadman"
  },
  "deadpool": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Deadpool 2",
+   "Deadpool Kills the Marvel Universe Again",
+   "Deadpool vs. Punisher",
+   "Deadpool: Samurai"
+  ]
  },
  "deadpool samurai": {
   "type": "series",
@@ -2438,9 +2469,9 @@
   "series": "Delicious in Dungeon"
  },
  "demon slayer": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Demon Slayer: Kimetsu no Yaiba"
  },
  "demon summoner gash gash": {
   "type": "series",
@@ -2550,9 +2581,9 @@
   "episodes": 1
  },
  "disney manga: stitch and the samurai": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Disney Manga: Stitch and the Samurai by Hiroto Wada"
  },
  "disney movies": {
   "type": "topic",
@@ -2594,9 +2625,13 @@
   "episodes": 1
  },
  "doctor strange": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Doctor Strange & Doctor Doom: Triumph and Torment",
+   "Doctor Strange: Fall Sunrise",
+   "Doctor Strange: Marvel Masterworks"
+  ]
  },
  "documentary": {
   "type": "topic",
@@ -2683,9 +2718,12 @@
   "series": "Dragon Ball Z"
  },
  "dragonball": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Dragonball Super",
+   "Dragonball Z"
+  ]
  },
  "drawn & quarterly": {
   "type": "publisher",
@@ -2768,9 +2806,9 @@
   "episodes": 3
  },
  "eddie brock": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Eddie Brock: Carnage"
  },
  "edgar wright": {
   "type": "topic",
@@ -2857,9 +2895,9 @@
   "episodes": 1
  },
  "essential judge death": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Essential Judge Death: My Name Is Death"
  },
  "essential rogue trooper": {
   "type": "series",
@@ -2981,9 +3019,9 @@
   "series": "Fallen World"
  },
  "family tree": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Family Tree, Volume One"
  },
  "fan fiction": {
   "type": "topic",
@@ -3142,9 +3180,9 @@
   "series": "Flight"
  },
  "flung out of space": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Flung Out of Space: Inspired by the Indecent Adventures of Patricia Highsmith"
  },
  "flux house": {
   "type": "topic",
@@ -3200,9 +3238,13 @@
   "episodes": 1
  },
  "frankenstein": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Frankenstein - Manga Classics",
+   "Frankenstein: Agent of SHADE",
+   "Frankenstein: The Unconquered"
+  ]
  },
  "frankenstein: agent of shade": {
   "type": "series",
@@ -3276,9 +3318,9 @@
   "series": "Fun Home"
  },
  "future shock": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Future Shock! The Story of 2000AD"
  },
  "future state: dark detective": {
   "type": "series",
@@ -3323,14 +3365,14 @@
   "series": "Gamma Flight"
  },
  "garfield": {
-  "type": "topic",
+  "type": "series",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Garfield Dishes Out"
  },
  "gargoyles": {
-  "type": "topic",
+  "type": "series",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Gargoyles x Fantastic Four"
  },
  "gender queer": {
   "type": "series",
@@ -3410,9 +3452,9 @@
   "episodes": 2
  },
  "gloomhaven": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Gloomhaven: Fallen Lion"
  },
  "gncrt": {
   "type": "topic",
@@ -3434,9 +3476,17 @@
   "series": "Godshaper"
  },
  "godzilla": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Godzilla vs America: Chicago",
+   "Godzilla's Monsterpiece Theatre Presents: Godzilla's The Odyssey",
+   "Godzilla: Aftershock",
+   "Godzilla: Heist",
+   "Godzilla: Skate or Die",
+   "Godzilla: War for Humanity",
+   "Godzilla’s Monsterpiece Theatre"
+  ]
  },
  "godzilla vs america: boston": {
   "type": "topic",
@@ -3492,9 +3542,9 @@
   "episodes": 49
  },
  "gotham academy": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Gotham Academy Second Semester"
  },
  "gotham city year one": {
   "type": "series",
@@ -3566,9 +3616,9 @@
   "series": "Groupies"
  },
  "grrl scouts": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Grrl Scouts: Stone Ghost"
  },
  "guest": {
   "type": "topic",
@@ -3677,9 +3727,9 @@
   "series": "Heathen"
  },
  "heaven’s official blessings": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Heaven’s Official Blessings - Tian Guan Ci Fu"
  },
  "heavenly delusion": {
   "type": "series",
@@ -3726,9 +3776,13 @@
   "series": "Hellboy"
  },
  "hellboy and the bprd": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Hellboy and the BPRD 1955",
+   "Hellboy and the BPRD 1957: Falling Sky",
+   "Hellboy and the BPRD: 1957 Forgotten Lives"
+  ]
  },
  "hellboy: seed of destruction": {
   "type": "series",
@@ -3749,9 +3803,13 @@
   "episodes": 1
  },
  "hellraiser": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Hellraiser Masterpieces",
+   "Hellraiser Omnibus",
+   "Hellraiser/A.X.E. Judgement Day"
+  ]
  },
  "helm greycastle": {
   "type": "series",
@@ -3960,9 +4018,9 @@
   "series": "Ice Cream Man"
  },
  "ice haven": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Ice Haven by Daniel Clowes"
  },
  "iceman": {
   "type": "series",
@@ -4025,9 +4083,9 @@
   "episodes": 1
  },
  "in the pines": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "In the Pines: 5 Murder Ballads"
  },
  "incursion": {
   "type": "series",
@@ -4179,9 +4237,9 @@
   "episodes": 2
  },
  "jay & silent bob": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Jay & Silent Bob: Jays of Future Past"
  },
  "jeff elmira": {
   "type": "topic",
@@ -4225,9 +4283,9 @@
   "episodes": 1
  },
  "jla/doom patrol": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "JLA/Doom Patrol Special"
  },
  "joe rogan": {
   "type": "topic",
@@ -4238,9 +4296,12 @@
   "episodes": 1
  },
  "john constantine": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "John Constantine, Hellblazer: Dead In America",
+   "John Constantine: Hellblazer"
+  ]
  },
  "john constantine: hellblazer": {
   "type": "series",
@@ -4451,9 +4512,9 @@
   "series": "Killers"
  },
  "kim & kim": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Kim & Kim Love is a Battlefield"
  },
  "king of the comics: 100 years of kings features syndicate": {
   "type": "series",
@@ -4461,14 +4522,17 @@
   "series": "King of the Comics: 100 Years of Kings Features Syndicate"
  },
  "kingdom hearts": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Kingdom Hearts Final Mix",
+   "Kingdom Hearts Final Mix 1"
+  ]
  },
  "kingsman": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Kingsman: The Secret Service"
  },
  "klaus": {
   "type": "series",
@@ -4485,9 +4549,9 @@
   "series": "Know Your Station"
  },
  "kobra olympus": {
-  "type": "topic",
+  "type": "series",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Kobra Olympus Issue"
  },
  "kochab": {
   "type": "series",
@@ -4627,9 +4691,9 @@
   "episodes": 1
  },
  "legacy of vader": {
-  "type": "topic",
+  "type": "series",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Legacy of Vader - The Reign of Kylo Ren"
  },
  "legion x": {
   "type": "topic",
@@ -4723,14 +4787,14 @@
   "episodes": 1
  },
  "little monsters": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Little Monsters by Jeff Lemire and Dustin Nguyen"
  },
  "little white duck": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Little White Duck: A Childhood in China"
  },
  "lizzo": {
   "type": "topic",
@@ -4742,9 +4806,9 @@
   "series": "Lobo"
  },
  "lobster is the best medicine": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Lobster is the Best Medicine: A Collection of Comics About Friendship"
  },
  "local comic shop": {
   "type": "topic",
@@ -4809,9 +4873,9 @@
   "series": "Lost Fantasy"
  },
  "lost marvels": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Lost Marvels No. 1: Tower of Shadows"
  },
  "love": {
   "type": "topic",
@@ -5077,9 +5141,12 @@
   "series": "Mary Tyler MooreHawk"
  },
  "mass effect": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Mass Effect Discovery",
+   "Mass Effect: Redemption"
+  ]
  },
  "masterpiece": {
   "type": "series",
@@ -5150,14 +5217,14 @@
   "episodes": 1
  },
  "megg & mogg": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Megg & Mogg on Instagram"
  },
  "megg and mogg": {
-  "type": "topic",
+  "type": "series",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Megg and Mogg in Amsterdam"
  },
  "memoir": {
   "type": "topic",
@@ -5182,9 +5249,9 @@
   "series": "Mermaid Town"
  },
  "merry x-men": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Merry X-Men Holiday Special"
  },
  "metal gear solid": {
   "type": "topic",
@@ -5250,7 +5317,7 @@
   "episodes": 1
  },
  "minisode": {
-  "type": "topic",
+  "type": "showFormat",
   "episodes": 3
  },
  "minor arcana": {
@@ -5326,9 +5393,9 @@
   "series": "Monkey Meat: The Summer Batch"
  },
  "monster matador": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "MONSTER MATADOR: AFRIPOCALYPSE"
  },
  "monster of frankenstein": {
   "type": "topic",
@@ -5425,9 +5492,9 @@
   "series": "Mr. & Mrs. X"
  },
  "mr. muffins: defender of the stars": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Mr. Muffins: Defender of the Stars by Ben Kahn & Georgeo Brooks"
  },
  "mtv": {
   "type": "topic",
@@ -5557,9 +5624,9 @@
   "episodes": 1
  },
  "nerd inferno": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Nerd Inferno: The Essential Evan Dorkin"
  },
  "nerds": {
   "type": "topic",
@@ -5903,9 +5970,9 @@
   "episodes": 1
  },
  "palestine": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Palestine by Joe Sacco"
  },
  "panda delivery service": {
   "type": "series",
@@ -5917,7 +5984,7 @@
   "episodes": 1
  },
  "panelist series": {
-  "type": "topic",
+  "type": "showFormat",
   "episodes": 4
  },
  "panels": {
@@ -5958,7 +6025,7 @@
   "episodes": 4
  },
  "patreon exclusive": {
-  "type": "topic",
+  "type": "showFormat",
   "episodes": 3
  },
  "paul brizzi": {
@@ -5970,9 +6037,9 @@
   "episodes": 1
  },
  "peacemaker": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Peacemaker Tries Hard"
  },
  "peacemaker tries hard": {
   "type": "series",
@@ -6012,9 +6079,9 @@
   "series": "Pet Peeves"
  },
  "peter parker": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Peter Parker: The Spectacular Spider-Man 1-2"
  },
  "petrol head": {
   "type": "series",
@@ -6064,9 +6131,9 @@
   "series": "Planetary"
  },
  "plastic man": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Plastic Man No More!"
  },
  "plastic man no more": {
   "type": "series",
@@ -6091,9 +6158,12 @@
   "episodes": 1
  },
  "power man and iron fist": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Power Man and Iron Fist (2016- 2017): Sweet Christmas Annual",
+   "Power Man and Iron Fist 9-10"
+  ]
  },
  "powers": {
   "type": "topic",
@@ -6124,9 +6194,9 @@
   "series": "Primordial"
  },
  "prince of cats": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Prince of Cats by Ronald Wimberley"
  },
  "princeless: find yourself": {
   "type": "series",
@@ -6186,9 +6256,9 @@
   "series": "Punk Rock Karaoke"
  },
  "punk’n heads": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Punk’N Heads with Nicole Goux and Dave Baker"
  },
  "q&a": {
   "type": "topic",
@@ -6204,9 +6274,9 @@
   "episodes": 1
  },
  "question": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Questionable Content"
  },
  "rabbits": {
   "type": "topic",
@@ -6356,9 +6426,9 @@
   "series": "Restaurant to Another World"
  },
  "resurrection man": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Resurrection Man: Quantum Karma"
  },
  "retcons": {
   "type": "topic",
@@ -6519,9 +6589,9 @@
   "series": "Sailor Moon"
  },
  "sailor twain": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Sailor Twain: The Mermaid of the Hudson"
  },
  "saimon hanselmann": {
   "type": "topic",
@@ -6639,9 +6709,9 @@
   "series": "Secret Invasion"
  },
  "seek you": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Seek You: A Journey Through American Loneliness"
  },
  "sennen": {
   "type": "series",
@@ -6659,9 +6729,9 @@
   "series": "SENTINELS"
  },
  "serenity": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Serenity No Power in the Verse"
  },
  "sex criminals": {
   "type": "series",
@@ -6993,9 +7063,9 @@
   "series": "Spider-Geddon"
  },
  "spider-gwen": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Spider-Gwen: Gwenverse"
  },
  "spider-man": {
   "type": "series",
@@ -7013,9 +7083,9 @@
   "series": "Spider-Man: Spider’s Shadow"
  },
  "spider-punk": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Spider-Punk: Battle of the Banned"
  },
  "spider-verse": {
   "type": "topic",
@@ -7054,9 +7124,9 @@
   "series": "Sports is Hell"
  },
  "spy island": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Spy Island: A Bermuda Triangle Mystery"
  },
  "spy superb": {
   "type": "series",
@@ -7165,9 +7235,9 @@
   "series": "Stars in Their Eyes"
  },
  "starscream": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Starscream is a Magical Girl"
  },
  "starship godzilla": {
   "type": "series",
@@ -7184,9 +7254,12 @@
   "series": "Steam"
  },
  "steins;gate": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Steins;Gate - The Complete Manga",
+   "Steins;Gate 0"
+  ]
  },
  "step by bloody step": {
   "type": "series",
@@ -7342,9 +7415,9 @@
   "series": "Superman: The Last Days of Lex Luthor"
  },
  "superman: the warworld": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Superman: The Warworld Saga"
  },
  "superman: up in the sky": {
   "type": "series",
@@ -7459,9 +7532,9 @@
   "episodes": 1
  },
  "teen titans": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Teen Titans TBP Full Throttle"
  },
  "teenage mutant ninja turtles": {
   "type": "series",
@@ -7503,9 +7576,9 @@
   "episodes": 1
  },
  "the amory wars": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Amory Wars: Good Apollo, I'm Burning Star IV, Volume II"
  },
  "the baker and the bard: a cozy fantasy adventure": {
   "type": "series",
@@ -7568,9 +7641,9 @@
   "series": "The Crimson Cage"
  },
  "the crown": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Crown: A Tale of Hell"
  },
  "the cull": {
   "type": "series",
@@ -7578,9 +7651,9 @@
   "series": "The Cull"
  },
  "the cursed earth": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Cursed Earth Unsensored"
  },
  "the day the law died": {
   "type": "series",
@@ -7781,9 +7854,12 @@
   "episodes": 1
  },
  "the last american": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "The Last American (Nick)",
+   "The Last American (Zach)"
+  ]
  },
  "the last mermaid": {
   "type": "series",
@@ -7821,9 +7897,9 @@
   "series": "The Many Deaths of Laila Starr"
  },
  "the mask": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Mask Omnibus"
  },
  "the me you love in the dark": {
   "type": "series",
@@ -7831,9 +7907,9 @@
   "series": "The me you love in the Dark"
  },
  "the midnight": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Midnight: Shadows"
  },
  "the midnight: shadows": {
   "type": "series",
@@ -7841,9 +7917,9 @@
   "series": "The Midnight: Shadows"
  },
  "the mortal instruments": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Mortal Instruments: The Graphic Novel"
  },
  "the mortal thor": {
   "type": "series",
@@ -7901,9 +7977,9 @@
   "series": "The One Hand and The Six Fingers"
  },
  "the order of the nun-ya": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Order of the Nun-Ya Kickstarter"
  },
  "the phantom of the opera": {
   "type": "topic",
@@ -7960,9 +8036,9 @@
   "series": "The Quarry"
  },
  "the raven boys": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Raven Boys: The Graphic Novel"
  },
  "the return of snow white and the seven dwarfs": {
   "type": "series",
@@ -7970,9 +8046,13 @@
   "series": "The Return of Snow White and the Seven Dwarfs"
  },
  "the rocketeer": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 2,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "The Rocketeer Breaks Free",
+   "The Rocketeer: The Great Race",
+   "The Rocketeer: The Island"
+  ]
  },
  "the rocketeer breaks free": {
   "type": "series",
@@ -8039,9 +8119,9 @@
   "series": "The Space Between"
  },
  "the star wars": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Star Wars by Jonathan Rinzler and Mike Mayhew"
  },
  "the starwell foundation": {
   "type": "series",
@@ -8072,9 +8152,9 @@
   "series": "The Thing"
  },
  "the transformers": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Transformers vs The Terminator"
  },
  "the transformers vs the terminator": {
   "type": "series",
@@ -8082,9 +8162,9 @@
   "series": "The Transformers vs The Terminator"
  },
  "the twilight man": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Twilight Man: Rod Serling and the Birth of Television"
  },
  "the twilight zone": {
   "type": "series",
@@ -8150,9 +8230,9 @@
   "series": "The Wrestler"
  },
  "the wrong earth": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "The Wrong Earth: Fame and Fortune"
  },
  "theme of the month": {
   "type": "topic",
@@ -8168,18 +8248,18 @@
   "episodes": 1
  },
  "this beautiful": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "This Beautiful, Ridiculous City"
  },
  "this is not an interview": {
-  "type": "topic",
+  "type": "showSeries",
   "episodes": 3
  },
  "this seems normal": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "This Seems Normal Kickstarter"
  },
  "thor": {
   "type": "series",
@@ -8225,9 +8305,12 @@
   "series": "Time Before Time"
  },
  "time wars": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Time Wars: Stellar Assult",
+   "Time Wars: the Adventures of Kobra Olympus"
+  ]
  },
  "tin can society": {
   "type": "series",
@@ -8385,9 +8468,9 @@
   "episodes": 1
  },
  "twilight": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Twilight: The Graphic Novel"
  },
  "twilight: the graphic novels": {
   "type": "topic",
@@ -8467,9 +8550,12 @@
   "series": "Uncle Pogo’s So-So Stories"
  },
  "uncle scrooge": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Uncle Scrooge and the Infinity Dime",
+   "Uncle Scrooge: The Golden Nugget Boat"
+  ]
  },
  "uncle scrooge: the golden nugget boat": {
   "type": "series",
@@ -8495,9 +8581,14 @@
   "episodes": 1
  },
  "universal monsters": {
-  "type": "topic",
+  "type": "franchise",
   "episodes": 4,
-  "review": "may be a comic — a mention string starts with this"
+  "spans": [
+   "Universal Monsters: Dracula",
+   "Universal Monsters: Frankenstein",
+   "Universal Monsters: The Invisible Man",
+   "Universal Monsters: The Phantom of the Opera"
+  ]
  },
  "universal monsters: frankenstein": {
   "type": "series",
@@ -8619,9 +8710,9 @@
   "series": "Void Rivals"
  },
  "vox machina": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Vox Machina: Origins"
  },
  "w maxwell prince": {
   "type": "topic",
@@ -8637,14 +8728,14 @@
   "series": "W0rldtr33"
  },
  "wake now in the fire: a story of censorship": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Wake Now in the Fire: a Story of Censorship, Action, Love and Hope"
  },
  "walt disney's uncle scrooge: only a poor old man": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Walt Disney's Uncle Scrooge: Only A Poor Old Man (Complete Carl Barks Disney Library)"
  },
  "war of the bounty hunters": {
   "type": "series",
@@ -9011,9 +9102,9 @@
   "episodes": 2
  },
  "z class: trix": {
-  "type": "topic",
+  "type": "series",
   "episodes": 1,
-  "review": "may be a comic — a mention string starts with this"
+  "series": "Z Class: Trix Kickstarter"
  },
  "zack kaplan": {
   "type": "creator",

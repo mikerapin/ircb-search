@@ -11,12 +11,18 @@
  * into every entry — a facet of one is a dead end, and the UI needs to be able to see that
  * rather than rendering a page nobody can browse to.
  *
- * Four rules, in order. Anything unmatched becomes `topic`, which is the bucket to review:
- *   series    — the term resolves to a key already in the series index, via the app's own
- *               seriesKey() rather than a re-implementation, so the two cannot disagree
- *   publisher — listed in data/tag-seeds.json
- *   creator   — listed in data/tag-seeds.json, or a known guest from the episode roster
- *   topic     — everything else
+ * Rules in order, first match wins. Anything unmatched becomes `topic`:
+ *   series     — resolves to a key already in the series index, via the app's own seriesKey()
+ *                rather than a re-implementation, so the two cannot disagree
+ *   showSeries — a named IRCB run (Candybar Antlerboy), not a comic
+ *   showFormat — what kind of episode it is (minisode), not what was discussed in it
+ *   series     — a book Mike confirmed by review that the extraction never logged, resolved
+ *                to the one series whose mention strings start with it
+ *   franchise  — the same, but spanning several series pages: an episode tagged "godzilla"
+ *                did not discuss all seven Godzilla series, so it merges into none of them
+ *   publisher  — listed in data/tag-seeds.json
+ *   creator    — listed in data/tag-seeds.json, or a known guest from the episode roster
+ *   topic      — everything else
  *
  * The keywords arrive lowercased, so there is no casing signal separating "jeff lemire" from
  * "sweet tooth". A term is a creator because it is on a list, never because it looks like a
@@ -30,7 +36,6 @@ import { readFileSync, writeFileSync } from "node:fs";
 
 const vite = await createServer({ server: { middlewareMode: true } });
 const series = await vite.ssrLoadModule("/src/data/series.ts");
-const shape = await vite.ssrLoadModule("/src/data/shape.ts");
 
 const seeds = JSON.parse(readFileSync("data/tag-seeds.json", "utf8"));
 const core = JSON.parse(readFileSync("public/d/core.json", "utf8"));
@@ -70,9 +75,37 @@ for (const d of details) {
   }
 }
 
+/* Books the extraction never logged, confirmed by hand. A reviewed term outranks every rule
+   below it — the whole point of the review was that the rules could not see these. */
+const REVIEWED_COMICS = lower(seeds.comics.terms);
+const SHOW_SERIES = lower(seeds.showSeries.terms);
+const SHOW_FORMAT = lower(seeds.showFormat.terms);
+
+/* Which existing series does a term name? A reviewed comic is a topic-classified term, so by
+   construction it is not itself a series key — it is the front of one or more comic strings. */
+function seriesPrefixedBy(term) {
+  const hits = new Set();
+  for (const m of mentions) {
+    if (series.clean(m.comic).toLowerCase().startsWith(term)) hits.add(m.series);
+  }
+  return [...hits].sort();
+}
+
 function classify(term) {
   const key = series.seriesKey(term, yearKeys);
   if (seriesKeys.has(key)) return ["series", seriesKeys.get(key)];
+  if (SHOW_SERIES.has(term)) return ["showSeries", null];
+  if (SHOW_FORMAT.has(term)) return ["showFormat", null];
+  if (REVIEWED_COMICS.has(term)) {
+    const hits = seriesPrefixedBy(term);
+    /* One match merges into that page, which is the decision on record. Several means the
+       tag names a franchise spanning separate pages — an episode tagged "godzilla" did not
+       discuss all seven Godzilla series, so attaching it to each would claim seven books it
+       never named. Those stay a browse axis of their own. */
+    if (hits.length === 1) return ["series", hits[0]];
+    if (hits.length > 1) return ["franchise", null, hits];
+    return ["series", null];
+  }
   if (SEGMENTS.has(term)) return ["topic", null];
   if (PUBLISHERS.has(term)) return ["publisher", null];
   if (CREATORS.has(term)) return ["creator", null];
@@ -100,12 +133,13 @@ function looksLikeSeries(term) {
 
 const taxonomy = {};
 for (const [term, keys] of [...episodesOf].sort((a, b) => a[0].localeCompare(b[0]))) {
-  const [type, seriesName] = classify(term);
+  const [type, seriesName, spans] = classify(term);
   const hint = type === "topic" && looksLikeSeries(term);
   taxonomy[term] = {
     type,
     episodes: keys.size,
     ...(seriesName ? { series: seriesName } : {}),
+    ...(spans ? { spans } : {}),
     ...(hint ? { review: "may be a comic — a mention string starts with this" } : {}),
   };
 }
@@ -119,7 +153,7 @@ for (const [, v] of Object.entries(taxonomy)) {
   if (v.episodes >= 3) browsable[v.type] = (browsable[v.type] ?? 0) + 1;
 }
 console.log(`${Object.keys(taxonomy).length} terms classified (aliases folded, noise dropped)`);
-for (const t of ["series", "publisher", "creator", "topic"]) {
+for (const t of ["series", "franchise", "publisher", "creator", "showSeries", "showFormat", "topic"]) {
   console.log(`  ${t.padEnd(10)} ${String(byType[t] ?? 0).padStart(5)}   ` +
               `${String(browsable[t] ?? 0).padStart(4)} on 3+ episodes`);
 }
