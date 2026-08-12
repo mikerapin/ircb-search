@@ -22,7 +22,9 @@ const parent: EpisodeCore[] = [{
 }];
 
 function shape(raw: Record<string, unknown>) {
-  return shapePatreonEpisodes([raw], parent)[0];
+  const [episode] = shapePatreonEpisodes([raw], parent);
+  if (!episode) throw new Error("shapePatreonEpisodes returned nothing to assert on");
+  return episode;
 }
 
 describe("a stated Panel: line", () => {

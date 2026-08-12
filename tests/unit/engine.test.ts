@@ -5,6 +5,7 @@ import type { EpisodeCore, Mention } from "../../src/data/types";
 const ep = (over: Partial<EpisodeCore> & { key: string }): EpisodeCore => ({
   showId: over.key, title: "", date: null, people: [], runtimeSecs: 3600, mentionCount: 0,
   artwork: null, enclosure: "http://x/a.mp3", playerId: null, simplecastUrl: null, patreonUrl: null,
+  ep: null, parentKey: null,
   ...over,
 });
 
@@ -23,7 +24,7 @@ const mentions: Mention[] = [
 ];
 
 const data: SearchData = {
-  core: { stats: { episodes: 3, mentions: 5, series: 4, indexedEpisodes: 3, people: 4 }, episodes },
+  core: { stats: { episodes: 3, mentions: 5, series: 4, uniqueComics: 4, indexedEpisodes: 3, people: 4 }, episodes, patreonSeries: [] },
   mentions,
   details: new Map([["a", { key: "a", summary: "a night about saga", keywords: ["image comics"] }]]),
 };
@@ -76,7 +77,7 @@ describe("relevance ranking", () => {
     ep({ key: "new", title: "New One", date: "2026-01-01" }),
   ];
   const build = (mentions: Mention[]): SearchData => ({
-    core: { stats: { episodes: 3, mentions: mentions.length, series: 1, indexedEpisodes: 3, people: 1 }, episodes: eps },
+    core: { stats: { episodes: 3, mentions: mentions.length, series: 1, uniqueComics: 1, indexedEpisodes: 3, people: 1 }, episodes: eps, patreonSeries: [] },
     mentions,
     details: new Map(),
   });
@@ -149,7 +150,7 @@ describe("relevance ranking", () => {
       ep({ key: "mike", date: "2025-01-01", people: ["Mike Rapin"] }),
     ];
     const r = runSearch({ q: "batman", who: "Kara Szamborski", guest: false, sort: "relevance" }, {
-      core: { stats: { episodes: 2, mentions: 2, series: 1, indexedEpisodes: 2, people: 2 }, episodes: filtered },
+      core: { stats: { episodes: 2, mentions: 2, series: 1, uniqueComics: 1, indexedEpisodes: 2, people: 2 }, episodes: filtered, patreonSeries: [] },
       mentions: [
         { comic: "Batman", series: "Batman", epKey: "kara", segment: null, secs: 120 },
         { comic: "Batman", series: "Batman", epKey: "mike", segment: null, secs: 120 },
@@ -163,7 +164,7 @@ describe("relevance ranking", () => {
   it("does not crash when nothing carries a date", () => {
     const undated = [ep({ key: "u1" }), ep({ key: "u2" })];
     const r = runSearch({ q: "batman", who: null, guest: false, sort: "relevance" }, {
-      core: { stats: { episodes: 2, mentions: 2, series: 1, indexedEpisodes: 2, people: 1 }, episodes: undated },
+      core: { stats: { episodes: 2, mentions: 2, series: 1, uniqueComics: 1, indexedEpisodes: 2, people: 1 }, episodes: undated, patreonSeries: [] },
       mentions: [
         { comic: "Batman", series: "Batman", epKey: "u1", segment: null, secs: null },
         { comic: "Batman", series: "Batman", epKey: "u2", segment: null, secs: 120 },

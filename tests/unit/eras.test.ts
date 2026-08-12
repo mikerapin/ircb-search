@@ -17,7 +17,7 @@ import type { EpisodeCore } from "../../src/data/types";
 const ep = (o: Partial<EpisodeCore>): EpisodeCore => ({
   key: o.key ?? "k", showId: null, title: "t", date: null, people: [], runtimeSecs: null,
   mentionCount: 0, artwork: null, enclosure: null, playerId: null, simplecastUrl: null,
-  patreonUrl: null, ...o,
+  patreonUrl: null, ep: null, parentKey: null, ...o,
 });
 
 const FIXTURE: EpisodeCore[] = [

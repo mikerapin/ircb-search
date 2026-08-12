@@ -98,12 +98,13 @@ describe("volume years are kept only when they disambiguate", () => {
   });
 
   it("keeps the year when the same title carries two of them", () => {
-    const raw = ["Fantastic Four (1961) #51", "Fantastic Four (2022) #1", "Fantastic Four #3"];
+    const v1961 = "Fantastic Four (1961) #51", v2022 = "Fantastic Four (2022) #1";
+    const raw = [v1961, v2022, "Fantastic Four #3"];
     const s = yearSensitiveKeys(raw);
     expect(normalizeSeries("Fantastic Four (1961) #51", s)).toBe("Fantastic Four (1961)");
     expect(normalizeSeries("Fantastic Four (2022) #1", s)).toBe("Fantastic Four (2022)");
     // Two different books must not share a page.
-    expect(seriesKey(raw[0], s)).not.toBe(seriesKey(raw[1], s));
+    expect(seriesKey(v1961, s)).not.toBe(seriesKey(v2022, s));
     // The undated mentions stay on their own run — we cannot know which volume they meant.
     expect(normalizeSeries("Fantastic Four #3", s)).toBe("Fantastic Four");
   });
