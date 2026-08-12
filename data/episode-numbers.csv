@@ -1,0 +1,407 @@
+ep,source,shown_as,delta,date,title,feed_title_ep,rec_date,lag_days,topic,key
+85,feed-title,1,-84,2016-09-28,Jack “King” Kirby,85,2016-09-25,3,Jack Kirby's Legacy. August 28th would be The King's 99th birthday. Let's talk about his influence.,622
+86,feed-title,2,-84,2016-10-05,The Warm Cookie of Comics,86,2016-10-02,3,What got you into comics?,644
+87,feed-title,3,-84,2016-10-12,On Wednesdays We Wear Pink,87,2016-10-08,4,Retconning - do you love/hate it? When has it worked? When has it sucked? Is it necessary for legacy characters?,657
+88,feed-title,4,-84,2016-10-19,And Then Mary Magdalene Couldn’t Even,88,2016-10-16,3,What makes a classic comic?  Are there any books being published right now that you think will be considered classics?,668
+89,feed-title,5,-84,2016-10-26,Mike bows to peer pressure,89,2016-10-22,4,What makes for a good comic shop?,683
+90,feed-title,6,-84,2016-11-02,Goodreads Book of the Month – The Chilling Adventures of Sabrina,90,2016-10-30,3,Goodreads Read - The Chilling Adventures of Sabrina Vol. 1,699
+91,feed-title,7,-84,2016-11-09,Classic Predictions,91,2016-11-06,3,What makes a classic comic? Are there any books being published right now that you think will be considered classics?,715
+92,feed-title,8,-84,2016-11-16,360 No-Trope,92,2016-11-13,3,Least favorite comic book trope,728
+93,feed-title,9,-84,2016-11-23,Own Your Trash,93,2016-11-20,3,The meme-ification of comic books - GODS WHY - aka how trendy is too trendy?,741
+94,feed-title,11,-83,2016-12-07,Every Party Needs A Pooper,94,2016-12-04,3,Goodreads Read - Trees Volume 1,770
+95,feed-title,12,-83,2016-12-14,"Remember, this is a team effort",95,2016-12-11,3,What is your favorite creator's definitive work?,795
+96,feed-title,13,-83,2016-12-21,My Slice of Life is Pizza,96,2016-12-18,3,What's one book you regret not buying?,810
+97,feed-title,16,-81,2017-01-11,My emotions!,97,2017-01-08,3,Has a comic book ever made you cry? Or at least get a little choked up? Why?,849
+98,feed-title,17,-81,2017-01-18,Roller Derby is a Gateway Drug,98,2017-01-14,4,What are you excited for in 2017?,865
+99,feed-title,18,-81,2017-01-25,Harrow County Volume 1,99,2017-01-22,3,Goodreads Read - Harrow County Volume 1,885
+100,feed-title,19,-81,2017-02-01,THE ANNUAL #2,100,2017-01-29,3,"The Annual #2: 100 episodes - Where we are, where we've been, where we're going",896
+101,feed-title,20,-81,2017-02-08,Something About a Book and It’s Cover,101,2017-02-05,3,"Surprises! Comics that were better than you had expected. Or, comics you were excited about that left you cold.",912
+102,feed-title,21,-81,2017-02-15,Tia’s Fury Road-Trip,102,2017-02-12,3,Do you listen to music when you read comics? Does it affect your feelings on the comic?,929
+103,feed-title,22,-81,2017-02-22,"That’s Baudrillard, Bitches!",103,2017-02-19,3,The things I do for love - what madness has your comic obsessions lead you to?,942
+104,feed-title,23,-81,2017-03-01,Going Full Kirby,104,2017-02-26,3,Goodreads Read - March Volume 1,959
+105,feed-title,24,-81,2017-03-08,Competent Assholes and Spider-Bucks,105,2017-03-05,3,O Captain! My Captain!...shipping in comic books. Who are your ships? Canon or non-canon? Blowing holes in other ships?,974
+106,feed-title,25,-81,2017-03-15,4 kids walk bank when?,106,2017-03-12,3,"Are terms like ""graphic novel"" useful any more? What sort of terminology would you like to see in comics?",992
+107,feed-title,26,-81,2017-03-22,Library Penalty Non Grata,107,2017-03-19,3,What makes you drop a book? How long do you give a book before you drop it? Any regrets?,1002
+108,feed-title,27,-81,2017-03-29,"Quiet, Sexy, and Unapproachable",108,2017-03-26,3,Goodreads Read - Rat Queens Volume 1,1011
+109,feed-title,28,-81,2017-04-05,"“No one cares, Mike…”",109,2017-04-02,3,"How does comic art creation work anyways? (the various mediums and methods, like having 1 person vs. 4, etc.)",1023
+110,feed-title,29,-81,2017-04-12,Dream a Little Dream of Comics,110,2017-04-09,3,"I dreamed a dream - what we want to see in comics, no matter how unlikely or unrealistic they are",1042
+111,feed-title,30,-81,2017-04-19,That Dude Is For Sure A Serial Killer,111,2017-04-16,3,"Nonfiction comics! Are comics a suitable medium for biographies, journalism, historical nonfiction? Examples of our favorites.",1056
+112,feed-title,31,-81,2017-04-26,Humanoid Traitors,112,2017-04-23,3,"The value of mini-series, what are some of your favorites?",1075
+113,feed-title,32,-81,2017-05-03,"I like your songs, Mike",113,2017-04-30,3,Goodreads Read - The Spire Volume 1,1089
+114,feed-title,34,-80,2017-05-17,Shitty Moms with Hearts of Gold,114,2017-05-14,3,Family in Comics,1121
+115,feed-title,35,-80,2017-05-24,"Kids And Their Turtles, Amiright?",115,2017-05-21,3,Comics as a subversive art form,1135
+116,feed-title,36,-80,2017-05-31,Hyper Violence in Hyper-drive,116,2017-05-28,3,Goodreads Read - Wytches,1142
+117,feed-title,37,-80,2017-06-07,Special Guest: Matt Horak,117,2017-06-04,3,Interview with Matt Horak - Comic Creation + Octo Skull & EarthQuaker Devices and Comics,1159
+118,feed-title,38,-80,2017-06-14,We’re All Trash Here,118,2017-06-11,3,Intro to Manga and Why we like it,1182
+119,feed-title,39,-80,2017-06-21,I’m Here For One Thing And One Thing Only,119,2017-06-18,3,"Comics and The Male Gaze (what the heck does it really mean, anyway?)",1194
+120,feed-title,40,-80,2017-06-28,Wonder Woman: The True Amazon,120,2017-06-25,3,Goodreads Read - Wonder Woman: The True Amazon,1217
+121,feed-title,45,-76,2017-08-02,Goodreads Book of the Month: Superman: Red Son,121,2017-07-30,3,Goodreads Read - Superman: Red Son,1309
+122,feed-title,46,-76,2017-08-09,DC Rebirth Status Update,122,2017-08-06,3,Rebirth Status Update,1317
+123,feed-title,47,-76,2017-08-16,Brain Holes,123,2017-08-13,3,Comics Mixtape: Pick a character or creator & give your 5 favorite stories about/by. (Might make a good minisode series).,1326
+124,feed-title,48,-76,2017-08-23,Hooked on Comics,124,2017-08-20,3,Start Here: Books you rec to people who don't read comics to get them hooked,1340
+125,feed-title,49,-76,2017-08-30,Goodreads Book of the Month: Old Man Logan,125,2017-08-27,3,Goodreads Read - Old Man Logan,1352
+126,feed-title,51,-75,2017-09-06,I’m Very Caps Lock About This,126,2017-09-03,3,What's up with B-Stories? Or backup stories? DO you like them? Do you read them?,1365
+127,feed-title,52,-75,2017-09-13,The Comic Book Family That Knows Everything,127,2017-09-10,3,How did you childhood shape your comic tastes?,1371
+128,feed-title,53,-75,2017-09-20,As Someone Who Went To The Louvre…,128,2017-09-17,3,"Unsung heroes of comics -- our favorite inkers, letterers, colorists, designers",1388
+129,feed-title,54,-75,2017-09-27,Goodreads Book of the Month: Fatale Volume 1,129,2017-09-24,3,Goodreads Read - Fatale Volume 1,1414
+130,feed-title,55,-75,2017-10-04,Everyone needs underwear,130,2017-10-01,3,"I'm not your comic book google (René's idea, about manga for him)",1423
+131,feed-title,57,-74,2017-10-11,"Pride and Joy, Shame and Scandal",131,2017-10-08,3,What are the pride and shame of your comic collection?,1439
+132,feed-title,58,-74,2017-10-18,Mike sleeps with the lights on,132,2017-10-15,3,"Horror Comics: How do you define horror, what works in comics, what tropes *don't* work in comics",1451
+134,feed-title,61,-73,2017-11-01,Goodreads Pick of the Month: Batman: The Long Halloween,134,2017-10-29,3,Goodreads Read - Batman: The Long Halloween,1488
+135,feed-title,62,-73,2017-11-08,Special Guest: Deniz Camp!,135,2017-11-05,3,Star Wars Comics and the Reboot/Retcons of Olde,1492
+136,feed-title,63,-73,2017-11-15,We’re getting Nick a library card again,136,2017-11-12,3,,1506
+137,feed-title,64,-73,2017-11-22,"Dystopia, Research, and Honorary Witches",137,2017-11-19,3,"Dystopian Comics, what's the deal? (Hinterkind, The Massive, Sweet Tooth, etc.)",1515
+138,feed-title,65,-73,2017-11-29,Goodreads Pick of the Month: Hilda and the Troll,138,2017-11-26,3,Goodreads Pick of the Month  - Hilda and the Troll,1526
+139,feed-title,66,-73,2017-12-06,Everyone Needs Socks and Pajama Pants,139,2017-12-03,3,Comic gifts for your non geeky friends but also how to buy comics for the geek in your life,1534
+140,feed-title,67,-73,2017-12-13,Insert Clickbait Title Here,140,2017-12-10,3,"Yes, That Film You Love Started As A Comic: non-superhero films based on comics (and do the interpretations work?)",1547
+141,feed-title,68,-73,2017-12-20,Goodreads Pick of the Month: Snow Blind,141,2017-12-17,3,Goodreads Pick of the Month - Snowblind,1553
+142,feed-title,71,-71,2018-01-10,How can we fix the comics industry?,142,2018-01-07,3,Let's Fix Comics! How to Fix the Industry That Churns Out Moneymaking IPs Yet Still Struggles To Pay Creators,1568
+143,feed-title,72,-71,2018-01-17,We’re all dead this week,143,2018-01-14,3,"New Year, New Hero: Why We Retcon & What Makes It Work (or not)",1573
+144,feed-title,73,-71,2018-01-24,"The Bird, The Plane, The Superman",144,2018-01-21,3,80 years of Superman! Kal-El turns 80 in 2018. Let's talk about our favorite Superman stories.,1578
+145,feed-title,75,-70,2018-01-31,ANNUAL #3 – TOTALLY NOT A CULT,145,2018-01-28,3,THE ANNUAL #3,1599
+146,feed-title,76,-70,2018-02-07,TMNT: Tutant Meenage Neetle Teetles,146,2018-02-04,3,TMNT: From Satirical Indie One-Shot to Global Shell-tastic Empire,1613
+147,feed-title,77,-70,2018-02-14,IRCB Q&A #1,147,2018-02-11,3,IRCB Answers your Questions (Q1),1619
+148,feed-title,78,-70,2018-02-21,Special Guests: Vita Ayala and Emily Pearson,148,2018-02-18,3,INTERVIEW - Emily + Vita from THE WILDS @ Black Mask,1625
+149,feed-title,80,-69,2018-02-28,Goodreads Book of the Month – Paper Girls Vol. 1,149,2018-02-25,3,Goodreads Pick of the Month - Paper Girls Volume 1,1638
+150,feed-title,81,-69,2018-03-07,Free Range Kids,150,2018-03-04,3,Comfort comics: Books/creators you turn to to ease your troubled mind. Like comfort food in comics form.,1649
+151,schedule-sheet,82,-69,2018-03-14,Caleb Goellner and Buster Moody,,2018-03-11,3,Comics translated or not English,1678
+152,schedule-sheet,84,-68,2018-03-21,Kelly Fitzpatrick,,2018-03-18,3,"Rank The X-Men from ""Best"" to ""Cyclops"": An Internal IRCB Poll, Shared",1693
+153,feed-title,86,-67,2018-03-28,Our Feminist Agenda,153,2018-03-25,3,Ask Us About our Feminist Agenda (women's history month edition - March 8th),1700
+154,schedule-sheet,87,-67,2018-04-04,Ryan Browne,,2018-04-01,3,How to do sexy comics without making it bad - with Brandon Graham,1715
+155,feed-title,89,-66,2018-04-11,A Deep Dive on Previews and Comic Subscriptions,155,2018-04-08,3,Managing your Previews/Pull List Deep Dive - Kickstarter Episode,1723
+156,feed-title,91,-65,2018-04-18,Mike and Rene are Fighting about Skins,156,2018-04-15,3,Comics as medium to expand TV universe,1739
+157,schedule-sheet,92,-65,2018-04-25,This Is Not An Interview #2: Magdalene Visaggio,,2018-04-22,3,"Ryan Browne: Bearded Cats, Astronauts, and more",1743
+158,feed-title,94,-64,2018-05-02,Goodreads BotM – Pretty Deadly Volume 1: The Shrike,158,2018-04-29,3,"Goodreads Pick of the Month - Pretty Deadly, Vol. 1: The Shrike",1754
+159,feed-title,95,-64,2018-05-09,We had a technical glitch (MCU Villians),159,2018-05-06,3,What's our favorite iteration of the x-men? And how was that new Gifted show?,1765
+160,feed-title,96,-64,2018-05-16,Always use 3M tape. ALWAYS. (IRCB QA #2),160,2018-05-13,3,IRCB Answers your Questions (Q2),1774
+161,feed-title,97,-64,2018-05-23,"My Boy Spider-Man, The Precious Angel Baby",161,2018-05-20,3,Why Should I Care About Spider-Man? And other skeptical questions,1785
+162,schedule-sheet,98,-64,2018-05-27,This Is Not An Interview #3: Christopher Sebela,,2018-05-27,0,Benjamin Saunders - Comic Book Academia and more,1796
+163,feed-title,100,-63,2018-06-06,Singles vs Collections: What stories do this well (or not)?,163,2018-06-03,3,Single Issues Vs. Collections - Stories or creators that work better for each type,1851
+164,feed-title,101,-63,2018-06-13,Hope Nicholson and Progress in Comics,164,2018-06-10,3,Measuring the distance comics have come and the roadblocks that still exist - With Hope Nicholeson? - Kickstarter ep,1857
+165,feed-title,102,-63,2018-06-20,Stuff to look forward to on your wedding,165,2018-06-17,3,Webtoons - WHAT ABOUT EM??,1860
+166,feed-title,103,-63,2018-06-27,Goodreads Book of the Month: Nimona,166,2018-06-24,3,Goodreads Pick of the Month - Nimona,1871
+167,feed-title,109,-58,2018-08-01,Depression and Mental Illness in Comics,167,2018-07-29,3,Depression and Mental Illness in comics,1896
+168,feed-title,110,-58,2018-08-08,When Buffy Jumps The Shark,168,2018-08-05,3,Extreme changes in existing characters or plotlines,1905
+169,feed-title,111,-58,2018-08-15,So Wholesome (IRCB Q&A #3),169,2018-08-12,3,IRCB Answers your Questions (Q3),1916
+170,feed-title,112,-58,2018-08-22,Comics to take to Summer Camp,170,2018-08-19,3,"Comics you would send to your younger, camping self",1925
+171,feed-title,113,-58,2018-08-29,Goodreads Book of the Month – Animosity Volume 1,171,2018-08-25,4,Goodreads Pick of the Month - Animosity Volume 1,1936
+172,feed-title,116,-56,2018-09-19,What keeps you reading comic books?,172,2018-09-16,3,Why do you continue to read comics?,1955
+173,feed-title,117,-56,2018-09-26,Crimey crime crime comics,173,2018-09-23,3,CRIMEY CRIME CRIME comics,1983
+174,feed-title,118,-56,2018-10-03,Getting Political with Comics!,174,2018-09-30,3,Vote Loki?  Matt Wilson for president? Comic characters and creators more qualified to be president than Donald Trump,1989
+175,feed-title,120,-55,2018-10-10,Seasonal Reading Habits,175,2018-10-07,3,How do your reading habits change with the season?,2002
+176,feed-title,121,-55,2018-10-17,CRACK Open A Cold One,176,2018-10-14,3,"BING! ZHAM! SPLOK! Sound effects in comics, what's up?",2007
+177,feed-title,122,-55,2018-10-24,Those are NOT good relationships,177,2018-10-21,3,Relationships in comics,2010
+178,feed-title,123,-55,2018-10-31,Goodreads Book of the Month: Revival Vol. 1,178,2018-10-28,3,Goodreads Pick of the Month - Revival Volume 1,2017
+179,feed-title,124,-55,2018-11-07,I’ll talk to you about animals all day,179,2018-11-03,4,Our favorite non-human characters,2023
+180,feed-title,125,-55,2018-11-14,Full On Western Aesthetic (IRCB Q&A #4),180,2018-11-11,3,IRCB Answers your Questions (Q4),2032
+181,feed-title,126,-55,2018-11-21,Special Guests: Pat Shand & Emily Pearson,181,2018-11-18,3,Interview with Pat Shand and Emily Pearson - Snap Flash Hustle,2041
+182,feed-title,128,-54,2018-12-05,Religion in Comic Books,182,2018-12-02,3,Religious comics? or Religion in comics?,2065
+183,feed-title,129,-54,2018-12-12,A Casey Jones Kind of Violence,183,2018-12-09,3,How to depict action in comics,2074
+184,feed-title,130,-54,2018-12-19,Goodreads Book of the Month – 4 Kids Walk Into A Bank,184,2018-12-16,3,Goodreads Book of the Month,2082
+185,feed-title,133,-52,2019-01-09,Comics anywhere but Earth,185,2019-01-06,3,Comics set anywhere but earth,2102
+186,feed-title,134,-52,2019-01-16,Income and Poverty in Comics,186,2019-01-13,3,Poverty in comics,2108
+187,feed-title,135,-52,2019-01-23,Slutty for Comics,187,2019-01-20,3,Nerd Fashion,2113
+188,feed-title,136,-52,2019-01-30,Annual #4: We did too much???,188,2019-01-27,3,Annual #4,2120
+189,feed-title,137,-52,2019-02-06,War in Comics,189,2019-02-03,3,War in comics,2127
+190,feed-title,138,-52,2019-02-13,Hungry for Manga,190,2019-02-10,3,Food in manga,2132
+191,feed-title,139,-52,2019-02-20,I don’t know what Hulkverines are and I’m too afraid too look,191,2019-02-17,3,"what makes you impulse buy a comic? (examples: cover design, creator, deals)",2152
+192,feed-title,140,-52,2019-02-27,Goodreads Book of the Month – From Under Mountains,192,2019-02-24,3,Goodreads Book of the Month - From Under Mountains,2156
+193,feed-title,141,-52,2019-03-06,Reading 100 chapters of a manga in one day,193,2019-03-03,3,"The different digital platforms (Marvel's redeem, Hoopla, comiXology)",2163
+194,feed-title,142,-52,2019-03-13,Comic Distribution with Scott McGovern,194,2019-03-10,3,Comic Distribution and such with Scott McGovern,2383
+195,feed-title,143,-52,2019-03-20,Do you eat a space orange for space scurvy?,195,2019-03-17,3,Space comics,2390
+196,feed-title,144,-52,2019-03-27,We went to c2e2,196,2019-03-24,3,C2E2,2396
+197,feed-title,145,-52,2019-04-03,Two Phasmas ARE better than one!,197,2019-03-31,3,Comic book Collectables,2400
+198,feed-title,147,-51,2019-04-17,Special Guest: David Pepose,198,2019-04-14,3,Discussing Spencer & Locke 2 with David Pepose and Jorge Santiago,2419
+200,feed-title,150,-50,2019-05-08,FCBD + interviews with Lucy Knisley & Box Brown,200,2019-05-05,3,FCBD 2019!,2438
+201,feed-title,151,-50,2019-05-15,"‘Kate-senpai,’ that sounds right",201,2019-05-11,4,"Pick something OLD from our backlog to read, then discuss why we let things sit for so long",2464
+202,feed-title,152,-50,2019-05-22,Special Guest: Chris Sebela!,202,2019-05-19,3,Interview with Chris Sebela,2474
+203,feed-title,153,-50,2019-05-29,"Book Adaptations, YA Edition!",203,2019-05-26,3,Book -> Comic Adaptations revisited (YA EDITION),2482
+204,feed-title,154,-50,2019-06-05,Special Guest: Dave Baker,204,2019-06-02,3,Interview with Dave Baker,2497
+205,feed-title,155,-50,2019-06-12,"Poststructuralism is like, “YOU ARE THE FATHER OF THAT BABY”",205,2019-06-09,3,Death of the author - how to separate the work from the creator,2503
+206,feed-title,156,-50,2019-06-19,Shooting A Comic Book with a LITERAL Bullet,206,2019-06-16,3,"Gimmicks in the comic reading experience (3-D, AR, etc.)",2513
+207,feed-title,157,-50,2019-06-26,"C’mon, give comics a chance!",207,2019-06-23,3,Why Do We Hate New? A discussion on the continued shut down of new ideas or new heroes taking on old mantles.,2520
+208,feed-title,158,-50,2019-07-03,Goodreads Book of the Month: Captain America Vol 1. Winter In America,208,2019-06-29,4,Goodreads Book of the Month - Captain America Vol. 1: Winter in America,2528
+209,feed-title,163,-46,2019-08-07,Hidden gems from your library,209,2019-08-04,3,Hidden Gems from your Library!,2581
+210,feed-title,164,-46,2019-08-14,Do you have the HOXPOX?,210,2019-08-11,3,"Unconventional art styles in comics (photo comics, collage art). Do they work or are they just gimmicks?",2595
+211,feed-title,165,-46,2019-08-21,Why does this exist? Can I resist buying this?,211,2019-08-18,3,"Weird, Weird Crossovers",2602
+212,feed-title,166,-46,2019-08-28,Goodreads Book of the Month: Heathen Vol. 1,212,2019-08-25,3,Goodreads Book of the Month - Heathen Vol. 1,2613
+213,feed-title,167,-46,2019-09-04,Interview with David Pepose,213,2019-09-01,3,Interview with David Pepose - Going to The Chapel,2617
+214,feed-title,168,-46,2019-09-11,Sticking the Landing,214,2019-09-08,3,What makes for a satisfying ending of a distinguished series?,2627
+215,feed-title,169,-46,2019-09-18,"Mike Rapin, The Swellest Guy",215,2019-09-15,3,issue #0/prologues. Do you read them? Do you seek them out if you missed it before #1? Do they pull you into new series?,2634
+216,feed-title,170,-46,2019-09-25,Devastating One-Liners to Poor Boys,216,2019-09-22,3,Back to school special!,2658
+217,feed-title,171,-46,2019-10-02,Revisiting old comic friends,217,2019-09-29,3,What are your favorite comics to re-read?,2664
+218,feed-title,172,-46,2019-10-09,What even is the fantasy genre?,218,2019-10-06,3,Fantasy comics - What do you like?,2668
+219,feed-title,173,-46,2019-10-16,I’m from the 50s. I don’t know who Lizzo is.,219,2019-10-12,4,What do you want out of a comic book's letters page?,2680
+220,feed-title,175,-45,2019-10-23,I’ve Heard of It (It Must Be Popular) Feat. Paulie,220,2019-10-20,3,"Recoloring comics. Examples of comics that have been improved -or not- by being recolored. (ie. Flex Mentallo, Scott Pilgrim, etc.)",2693
+221,feed-title,176,-45,2019-10-30,Goodreads Book of the Month: They Called Us Enemy,221,2019-10-27,3,Goodreads Book of the Month - They Called Us Enemy,2699
+222,feed-title,177,-45,2019-11-06,We All Have Statues Of Each Other,222,2019-11-03,3,DC's Trinity Through The Decades: Remember that time Wonder Woman was a spy and Batman was a family man?,2716
+223,feed-title,179,-44,2019-11-13,The Absorption Problem,223,2019-11-10,3,"How do you read comics? deep dive look at art, analyze for backstory/themes, quick dialogue-focused reads, read twice for different things?",2736
+224,feed-title,181,-43,2019-11-20,Zero Issues and Prologues,224,2019-11-17,3,issue #0/prologues. Do you read them? Do you seek them out if you missed it before #1? Do they pull you into new series?,2744
+225,feed-title,183,-42,2019-11-27,Mike is no longer on energy drinks,225,2019-11-24,3,First Exposure: What was the first comic you read by your favorite creator/creative team? How do you see that series now?,2776
+226,feed-title,187,-39,2019-12-11,Your 2019 Comic Book Holiday Shopping Guide,226,2019-12-08,3,Comic Book Gift Giving Guide: TPB's for Everyone in your life.,2785
+227,feed-title,189,-38,2019-12-18,“This is the I have been reading comic books podcast”,227,2019-12-15,3,The best comics you read in 2019,2794
+228,feed-title,191,-37,2019-12-25,Goodreads Book of the Month: Comics For A Strange World: A Book of Poorly Drawn Lines,228,2019-12-22,3,Goodreads Book of the Month - Comics for a Strange World: A Book of Poorly Drawn Lines,2806
+229,feed-title,195,-34,2020-01-08,Finding deeper meaning in comic art,229,2020-01-05,3,How to interpret art and look for themes and deeper meanings,2824
+230,feed-title,196,-34,2020-01-15,“Aggressively Heterosexual”,230,2020-01-12,3,what stories or universes would you like to see made into comics,2830
+231,feed-title,197,-34,2020-01-22,The Longest Decade of Comic Book Movies Ever (2009-2019),231,2020-01-19,3,"2009-2019, a decade of comic book movies",2833
+232,feed-title,198,-34,2020-01-29,ANNUAL #5: We’re always whole-assing this show,232,2020-01-26,3,ANNUAL #5,2838
+233,feed-title,199,-34,2020-02-05,Release the JJ Cut,233,2020-02-02,3,"Do you read any annotations for comics? Or ""Director's Cut"" comics?",2847
+234,feed-title,200,-34,2020-02-12,Are Comic Books Accessible?,234,2020-02-09,3,"Comics for non-standard reading abilities (audio, large print, other?)",3099
+235,feed-title,201,-34,2020-02-19,Special Guests: Dominic Archer & Marc Casili,235,2020-02-16,3,Interview with Dominic Archer & Marc Casilli,3112
+236,feed-title,202,-34,2020-02-26,Goodreads Book of the Month: Sex Criminals Vol. 1,236,2020-02-23,3,Goodreads Book of the Month - Sex Criminals: Volume One: One Weird Trick,3125
+237,feed-title,203,-34,2020-03-04,Being “First Mate” Is My New Life Goal,237,2020-03-01,3,Trying the Shonen Jump app (and some Manga),3143
+238,feed-title,204,-34,2020-03-11,A Bare Minimum of Slash-Fics,238,2020-03-08,3,"(international women's day) If you read a comic/GN/manga in another language, can you still follow what's going on?",3251
+239,feed-title,206,-33,2020-03-25,Brain Superjail,239,2020-03-22,3,Comics you finally got around to and what took you so long???,3261
+240,feed-title,207,-33,2020-04-01,Special Guest: Amie Wright,240,2020-03-29,3,Special Guest Amie Wright - Comics in Libraries,3272
+241,feed-title,210,-31,2020-04-22,The Books Your Shop Doesn’t Know What To Do With,241,2020-04-19,3,"Oversized comics: Do we like the extra room for art, or do we hate them because they don't fit in our longboxes?",3295
+242,feed-title,211,-31,2020-04-29,Goodreads Book of the Month: Fables Vol. 1: Legends in Exile,242,2020-04-26,3,Goodreads Book of the Month - Fables Vol. 1,3300
+243,feed-title,212,-31,2020-05-06,In This Quarantine House We Read Comics,243,2020-05-03,3,"*Coronavius special* Per the ""your quarantine house"" meme, who are the 5-6 comic book characters you'd like to be stuck with for a few months? Who would be the worst?",3306
+244,feed-title,213,-31,2020-05-13,I Can’t Tell What’s Good Anymore,244,2020-05-10,3,"apart from movie adaptations, how do you see comics impacting society and other media?",3317
+245,feed-title,214,-31,2020-05-20,Three is the Final Number,245,2020-05-17,3,Three Questions And A Lie,3322
+246,feed-title,215,-31,2020-05-27,The Biggest Sci-Fi Series Ever Made: Firefly,246,2020-05-24,3,"Firefly, the comics",3330
+247,feed-title,217,-30,2020-06-10,"Spoilers, I’m baby",247,2020-06-07,3,Comic Book Time Machine: Read a comic released the month / year you were born and discuss.,3347
+248,feed-title,220,-28,2020-07-01,Goodreads Book of the Month: On A Sunbeam,248,2020-06-28,3,Goodreads Book of the Month -  On a Sunbeam,3375
+249,feed-title,226,-23,2020-08-12,"How DARE you, Brain?",249,2020-08-09,3,Manga for Newbies: Let's give Brian some Manga to read,3423
+250,feed-title,228,-22,2020-08-19,Put It In Your Cart For The Kids,250,2020-08-16,3,Comics I Didn't Think I Would Like (Revisited),3450
+251,feed-title,230,-21,2020-08-26,“My Name Is Mike Rapin And This Is An X-Men Book”,251,2020-08-23,3,"Comics you would send to your younger, camping self (Revisit - ep 170)",3456
+252,feed-title,231,-21,2020-09-02,Goodreads Book of the Month: Lumberjanes/Gotham Academy Vol 1.,252,2020-08-30,3,Goodreads Book of the Month - Lumberjanes/Gotham Academy Vol. 1,3460
+253,feed-title,234,-19,2020-09-16,Building Our Little Guys,253,2020-09-13,3,"if you had a job making comics, what would it be? (colorist, editor, writer, etc.)",3493
+254,feed-title,235,-19,2020-09-23,HoXPox B’gosh,254,2020-09-20,3,"Special Guests, HoXPox Bagosh",3498
+255,feed-title,236,-19,2020-09-30,Alex and Jayare from Opinions May Vary,255,2020-09-27,3,Special Guests: Alex and Jayare of Opinions May Vary,3502
+256,feed-title,238,-18,2020-10-07,Three 30 Year Olds Playing 17-Year Olds,256,2020-10-04,3,Comics that would make terrible movies,3514
+257,feed-title,239,-18,2020-10-14,It’s Halloween and We’re Manifesting Zombies Now,257,2020-10-11,3,Zombie comics. Do some stand out? What are the most original?,3525
+258,feed-title,241,-17,2020-10-21,X of Swords is just Space Jam,258,2020-10-18,3,Describe your Ideal convention,3536
+259,feed-title,243,-16,2020-10-28,Goodreads Book of the Month: Something Is Killing The Children Vol. 1,259,2020-10-25,3,Goodreads Book of the Month - Something is Killing the Children Vol. 1,3626
+260,feed-title,245,-15,2020-11-04,Take Me To The Atelier!,260,2020-11-01,3,Kate Asks: What are some of the best comics to be reading right now?,3640
+261,feed-title,246,-15,2020-11-11,Fights For The Sake Of Fights,261,2020-11-08,3,Is it worth revisiting Event Comics?,3645
+262,feed-title,248,-14,2020-11-18,Incredibly Smart People Think Inside Their Head,262,2020-11-15,3,Comic Book Time Machine: Read a comic released the month / year you were born and discuss.,3656
+263,feed-title,249,-14,2020-11-25,Worldbuilding in Comics,263,2020-11-22,3,Is there something unique about world building in comics?,3671
+264,feed-title,252,-12,2020-12-09,Batman Fell In Love With a Ghost Lady,264,2020-12-06,3,Cliffhangers never addressed / series never finished,3687
+265,feed-title,254,-11,2020-12-16,The Best Comics We Read in 2020,265,2020-12-13,3,The best comics you read in 2020,3704
+266,feed-title,255,-11,2020-12-23,Love “Quadrangles”,266,2020-12-20,3,"Goodreads Book of the Month - Farmhand, Vol. 1: Reap What Was Sown",3709
+267,feed-title,257,-10,2021-01-06,The X of Swords Review,267,2021-01-03,3,X of Swords post-mortem,3721
+268,feed-title,259,-9,2021-01-13,How do you choose the format to read your comics?,268,2021-01-10,3,"Reading and Collecting books, digital, physical, subscriptions, other models, kickstarters...",3743
+269,feed-title,260,-9,2021-01-20,"Oops, All Gambits",269,2021-01-17,3,Gambit: Broke ass Batman?,3769
+270,feed-title,261,-9,2021-01-27,6th Annual: Not Even the Longest,270,2021-01-24,3,and Kait. ANNUAL #6,3777
+271,schedule-sheet,262,-9,2021-02-01,January 2021 Goodreads Book of the Month: Why Art?,,2021-01-31,1,What are your weird comic habits?,3784
+272,feed-title,264,-8,2021-02-10,IRCB Now Recommends Garfield Comics,272,2021-02-07,3,Music in comics - how do you enjoy a static medium's interpretation of a fluid medium?,3803
+273,feed-title,265,-8,2021-02-17,Mike’s going to watch ‘The Joker’ and it’s all your fault,273,2021-02-14,3,Pick up a new #1 and give us your review,3807
+274,feed-title,266,-8,2021-02-24,Read comics for your inner-punk-self,274,2021-02-21,3,What comics have shaped the way you read and understand comics?,3813
+275,feed-title,268,-7,2021-03-03,Goodreads Book of the Month: Noir: A Collection of Crime Comics,275,2021-02-28,3,Goodreads Book of the Month - Noir: A Collection of Crime Comics,3825
+276,feed-title,269,-7,2021-03-10,We actually judge comic books by their cover,276,2021-03-07,3,"""Judge a Book By Its Cover""",3832
+277,feed-title,270,-7,2021-03-17,Comics that got you hooked (ft. Gabe Cheng),277,2021-03-14,3,Comics that really got you hooked on the medium,3842
+278,feed-title,271,-7,2021-03-24,Mike’s biggest shame is getting swindled on eBay,278,2021-03-21,3,What are the pride and shame of your comic collection? (Revisit from ep 131),3856
+279,feed-title,272,-7,2021-03-31,You Guys Ever Want To Kill Hitler? (ft. Dr. Zanne Domoney-Lyttle),279,2021-03-28,3,Do current events shape how you read comics? Do you see themes in comics that reflect the current political climate?,3862
+280,feed-title,273,-7,2021-04-07,"Suddenly, Satan Was Real",280,2021-04-04,3,Comic Book Time Machine: Read a comic released the month / year you were born and discuss.,3866
+281,feed-title,274,-7,2021-04-14,"In a Week Or So, We Can Start Making Out",281,2021-04-11,3,Goodreads Reading Challenge: Why did you pick your comic and what are your thoughts on the books you've read so far in the challenge?,3873
+282,feed-title,275,-7,2021-04-21,Chock Full of Left Turns (ft. Paloma Deerfield),282,2021-04-18,3,What makes you the most excited about reading comics?,3878
+283,feed-title,276,-7,2021-04-28,Goodreads Book of the Month – My Lesbian Experience with Loneliness,283,2021-04-25,3,Goodreads Book of the Month - My Lesbian Experience with Loneliness,3885
+284,feed-title,277,-7,2021-05-05,Action Figures Are Rad As Hell,284,2021-05-02,3,"Revisiting Spawn??? Mike goes in Blind, Kara and Paul explain",3892
+285,feed-title,278,-7,2021-05-12,"Welcome to Clickbait, An IRCB Podcast",285,2021-05-09,3,Which long running superhero would be the best dad (IS it Batman?),3917
+286,feed-title,279,-7,2021-05-19,“Retail Therapy for Zero Dollars” with Erica Schultz + The Deadliest Bouquet Kickstarter,286,2021-05-16,3,Erica Schultz - Kickstarter Campaign (The Deadliest Bouquet) - Like This? Try This.,3921
+287,feed-title,280,-7,2021-05-26,Moby Dick… But Better (with Elsa Charretier!),287,2021-05-23,3,Guest Episode - Elsa Charretier - Comic book page analysis,3959
+288,feed-title,281,-7,2021-06-02,The Class and the Curious: Academic Shift,288,2021-05-30,3,"""Comics summer school"": educational comics or books about comics.",3967
+289,schedule-sheet,284,-5,2021-06-14,Sorry About All The Dead People,,2021-06-13,1,Revisit a comic or two that you read when you first got into comics,3981
+290,schedule-sheet,286,-4,2021-06-21,Weird Deer S**t,,2021-06-20,1,Which long running superhero would be the best mom (IS it Wanda Maximoff?),4001
+291,schedule-sheet,288,-3,2021-06-28,Secret Sauce,,2021-06-27,1,"Goodreads Book of the Month - Constantine: The Hellblazer, Volume 1: Going Down",4011
+292,feed-title,298,6,2021-08-04,"I Live. I am Born Again Because of This Book. (ft. interview w/ Gabe Cheng, For Molly Kickstarter)",292,2021-08-01,3,Goodreads Reading Challenge: Why did you pick your comic and what are your thoughts on the books you've read so far in the challenge?,4071
+293,feed-title,299,6,2021-08-11,“You Guys Like Serial Killers?”,293,2021-08-08,3,"Spoiler Alert: What is it about spoilers that bothers you? How does it affect your experience reading comics if you were spoiled? Or, why do you like spoilers?",4082
+294,feed-title,300,6,2021-08-18,I’m a Notorious Cheapskate,294,2021-08-15,3,"""I'll buy that for a dollar!"" The joys of digging through dollar bins. Find a CHEAP comic (NOT FREE) and discuss it?",4085
+295,feed-title,301,6,2021-08-25,It's Hot!... But Comics Are Cool (ft. The O.Z. #1-2 Kickstarter chat with David Pepose!),295,2021-08-22,3,Loki TV Show + Loki: Agent of Asgard,c92cb2d2-8b8f-4e95-b742-d91a7528d4a4
+296,feed-title,302,6,2021-09-01,"Goodreads Book of the Month - The Promised Neverland, Vol. 1",296,2021-08-29,3,"Goodreads Book of the Month - The Promised Neverland, Vol. 1",def29064-1619-43de-8a06-366ce2eb68f6
+297,feed-title,304,7,2021-09-15,"OMG, I'm Seven",297,2021-09-12,3,"""Would this comic have made me gayer sooner? An exaltation of middle grade comics""",8e9f4af1-5388-40bf-a976-0078a27d53c0
+298,feed-title,305,7,2021-09-22,"Secret Pop Punk Junji Ito (ft. Lesly Julien & Brian Flint, Savage Wizard Kickstarter!)",298,2021-09-19,3,Aliens Aliens Aliens!!,e8d8787e-eb7b-421f-b757-e0c9486970b2
+299,feed-title,306,7,2021-09-29,"Are We Going to Get Sued??? (ft. François Vigneault & Michael Tanner, Orcs In Space!)",299,2021-09-26,3,(We Pick & Discuss) Disney Manga: Stitch and the Samurai,c4e9b4f4-0535-4cd4-b353-4c9db0a90d85
+300,feed-title,307,7,2021-10-06,A Community of Friends,300,2021-10-03,3,"Ep 300 and beyond, interview ep",efe4984a-6db8-468d-af3d-5d0c84cdc730
+301,feed-title,308,7,2021-10-13,"Everyone Has to Be Nice To Me (ft. Phillip Maira, Crackle Vol. 3 Kickstarter)",301,2021-10-10,3,"Witches in comics (best, worst, weirdest, etc)",946a6c6e-9bf9-41e0-a5e2-ad6e856a11f4
+302,feed-title,309,7,2021-10-20,Anime Isn't Real!,302,2021-10-17,3,The Evolution of Super Hero Movies after Spider-Man (2002),2f0d4ab2-c07c-4840-ab48-c7998c4f7754
+303,feed-title,310,7,2021-10-27,"Ahh, Yes. The Plants. I Drink Them.  (ft. Steve Prince, Monster Matador Kickstarter)",303,2021-10-24,3,Halloween Comic + Tea Pairing,9c0de2c5-770b-4e07-a7f8-048e8171a70c
+304,feed-title,311,7,2021-11-03,Goodreads Book of the Month: The Sixth Gun Vol. 1: Cold Dead Fingers,304,2021-10-31,3,Goodreads Book of the Month - The Sixth Gun Vol. 1: Cold Dead Fingers,ead05ed5-5964-4b27-b300-5784986de150
+305,feed-title,312,7,2021-11-10,"""And I'm Jimmy Olsen!"" (ft. interview with Cavan Scott, Shadow Service)",305,2021-11-07,3,Final Crisis - The Finalest Crisisest,0a3cefd0-d3d1-46b1-8bfe-4d55e7ccccb2
+306,feed-title,313,7,2021-11-17,Mad and Unprincipled (ft. interview with Todd Hunt for Darling #1-4),306,2021-11-14,3,A nice chat between friends(no topic),31902d8a-dfa9-4978-a05a-8403fffb1836
+307,feed-title,314,7,2021-11-24,Humans: An Invasive Species,307,2021-11-21,3,WE PICK A COMIC TO Read/DISCUSS.,133c30e4-cb75-43ca-9777-14e3e0381703
+308,feed-title,315,7,2021-12-01,"It’s not a flex, I’m irresponsible (ft. Gabe Cheng)",308,2021-11-28,3,"Hoisting comics from our backlogs, how do we make the decision??",666efae8-0fe3-4f67-8206-3e40ea7cdab6
+309,feed-title,316,7,2021-12-08,They Wouldn't Let You Wear That In France,309,2021-12-05,3,We chat and catch up - Extended chat about comics we've been reading,9cbae9cb-2321-4459-b7d2-1cfb40064513
+310,feed-title,317,7,2021-12-15,I Don't Have a Favorite... But These Are My Favorite,310,2021-12-12,3,Goodreads Reading Challenge: Why did you pick your comic and what are your thoughts on the books you've read so far in the challenge?,90e4ab4e-8258-4e7c-954a-de73e33148bf
+311,feed-title,318,7,2021-12-22,Can We Get Some Donny Cates in the Chat?,311,2021-12-19,3,Goodreads Book of the Month - Long Walk to Valhalla,770ce9ea-3a67-4a9b-93f2-e42467d6c633
+312,feed-title,321,9,2022-01-12,The Watership Down Effect,312,2022-01-09,3,"[commissioned ep] Newspaper comics (history of, impact of, or a selection of)",e3d7b911-519c-4a68-85ce-3c9c65e7210a
+313,feed-title,322,9,2022-01-19,NFTs Nuts,313,2022-01-16,3,NFTs and the Shit of Blockchain (Date tentative),186e1fed-852c-4dab-974e-33a452641b56
+314,feed-title,323,9,2022-01-26,Annual #7: Scissors Challenge,314,2022-01-23,3,& Paul  - ANNUAL #7,c40794c4-892a-424e-852f-2c375b715ac5
+315,feed-title,324,9,2022-02-02,The Comics Pit (Goodreads Book of the Month: Pearl Vol. 1),315,2022-01-30,3,Goodreads Book of the Month - Pearl Vol. 1,66a57bc8-0f7f-4875-88fc-7e7863a47b8c
+316,feed-title,325,9,2022-02-09,"Just a Nerd, Standing In The Toy Aisle",316,2022-02-06,3,No Topic Episode,46e52814-3021-4656-8fd6-188aa1f515b2
+317,feed-title,326,9,2022-02-16,The One Where Archie Kills JFK,317,2022-02-12,4,[commissioned ep] The challenge of supporting the comic book industry and local economies is to acquire a physical good.,817aed91-9445-4143-ac87-db1fbd90865a
+318,feed-title,327,9,2022-02-23,You Can't Just Be A Crony Anymore (ft. Gabe Cheng),318,2022-02-20,3,No topic Episode,371e1626-ee09-4fdd-a9cf-b84fcdb6e7c3
+319,feed-title,328,9,2022-03-02,I'm a Hypocrite and It's Fine,319,2022-02-27,3,Goodreads Book of the Month - In the Pines: Five Murder Ballads,66c032a3-724a-4541-abdf-01ce642d028f
+320,feed-title,329,9,2022-03-09,I Read Aliens-- I Don't Feel Pain Anymore,320,2022-03-06,3,comics that constantly have me on Wikipedia trying to figure out what parts are fucking real life and sometimes I'd probably be better of not knowing the truth,d4338944-b196-462e-bdd9-e8da84a65215
+321,feed-title,330,9,2022-03-16,I'm An Art Hoe,321,2022-03-13,3,How Image has impacted me / How Image appeared on my map - Celebrating Image's 30th Anniversary,579a6dd5-1db1-4654-ad73-7e013e28010f
+322,feed-title,331,9,2022-03-23,The Silmarillion of the Skywalkers,322,2022-03-20,3,No Topic Episode,fbc3e612-0d79-4fd3-89ae-d8416a468716
+323,feed-title,332,9,2022-03-30,Buzzfeed Demons,323,2022-03-27,3,Grab something from the comps folder and read it!,2d8ca8c8-9b31-4f15-b35d-409f020c71d0
+324,feed-title,333,9,2022-04-06,I'm Picking This Up Because I'm Shallow,324,2022-04-03,3,The airing of comic grievances (and how do we fix em),a763d785-86fe-452b-ac3d-915826818293
+325,feed-title,334,9,2022-04-13,"Basically, Marvel's Batman",325,2022-04-10,3,No Topic Episode,fba864a7-3564-48af-8c21-f37756b4736e
+326,feed-title,335,9,2022-04-20,Powers of X Marks The Spot,326,2022-04-17,3,No Topic Episode,2aa270c9-bebb-4273-97aa-06d46fec4720
+327,feed-title,336,9,2022-04-27,It's Twilight Meets The Baby-Sitters Club,327,2022-04-24,3,Goodreads Book of the Month - Anthologies,b3a90bd9-85da-4308-ba23-4c468dbc04b8
+328,feed-title,337,9,2022-05-04,"Get In Losers, We're Howling At The Moon",328,2022-05-01,3,comics created by musicians or comics that have dedicated soundtracks,5eecbe87-3eba-4274-ac17-ba9f4ff51b85
+329,feed-title,338,9,2022-05-11,A Dumpster Fire Will Keep You Warm,329,2022-05-08,3,Special guests - Austin & Brenda!,d18dd239-5112-48fd-aeff-91312fa93cc9
+330,feed-title,339,9,2022-05-18,Avoid Amazon With This One Weird Trick (ft. Curtis Clow),330,2022-05-15,3,No Topic Episode - Talking comics + DH Release,e6901bc2-773f-4f4c-8c8b-98480b00e1aa
+331,feed-title,340,9,2022-05-25,Completely Naked Turtles,331,2022-05-22,3,No Topic Episode,8b044a00-465e-4707-94a6-ea271710a99e
+332,feed-title,342,10,2022-06-08,Anybody Can Explode Once,332,2022-06-05,3,Who IS the Scarlet Witch?,478cb1af-fb5c-497f-905a-d98a5ba22998
+333,feed-title,343,10,2022-06-15,Nine Out Of Ten Listeners Won't Believe How This Podcast Ends!!!,333,2022-06-12,3,What are your favorite comic endings?,63bb1bb6-841b-42a5-bee1-513ac7a1a3ba
+334,feed-title,344,10,2022-06-22,Comics and Math Are The Same Thing (ft. Aubrey Lyn Jeppson & C.K. Lawson),334,2022-06-19,3,"Special guests Chris and Aubrey -  ""Scott Snyder Presents Tales from the Cloakroom""",440bcac5-9eed-493f-b1d9-6a5c77de54d9
+335,feed-title,345,10,2022-06-29,How Did This Woman Warm My Cold Dead Heart?,335,2022-06-26,3,Goodreads Book of the Month - Favorite read from 2021,5e285758-cbc8-4c38-8904-aef1602919d1
+336,feed-title,350,14,2022-08-03,This Podcast Is Blessed By God,336,2022-07-31,3,"The Designers of Comic Logos (Rian Hughes, Tom Muller, etc.) and the importance of a SOLID logo + our favorites",7a7e1554-f49d-4ce6-9d9b-3af94aa09dda
+337,feed-title,351,14,2022-08-10,I Like Unicorns Podcast,337,2022-08-07,3,"This is NOT a Furry podcast, I promise - Our favorite animals / anthropomorphized characters in comics",84502b8b-36ff-45b8-a9da-240e43f8178a
+338,feed-title,352,14,2022-08-17,Tripping Hazards In Hell,338,2022-08-14,3,No Topic Episode,bc6465d2-8351-41aa-a3a9-4735029e0079
+339,feed-title,353,14,2022-08-24,"Bat In One Ear, Bats Out The Other",339,2022-08-21,3,"Nightwing and the Batfam, the (damaged) children of a one Mister Bruce Wayne",d3c3563f-650b-45a7-8343-15297934fbf5
+340,feed-title,354,14,2022-08-31,Blame It On The X-Men,340,2022-08-28,3,Goodreads Book of the Month - Banned Books,ce71e3eb-3636-42c3-a7a8-2d51c0fa7a17
+341,feed-title,356,15,2022-09-14,A Person Cannot Be Sustained On Batman Alone,341,2022-09-11,3,The airing of comic grievances (and how do we fix em) PART 2,a70a427d-0e4d-498b-ab12-c492aac4e9de
+342,feed-title,357,15,2022-09-21,You Can't Be In Two Pits At Once,342,2022-09-18,3,No Topic Episode,6d314872-b078-4b0d-adb0-41257e3de25a
+343,feed-title,358,15,2022-09-28,Padme Amidala Has Entered The Chat,343,2022-09-25,3,Sex Bad Babies REDUX,91c9e2ce-2ac2-4fa0-b2f4-7991b4e52338
+344,feed-title,359,15,2022-10-05,"Get In Loser, We're Killing Christopher Columbus",344,2022-10-02,3,It's that time of year: Fall Vibes but comic books,fa9de1cb-94a5-4a04-915a-1c51e621ecbc
+345,feed-title,360,15,2022-10-12,"""Ribbit and Rip-It!""",345,2022-10-09,3,,174ec778-3b56-4c27-863d-83a4970c7cc1
+346,feed-title,361,15,2022-10-19,A Birthday Gift On Mike's Birthday At His Birthday Party With A Birthday Gift,346,2022-10-16,3,"Pass the #1, dude",a322e393-dfd7-4b04-aae2-8f4bd9d7063d
+347,feed-title,362,15,2022-10-26,Reading Comics in Broad Daylight (ft. Brandon Ingram),347,2022-10-23,3,Special guest - Brandon Ingram of Dismay Comics,c1b0c474-20a3-4770-b383-96d6f3918fda
+348,feed-title,363,15,2022-11-02,Is Slender Man Good With Kids?,348,2022-10-30,3,Goodreads Book of the Month - Spooky not Scary comics,34c7273c-6621-48d3-96f5-214d70ba0642
+349,feed-title,364,15,2022-11-09,Adding to Your Pull List Just To Feel Something,349,2022-11-06,3,The highs and lows of being a New Comics Day Warrior / Working the morning of New Comics Day,dd0d99ac-4bff-4574-873e-88c2b53a1744
+350,feed-title,365,15,2022-11-16,No Horn! I Didn't Get ANY Horn!,350,2022-11-13,3,Big Bombastic Stupid Comics That Are Dumb But Fun,2c0f1fa2-974a-419c-9dfc-b7a8fa23b7d7
+351,feed-title,366,15,2022-11-23,Blanket Statements About The French,351,2022-11-20,3,Goodreads Reading Challenge 2022 - Let's read and discuss everyone on this episode's picks!,d7c1ca18-6716-4c05-8c6b-ef72a0a95708
+352,feed-title,368,16,2022-12-07,Will Shakespeare's Pokémon Battles,352,2022-12-04,3,Adapted comics (revisited),e5da2211-2e05-4852-af3a-0ba88288785d
+353,feed-title,369,16,2022-12-14,IRCB Cancels The Justice League,353,2022-12-11,3,We know we love Batman/X-Men... but what's the super hero comic you love but people probably don't know?,868cb678-79fa-4270-9aef-a5bd35c1a540
+354,feed-title,370,16,2022-12-21,Spoilers For a One Hundred and Fifty Year Old Book,354,2022-12-18,3,Goodreads Book of the Month - Made into a movie or show,66f3786a-c0cd-45e8-9d56-7a794c87b324
+355,feed-title,373,18,2023-01-11,"THEY GO IN THE TRASH, DANNY",355,2023-01-08,3,What are your 2023 New Years Resolutions for comics? Big reads? Big buys? Finally gonna read something?,6ffe7683-5180-418c-9ce5-100816e35fd5
+356,feed-title,374,18,2023-01-18,We Have Ghostbusters At Home,356,2023-01-15,3,Goodreads Book of the Month - Picked by the 2022 Challenge finishers,2c39e6cf-9b51-4059-8017-a83ac3e74296
+357,feed-title,375,18,2023-01-25,This One Weird Thing Happens When You Subscribe To The Patreon,357,2023-01-22,3,ANNUAL #8 - WE'RE NOT DEAD YET - LIVE FROM IRCB STUDIOS,daea4013-fb81-40fa-97cd-32c89e09f67a
+358,feed-title,376,18,2023-02-01,"Where's My Comics, Nick? (ft. Ari Gross)",358,2023-01-29,3,"No Topic - Special guest Ari Gross for ""Awakening"" Kickstarter",a043f196-64c2-4423-bac3-7a6953fa7c98
+359,feed-title,377,18,2023-02-08,These Legos Are 18+,359,2023-02-05,3,No Topic,5fa43359-045f-41ab-acfc-da80f8d78cc6
+360,feed-title,378,18,2023-02-15,This is a Comic Book Podcast About Comic Books (ft. Zach McCrary),360,2023-02-12,3,"What is love? Baby don't hurt me. It's Valentine's Day - Comics that'll break your heart - Guest, Zach McCrary",5e3cb34d-d5e0-404c-bb97-5c3e09f9c750
+361,feed-title,379,18,2023-02-22,CONCENTRATED BOOMER ENERGY: DO NOT READ,361,2023-02-19,3,No Topic,a277a38a-ed91-4034-b802-7fdf2bb2412c
+362,feed-title,380,18,2023-03-01,Look at the Drip on These Orphans,362,2023-02-26,3,The Best Jackets in Comics,3a75b21e-c047-4c7d-99b2-ba728590dd89
+363,feed-title,381,18,2023-03-08,Real Life is the Greatest Spoiler,363,2023-03-05,3,Digging into 'Nuff Said from Marvel,81ba357f-1034-4b56-9cc0-5c6b70488544
+364,feed-title,382,18,2023-03-15,A Vaguely Malicious Mist,364,2023-03-12,3,Your Favorite Woman Creator - Women's History Month ep!,a94bcce1-e737-497c-be99-80dd91e178b8
+365,feed-title,383,18,2023-03-22,Everything Is Shapes (LIVE on Twitch),365,2023-03-19,3,IRCB LIVE,09b995a0-d492-4048-a2a5-b937be18be93
+366,feed-title,384,18,2023-03-29,"Now We're Fighting God, Apparently",366,2023-03-26,3,Riverdale: Ep1 & Ep 116/117,4eb35330-6588-4d32-882c-4f87912e4bf5
+367,feed-title,385,18,2023-04-05,Mike Is On Thin Ice,367,2023-04-02,3,No Topic?,159c37fa-e8e6-4e39-83ea-0808291edded
+368,feed-title,386,18,2023-04-12,Giant Robots: The Easiest Sale,368,2023-04-09,3,"Special guest, Kevin Maher creator of Toxic Man comic",694b9276-965b-4c21-84b7-9a017f4b66a7
+369,feed-title,387,18,2023-04-19,Doxxing Mike At The Trial of Magneto,369,2023-04-16,3,"Special guest, Chris Solis - A Flag to Fly Kickstarter",b876b8da-090b-473e-9551-1198fc04668f
+370,feed-title,388,18,2023-04-26,Never Bring Children To Active Warzones,370,2023-04-23,3,Messy Sith Who Live For Drama,ebba37c3-e9d9-4af4-b264-e8fcf9af095b
+371,schedule-sheet,389,18,2023-05-01,In Captivity,,2023-04-30,1,Best Depictions of Death in Comics,e61e7ce9-78c6-44cb-b696-645c9741960f
+372,schedule-sheet,391,19,2023-05-08,Into the Deep Woods,,2023-05-07,1,LIVE ON TWITCH,21d78de4-c157-4f89-a91d-c60ab18dda55
+373,schedule-sheet,393,20,2023-05-15,"""Chicken or Egg""",,2023-05-14,1,Special Guest - Amie Wright - Censorship in Modern-Day Comics,33768cef-6659-4bd9-a83a-94083b371a4c
+374,schedule-sheet,395,21,2023-05-22,"""Bad Man""",,2023-05-21,1,"Give me your wildest Manga volume, you fuckers read the WEIRD stuff",0f01f814-ef85-40be-83b8-b5fb92ed6c10
+375,feed-title,399,24,2023-06-07,Empathizing with Flesh Tornadoes,375,2023-06-04,3,No Topic + Nice House On The Lake dicussion(?),1ccb31e4-78fd-440b-91cb-bc1601d9016d
+376,feed-title,400,24,2023-06-14,"Stupid Questions, Stupid Answers",376,2023-06-11,3,Big ol' Blockbusters,44ecf296-229d-44a9-ac47-103fefd2674b
+377,feed-title,401,24,2023-06-21,Tiny Buff Children (ft. Kevvo + Z Class: Trix),377,2023-06-18,3,Special guest: Kevvo!,2bc0abf0-df60-4c97-9f46-38060c2d569d
+378,schedule-sheet,402,24,2023-06-26,"""How It Started, How It’s Going""",,2023-06-25,1,Our comic guilty pleasures (revisited),fe3cf29d-92f8-4893-a4f1-f07f3f77921b
+379,feed-title,410,31,2023-08-02,The Brutal Murders of Tintin,379,2023-07-30,3,TinTin???,bf12277f-ba70-4328-93c8-dcd5f9d55c32
+380,feed-title,411,31,2023-08-09,You're Free To Do What Your Told,380,2023-08-06,3,Some non-fiction comics for ya,5e1d1db9-8a18-4087-8638-5e3aba6c030d
+381,feed-title,412,31,2023-08-16,Ten Places to Buy Meth But No Place to Buy Food,381,2023-08-13,3,No Topic,2309eabd-2858-48e4-a0fa-0521c6415d6b
+382,feed-title,413,31,2023-08-23,Sorry to Shonen Jump,382,2023-08-20,3,Manga App Retrospective - Viz v Shonen Jump v. Kodansha v Manga+,da2e4d7d-a716-4b59-b0f6-f5a3af952185
+383,feed-title,414,31,2023-08-30,Touched Grass This Month,383,2023-08-27,3,COMMISSIONED EPISODE: Opposable Plagiarism (see doc),a53b62ab-3285-469c-917c-7d0c12894957
+384,feed-title,416,32,2023-09-13,There's Law And Then There's Order,384,2023-09-10,3,"Giving properties the ""IDW Treatment""",6433d13b-0072-4ae3-8ba7-1078882d7530
+385,feed-title,417,32,2023-09-20,Divorced Dad Energy (ft. Brandon Ingram),385,2023-09-17,3,Special Guest: Brandon Ingram,2c0f9867-3048-46cb-b326-f3d690321cca
+386,feed-title,418,32,2023-09-27,We’d Strangle Sam Witwicky In An Instant (ft. Kev from Austin Danger Podcast),386,2023-09-24,3,Kev debuts on IRCB - TRANSFORMERS MOVIES... RANKED,c8a128e5-43be-40f8-9e17-d0ad3ec7b670
+387,feed-title,419,32,2023-10-04,Teeth: A Tail For Your Face,387,2023-10-01,3,TRANSFORMERS COMICS,6544ed6d-4bc0-4008-a421-a3859e274f6a
+388,feed-title,420,32,2023-10-11,Gambit Will Show You Anything Under That Trench Coat,388,2023-10-08,3,Mike's Birthday is on Friday: Read something about Gambit,d06c4262-5194-48c0-bc4e-3ae9c2990996
+389,feed-title,421,32,2023-10-18,Don’t Let Some Boy Get His Fangs in You,389,2023-10-14,4,IRL episode,f7906082-7778-467a-b8ae-3226b107b6ec
+390,feed-title,422,32,2023-10-25,Go Look At A Real Boob,390,2023-10-22,3,IRCB LIVE - COMMISSIONED EPISODE: Booster Gold Vol 2 #1-6 (2007) AKA 52 Pick-Up TP,f6c08a5e-a028-4622-9e91-544e434747e3
+391,feed-title,423,32,2023-11-01,Scaring The Pants OUT Of Me,391,2023-10-28,4,Halloween Special!,e5615c74-60f4-4057-ac8d-8de5808d6062
+392,feed-title,424,32,2023-11-08,If King Of The Hill Was An Anime,392,2023-11-05,3,No Topic / Food in Comics?,6f66bce0-e3d1-4dd7-9975-ad322ed5847e
+393,feed-title,425,32,2023-11-15,Inside All Of Us Is A Teen Girl,393,2023-11-12,3,Mike Reads Sailor Moon for the first time. Will he experience a magical girl transformation?,7b6e1a80-8aff-4356-b71a-e251aa35163f
+394,feed-title,426,32,2023-11-22,"We’ve Posted On Socials, Please Respond (ft. Bijhan Agha)",394,2023-11-19,3,No topic. Special Guest: Bijhan Agha,5a6dbe48-803c-45da-b512-d1ae0281c985
+395,feed-title,428,33,2023-12-06,Fighting Comics Carpetbaggers (ft. Ed Brubaker),395,2023-12-03,3,Special Guest: Ed Brubaker,c2de1b68-1534-42b2-aec4-203453a312be
+396,feed-title,429,33,2023-12-13,Doxxed By Santa,396,2023-12-10,3,IRCB LIVE,5fdb8c64-0cd6-4edc-bdbf-991655290073
+397,feed-title,430,33,2023-12-20,Non-Fiction Means It “Really Happened”,397,2023-12-17,3,End of Year Wrap up - Best comics we read in 2023?,6568ed1f-7a41-4975-9f69-b52211725b6c
+398,feed-title,433,35,2024-01-10,Legacy Numbering Freaks (Goodreads Book of the Month - Catwoman: Lonely City),398,2024-01-07,3,2024 - THE BEGINNING OF YEAR 9 OF IRCB - Goodreads Book of the Month: Catwoman Lonely City,afd652d4-725f-4fcc-abef-7d9d5cd1f8e2
+399,feed-title,434,35,2024-01-17,Not Legally A Weatherperson,399,2024-01-14,3,"No Topic, hanging out and chattin'",e361b5d0-66ad-4138-99e4-6cbd91fbaaa0
+400,feed-title,435,35,2024-01-24,400 Episodes of FOMO,400,2024-01-21,3,IRCB LIVE: It's the Annual. We're done with numbering the show and we hope you like it!,b5a04bf4-a540-480a-b9dc-9a5be722550e
+401,schedule-sheet,436,35,2024-01-31,Mike Watched Saltburn. He’s Cultured.,,2024-01-28,3,"PANELIST EPISODE - Who is Zach??? (first ep, 378,  first guest: 360)",165397c4-d5b4-4160-b977-72c373c5708d
+402,schedule-sheet,437,35,2024-02-07,"Still Alive. Giving Zero Fucks. (ft. Dave Baker, Mary Tyler MooreHawk)",,2024-02-04,3,Special guest: Dave Baker,f3cf55e7-596c-4980-9113-8b1193b23e47
+403,schedule-sheet,438,35,2024-02-14,Books To Read If You’re Numb Like Me,,2024-02-11,3,Reading Episode,fb4fbd74-54e0-4c86-a738-b51a04a15cb6
+404,schedule-sheet,439,35,2024-02-21,The Punxsutawney Cover-up,,2024-02-18,3,Reading Episode: BUT read something from the Goodreads Theme: Non-cape comics made into a movie or show,65a7a980-6439-42bf-a487-2eba556fc1f6
+405,schedule-sheet,440,35,2024-02-28,Exactly The Right Age To Meet Future Trunks,,2024-02-25,3,"PANELIST EPISODE - Who is Paloma??? (first ep, 339 , first guest: 282)",99ffb062-baf8-4dfe-860c-b8aec50c6dbe
+406,schedule-sheet,441,35,2024-03-06,A Different Mecha Book,,2024-03-03,3,Reading Episode,644afecc-4d93-462d-9e29-6e0f16e7d780
+408,schedule-sheet,443,35,2024-03-20,Back Before Comics Were Cool,,2024-03-17,3,Reading Episode: BUT read something from the Goodreads Theme - Comics by women,7e098870-e669-4262-abf2-e680c227991c
+409,schedule-sheet,444,35,2024-03-27,Incredible Risqué Mathematicians,,2024-03-24,3,IRCB LIVE - Reading Episode,283835be-13b6-42ea-9a30-ce92a8196c8b
+410,schedule-sheet,445,35,2024-04-03,You Can Only Edge Mike So Long,,2024-03-31,3,Reading Episode,765aa3c0-4e99-4538-84c5-b08199fed1bb
+411,schedule-sheet,446,35,2024-04-10,Addicted to Kickstarters,,2024-04-07,3,Reading Episode: Read a comic that was originally Crowdfunded! Crowdfunded Comics - And celebrating Kickstarter's 15th Anniversary! (This also meets the Goodreads Theme of the Month),505e4a7d-b520-4faa-b080-31df773ef938
+413,schedule-sheet,448,35,2024-04-24,We're Fighting Orchis Because We Saw Pat Die (ft. Pat Loika),,2024-04-21,3,Reading Episode - Special Guest: Pat Loika,1d288fcd-2063-4660-9ea6-7c959d9021be
+414,schedule-sheet,449,35,2024-05-01,If Cookie Monster Was A Jedi,,2024-04-28,3,Reading episode,36897a4a-fb6a-4729-a4f8-cf79759fc4b5
+415,schedule-sheet,450,35,2024-05-08,Joker Can Be Your Angle Or Your Devil,,2024-05-05,3,"PANELIST EPISODE - Who is Danny??? (first ep, 268 - first guest: minisode 37)",ff6f7e3b-bd72-426a-aaed-b05ce62a86fe
+417,schedule-sheet,453,36,2024-05-22,Some Corporation Telling You Comics Are Good,,2024-05-19,3,Reading Episode: BUT read something from the Goodreads Theme - Writer &/or artist is a POC,56c9df16-66c9-45aa-b084-5d18343ff5f9
+418,schedule-sheet,454,36,2024-05-29,How dare you gaze into my soul so intimately,,2024-05-26,3,Reading Episode,ee548257-7cfd-48f1-a651-5b152456bb76
+419,schedule-sheet,455,36,2024-06-05,Party-Boy Wayne (ft. Bijhan Agha),,2024-06-02,3,"Reading episode: Special guest, Bijhan Agha",d9fbdb13-e972-4c2c-9bb2-ffa5f137ab3b
+421,schedule-sheet,457,36,2024-06-19,This sounds dumb enough that I'm interested,,2024-06-15,4,Reading Episode: BUT read something from the Goodreads Theme - Cape comics made into a movie or show,863a96d2-da37-4eee-8f1d-e2ea0930862d
+422,schedule-sheet,458,36,2024-06-26,Person-Soup,,2024-06-23,3,Reading Episode,810cd69a-fc2e-4715-9b4e-29a76d807e27
+427,schedule-sheet,463,36,2024-07-31,The Era of the Bucket (ft. Malachi Ward),,2024-07-28,3,IRCB LIVE with Malachi Ward,f66c1f97-68d7-4a34-8feb-8ff8b4d2bd82
+428,schedule-sheet,464,36,2024-08-07,Capitalism Will Kill You,,2024-08-04,3,Reading Episode,71cecefe-5bc4-466f-8a25-5007f19dbf29
+430,schedule-sheet,466,36,2024-08-21,Hoopla Please Sponsor Us,,2024-08-18,3,Reading Episode,de8efc22-e7f1-4d5b-a6b7-9781655da2c5
+431,schedule-sheet,467,36,2024-08-28,The Bad Boy of Comics (ft. Jesse Lonergan),,2024-08-25,3,"Guest ep - Jesse Lonergan - Reading Episode: BUT read something from the Goodreads Theme - Autobiographical, Memoir, Biographical",91b0dd27-9877-492b-9ff8-7f7fd5709198
+433,schedule-sheet,469,36,2024-09-11,Books Dense Enough For Killing,,2024-09-08,3,Reading Episode,63d11209-e2eb-4e6f-bde3-c47142c62c63
+435,schedule-sheet,471,36,2024-09-25,"My Wife, Abraham Lincoln",,2024-09-22,3,Reading Episode - Axe Cop,47e8ce19-bd6f-4dbe-b3bc-7f46890321b5
+436,schedule-sheet,472,36,2024-10-02,Why Isn’t There A Rabbit Word For This? (ft. CK Carpenter),,2024-09-29,3,SPECIAL GUEST: CK Carpenter - IRCB LIVE - Reading Episode: BUT read something from the Goodreads Theme - 2024 Eisner Award winners,0f0c7609-49a8-42e3-a18d-43db934f702d
+437,schedule-sheet,473,36,2024-10-09,I'm Calling Mr. Image,,2024-10-06,3,Reading Episode,2d6a455a-18ae-4e34-8355-1fe7f6441171
+439,schedule-sheet,475,36,2024-10-23,Unfortunate Horniness,,2024-10-20,3,Reading Episode: BUT read something from the Goodreads Theme - Magical People INCLUDING Magical Girls,8a5f6666-2e57-4e76-ab90-365ec80c2b6f
+440,schedule-sheet,476,36,2024-10-30,Our Dependency on Petroleum Will Never End,,2024-10-27,3,"PANELIST EPISODE - Who is Kara??? (first ep, 105)",28c7f668-9b48-432e-b7e5-f5cbd0d34cf4
+441,schedule-sheet,477,36,2024-11-06,Immediately We’re All Best Friends (ft. Asia Simone),,2024-11-03,3,Reading Episode - Special Guest: Asia Simone,6e14b1a4-8123-4133-b597-0e3bb8fd1510
+443,schedule-sheet,479,36,2024-11-20,The Apocalypse Doesn’t Have To Be Miserable,,2024-11-17,3,Reading Episode: BUT read something from the Goodreads Theme - Feel Good comics for when the seasons are making you feel down,c3e127c3-44e2-4d12-b8bb-ccdcff21c59c
+445,schedule-sheet,481,36,2024-12-04,Do Insecure Men Buy Jetpacks?,,2024-12-01,3,Reading Episode: BUT read something from the Goodreads Theme - Picked for the Cover,24aa9937-f745-4686-aedc-72db3f7848e3
+447,schedule-sheet,483,36,2024-12-18,Judging Everyone on Earth in 24 Hours,,2024-12-15,3,"PANELIST EPISODE - Who is Kate??? (first ep, 52)",00e8cacc-049d-4f19-939c-39107d14e834
+448,schedule-sheet,484,36,2024-12-25,Comic Books Are Just Paper!,,2024-12-22,3,Reading Episode,28898740-9636-42a6-9b24-d492d8c6072e
+450,schedule-sheet,486,36,2025-01-08,Googly-Eyes on the Stack,,2025-01-05,3,HAPPY NEW YEAR AND HAPPY EPISODE 450!!! Comic Book New Years Resolutions?,43b73f60-f81e-466f-905f-2a19bb24bbc2
+451,schedule-sheet,487,36,2025-01-15,Pokemon in Unfamiliar Places (ft. Chris Solis & Aubrey Lyn Jeppson - The Order of The Nun-Ya),,2025-01-12,3,Goodreads Reading Challenge finishers pick episode ft. Chris / Aubrey - The Order of the Nun-Ya Kickstarter,dc7169a1-acf0-4e79-bc98-d7334b0ba69d
+452,schedule-sheet,488,36,2025-01-22,"Comics, A Quarter-Mile At A Time (IRCB Annual #10)",,2025-01-19,3,IRCB ANNUAL #10 - LIVE ON TWITCH,5d32b695-7361-40a1-99e3-b56cdec3c0c8
+454,schedule-sheet,490,36,2025-02-05,This Rabbit Has Been To Space,,2025-02-02,3,Reading Episode,eeae7efb-ca03-478f-a9d3-73d177955f9f
+455,schedule-sheet,491,36,2025-02-12,Please Act Like You’re Impressed,,2025-02-09,3,Reading Episode,346ec703-fc05-499b-8460-59203d45e797
+456,schedule-sheet,492,36,2025-02-19,Putting A Pause on Wrestling (ft. Ben Kahn),,2025-02-16,3,Guest Episode: Ben Kahn,27b6731d-3941-489a-9239-f6f03b3d792c
+458,schedule-sheet,494,36,2025-03-05,If You’re Not Familiar With Monkey Meat (ft. Nick Goode),,2025-03-02,3,Reading episode - Special Guest Nick Goode,55adc2b8-7cdf-4f7a-a88a-cfdd7f5cfed6
+459,schedule-sheet,495,36,2025-03-12,Nick's Magical Crimes,,2025-03-09,3,Reading Episode,a007309d-8c90-4f39-8c08-fd15bb94011c
+460,schedule-sheet,497,37,2025-03-19,How Does Godzilla Get to Chicago?,,2025-03-16,3,Goodreads Theme of the Month: WE KNOW MEN MAKE COMICS: Comics made by women & non-binary creators,19e8b370-6fd2-4179-8a28-ad9fb8c43396
+462,schedule-sheet,499,37,2025-04-02,I’m A Big Crunch Guy,,2025-03-30,3,"Panelist Episode - Who is Brian??? (first ep, 38)",0338cc9b-01c8-4ba1-a15f-9f3e54ae1ce7
+463,schedule-sheet,500,37,2025-04-06,Wic+Div Uncovered #1,,2025-04-06,0,Reading Episode,c8967874-ddf1-428b-baa3-a335759d2da1
+465,schedule-sheet,503,38,2025-04-23,I’m The Winner. I Am The One Who Wins.,,2025-04-20,3,Reading Ep,e43fdceb-9425-4b24-8444-9de556b7f79d
+466,schedule-sheet,504,38,2025-04-30,Reconsidering getting back on coffee,,2025-04-27,3,Goodreads Theme of the Month Around the World: Comics published outside of the US,b0c77de4-f252-4855-a6c2-1f2aa0327b1b
+467,schedule-sheet,505,38,2025-05-07,Burn It Down. Return To Nature.,,2025-05-04,3,Reading Episode,cbfcb5fb-39c0-4d76-8831-ce9d4557943b
+468,schedule-sheet,506,38,2025-05-14,Every Pun Intended (ft. Cavan Scott),,2025-05-11,3,Guest Ep - Cavan Scott - Gwenpool #1,34492e55-baae-4fc9-973a-1572908547e8
+469,schedule-sheet,507,38,2025-05-18,Wic+Div Uncovered #2,,2025-05-18,0,Guest Ep - Meredith McClaren,9591ead1-be2b-4e3b-8a35-90c191a1c97f
+471,schedule-sheet,510,39,2025-06-04,A Very Batman-Coded Show,,2025-06-01,3,"Panelist Episode - Who is Paul??? (First Ep, 8)",bf9898bd-8319-4441-ab33-239dee7d1e04
+472,schedule-sheet,511,39,2025-06-11,You Can Read Books Or You Can Try Meth,,2025-06-08,3,Goodreads Theme of the Month: Eisner Nominees,60ac6422-6d05-45a5-9177-307e3589a783
+473,schedule-sheet,512,39,2025-06-15,Wic+Div Uncovered #3,,2025-06-15,0,Guest Ep - Matty B,dd3b8e16-4bf7-4d30-9a1e-5c9f575b4a03
+476,schedule-sheet,518,42,2025-08-06,What Do Teenagers Sound Like?,,2025-08-03,3,Goodreads Theme of the Month: Disability Pride (July),445d522f-e298-4e95-9cba-95c5b340fa14
+477,schedule-sheet,519,42,2025-08-13,Thanks For The Threat (ft. Claire Connelly),,2025-08-10,3,Guest Ep - Claire Connelly,fb53416a-a414-488b-9365-c947d37f4365
+478,schedule-sheet,520,42,2025-08-17,Wic+Div Uncovered #5,,2025-08-17,0,Guest Ep - Jesse Lonergan,871fd9fe-1a09-4acc-be3c-47bbca4249c6
+479,schedule-sheet,522,43,2025-08-27,White Lotus: Alien,,2025-08-24,3,Goodreads Theme of the Month: The Dark Ages: Comics Published 2000-2010,970b7570-c885-4bca-9775-fdc29d27c43a
+481,schedule-sheet,524,43,2025-09-10,PROTECT LIBRARIES AT ALL COSTS!,,2025-09-07,3,Reading Episode,e6262d04-a648-43ba-bd9f-dd48f4e10777
+482,schedule-sheet,525,43,2025-09-17,Reading Books With Our Eyes Closed,,2025-09-14,3,Panelist Episode - Who is Nick??? (First ep: 3.5 / 4),d005e0ef-d932-4ee3-ba4d-0675eda00b2f
+483,schedule-sheet,526,43,2025-09-24,Every Day I Forget Crucial Information About My Friends and Family,,2025-09-21,3,Goodreads Theme of the Month: Magical creature(s) in it (Erin's Bday month!!),30b8a93b-33fe-4740-a1f6-eaaf0c10e0b7
+485,schedule-sheet,528,43,2025-10-08,Mike’s Favorite Star Trek Characters,,2025-10-05,3,Reading episode,45f82ddc-9688-4e01-b5cf-c5b59e635b8f
+486,schedule-sheet,529,43,2025-10-15,We Don’t Make the Rules About “Regular Comics”,,2025-10-12,3,Reading Episode,4605a678-162d-44d6-9988-9cd882ea153a
+487,schedule-sheet,530,43,2025-10-22,It’s Not Insane to Wear Shorts,,2025-10-19,3,Goodreads Theme of the Month: Spooky Season,417880be-abeb-4e43-a586-d8675a0eea2d
+489,schedule-sheet,532,43,2025-11-05,“What a coincidence!  ;)” (ft. Martín Morazzo),,2025-11-02,3,Special guest: Martín Morazzo (confirmed!),266a435d-b2a5-47fd-a223-ce67557acfd0
+490,schedule-sheet,533,43,2025-11-12,Just The Right Amount of Child Cannibalisms (ft. Jibola Fagbamiye and Conor McCreery),,2025-11-09,3,Guest ep - Conor McCreery & Jibola Fagbamiye (The Last Witch + Fela OGN) (confirmed),de9b2f3f-2158-436c-8463-216acf15d923
+491,schedule-sheet,534,43,2025-11-19,What’s Quackin'? (ft. Brian McCray),,2025-11-16,3,Guest ep - Brian MccCray (confirmed),996f7efc-ba3d-4332-b4c2-1b1c00d52a21
+492,schedule-sheet,535,43,2025-11-26,Back To Life. Back to Reality.,,2025-11-23,3,Goodreads Theme of the Month: Ask an Expert: Recommended by your LCS or library,e1d17592-6612-4a03-8f23-81cd7f3d4008
+494,schedule-sheet,537,43,2025-12-10,Too Similar! Cancel the Show.,,2025-12-07,3,Reading Episode,b84d5a52-7b66-43fe-adee-d5f4144cffa4
+495,schedule-sheet,538,43,2025-12-17,Lending Books to People We Never See Again,,2025-12-14,3,New 52 Retro just like the GR ep about 2000-2010 comics,54b0da6c-923a-4299-b193-e3991ca7e201
+496,schedule-sheet,539,43,2025-12-24,Just This Once: A Good Episode,,2025-12-21,3,X-MAS TIME IS HERE,af6a51ca-ab2a-4a8f-bf41-61574c3e40ee
+498,schedule-sheet,541,43,2026-01-07,"Also, Do You Want To Buy These Pretzels?",,2026-01-04,3,Welcome to 2026,df16fd82-64d4-42dd-9ab7-fc3da0954733
+499,schedule-sheet,542,43,2026-01-14,I know him from Marvel Snap,,2026-01-11,3,IRCB Commissioned Episode! by Shane aka Avocado Kenobi - BARGAIN BIN PICKS,ec51175c-b8dc-4c06-940a-90f6a18185f8
+500,schedule-sheet,543,43,2026-01-21,500 Episodes and We’ve Finally Figured Out Comic Books,,2026-01-18,3,IRCB Annual #11 - Panelist Episode: Who are Mike and Zander?,aeacc8dc-432f-4f25-833f-b5dc9a64bb23
+502,schedule-sheet,545,43,2026-02-04,"They’re Sharks And They’re On The Street, What More Do You Want?",,2026-02-01,3,Reading Episode,e8872a93-7a2e-48f2-8582-b2dcfd441d26
+503,schedule-sheet,546,43,2026-02-11,He’s Not Like Other Comic Book Fans… He’s Worse,,2026-02-08,3,Reading Episode,8af4ab8e-32a9-40f3-bbee-3a420fe42f01
+504,schedule-sheet,547,43,2026-02-18,"That’s Not Manga, That’s the Phone Book",,2026-02-15,3,Goodreads Theme of the Month - Feel good comics,156aa69a-cc7f-431a-a209-083679e9f800
+505,schedule-sheet,548,43,2026-02-25,This Book is Good. Maybe One Day My Dad Will Respect Me.,,2026-02-22,3,Reading Episode,6ec4f921-1ae5-4d29-966b-8c3017a69cad
+506,schedule-sheet,549,43,2026-03-04,Weighting for the Write Stock is Tearable (ft. Nick Goode),,2026-03-01,3,Special guest: Nick Goode,41bcdba1-1d8c-48d1-b90c-51b36ec5d2c6
+507,schedule-sheet,550,43,2026-03-11,Comfort. Depth. And You Can Kill A Rat With It.,,2026-03-08,3,Desert Island Comics - 2 comics you'd take with you on a desert island,8e791985-ddc8-4087-82ba-bd163a582815
+508,schedule-sheet,551,43,2026-03-18,Insulting Legions of Fans (ft. Dave Baker and Nicole Goux),,2026-03-15,3,Special guests Dave Baker and Nicole Goux,3c29bea4-bad4-4588-b5d9-11944cbf65e7
+510,schedule-sheet,553,43,2026-04-01,Starscream is a Magical Girl,,2026-03-29,3,Magical Girls and Trash Boys,0ce05b4f-21e4-499a-8b2b-70a6aa91dbff
+511,schedule-sheet,554,43,2026-04-08,Difficult Conversations at the Starbucks,,2026-04-05,3,Regular Reading Ep (or Another Topic per the group),38161c07-1abd-4007-8bc0-22f784f03e8d
+512,schedule-sheet,555,43,2026-04-15,"He’s Dead, But That Hasn’t Stopped Him Before",,2026-04-12,3,Regular Reading Ep (or Another Topic per the group,7bb1c26d-d0d7-41a7-af58-bd80a98e21a5
+514,schedule-sheet,557,43,2026-04-29,Maybe The Best In The Business (ft. Matt Rosenberg),,2026-04-26,3,Special Guest: Matt Rosenberg,a2d031b5-762e-411c-b578-56981fd30164
+515,schedule-sheet,558,43,2026-05-06,Rude Teen-Implied Names,,2026-05-03,3,Regular Reading Ep (or Another Topic per the group),812821b4-d773-4066-b5f3-754321fad958
+516,schedule-sheet,559,43,2026-05-13,Latter-Day X-Men Fans (ft. Gabe Cheng),,2026-05-10,3,Regular Reading Episode with Gabe Cheng,ba0d0128-bf9d-48e1-a4ea-a592e8fece5f
+517,schedule-sheet,560,43,2026-05-20,Comics Crank My Mother Effing Hog,,2026-05-17,3,Reading Episode - Include ad from Greg and Fake,9cbdd6c6-003e-4c7b-a73c-8d95e7ab44cb
+519,schedule-sheet,562,43,2026-06-03,We Gotta Power Him Down (ft. Henry Barajas & Rachel Merrill),,2026-05-31,3,Reading Episode with Henry Barajas & Rachel Merrill,830a9757-4a09-44f3-8426-3ee60209d256
+520,schedule-sheet,563,43,2026-06-10,Put A Kaiju In It (ft. Julio Anta),,2026-06-07,3,Reading episode with Julio Anta,532c4067-b534-42b1-8cbb-515cadfc98af
+521,schedule-sheet,564,43,2026-06-17,Hard. Killing People Hard. (ft. Zack Kaplan),,2026-06-14,3,Zack Kaplan - Only The Savage Are Left,b557774b-f9f6-48d2-9a5a-587ae2c8b569
+522,schedule-sheet,566,44,2026-07-08,They Were Coworkers,,2026-06-28,10,,01d95b9e-97f9-4e23-8895-42db59170cc2
+523,schedule-sheet,567,44,2026-07-29,The Homie Batman,,2026-07-19,10,,0f93f83d-a2f6-42af-bebe-1c462a1ffa50
+525,schedule-sheet,568,43,2026-08-05,Do Not Smell Me. You Will Not Be Pleased.,,2026-08-02,3,Reading Episode,21b27308-77f3-4241-9692-ce7ec3dff00a

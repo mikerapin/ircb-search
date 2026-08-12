@@ -51,6 +51,8 @@ SERIES_SUBJECT = [
 GOODREADS = re.compile(r"goodreads book of the month\s*:\s*(.+)$", re.I)
 
 POST_CREDITS = re.compile(r"post[\s\-]*credits?", re.I)
+
+from panel_line import stated_people  # noqa: E402  (shared with export_data.py)
 EPISODE_NO = re.compile(r"\bEpisode\s+(\d+)\b", re.I)
 VOLUME = re.compile(r"\b(?:vol\.?|volume)\s*(\d+)", re.I)
 ISSUE = re.compile(r"#\s*(\d+(?:\s*-\s*\d+)?)")
@@ -209,6 +211,7 @@ def main():
             "url": item.findtext("link"),
             "artwork": (image.get("href") or image.text) if image is not None else None,
             "summary": item.findtext("description"),
+            "panel": stated_people(item.findtext("description")),
             "parentTitle": parent,
             "comics": comics,
         })
@@ -219,6 +222,8 @@ def main():
 
     linked = sum(1 for e in episodes if e["parentTitle"])
     withc = sum(1 for e in episodes if e["comics"])
+    withpanel = sum(1 for e in episodes if e["panel"])
+    print(f"  → {withpanel} episodes state their panel in the description")
     print(f"  → {mirrors} mirrors of the public feed, skipped")
     print(f"  → {len(episodes)} Patreon-only episodes → {out}")
     print(f"     {withc} with comics, {linked} post-credits linked to their episode, "

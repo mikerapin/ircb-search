@@ -13,6 +13,8 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from panel_line import stated_people
+
 try:
     import pandas as pd
 except ImportError:
@@ -52,7 +54,15 @@ def build_rss_maps():
             continue
         link = link_el.text.split("?")[0].rstrip("/")
         rec = {"player_id": None, "summary": None, "enclosure_url": None,
-               "artwork_url": None, "duration_secs": None}
+               "artwork_url": None, "duration_secs": None, "panel": []}
+        # The credits block lives in <description>, not itunes:summary. Panel and Guest are
+        # the only roles that put someone on the episode — Producer, Post Production,
+        # Prooflistener and Editor are crew, and the prooflistener in particular is a
+        # panelist who was NOT on that week's show.
+        desc_el = item.find("description")
+        rec["panel"] = stated_people(
+            (desc_el.text if desc_el is not None else None)
+            or (item.findtext(f"{{{_ITUNES_NS}}}summary") or ""))
         enc_el = item.find("enclosure")
         if enc_el is not None:
             url = enc_el.get("url", "")
@@ -134,10 +144,13 @@ def export_episodes():
         rec = rss.get(str(url).split("?")[0].rstrip("/"))
         return rec[field] if rec else None
 
-    for field in ("player_id", "summary", "enclosure_url", "artwork_url", "duration_secs"):
+    for field in ("player_id", "summary", "enclosure_url", "artwork_url", "duration_secs",
+                  "panel"):
         df[field] = df["simplecast_url"].apply(lambda u, f=field: rss_field(u, f))
     matched = df["player_id"].notna().sum()
     print(f"  → {matched}/{len(df)} episodes matched to a Simplecast player ID")
+    stated = df["panel"].apply(lambda p: bool(p) and len(p) > 0).sum()
+    print(f"  → {stated} episodes state their panel in the description")
 
     # Assign Patreon collection URLs to spin-off episodes that have no Simplecast URL
     patreon_series = load_patreon_series()

@@ -11,6 +11,13 @@ export interface EpisodeCore {
   playerId: string | null;
   simplecastUrl: string | null;
   patreonUrl: string | null;
+  /* The number the show gave this episode, or null when it never had one.
+     Not a position in the feed: the feed opens at episode 85 and carries 162 minisodes,
+     interviews, bonuses and annuals that never consumed a number, so counting items drifted
+     — it labelled "400 Episodes of FOMO" as 435 and "500 Episodes…" as 543. Filled at build
+     time from data/episode-numbers.csv, which is the show's own RSS titles where they state
+     a number and the schedule sheet for the era after the titles stopped. */
+  ep: number | null;
   /* The episode a Patreon post-credits segment belongs to. Those segments are loose chatter
      recorded after a taping, so they carry no mentions of their own — attaching the parent's
      would claim they discussed books they never named. The link is the honest version. */

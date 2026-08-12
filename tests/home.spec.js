@@ -168,7 +168,11 @@ test("home is axe clean with no console errors", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test("the hero wears a real feed number, not the record count", async ({ page }) => {
+test("the hero wears the show's own episode number, not a count of anything", async ({ page }) => {
+  // This test used to compute its expectation as `feed.length` — the same way the code did —
+  // so it passed for two years while the hero read EP. 568 for an episode the show calls 525.
+  // A number derived the same way as the thing under test cannot check it. The number now
+  // comes from the episode record, and the two counts it must NOT equal are asserted by name.
   await page.goto("/");
   await page.waitForSelector(".cover-hero");
   const core = await page.evaluate(() => fetch("d/core.json").then(r => r.json()));
@@ -176,12 +180,14 @@ test("the hero wears a real feed number, not the record count", async ({ page })
     .sort((a, b) => a.date.localeCompare(b.date));
   const newest = feed[feed.length - 1];
 
+  expect(newest.ep).toBeGreaterThan(0);
   const micro = await page.locator(".hero-side .micro").innerText();
-  expect(micro).toContain(`EP. ${feed.length}`);
-  // Many records were never numbered feed episodes, so the total must not appear.
-  expect(feed.length).toBeLessThan(core.stats.episodes);
+  expect(micro).toContain(`EP. ${newest.ep}`);
+  // Neither the record count (950) nor the feed-item count (568) is an episode number.
+  expect(newest.ep).toBeLessThan(feed.length);
   expect(micro).not.toContain(String(core.stats.episodes));
-  await expect(page.locator("#dressno")).toHaveText(`EP. ${feed.length.toLocaleString("en-US")}`);
+  expect(micro).not.toContain(`EP. ${feed.length}`);
+  await expect(page.locator("#dressno")).toHaveText(`EP. ${newest.ep.toLocaleString("en-US")}`);
   expect(newest.key).toBe(await page.locator(".hero-title a").getAttribute("href")
     .then(h => decodeURIComponent(h.replace("#/ep/", ""))));
 });

@@ -1,0 +1,154 @@
+{
+  "_comment": [
+    "Panel rules for Patreon episodes the feed credits to nobody. Checked in as data so a",
+    "wrong entry is fixed by editing one line rather than by changing a parser.",
+    "",
+    "sagaVolumes: Saga of Saga hosts are per VOLUME, not per issue, and each volume covers six",
+    "issues — issue N belongs to volume ceil(N/6). Host1+Host2 recorded the issue episodes; the",
+    "third name in Mike's prep doc is the volume WRAP person, which is why including it kept",
+    "over-crediting. Validated against all 15 Saga descriptions that name anyone: 14 exact, 1",
+    "partial, 0 contradictions.",
+    "",
+    "seriesPanels: runs with a standing panel. `unlessDescriptionNames` means the description",
+    "wins whenever it names a roster member, so a stand-in is picked up automatically.",
+    "",
+    "fromPublicEpisode: Patreon companions to a public episode inherit that episode's panel."
+  ],
+  "sagaVolumes": {
+    "1": [
+      "Kait Lamphere",
+      "Kara Szamborski"
+    ],
+    "2": [
+      "Kara Szamborski",
+      "Mike Rapin"
+    ],
+    "3": [
+      "Brian Murray",
+      "Mike Rapin"
+    ],
+    "4": [
+      "Kait Lamphere",
+      "Brian Murray"
+    ],
+    "5": [
+      "Mike Rapin",
+      "Brian Murray"
+    ],
+    "6": [
+      "Kait Lamphere",
+      "Mike Rapin"
+    ],
+    "7": [
+      "Brian Murray",
+      "Kara Szamborski"
+    ],
+    "8": [
+      "Kait Lamphere",
+      "Brian Murray"
+    ],
+    "9": [
+      "Kara Szamborski",
+      "Mike Rapin"
+    ]
+  },
+  "sagaWrapExtra": {
+    "_comment": [
+      "A volume wrap adds the doc's Summary-column name to that volume's two hosts, or runs",
+      "with all four when the doc says 'Everyone'. Verified against every wrap description that",
+      "names anyone: volumes 3,4,5,6,7,8 match Host1+Host2+Summary exactly. Volume 2's doc row",
+      "says 'Everyone' but its description names three, so a description always wins here."
+    ],
+    "1": [
+      "Brian Murray",
+      "Mike Rapin",
+      "Kara Szamborski",
+      "Kait Lamphere"
+    ],
+    "2": [
+      "Brian Murray",
+      "Mike Rapin",
+      "Kara Szamborski",
+      "Kait Lamphere"
+    ],
+    "4": [
+      "Kara Szamborski"
+    ],
+    "5": [
+      "Kait Lamphere"
+    ],
+    "6": [
+      "Brian Murray"
+    ],
+    "7": [
+      "Mike Rapin"
+    ],
+    "8": [
+      "Kara Szamborski"
+    ],
+    "9": [
+      "Kait Lamphere"
+    ]
+  },
+  "sagaVolumeEpisodes": {
+    "_comment": "Volumes 10-12 have no per-issue episodes. Read from the speaker labels under their own headings in Mike's prep doc; Volume 11 agrees exactly with its episode description.",
+    "10": [
+      "Kait Lamphere",
+      "Kara Szamborski",
+      "Mike Rapin",
+      "Brian Murray"
+    ],
+    "11": [
+      "Kait Lamphere",
+      "Kara Szamborski",
+      "Mike Rapin"
+    ],
+    "12": [
+      "Kait Lamphere",
+      "Mike Rapin"
+    ]
+  },
+  "seriesPanels": [
+    {
+      "match": "Mike & Paul Read Doom Patrol",
+      "panel": [
+        "Mike Rapin",
+        "Paul Jaissle"
+      ],
+      "why": "named in the series title"
+    },
+    {
+      "match": "IRCB Movie Club",
+      "panel": [
+        "Paul Jaissle",
+        "Brian Murray",
+        "Mike Rapin"
+      ],
+      "unlessDescriptionNames": true,
+      "why": "standing panel; at least one episode has Kara Szamborski in for Brian Murray"
+    },
+    {
+      "match": "A Better Batmobile",
+      "alwaysInclude": [
+        "Paul Jaissle"
+      ],
+      "unlessDescriptionNames": true,
+      "why": "Paul Jaissle hosts every episode; co-hosts are named in the description"
+    }
+  ],
+  "fromPublicEpisode": {
+    "Episode 300 Live Q&A": 300,
+    "IRCB Episode 357 Q&A": 357,
+    "IRCB Ep 300 Full Interviews": 300
+  },
+  "publicCounterpart": {
+    "_comment": "Not Patreon-exclusive. The two feeds number minisodes differently, so these join on the content half of the title, never the number.",
+    "Minisode 21 | Planetary vs Fire & Stone": "Minisode 22 | Planetary vs Fire & Stone",
+    "Minisode 22 | 2018, Memoriam": "Minisode 23 | 2018, Memoriam",
+    "Minisode 61 | Ice Cream Man Vol. 8": "Minisode 61 | Ice Cream Man Volume 8: Subjects & Objects"
+  },
+  "hold": {
+    "_comment": "Titles whose proposal is known wrong. They ship with no panel rather than a guessed one, and are the first candidates for a `Panel:` line in the Patreon post.",
+    "IRCB's Best of 2022": "the description lists whose picks were discussed, not who recorded — it names all ten regulars"
+  }
+}

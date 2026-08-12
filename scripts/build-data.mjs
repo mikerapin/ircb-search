@@ -17,6 +17,57 @@ const patreonRaw = JSON.parse(readFileSync("data/patreon.json", "utf8")).episode
 const patreon = shape.dropUnreleased(shape.shapePatreonEpisodes(patreonRaw, published));
 const eps = [...published, ...patreon];
 
+/* The show's own episode numbers, and the panels recovered for Patreon runs that credit
+   nobody. Both are checked-in CSVs rather than logic here: each row was measured against a
+   second source before it was written, and a wrong one is fixed by editing a line. */
+attachFromCsv("data/episode-numbers.csv", eps, (ep, row) => { ep.ep = Number(row.ep); });
+attachFromCsv("data/patreon-panel-proposed.csv", eps, (ep, row) => {
+  /* Only two flags withhold a panel. `not-patreon-exclusive` means the episode is the public
+     one under a different number, and `hold` is a proposal known to be wrong — "IRCB's Best
+     of 2022" lists whose picks were discussed, not who recorded, so it names all ten
+     regulars. Both keep no panel rather than a guessed one.
+     `stand-in` and `caution` are notes for a reader, not doubts: `stand-in` is the rule
+     working, catching Kara Szamborski covering for Brian Murray on Movie Club #6. */
+  if (row.flag === "hold" || row.flag === "not-patreon-exclusive" || !row.proposed) return;
+  ep.people = row.proposed.split(";").map(s => s.trim()).filter(Boolean);
+});
+
+function attachFromCsv(path, episodes, apply) {
+  const rows = parseCsv(readFileSync(path, "utf8"));
+  const byKey = new Map(episodes.map(e => [e.key, e]));
+  let hit = 0;
+  for (const row of rows) {
+    const ep = byKey.get(row.key);
+    if (!ep) continue;
+    apply(ep, row);
+    hit++;
+  }
+  if (!hit) throw new Error(`${path} matched no episodes — the key column has drifted`);
+  console.log(`  ${path}: ${hit}/${rows.length} rows attached`);
+}
+
+/* A real parser rather than split(","), because titles carry commas and quotes — "Comics, A
+   Quarter-Mile At A Time" would otherwise shift every column after it. */
+function parseCsv(text) {
+  const rows = [];
+  let row = [], field = "", quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else field += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+    else if (c !== "\r") field += c;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  const head = rows.shift();
+  return rows.filter(r => r.length === head.length)
+             .map(r => Object.fromEntries(head.map((h, i) => [h, r[i]])));
+}
+
 const live = new Set(patreon.map(e => e.key));
 const men = [
   ...shape.shapeMentions(JSON.parse(readFileSync("data/comics.json", "utf8")), eps),

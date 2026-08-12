@@ -76,7 +76,10 @@ export function shapeEpisodes(raw: unknown[]): EpisodeCore[] {
       showId,
       title,
       date,
-      people: people(e["people"]),
+      /* A `Panel:` line in the show notes is stated by the show; `people` is spaCy's guess
+         from the description, which is why Judge Dredd, Jack Kirby and Post Malone were once
+         recorded as panelists. Where the notes state it, the guess does not get a vote. */
+      people: people(e["panel"]).length ? people(e["panel"]) : people(e["people"]),
       runtimeSecs: num(e["duration_secs"]),
       mentionCount: 0,
       artwork: text(e["artwork_url"]),
@@ -84,6 +87,7 @@ export function shapeEpisodes(raw: unknown[]): EpisodeCore[] {
       playerId: text(e["player_id"]),
       simplecastUrl: text(e["simplecast_url"]),
       patreonUrl: text(e["patreon_url"]),
+      ep: null,                         // filled at build time from data/episode-numbers.csv
       parentKey: null,
     };
   });
@@ -124,15 +128,19 @@ export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): 
     const e = rec(r);
     const parentTitle = text(e["parentTitle"]);
     const parent = parentTitle ? byTitle.get(titleKey(parentTitle)) : undefined;
+    const stated = people(e["panel"]);
     return {
       key: "p:" + text(e["guid"]),
       showId: null,
       title: text(e["title"]) ?? "",
       date: toIsoDate(e["date"]),
-      /* The feed credits nobody, so a post-credits segment read "Panel unknown" beside the
-         episode it was recorded straight after, by the same people. Borrow theirs. A run with
-         no parent still has no panel, and the card says nothing rather than saying that. */
-      people: parent?.people ?? [],
+      /* A description carrying its own `Panel:` line is the only source here that states the
+         panel rather than being read out of prose, so nothing overrides it — not even a
+         parent episode. Everything else: the feed credits nobody, so a post-credits segment
+         read "Panel unknown" beside the episode it was recorded straight after, by the same
+         people. Borrow theirs. A run with no parent still has no panel, and the card says
+         nothing rather than saying that. */
+      people: stated.length ? stated : parent?.people ?? [],
       runtimeSecs: num(e["durationSecs"]),
       mentionCount: 0,
       artwork: text(e["artwork"]),
@@ -140,6 +148,7 @@ export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): 
       playerId: null,
       simplecastUrl: null,
       patreonUrl: text(e["url"]),
+      ep: null,                         // Patreon runs are never part of the numbered show
       parentKey: parent?.key ?? null,
     };
   });
