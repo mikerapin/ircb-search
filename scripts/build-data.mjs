@@ -14,7 +14,14 @@ const det = shape.shapeDetails(epsRaw);
    shelf and use the feed. Everything else in the table is untouched. */
 const published = shape.shapeEpisodes(epsRaw).filter(e => !shape.isPatreonShelfRow(e));
 const patreonRaw = JSON.parse(readFileSync("data/patreon.json", "utf8")).episodes;
-const patreon = shape.dropUnreleased(shape.shapePatreonEpisodes(patreonRaw, published));
+const patreonShaped = shape.shapePatreonEpisodes(patreonRaw, published);
+const patreon = shape.dropUnreleased(patreonShaped);
+/* Holding one is normal between the Patreon drop and Wednesday's release. Say so anyway: a
+   held episode is an episode missing from the site, and the count creeping up would mean
+   parents have stopped resolving rather than that the week is early. */
+for (const e of patreonShaped) {
+  if (!patreon.includes(e)) console.log(`  held until its episode is public: ${e.title}`);
+}
 const eps = [...published, ...patreon];
 
 /* The show's own episode numbers, and the panels recovered for Patreon runs that credit

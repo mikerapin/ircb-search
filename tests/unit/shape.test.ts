@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { shapeEpisodes, shapeDetails, shapeMentions, buildStats, attachMentionCounts, tsToSeconds } from "../../src/data/shape";
+import { shapeEpisodes, shapeDetails, shapeMentions, buildStats, attachMentionCounts, tsToSeconds, dropUnreleased } from "../../src/data/shape";
+import type { EpisodeCore } from "../../src/data/types";
 import epsRaw from "./fixtures/episodes.sample.json";
 import comicsRaw from "./fixtures/comics.sample.json";
 
@@ -135,5 +136,48 @@ describe("shapeDetails / buildStats", () => {
     expect(stats.series).toBe(new Set(men.map(m => m.series)).size);
     expect(stats.uniqueComics).toBe(new Set(men.map(m => m.comic)).size);
     expect(stats.uniqueComics).toBeGreaterThanOrEqual(stats.series);
+  });
+});
+
+/**
+ * A post-credits segment carries no panel, no comics and no minutes. Alone on the site it is
+ * just the title of an episode nobody can hear yet, which is the show spoiling its own drop.
+ *
+ * Both cases below happened to "Post Credits: Everywhere Bagel (ft. Matt Burbridge)" in the
+ * same week. The first was already handled; the second shipped.
+ */
+describe("dropUnreleased", () => {
+  const ep = (over: Partial<EpisodeCore>): EpisodeCore => ({
+    key: "k", showId: null, title: "", date: "2026-08-11", people: [], runtimeSecs: null,
+    mentionCount: 0, artwork: null, enclosure: null, playerId: null, simplecastUrl: null,
+    patreonUrl: null, ep: null, parentKey: null, ...over,
+  });
+
+  it("holds the pair that reached Patreon before the public feed", () => {
+    const kept = dropUnreleased([
+      ep({ key: "p:1", title: "Post Credits: Everywhere Bagel (ft. Matt Burbridge)" }),
+      ep({ key: "p:2", title: "Everywhere Bagel (ft. Matt Burbridge)" }),
+      ep({ key: "p:3", title: "Saga of Saga #37" }),
+    ]);
+    expect(kept.map(e => e.key)).toEqual(["p:3"]);
+  });
+
+  it("holds a segment whose parent has not resolved, with no sibling left to tell on it", () => {
+    // Wednesday: fetch_patreon.py has stopped treating the ad-free mirror as Patreon-only, so
+    // the sibling is gone — but data/episodes.json has no row for the episode yet, so
+    // parentKey is still null. Nothing here can see the parent, so the segment waits.
+    const kept = dropUnreleased([
+      ep({ key: "p:1", title: "Post Credits: Everywhere Bagel (ft. Matt Burbridge)" }),
+      ep({ key: "p:3", title: "Saga of Saga #37" }),
+    ]);
+    expect(kept.map(e => e.key)).toEqual(["p:3"]);
+  });
+
+  it("keeps a segment once its parent resolves, and never touches a Patreon-only run", () => {
+    const kept = dropUnreleased([
+      ep({ key: "p:1", title: "Post-Credits: The Homie Batman", parentKey: "abc" }),
+      ep({ key: "p:3", title: "Saga of Saga #37" }),
+    ]);
+    expect(kept.map(e => e.key)).toEqual(["p:1", "p:3"]);
   });
 });

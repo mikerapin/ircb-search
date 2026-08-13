@@ -165,9 +165,26 @@ const POST_CREDITS = /post[\s-]*credits?/i;
  * card with no panel, no comics and no minutes — the show's own listing spoiling a title
  * before it airs. They arrive properly on the next refresh once Simplecast has them.
  *
- * The tell is structural rather than a date window: a post-credits segment whose parent is
- * not a public episode, but IS another item in this same feed. A genuine Patreon-only run
- * never has that shape.
+ * The rule is that a post-credits segment never ships without the episode it belongs to. It
+ * has no panel, no comics and no minutes of its own — all it can do alone is name an episode
+ * nobody can hear yet.
+ *
+ * There are two windows where the parent is missing, and the earlier version of this only
+ * closed the first:
+ *
+ *   1. Between the Patreon drop and Wednesday's public release, the pair sits in the Secret
+ *      Feed and nowhere else. The tell is structural — the segment's parent is not a public
+ *      episode but IS another item in this same feed — so the ad-free mirror is held too.
+ *   2. After the public release but before the segment's parent resolves. `fetch_patreon.py`
+ *      correctly stops treating the mirror as Patreon-only the moment Simplecast carries it,
+ *      so the sibling from case 1 disappears — and if `data/episodes.json` has not caught up,
+ *      `parentKey` is still null. The segment then had neither tell and shipped alone. That
+ *      is what put "Post Credits: Everywhere Bagel" on the site with no episode behind it.
+ *
+ * So hold on the parent being missing, and treat the sibling as an extra thing to hold rather
+ * than as the condition. A genuine Patreon-only run is unaffected: it does not match
+ * POST_CREDITS at all. `fetch_patreon.py` states a parentTitle for all 106 segments in the
+ * feed, so a null parentKey here means the join is mid-refresh, never that none exists.
  */
 export function dropUnreleased(patreon: EpisodeCore[]): EpisodeCore[] {
   const byTitle = new Map<string, EpisodeCore>();
@@ -176,12 +193,10 @@ export function dropUnreleased(patreon: EpisodeCore[]): EpisodeCore[] {
   const held = new Set<string>();
   for (const e of patreon) {
     if (e.parentKey || !POST_CREDITS.test(e.title)) continue;
+    held.add(e.key);
     const stem = e.title.replace(POST_CREDITS, "").replace(/^[\s:\-–—|]+|[\s:\-–—|]+$/g, "");
     const sibling = stem ? byTitle.get(titleKey(stem)) : undefined;
-    if (sibling) {
-      held.add(e.key);
-      held.add(sibling.key);
-    }
+    if (sibling) held.add(sibling.key);
   }
 
   return patreon.filter(e => !held.has(e.key));
