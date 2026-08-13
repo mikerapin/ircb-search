@@ -17,7 +17,7 @@ import type { EpisodeCore } from "../../src/data/types";
 const parent: EpisodeCore[] = [{
   key: "s:1", showId: "1", title: "The Homie Batman", date: "2026-07-29",
   people: ["Mike Rapin", "Brian Murray"], runtimeSecs: null, mentionCount: 0,
-  artwork: null, enclosure: null, playerId: null, simplecastUrl: null,
+  artwork: null, enclosure: null, simplecastUrl: null,
   patreonUrl: null, ep: 523, parentKey: null,
 }];
 

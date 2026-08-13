@@ -32,17 +32,11 @@ RSS_URL = "https://feeds.simplecast.com/U93zjuSN"
 COMIC_COLS = ["comic", "show_id", "segment", "timestamp", "direct_url"]
 EPISODE_COLS = ["show_id", "title", "date", "people", "keywords", "simplecast_url"]
 
-_EPISODE_UUID_RE = re.compile(
-    r"/episodes/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/audio/",
-    re.I,
-)
-
-
 _ITUNES_NS = "http://www.itunes.com/dtds/podcast-1.0.dtd"
 
 
 def build_rss_maps():
-    """Return {url → {player_id, summary, enclosure_url, artwork_url, duration_secs}} from RSS."""
+    """Return {url → {summary, enclosure_url, artwork_url, duration_secs, panel, …}} from RSS."""
     print("Fetching RSS feed...")
     with urllib.request.urlopen(RSS_URL) as resp:
         rss_bytes = resp.read()
@@ -53,7 +47,7 @@ def build_rss_maps():
         if link_el is None or not link_el.text:
             continue
         link = link_el.text.split("?")[0].rstrip("/")
-        rec = {"player_id": None, "summary": None, "enclosure_url": None,
+        rec = {"summary": None, "enclosure_url": None,
                "artwork_url": None, "duration_secs": None, "panel": [],
                # Carried so append_missing() can build a table row out of a feed item. The
                # guid is the same UUID the upstream table stores as show_id, which is what
@@ -72,11 +66,7 @@ def build_rss_maps():
             or (item.findtext(f"{{{_ITUNES_NS}}}summary") or ""))
         enc_el = item.find("enclosure")
         if enc_el is not None:
-            url = enc_el.get("url", "")
-            rec["enclosure_url"] = url or None
-            m = _EPISODE_UUID_RE.search(url)
-            if m:
-                rec["player_id"] = m.group(1)
+            rec["enclosure_url"] = enc_el.get("url", "") or None
         summary_el = item.find(f"{{{_ITUNES_NS}}}summary")
         if summary_el is not None and summary_el.text:
             rec["summary"] = summary_el.text.strip()
@@ -181,11 +171,14 @@ def export_episodes():
         rec = rss.get(str(url).split("?")[0].rstrip("/"))
         return rec[field] if rec else None
 
-    for field in ("player_id", "summary", "enclosure_url", "artwork_url", "duration_secs",
-                  "panel"):
+    for field in ("summary", "enclosure_url", "artwork_url", "duration_secs", "panel"):
         df[field] = df["simplecast_url"].apply(lambda u, f=field: rss_field(u, f))
-    matched = df["player_id"].notna().sum()
-    print(f"  → {matched}/{len(df)} episodes matched to a Simplecast player ID")
+    # Counted on the enclosure, because that is the field the site actually plays. This used
+    # to count player_id, parsed out of the enclosure path — a CDN asset id that no view ever
+    # read, and that silently went null for every episode once Simplecast changed the path
+    # shape. The number it printed said "matched" while dropping by one a week.
+    matched = df["enclosure_url"].notna().sum()
+    print(f"  → {matched}/{len(df)} episodes joined to an RSS enclosure")
     stated = df["panel"].apply(lambda p: bool(p) and len(p) > 0).sum()
     print(f"  → {stated} episodes state their panel in the description")
 

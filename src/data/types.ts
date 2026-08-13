@@ -8,7 +8,6 @@ export interface EpisodeCore {
   mentionCount: number;        // folded in at build time so home can show honest counts
   artwork: string | null;      // without fetching the full mention list
   enclosure: string | null;
-  playerId: string | null;
   simplecastUrl: string | null;
   patreonUrl: string | null;
   /* The number the show gave this episode, or null when it never had one.

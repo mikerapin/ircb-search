@@ -149,7 +149,7 @@ describe("shapeDetails / buildStats", () => {
 describe("dropUnreleased", () => {
   const ep = (over: Partial<EpisodeCore>): EpisodeCore => ({
     key: "k", showId: null, title: "", date: "2026-08-11", people: [], runtimeSecs: null,
-    mentionCount: 0, artwork: null, enclosure: null, playerId: null, simplecastUrl: null,
+    mentionCount: 0, artwork: null, enclosure: null, simplecastUrl: null,
     patreonUrl: null, ep: null, parentKey: null, ...over,
   });
 

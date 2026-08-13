@@ -88,8 +88,10 @@ test("the sources block credits each source with what it actually supplies", asy
   const { core } = await data(page);
   const dd = await page.locator("#view .kv > div", { hasText: /^Episodes/ }).locator("dd").innerText();
   // The RSS feed carries only some of the records and supplies none of the titles, dates or
-  // panel — export_data.py takes those from the spreadsheet and merges only player_id,
-  // summary, enclosure, artwork and duration off the feed.
+  // panel for the ones the spreadsheet already has — export_data.py takes those from the
+  // spreadsheet and merges only summary, enclosure, artwork and duration off the feed. The
+  // exception is an episode the spreadsheet has not reached yet, which comes wholly from the
+  // feed until it does; see append_missing.
   expect(dd).toContain(nf(core.episodes.filter(e => e.showId).length));
   expect(dd).toMatch(/titles, air dates and who was on the panel for all [\d,]+ records/);
   expect(dd).not.toMatch(/feed[^.]*titles/i);

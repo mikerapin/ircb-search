@@ -4,7 +4,7 @@ import type { EpisodeCore, Mention } from "../../src/data/types";
 
 const ep = (over: Partial<EpisodeCore> & { key: string }): EpisodeCore => ({
   showId: over.key, title: "", date: null, people: [], runtimeSecs: 3600, mentionCount: 0,
-  artwork: null, enclosure: "http://x/a.mp3", playerId: null, simplecastUrl: null, patreonUrl: null,
+  artwork: null, enclosure: "http://x/a.mp3", simplecastUrl: null, patreonUrl: null,
   ep: null, parentKey: null,
   ...over,
 });

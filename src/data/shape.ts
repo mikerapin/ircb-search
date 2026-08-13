@@ -84,7 +84,6 @@ export function shapeEpisodes(raw: unknown[]): EpisodeCore[] {
       mentionCount: 0,
       artwork: text(e["artwork_url"]),
       enclosure: text(e["enclosure_url"]),
-      playerId: text(e["player_id"]),
       simplecastUrl: text(e["simplecast_url"]),
       patreonUrl: text(e["patreon_url"]),
       ep: null,                         // filled at build time from data/episode-numbers.csv
@@ -145,7 +144,6 @@ export function shapePatreonEpisodes(raw: unknown[], published: EpisodeCore[]): 
       mentionCount: 0,
       artwork: text(e["artwork"]),
       enclosure: null,                  // per-patron and signed, so it never ships
-      playerId: null,
       simplecastUrl: null,
       patreonUrl: text(e["url"]),
       ep: null,                         // Patreon runs are never part of the numbered show
