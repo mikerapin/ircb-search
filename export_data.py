@@ -7,10 +7,13 @@ Requirements: pip install pandas openpyxl
 """
 
 import json
+import os
 import re
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 from panel_line import stated_people
@@ -31,6 +34,14 @@ RSS_URL = "https://feeds.simplecast.com/U93zjuSN"
 
 COMIC_COLS = ["comic", "show_id", "segment", "timestamp", "direct_url"]
 EPISODE_COLS = ["show_id", "title", "date", "people", "keywords", "simplecast_url"]
+
+# How long a public episode may be absent from the upstream table before that is a fault rather
+# than a normal gap. An episode is public at Wed 10:00 UTC and sshugars/ircb regenerates its
+# tables at Wed 16:00, so the Wednesday refresh at 17:00 legitimately sees a few hours of lag if
+# that job is merely slow. By the Thursday refresh at 03:00 the episode is 17 hours old and a
+# gap means the job did not run. Twelve hours separates those two without this needing to know
+# which refresh it is.
+STALE_AFTER_HOURS = 12
 
 _ITUNES_NS = "http://www.itunes.com/dtds/podcast-1.0.dtd"
 
@@ -152,9 +163,45 @@ def append_missing(df, rss):
            if link not in have and r["show_id"] and r["title"]]
     if not new:
         return df
+    stale = []
     for r in new:
+        hours = _hours_public(r["date"])
         print(f"  + {r['title']} — in the feed, not yet in the table")
+        if hours is not None and hours > STALE_AFTER_HOURS:
+            stale.append(f"{r['title']} ({hours:.0f}h public)")
+    _report_stale(stale)
     return pd.concat([df, pd.DataFrame(new)], ignore_index=True)
+
+
+def _hours_public(pubdate):
+    """Hours since an RFC-2822 pubDate, or None if it will not parse."""
+    try:
+        published = parsedate_to_datetime(pubdate)
+    except (TypeError, ValueError):
+        return None
+    if published.tzinfo is None:
+        published = published.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - published).total_seconds() / 3600
+
+
+def _report_stale(stale):
+    """Tell CI the upstream table has fallen behind, rather than merely being early.
+
+    Deliberately a signal and not an exit: the backfill above means the site already has the
+    episode, so a late table costs comics and timestamps, not the episode itself. That is worth
+    an email, never a reason to abandon the refresh — the workflow reads this at the very end,
+    after the data is committed and the deploy asked for, and fails the job then.
+
+    The 2026-08-12 miss went unnoticed for a day precisely because nothing did this. It was
+    also the third miss of the year, after 04-22 and 06-03, and none of them announced itself.
+    """
+    if not stale:
+        return
+    print(f"  ! the upstream table is behind: {'; '.join(stale)}")
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        with open(github_output, "a") as f:
+            f.write(f"stale={len(stale)}\n")
 
 
 def export_episodes():

@@ -37,6 +37,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Export data
+        id: export
         run: python export_data.py
 
       # The Secret Feed URL is per-patron: it is a credential, so it lives in repository
@@ -82,3 +83,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run deploy.yml --ref main
+
+      # Last on purpose. The upstream cron in sshugars/ircb skipped 2026-04-22, 2026-06-03 and
+      # 2026-08-12 without saying so, and the August one was only found because someone noticed
+      # the site looked wrong a day later. A red job here is an email.
+      #
+      # It runs after the commit and the deploy because a table that is behind is not a reason
+      # to withhold the episode — append_missing has already published it from the feed, and it
+      # is only comics and timestamps that are waiting. Failing earlier would trade a missing
+      # timestamp for a missing episode, which is the bug this all started with.
+      - name: Flag an upstream table that is behind
+        if: always() && steps.export.outputs.stale != ''
+        run: |
+          echo "::error::sshugars/ircb has not indexed ${{ steps.export.outputs.stale }} public episode(s). The site is serving them from RSS, so nothing is missing from the listing — but they have no comics or timestamps until that table catches up. Check whether the weekly job ran."
+          exit 1
