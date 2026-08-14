@@ -10,7 +10,9 @@ Comic Books" is labelled EP. 543.
 The workbook has the real numbers. It records *recording* dates and the feed records *air*
 dates, and the titles carry no "Episode N |" prefix to join on (upstream strips it), so the
 join is a monotone alignment on date: each feed episode takes the latest unclaimed sheet row
-recorded no more than LAG_MAX days before it aired. 378 of 406 land at exactly 3 days.
+recorded no more than LAG_MAX days before it aired. 414 of 440 land at exactly 3 days and none
+lands past 4 — which is the check that matters, because a match drifting out toward the
+14-day limit is the shape a wrong match has.
 
 Episodes that match no sheet row keep NO number. They are the separately-numbered minisodes
 and the untitled one-offs, and the sheet lists them with a blank `Ep` — inventing a number
@@ -28,7 +30,7 @@ import csv
 import json
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import xml.etree.ElementTree as ET
@@ -47,27 +49,57 @@ TABS = (("Old Recording Dates", "Recording Date"), ("Schedule", "Rec. Date"))
 
 
 def _ep(v):
+    """(number, is_an_episode). A fractional Ep — 475.1, 522.1 — is a *skipped* week.
+
+    They are labelled "NO EPISODE IN JULY?" in the 2025 run and left blank in the 2026 one,
+    and they carry no host and no topic. Rounding them down to 475 or 522 hands the real
+    episode a recording date belonging to a week it was not recorded in.
+    """
     try:
-        return int(float(str(v).strip()))
+        f = float(str(v).strip())
     except (TypeError, ValueError):
-        return None
+        return None, False
+    return int(f), f == int(f)
 
 
 def read_sheet(xlsx):
-    """Numbered rows carrying a recording date, one per episode number, ascending."""
+    """One row per week in order, ascending by episode number.
+
+    `Rec. Date` is overwritten with "Done"/"DONE" once a recording is in the can, so the date
+    is gone by the time the episode airs. Requiring one silently dropped 33 rows — which is
+    every missing number on the site, exactly — and, worse, slid later numbers onto earlier
+    episodes, because the skipped-week rows kept their dates and got claimed in their place.
+
+    A missing date is recoverable because the rows are a weekly timeline and the skipped weeks
+    are rows too: walk 7 days per row from the last dated row. Across the 129 dated rows either
+    side of these gaps in the numbering era that depends on the sheet (Ep 400+, where the RSS
+    title no longer states a number), the walk lands exactly on the next dated row every time
+    but twice — one June 2024 stretch that shifted a day. The alignment window is 14 days, so a
+    reconstruction has to be a fortnight wrong before it can pick the wrong episode.
+    """
     wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)
     rows = {}
     for tab, datecol in TABS:
         ws = wb[tab]
         it = ws.iter_rows(values_only=True)
         hdr = [str(c).strip() if c is not None else "" for c in next(it)]
+        week = None
         for raw in it:
             if all(c is None or str(c).strip() == "" for c in raw):
                 continue
             r = dict(zip(hdr, raw))
-            ep, rec = _ep(r.get("Ep")), r.get(datecol)
-            if ep is None or not isinstance(rec, datetime):
+            ep, is_episode = _ep(r.get("Ep"))
+            if ep is None:
                 continue
+            rec = r.get(datecol)
+            if isinstance(rec, datetime):
+                week = rec
+            elif week is None:
+                continue                      # nothing to count from yet
+            else:
+                week = rec = week + timedelta(days=7)
+            if not is_episode:
+                continue                      # a skipped week holds its place and nothing else
             # Four numbers appear twice, rescheduled. The later row is the one that happened.
             if ep not in rows or rec > rows[ep]["rec"]:
                 rows[ep] = {"ep": ep, "rec": rec, "topic": r.get("Topic")}
@@ -178,7 +210,47 @@ def main(xlsx):
     print(f"→ {OUT.relative_to(ROOT)}")
 
 
+def selfcheck():
+    """The two rules that recover a date, on a sheet small enough to read.
+
+    `check()` guards the alignment on real data every run, but it cannot see this class of
+    fault: dropping a row produces an alignment that is monotone, unique and inside the lag
+    window — valid in every way it knows to test, and quietly missing 33 episodes.
+    """
+    import io
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = TABS[0][0]
+    ws.append(["Ep", TABS[0][1], "Topic"])
+    for row in [
+        [100, datetime(2020, 1, 5), "dated"],
+        [101, "DONE", "recorded, date overwritten"],     # -> 2020-01-12, one week on
+        [102, datetime(2020, 1, 19), "dated again"],     # a real date always wins
+        [103, datetime(2020, 1, 26), "dated"],
+        ["103.1", datetime(2020, 2, 2), None],           # a skipped week, not episode 103
+        [104, "Done", "after the skipped week"],         # -> 2020-02-09, counting past it
+    ]:
+        ws.append(row)
+    wb.create_sheet(TABS[1][0]).append(["Ep", TABS[1][1], "Topic"])
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    got = {r["ep"]: r["rec"].date().isoformat() for r in read_sheet(buf)}
+
+    assert got[101] == "2020-01-12", f"'DONE' should count a week on from 100, got {got[101]}"
+    assert got[102] == "2020-01-19", "a stated date must beat the reconstruction"
+    assert got[103] == "2020-01-26", f"103.1 is a skipped week, not 103's date, got {got[103]}"
+    assert got[104] == "2020-02-09", f"the skipped week still costs a week, got {got[104]}"
+    assert sorted(got) == [100, 101, 102, 103, 104], f"103.1 is not an episode: {sorted(got)}"
+    print("selfcheck ok")
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) == 2 and sys.argv[1] == "--selfcheck":
+        selfcheck()
+    elif len(sys.argv) != 2:
         sys.exit(__doc__)
-    main(sys.argv[1])
+    else:
+        main(sys.argv[1])

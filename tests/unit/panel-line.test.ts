@@ -18,7 +18,7 @@ const parent: EpisodeCore[] = [{
   key: "s:1", showId: "1", title: "The Homie Batman", date: "2026-07-29",
   people: ["Mike Rapin", "Brian Murray"], runtimeSecs: null, mentionCount: 0,
   artwork: null, enclosure: null, simplecastUrl: null,
-  patreonUrl: null, ep: 523, parentKey: null,
+  patreonUrl: null, ep: 524, parentKey: null,
 }];
 
 function shape(raw: Record<string, unknown>) {
