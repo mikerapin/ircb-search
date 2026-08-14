@@ -38,7 +38,7 @@ export function episodePanel(e: EpisodeCore, opts?: { extra?: string }): string 
   const n = e.mentionCount;
 
   /* A post-credits segment logs no comics and no minutes, so this card used to read
-     "0 comics", "Panel unknown" and "0 moments" — three labels announcing three absences.
+     "0 comics", "Panel unknown" and "0 mentions" — three labels announcing three absences.
      Say nothing instead: a count of zero is not information a reader needs. */
   const micro = [fmtDate(e.date) || "Date unknown", n ? `${n} comic${pl(n)}` : ""]
     .filter(Boolean).join(" · ");
@@ -54,7 +54,7 @@ export function episodePanel(e: EpisodeCore, opts?: { extra?: string }): string 
       (opts?.extra ?? "") +
       `<div class="spacer"></div>` +
       `<a class="ts dark" href="${epHref(e)}"><span class="tri">▤</span>Open the episode` +
-        (n ? `<span class="lab">${n} moment${pl(n)}</span>` : "") + `</a>` +
+        (n ? `<span class="lab">${n} mention${pl(n)}</span>` : "") + `</a>` +
     `</div>` +
   `</div></article>`;
 }

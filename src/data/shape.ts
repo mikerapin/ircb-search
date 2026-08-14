@@ -297,6 +297,98 @@ export function shapeMentions(raw: unknown[], episodes: EpisodeCore[]): Mention[
   return out;
 }
 
+/** The label a tag-derived mention carries, so it is never mistaken for a logged one. */
+export const TAGGED = "Tagged";
+
+/**
+ * Resolve an `<itunes:keywords>` term to a series page that already exists, or null.
+ *
+ * Shared by the two things that consume the taxonomy — the mentions below and the chips on
+ * the episode page — so a tag cannot link to one page and file itself under another.
+ *
+ * Two rules do the work. A term must be typed `series` in the taxonomy, which is decided by
+ * the app's own seriesKey() when the taxonomy is built rather than by a second guess here.
+ * And it must land on a heading the mention list *already* holds: tags are an index of what
+ * the show tagged, not of what it discussed, so one is allowed to add an episode to a run
+ * that exists and never to mint a run of its own. Measured when this shipped, no series page
+ * depended on a tag for its existence, so the rule costs nothing and closes the failure mode
+ * where a stray keyword invents a page with one episode on it.
+ */
+export function tagSeriesResolver(
+  taxonomy: Record<string, { type?: string; series?: string }>,
+  aliases: Record<string, string>,
+  mentions: Mention[],
+): (term: string) => string | null {
+  const canonical = new Map<string, string>();
+  for (const m of mentions) canonical.set(m.series.toLowerCase(), m.series);
+  return (term: string) => {
+    const t = term.trim().toLowerCase();
+    if (!t) return null;
+    const entry = taxonomy[aliases[t] ?? t];
+    if (!entry || entry.type !== "series" || !entry.series) return null;
+    return canonical.get(entry.series.toLowerCase()) ?? null;
+  };
+}
+
+/**
+ * Episode-level mentions built from the RSS keywords, for series the episode's own comic rows
+ * missed. They carry no minute, because a tag records that a book came up and nothing about
+ * when, and `segment` marks where they came from so a reader is never told otherwise.
+ *
+ * Deduped against the mentions that already exist, so an episode that both logged Batman and
+ * tagged it keeps the logged row — the one that may carry a timestamp — rather than gaining a
+ * second, weaker copy of it.
+ */
+export function shapeTaggedMentions(
+  details: EpisodeDetail[],
+  resolve: (term: string) => string | null,
+  existing: Mention[],
+): Mention[] {
+  const have = new Set(existing.map(m => m.epKey + " " + m.series.toLowerCase()));
+  const out: Mention[] = [];
+  for (const d of details) {
+    for (const k of d.keywords) {
+      const series = resolve(k);
+      if (!series) continue;
+      const id = d.key + " " + series.toLowerCase();
+      if (have.has(id)) continue;      // also catches two tags folding onto one run
+      have.add(id);
+      out.push({ comic: series, series, epKey: d.key, segment: TAGGED, secs: null });
+    }
+  }
+  return out;
+}
+
+/**
+ * Point a tag chip at the series page it names, where there is one. In place, returns the
+ * same array. Everything else stays a search, which is all a publisher or a topic can honestly
+ * offer — the tags reach a minority of the episodes that actually discussed a given thing, so
+ * a page promising "every Image Comics episode" would be wrong by a factor of three or more.
+ *
+ * **Only the terms that are not their own heading are recorded.** Nine in ten resolve to their
+ * own name in the show's casing — `batman` to Batman — and shapeTaggedMentions has by then
+ * guaranteed the episode carries a mention under that heading, so the view finds those by
+ * matching its own mentions and pays nothing to ship them. Writing all of them cost 15KB
+ * gzipped on a chunk the search route also loads; this costs about two.
+ *
+ * The remainder are the ones no match could find: `palestine` is shelved under "Palestine by
+ * Joe Sacco", `wicdiv` under "The Wicked + The Divine".
+ */
+export function attachTagSeries(
+  details: EpisodeDetail[],
+  resolve: (term: string) => string | null,
+): EpisodeDetail[] {
+  for (const d of details) {
+    let map: Record<string, string> | undefined;
+    for (const k of d.keywords) {
+      const series = resolve(k);
+      if (series && series.toLowerCase() !== k.trim().toLowerCase()) (map ??= {})[k] = series;
+    }
+    if (map) d.keywordSeries = map;
+  }
+  return details;
+}
+
 /** Fold each episode's mention count onto its record, in place. Returns the same array. */
 export function attachMentionCounts(episodes: EpisodeCore[], mentions: Mention[]): EpisodeCore[] {
   const counts = new Map<string, number>();

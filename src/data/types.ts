@@ -23,7 +23,16 @@ export interface EpisodeCore {
   parentKey: string | null;
 }
 
-export interface EpisodeDetail { key: string; summary: string | null; keywords: string[] }
+export interface EpisodeDetail {
+  key: string;
+  summary: string | null;
+  keywords: string[];
+  /* Keyword → series page, for the keywords that do not simply spell their own heading:
+     `palestine` is shelved under "Palestine by Joe Sacco". The nine in ten that do spell it
+     are absent on purpose and matched against the episode's own mentions instead, which costs
+     nothing to ship. Absent entirely where no keyword needs it. */
+  keywordSeries?: Record<string, string>;
+}
 
 export interface Mention { comic: string; series: string; epKey: string; segment: string | null; secs: number | null }
 

@@ -69,6 +69,19 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   const rel = related(ep, data.episodes, byEp);
   const n = mine.length;
 
+  /* A tag that names a book we shelve goes to the shelf; everything else runs a search.
+     Most terms spell their own heading, and a tagged term always leaves a mention on this
+     episode under it, so this episode's own rows answer the common case without the build
+     shipping a lookup for it. `keywordSeries` carries only the terms that spell something
+     else — and because it is consulted first, it also wins when the two disagree. */
+  const ownSeries = new Map(mine.map(m => [m.series.toLowerCase(), m.series]));
+  const tagHref = (k: string): string => {
+    const series = detail?.keywordSeries?.[k] ?? ownSeries.get(k.trim().toLowerCase());
+    return series
+      ? href("/series/" + encodeURIComponent(series))
+      : href("/search", { q: k });
+  };
+
   /* The cover is square and the row is not, so the leftover is a screened tint field. Left
      carrying two lines it read as a failed image, so it carries the episode's whole
      colophon instead — the facts that used to sit twice over in the right column. */
@@ -114,7 +127,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
           : `<p class="notes">We didn&rsquo;t write show notes for this one.</p>`}
         ${detail?.keywords.length
           ? `<div class="tags">${detail.keywords.slice(0, 10).map(k =>
-              `<a class="tag" href="${href("/search", { q: k })}">${esc(k)}</a>`).join("")}</div>`
+              `<a class="tag" href="${tagHref(k)}">${esc(k)}</a>`).join("")}</div>`
           : ""}
         ${play}
         <div class="cutslot"></div>
@@ -123,7 +136,9 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
           : ""}
       </div>
     </div></section>` +
-    sfx(n ? `${nf(n)} moment${pl(n)}` : "Not indexed");
+    /* "mention", not "moment": most of these carry no minute, and since the RSS keywords
+       started feeding the index some were never logged against a point in the tape at all. */
+    sfx(n ? `${nf(n)} mention${pl(n)}` : "Not indexed");
 
   const raSection = (): string =>
     `<div class="sec-head"><h2 class="disp">Read Along</h2>

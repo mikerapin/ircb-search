@@ -80,6 +80,23 @@ const men = [
   ...shape.shapeMentions(JSON.parse(readFileSync("data/comics.json", "utf8")), eps),
   ...shape.shapePatreonMentions(patreonRaw).filter(m => live.has(m.epKey)),
 ];
+
+/* The show's own RSS keywords, for books the comic rows missed. Only terms the taxonomy typed
+   as a series, and only onto runs the list above already holds — a tag adds an episode to a
+   page, it never opens one. Both the mentions and the chips on the episode page go through the
+   same resolver, so a tag cannot link to one page and file itself under another. */
+const resolveTag = shape.tagSeriesResolver(
+  JSON.parse(readFileSync("data/tag-taxonomy.json", "utf8")),
+  Object.fromEntries(Object.entries(
+    JSON.parse(readFileSync("data/tag-seeds.json", "utf8")).aliases)
+    .filter(([k]) => !k.startsWith("_"))),
+  men);
+const tagged = shape.shapeTaggedMentions(det, resolveTag, men);
+men.push(...tagged);
+shape.attachTagSeries(det, resolveTag);
+console.log(`  tags: ${tagged.length} mentions added, ` +
+            `${new Set(tagged.map(m => m.series)).size} series pages touched`);
+
 shape.attachMentionCounts(eps, men);
 
 // Keys are route parameters. A collision would silently merge two episodes into one page.

@@ -1,5 +1,6 @@
 import { core, mentions as loadMentions } from "../data/load";
 import { ALIASED_REGULARS, ROSTER } from "../data/roster";
+import { TAGGED } from "../data/shape";
 import type { EpisodeCore } from "../data/types";
 import { nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -46,6 +47,7 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
   const { feed: feedEps, backCatalogue, backCatalogueDated, patreonShelf } = eraCounts(data.episodes);
   const noTitle = data.episodes.filter(e => !e.title).length;
   const noMinute = men.filter(m => m.secs == null).length;
+  const tagged = men.filter(m => m.segment === TAGGED).length;
   /* Not `men.length - noMinute`: a minute is necessary but not sufficient. jumpable() also
      needs audio on file and a stamp inside the runtime, which is one mention fewer. Quote
      the number the play controls actually honour. */
@@ -64,11 +66,15 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">Where All This Came From</h2></div>
       <dl class="kv">
-        <div><dt>Comics</dt><dd>Every comic here was logged by hand from our show notes, and
+        <div><dt>Comics</dt><dd>Most comics here were logged by hand from our show notes, and
           <a href="https://github.com/sshugars/ircb">sshugars/ircb</a> keeps that data in the open.
           We build the whole site off it: ${nf(s.mentions)} comics across ${nf(s.indexedEpisodes)} episodes.
           ${nf(men.length - noMinute)} of them have a minute attached, which is what lets you jump straight to
           where we started talking.</dd></div>
+        <div><dt>Tags</dt><dd>${nf(tagged)} more came from the keywords we file each episode under,
+          for books the notes never listed. They only ever join a run already on the shelf &mdash; a tag
+          can add an episode to one, never start one &mdash; and they carry no minute, because a tag records
+          that a book came up and nothing about when. They&rsquo;re marked <b>Tagged</b> in a checklist.</dd></div>
         <div><dt>Episodes</dt><dd>The same repo has our episode table, with titles, air dates and who was on the
           panel for all ${nf(s.episodes)} records. Our <a href="https://feeds.simplecast.com/U93zjuSN">Simplecast
           feed</a> fills in artwork, runtimes and audio for the ${nf(feedEps)} episodes that made it there.</dd></div>
@@ -103,7 +109,8 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
         <span class="note">We&rsquo;d rather tell you</span></div>
       <dl class="kv">
         <div><dt>Minutes</dt><dd><b>${nf(noMinute)} of our ${nf(men.length)} logged comics have no timestamp.</b>
-          Somebody caught the book but not the minute. Those show <b>&mdash;:&mdash;&mdash;</b> and link to the
+          Mostly somebody caught the book but not the minute; ${nf(tagged)} came from an episode&rsquo;s tags,
+          which never had a minute to catch. Those show <b>&mdash;:&mdash;&mdash;</b> and link to the
           episode rather than fake a play button. ${nf(canJump)} can actually be jumped into.</dd></div>
         <div><dt>Dates</dt><dd>${nf(undated)} episodes have no recoverable air date, so they sort last and sit
           outside every calendar.</dd></div>

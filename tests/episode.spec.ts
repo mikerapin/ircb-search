@@ -66,9 +66,66 @@ test("keyword tags search, and the crew links to panelists", async ({ page }) =>
   const tag = page.locator(".tags .tag").first();
   await expect(tag).toBeVisible();
   const label = (await tag.innerText()).trim();
+  const isShelved = await tag.getAttribute("href").then(h => /#\/series\//.test(h ?? ""));
   await tag.click();
-  await expect(page).toHaveURL(/#\/search\?q=/);
-  await expect(page.locator("#q")).toHaveValue(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  if (isShelved) {
+    await expect(page).toHaveURL(/#\/series\//);
+  } else {
+    await expect(page).toHaveURL(/#\/search\?q=/);
+    await expect(page.locator("#q")).toHaveValue(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  }
+});
+
+/**
+ * A tag that names a book we shelve goes to the shelf; everything else runs a search. The
+ * branch above follows whichever the newest tagged episode happens to carry, so it cannot
+ * prove both exist — this picks one episode of each kind out of the data and follows it.
+ *
+ * The selection states the contract rather than re-implementing the view: an episode whose
+ * keyword names a run the index holds should link there. It deliberately does not read
+ * `keywordSeries`, which carries only the terms that spell something other than their own
+ * heading, so a test built on it would miss the nine in ten that do.
+ */
+test("a tag that names a shelved book links to the shelf, not a search", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+
+  const picks = await page.evaluate(async () => {
+    const [det, men] = await Promise.all([
+      fetch("d/detail.json").then(r => r.json() as Promise<EpisodeDetail[]>),
+      fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>),
+    ]);
+    const shelvedBy = new Map<string, Set<string>>();
+    for (const m of men) {
+      let s = shelvedBy.get(m.epKey);
+      if (!s) shelvedBy.set(m.epKey, (s = new Set()));
+      s.add(m.series.toLowerCase());
+    }
+    let shelved = null, loose = null;
+    for (const d of det) {
+      const own = shelvedBy.get(d.key) ?? new Set<string>();
+      for (const k of d.keywords ?? []) {
+        const hit = own.has(k.trim().toLowerCase()) || !!d.keywordSeries?.[k];
+        if (hit && !shelved) shelved = { key: d.key, tag: k };
+        if (!hit && !loose) loose = { key: d.key, tag: k };
+      }
+      if (shelved && loose) break;
+    }
+    return { shelved, loose };
+  });
+
+  expect(picks.shelved, "no keyword anywhere names a run the index holds").not.toBeNull();
+  expect(picks.loose, "every keyword names a run, which cannot be right").not.toBeNull();
+
+  for (const [pick, pattern] of [
+    [picks.shelved, /#\/series\//],
+    [picks.loose, /#\/search\?q=/],
+  ] as const) {
+    await page.goto("/#/ep/" + encodeURIComponent(pick!.key));
+    const chip = page.locator(".tags .tag", { hasText: new RegExp(`^\\s*${
+      pick!.tag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "i") }).first();
+    await expect(chip).toHaveAttribute("href", pattern);
+  }
 });
 
 test("read-along toggle switches layout and persists", async ({ page }) => {
