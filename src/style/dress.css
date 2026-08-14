@@ -845,18 +845,50 @@ html[data-neg] .tenure .yr.on{color:#14120F}
 /* ---------- accordion ---------- */
 details.acc{border:var(--rule) solid var(--ink); margin:0 var(--pad); background:var(--paper)}
 .split details.acc{margin:0}
-details.acc>summary{
+details.acc>summary,.whopage .foldbtn{
   list-style:none; cursor:pointer; padding:11px 12px; display:flex; align-items:center; gap:10px;
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800; text-transform:uppercase;
   font-size:13px; letter-spacing:.03em; background:var(--paper);
 }
 details.acc>summary::-webkit-details-marker{display:none}
-details.acc>summary::after{content:"+"; margin-left:auto; font-size:17px; line-height:1}
-details.acc[open]>summary{background:var(--ink); color:var(--paper); border-bottom:var(--rule) solid var(--ink)}
-html[data-neg] details.acc[open]>summary{color:#14120F}
-details.acc[open]>summary::after{content:"–"}
-details.acc>summary:hover{background:var(--yellow); color:#14120F}
+details.acc>summary::after,.whopage .foldbtn::after{content:"+"; margin-left:auto; font-size:17px; line-height:1}
+details.acc[open]>summary,.whopage .foldbtn[aria-expanded="true"]{background:var(--ink); color:var(--paper); border-bottom:var(--rule) solid var(--ink)}
+html[data-neg] details.acc[open]>summary,html[data-neg] .whopage .foldbtn[aria-expanded="true"]{color:#14120F}
+details.acc[open]>summary::after,.whopage .foldbtn[aria-expanded="true"]::after{content:"–"}
+details.acc>summary:hover,.whopage .foldbtn:hover{background:var(--yellow); color:#14120F}
 details.acc .accb{padding:12px}
+
+/* ---------- panelist: the supporting material, folded ---------- */
+/* Scoped to .whopage because search uses .split and .rail too, and its rail is the facet
+   list — the thing a reader is there to operate, not context to tuck away.
+
+   Narrow: one fold holding the rail and the two context sections, ordered after the episode
+   list so the episodes lead. Wide: the <details> dissolves. display:contents drops its box
+   so its children become grid items of .split directly and land in the same two columns they
+   occupied before this existed; the placement is explicit because auto-placement would run
+   rail, extras, mainpane across the tracks in that order and put the episode list in the
+   262px rail column. */
+.whopage .more{order:2; border:var(--rule) solid var(--ink); background:var(--paper)}
+.whopage .mainpane{order:1; min-width:0}
+/* The button carries the accordion's summary styling (see the selector lists above); these
+   are the parts a <button> needs that a <summary> gets for free. */
+.whopage .foldbtn{width:100%; border:0; color:inherit; text-align:left}
+.whopage .foldbody>.rail{padding:12px}
+.whopage .extras{padding:0 12px}
+.whopage .extras>.sec:last-child{margin-bottom:12px}
+
+@media(min-width:980px){
+  /* Both wrappers stop being boxes so their children become grid items of .split and take
+     the columns they held before the fold existed. Plain divs, because display:contents does
+     not flatten a <details> — Chromium keeps an internal ::details-content box that inherits
+     the grid slot, which put both children in the 262px rail column. */
+  .whopage .more,.whopage .foldbody{display:contents}
+  .whopage .foldbtn{display:none}
+  .whopage .foldbody>.rail{grid-column:1; grid-row:1/span 2; padding:0}
+  .whopage .extras{grid-column:2; grid-row:1; padding:0}
+  .whopage .extras>.sec:last-child{margin-bottom:0}
+  .whopage .mainpane{grid-column:2; grid-row:2}
+}
 
 /* ---------- THE WALL ---------- */
 .wallwrap{padding:0 var(--pad)}

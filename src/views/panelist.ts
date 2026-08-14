@@ -40,6 +40,69 @@ function tenureStrip(name: string, data: CoreData): string {
   }).join("");
 }
 
+/** The breakpoint `.split` becomes two columns at. The fold only exists below it. */
+const WIDE = "matchMedia" in globalThis ? matchMedia("(min-width:980px)") : null;
+let wired = false;
+
+function applyFold(open: boolean): void {
+  const btn = document.getElementById("foldbtn");
+  const body = document.getElementById("foldbody");
+  if (!btn || !body) return;
+  btn.setAttribute("aria-expanded", String(open));
+  body.hidden = !open;
+}
+
+/**
+ * Open above the breakpoint, shut below it.
+ *
+ * Registered once at module scope rather than per render. This view repaints on every
+ * navigation between people and `matchMedia` returns a fresh MediaQueryList per call, so a
+ * listener wired inside `after()` would pile up one per visit for the life of the tab, each
+ * holding a detached fold. Looking the elements up by id at fire time always finds the live
+ * ones.
+ */
+function syncFold(): void {
+  if (document.getElementById("foldbody")) applyFold(WIDE ? WIDE.matches : true);
+}
+
+/** Wires this render's button, then puts the fold in the state its width calls for. */
+function mountFold(): void {
+  const btn = document.getElementById("foldbtn");
+  if (!btn) return;
+  btn.addEventListener("click", () => applyFold(btn.getAttribute("aria-expanded") !== "true"));
+  syncFold();
+  if (WIDE && !wired) { wired = true; WIDE.addEventListener("change", syncFold); }
+}
+
+/**
+ * Everything that is not the episode list, behind one control.
+ *
+ * Narrow, the page opened with tenure, then who they sit with, then the topics — three blocks
+ * of context ahead of the episodes anyone came for. They fold rather than go.
+ *
+ * A button and `hidden` rather than `<details>`, which is what this was first built as. Wide,
+ * the wrapper has to stop being a box so the rail and the extras land in the two columns they
+ * have always had, and `display:contents` does not achieve that on a `<details>`: Chromium
+ * lays its children out inside an internal `::details-content` box, so the host's box
+ * disappears and the shadow wrapper's takes its place in the grid. Measured — both children
+ * came out 262px wide in the rail column with `grid-column:2` computed and ignored. On plain
+ * divs the flattening works, and this is the pattern the masthead menu already uses.
+ *
+ * Ships expanded and unhidden, so a reader whose script never runs gets the whole page rather
+ * than a button that the wide-screen CSS hides. The failure mode has to be "too much", never
+ * "nothing".
+ */
+function fold(name: string, side: string, extras: string): string {
+  return `<div class="more">` +
+    `<button class="foldbtn" id="foldbtn" type="button" aria-expanded="true" aria-controls="foldbody">` +
+      `More about ${esc(firstName(name))}</button>` +
+    `<div class="foldbody" id="foldbody">` +
+      side +
+      (extras ? `<div class="extras">${extras}</div>` : "") +
+    `</div>` +
+  `</div>`;
+}
+
 export async function viewPanelist(rawName: string): Promise<{ html: string; after: () => void }> {
   const data = await core();
   const name = canon(rawName);
@@ -77,7 +140,10 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
   const activeYears = new Set(dated.map(e => e.date?.slice(0, 4)));
   const showYears = new Set(data.episodes.map(e => e.date?.slice(0, 4)).filter(Boolean));
 
-  const main = `<div>` +
+  /* Context, not the reason anyone opened this page. Below the two-column breakpoint it all
+     folds behind one summary so the episode list leads; above it, it sits in the columns it
+     always had. See the fold below. */
+  const extras =
     (coFaces.length
       ? `<section class="sec"><div class="sec-head"><h2 class="disp">Who They Sit With</h2>
           <span class="note">Share of ${esc(firstName(name))}&rsquo;s ${nf(nEps)} episode${pl(nEps)}</span></div>
@@ -100,8 +166,11 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
       ? `<section class="sec"><div class="sec-head"><h2 class="disp">Most Discussed On Their Watch</h2></div>
           <div class="chips">${top.map(([s, n]) =>
             `<a class="chip" href="${href("/series/" + encodeURIComponent(s))}">${esc(s)}<span class="n">${nf(n)}</span></a>`).join("")}</div></section>`
-      : "") +
-    /* One episode is one square; a whole grid for that is noise (Round 2 note). */
+      : "");
+
+  /* What the page is for. One episode is one square; a whole grid for that is noise
+     (Round 2 note). */
+  const episodes =
     (nEps > 1
       ? `<section class="sec"><details class="acc"><summary>Every episode with ${esc(firstName(name))} · ${nf(nEps)}</summary>
           <div class="accb"><div class="ra-list">${theirs.map(e =>
@@ -119,8 +188,7 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
       ? `<section class="sec"><div class="sec-head"><h2 class="disp">On the Panel</h2>
           <span class="note">Newest first · ${nf(nEps)} total</span></div>
           <div class="panels">${recent.map(e => episodePanel(e)).join("")}</div></section>`
-      : "") +
-    `</div>`;
+      : "");
 
   const side = `<aside class="rail">
     <div class="railbox"><div class="rh">Tenure</div>
@@ -160,8 +228,12 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
       </div>
     </div></section>` +
     sfx(`${nf(nEps)} episode${pl(nEps)}`) +
-    `<div class="split">${side}${main}</div>` +
+    `<div class="split whopage">${fold(name, side, extras)}` +
+      `<div class="mainpane">${episodes}</div></div>` +
     subscribeCoupon(`Follow ${firstName(name)} into next week.`);
 
-  return { html, after: () => { requestAnimationFrame(() => fitPlates(document)); } };
+  return {
+    html,
+    after: () => { mountFold(); requestAnimationFrame(() => fitPlates(document)); },
+  };
 }

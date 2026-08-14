@@ -79,6 +79,87 @@ test("a guest without a roster entry says so instead of showing a blank portrait
   await expect(page.locator(".tagline")).toHaveCount(0);
 });
 
+/* The fold. Narrow, everything that is not the episode list collapses behind one summary so
+   the episodes lead; wide, the <details> dissolves to display:contents and its children take
+   the two columns they had before it existed. Both halves are asserted on geometry rather
+   than on classes, because display:contents failing silently would leave the markup correct
+   and the page wrong. */
+test.describe("the supporting material folds on a narrow screen", () => {
+  test("narrow: it is shut, and the episodes come first", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/#/who/Mike%20Rapin");
+    await page.waitForSelector("body[data-ready]");
+
+    const btn = page.locator("#foldbtn");
+    await expect(btn).toBeVisible();
+    await expect(btn).toHaveAttribute("aria-expanded", "false");
+
+    // The point of the change: episodes above the fold, not under three blocks of context.
+    const ep = await page.locator(".mainpane").boundingBox();
+    const more = await page.locator(".more").boundingBox();
+    expect(ep!.y).toBeLessThan(more!.y);
+
+    // Shut means shut — the tenure strip and the co-panelist grid are off the page.
+    await expect(page.locator(".rail .tenure")).toBeHidden();
+    await expect(page.locator(".extras .panelgrid")).toBeHidden();
+
+    await btn.click();
+    await expect(btn).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator(".rail .tenure")).toBeVisible();
+  });
+
+  test("wide: the fold dissolves back into two columns", async ({ page }) => {
+    await page.setViewportSize({ width: 1200, height: 900 });
+    await page.goto("/#/who/Mike%20Rapin");
+    await page.waitForSelector("body[data-ready]");
+
+    await expect(page.locator("#foldbtn")).toBeHidden();
+    await expect(page.locator(".rail .tenure")).toBeVisible();
+
+    const rail = (await page.locator(".whopage .rail").boundingBox())!;
+    const extras = (await page.locator(".whopage .extras").boundingBox())!;
+    const main = (await page.locator(".whopage .mainpane").boundingBox())!;
+
+    // Rail in the narrow left track, both others in the wide right one and aligned to it.
+    expect(rail.width).toBeLessThan(300);
+    expect(extras.x).toBeGreaterThan(rail.x + rail.width);
+    expect(Math.abs(extras.x - main.x)).toBeLessThan(2);
+    expect(main.width).toBeGreaterThan(rail.width * 2);
+    // Context above the episode list, which is the order this page has always had.
+    expect(extras.y).toBeLessThan(main.y);
+  });
+
+  test("crossing the breakpoint re-syncs it", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/#/who/Mike%20Rapin");
+    await page.waitForSelector("body[data-ready]");
+    await expect(page.locator("#foldbtn")).toHaveAttribute("aria-expanded", "false");
+
+    /* Resizing up must reopen it. The wide layout hides the button, so a fold left shut here
+       would strand the rail and the extras with no control to reveal them. */
+    await page.setViewportSize({ width: 1200, height: 900 });
+    await expect(page.locator(".rail .tenure")).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator("#foldbtn")).toHaveAttribute("aria-expanded", "false");
+    await expect(page.locator(".rail .tenure")).toBeHidden();
+  });
+
+  test("navigating between people does not pile up listeners", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/#/who/Mike%20Rapin");
+    await page.waitForSelector("body[data-ready]");
+    for (const who of ["Kara%20Szamborski", "Mike%20Rapin", "Kara%20Szamborski"]) {
+      await page.goto("/#/who/" + who);
+      await expect(page.locator("#foldbtn")).toHaveAttribute("aria-expanded", "false");
+    }
+    // Still one live fold, and it still answers the breakpoint after four renders.
+    await expect(page.locator("#foldbtn")).toHaveCount(1);
+    await page.setViewportSize({ width: 1200, height: 900 });
+    await expect(page.locator(".rail .tenure")).toBeVisible();
+  });
+});
+
 test("an unknown name says so", async ({ page }) => {
   await page.goto("/#/who/Nobody%20At%20All");
   await expect(page.locator(".empty")).toContainText(/No one by that name in the index/);
