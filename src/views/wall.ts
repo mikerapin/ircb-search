@@ -271,10 +271,10 @@ function openRail(
   if (label) label.textContent = e.date ? fmtDate(e.date) : "Undated";
 
   const epLink = href("/ep/" + encodeURIComponent(e.key));
-  /* The runtime reads as text here, not as the cover's corner badge. `.pricebox` is
-     `position:absolute`, and every other caller wraps it in a positioned box — the rail had
-     no artwork to pin it to, so it resolved against #rail itself and landed exactly on top
-     of the close button, swallowing the click. */
+  /* The rail has always read the runtime as text rather than as a badge on the cover, and
+     everywhere else now does the same. It used to be a `position:absolute` box pinned to the
+     artwork; here there was no artwork to pin to, so it resolved against #rail itself and
+     landed on the close button, swallowing every click on it. */
   const runtime = fmtRuntime(e.runtimeSecs);
   body.innerHTML =
     `<h2 class="disp" style="margin:0"><a href="${epLink}">${esc(e.title || "Untitled episode")}</a></h2>

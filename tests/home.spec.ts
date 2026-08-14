@@ -8,7 +8,11 @@ import type { CoreData } from "../src/data/types";
 
 test("home shows hero and recent episodes from real data", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".cover-hero .pricebox")).toContainText(/\d+:\d\d/);
+  // Runtime sits in the hero's metadata line now, not as a badge over the artwork.
+  await expect(page.locator(".hero-side .micro")).toContainText(/\d+:\d\d/);
+  // And the flag is a band under the cover rather than a corner pinned on top of it, where
+  // it collided with the $3.99 printed into Mike's own artwork.
+  await expect(page.locator(".hero-art .hero-flag")).toBeVisible();
   await expect(page.locator(".hero-title")).not.toBeEmpty();
   const panels = page.locator(".panels .panel");
   await expect(panels).toHaveCount(8);
@@ -22,7 +26,10 @@ test("hero links to a real episode and counts are honest", async ({ page }) => {
   // and the comic count, and the first thing a reader asked of this page was which episode
   // it is. Both are still asserted, just where they now live.
   await expect(page.locator(".hero-side .hero-no")).toContainText(/EP\. \d+/);
-  await expect(page.locator(".hero-side .micro")).toContainText(/\w{3} \d+, \d{4} · \d+ comics? indexed/);
+  // Runtime sits between the date and the comic count now. Optional in the pattern because
+  // not every episode has one, and the hero falls back to the newest record either way.
+  await expect(page.locator(".hero-side .micro"))
+    .toContainText(/\w{3} \d+, \d{4}( · \d+:\d\d)? · \d+ comics? indexed/);
   await expect(page.locator(".sfx")).toContainText(/[\d,]+ comics!/);
   await page.locator(".big-play").click();
   await expect(page).toHaveURL(/#\/ep\//);

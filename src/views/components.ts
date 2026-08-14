@@ -4,12 +4,6 @@ import { jumpable } from "../search/engine";
 import { blankVariant, cover, num } from "./cover";
 import { href } from "../router";
 
-/** A comic cover carries a price; an episode carries a runtime. */
-export function priceBox(e: EpisodeCore): string {
-  const r = fmtRuntime(e.runtimeSecs);
-  return r ? `<span class="pricebox">${esc(r)}<small>Runtime</small></span>` : "";
-}
-
 export function epHref(e: EpisodeCore): string {
   return href("/ep/" + encodeURIComponent(e.key));
 }
@@ -25,7 +19,7 @@ function art(e: EpisodeCore): string {
       `aria-hidden="true" tabindex="-1">${blankVariant(e)}</a>`;
   }
   return `<a class="epw-art" href="${link}" tabindex="-1" aria-hidden="true">` +
-    `<img src="${esc(e.artwork)}" alt="" loading="lazy">${priceBox(e)}</a>`;
+    `<img src="${esc(e.artwork)}" alt="" loading="lazy"></a>`;
 }
 
 /**
@@ -39,9 +33,14 @@ export function episodePanel(e: EpisodeCore, opts?: { extra?: string }): string 
 
   /* A post-credits segment logs no comics and no minutes, so this card used to read
      "0 comics", "Panel unknown" and "0 mentions" — three labels announcing three absences.
-     Say nothing instead: a count of zero is not information a reader needs. */
-  const micro = [fmtDate(e.date) || "Date unknown", n ? `${n} comic${pl(n)}` : ""]
-    .filter(Boolean).join(" · ");
+     Say nothing instead: a count of zero is not information a reader needs.
+     Runtime joins them here rather than riding the artwork as a corner badge: it is a fact
+     about the episode, and pinned to the cover it covered the art it sat on. */
+  const micro = [
+    fmtDate(e.date) || "Date unknown",
+    e.runtimeSecs ? fmtRuntime(e.runtimeSecs) : "",
+    n ? `${n} comic${pl(n)}` : "",
+  ].filter(Boolean).join(" · ");
   const panel = e.people.join(", ");
 
   return `<article class="panel${opts?.extra ? " epcard" : ""}" data-ep="${esc(e.key)}"><div class="epw">` +

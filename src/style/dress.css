@@ -32,6 +32,8 @@ html[data-neg] .logo{color:#14120F}
   flex:0 0 auto; display:flex; align-items:center; justify-content:center;
 }
 .neg-toggle{padding:0 14px; gap:7px; font-size:11px; letter-spacing:.12em; font-weight:700; text-transform:uppercase}
+/* Butted panels, so their rings inset too — at +2px they overlap the neighbour's rule. */
+.neg-toggle:focus-visible,.upc:focus-visible,.latest:focus-visible,.blurb .go:focus-visible{outline-offset:-3px}
 /* Half-filled disc: the toggle's own two plates, drawn rather than typed for the same reason
    the barcode's triangle is. It is the whole label on a small phone. */
 .neg-toggle .swatch{
@@ -271,18 +273,6 @@ html[data-neg] .sfx{color:var(--paper); -webkit-text-stroke-color:var(--ink)}
 .bv-d{position:absolute; left:6%; right:6%; top:42%; font-family:var(--disp);
   font-variation-settings:"wdth" 100,"wght" 800; text-transform:uppercase; font-size:12cqw; line-height:.92; letter-spacing:.02em; opacity:.85}
 
-/* The price box, re-labeled: a comic cover carries a price, an episode carries a runtime.
-   It is absolutely positioned, so it MUST be dropped inside a `position:relative` box —
-   .epw-art, .hero-art and .issue-head .art all provide one. The Wall's rail did not, and
-   the badge resolved against #rail and sat on top of the close button, eating every click
-   on it. If there is no artwork to pin to, render the runtime as text instead. */
-.pricebox{
-  position:absolute; right:0; top:0; z-index:2; background:var(--paper); color:var(--ink);
-  border:var(--rule) solid var(--ink); border-top:0; border-right:0; padding:3px 7px 3px 8px;
-  font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 900; font-size:12px;
-  letter-spacing:.02em; font-feature-settings:"tnum"; line-height:1.15; text-align:center;
-}
-.pricebox small{display:block; font-family:var(--body); font-size:7.5px; letter-spacing:.16em; font-weight:700; text-transform:uppercase; color:color-mix(in srgb, currentColor 60%, transparent)}
 
 /* comic-title band — the yellow plate */
 .band{
@@ -366,7 +356,11 @@ html[data-neg] .player .pp{border-color:#14120F}
    <wbr> after a slash, but never inside "X-Men". overflow-wrap stays free to break a single
    segment that fitPlates could not shrink to fit. */
 .gc-t .nb{white-space:nowrap}
-.gc-no{position:absolute; right:5%; bottom:5%; min-width:22%; text-align:center;
+/* right:6%, matching .gc-rule and .gc-pub. At 5% the box hung ~2px past the right end of the
+   rule directly above it while the publisher line on the left sat flush to it, so the plate
+   looked knocked out of true — on every generated plate, most visibly in the read-along
+   where the box is large against a small cover. */
+.gc-no{position:absolute; right:6%; bottom:5%; min-width:22%; text-align:center;
   background:var(--gc-t); color:var(--gc-f); border:2px solid var(--gc-t);
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 900; font-size:12px; padding:2px 4px}
 .gc-rule{position:absolute; left:6%; right:6%; bottom:16%; height:3px; background:var(--gc-t); opacity:.85}
@@ -382,11 +376,21 @@ html[data-neg] .player .pp{border-color:#14120F}
 .hero-art{position:relative; border-bottom:var(--rule) solid var(--ink); background:var(--paper-2);
   background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:6px 6px}
 @media(min-width:900px){ .hero-art{border-right:var(--rule) solid var(--ink); border-bottom:0} }
+/* White under the image, not just behind the box. Mike's post-credits artwork is a PNG with
+   alpha, so on the warm --paper-2 ground the whole cover composited grey — the $3.99 plate and
+   the avatars came out muted beside the opaque JPEGs next to them. An opaque cover cannot see
+   this rule; only the transparent ones land as they were drawn. */
+.hero-art img,.epw-art img,.issue-head .art img{background:#FFFFFF}
 .hero-art img{width:100%; aspect-ratio:1/1; object-fit:cover; filter:saturate(.92) contrast(1.04)}
+/* A band under the cover, not a corner pinned on top of it. It used to sit bottom-left, which
+   is exactly where Mike's artwork prints its $3.99 — the two were fighting over the same
+   corner on every phone. Full width and butted to the art, so it reads as the cover's own
+   cover line. */
 .hero-flag{
-  position:absolute; bottom:0; left:0; z-index:2; background:var(--red-deep); color:var(--paper);
-  padding:6px 11px; font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900;
-  font-size:12px; letter-spacing:.05em; text-transform:uppercase; border:var(--rule) solid var(--ink); border-bottom:0; border-left:0;
+  display:block; background:var(--red-deep); color:var(--paper); text-align:center;
+  padding:7px 11px; font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900;
+  font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+  border-top:var(--rule) solid var(--ink);
 }
 html[data-neg] .hero-flag{color:#14120F}
 .hero-side{padding:18px; display:flex; flex-direction:column; gap:13px; min-width:0; justify-content:center}
@@ -530,8 +534,14 @@ html[data-neg] .adslot .go{color:#14120F}
 
 /* ---------- read-along, three states ---------- */
 .togg{display:flex; border:var(--rule) solid var(--ink)}
-.togg button{padding:7px 10px; font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; min-height:38px; white-space:nowrap}
+.togg button{padding:7px 11px; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  font-weight:700; min-height:calc(var(--ctl-h) - 2 * var(--rule)); white-space:nowrap}
 .togg button+button{border-left:var(--rule) solid var(--ink)}
+/* The ring goes inside. The global :focus-visible is 3px at +2px offset, which is right for a
+   button with air around it and wrong for one butted inside a rule: on a 38px button in a
+   42px group it draws 48px and punches out of the group top and bottom, which reads as a
+   border glitch rather than as focus. Same reason .blurb input and .facet inset theirs. */
+.togg button:focus-visible{outline-offset:-3px}
 .togg button[aria-pressed=true]{background:var(--ink); color:var(--paper)}
 html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 .togg button:hover{background:var(--yellow); color:#14120F}
@@ -640,6 +650,23 @@ html[data-neg] .big-play:hover{color:#14120F}
   background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:6px 6px; position:relative}
 @media(min-width:700px){ .credit-head .por{border-bottom:0; border-right:var(--rule) solid var(--ink)} }
 .credit-head .por img{width:100%; aspect-ratio:1/1; object-fit:contain; object-position:bottom}
+/* Stand-in for a guest with no portrait: the masthead badge's own colours — yellow field,
+   red bar, paper strip — blown up and blurred past reading, then screened with the same dot
+   field the roster blocks use. Drawn rather than an image file, so it costs no request and
+   inverts with the plate. inset:-25% keeps the blur's soft edge outside the frame instead of
+   fading to the ground at the border. */
+.noface{position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--yellow)}
+.noface::before{
+  content:""; position:absolute; inset:-25%; filter:blur(26px);
+  background:
+    linear-gradient(180deg, var(--red) 0 34%, transparent 34% 100%),
+    linear-gradient(0deg, var(--paper) 0 22%, transparent 22% 100%),
+    var(--yellow);
+}
+.noface::after{
+  content:""; position:absolute; inset:0;
+  background-image:radial-gradient(var(--dot) 33%,transparent 35%); background-size:6px 6px;
+}
 .credit-head .info{padding:18px; display:flex; flex-direction:column; gap:11px}
 .credit-head h1{margin:0; font-size:clamp(27px,6vw,46px)}
 .tagline{font-family:var(--hand); font-variation-settings:"BNCE" 0,"INFM" 20; font-size:17px; font-style:italic}
@@ -666,7 +693,12 @@ html[data-neg] .big-play:hover{color:#14120F}
 .railbox .rh{background:var(--ink); color:var(--paper); padding:5px 10px; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:700}
 html[data-neg] .railbox .rh{color:#14120F}
 .railbox .rb{padding:10px; display:flex; flex-direction:column; gap:7px}
-.railbox .rb.rows{padding:0}
+/* `gap:0` as well as `padding:0`. A row facet separates itself with a rule, so the 7px
+   inherited from .rb was paper showing between them — which only became obvious once a row
+   was painted: the selected red and the hovered yellow stopped short of their neighbours and
+   the whole group read as ragged. Worse stacked horizontally on a phone, where it left the
+   selected item visibly narrower than the two beside it. */
+.railbox .rb.rows{padding:0; gap:0}
 .facet{
   display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:7px 10px;
   border-top:var(--rule) solid var(--ink); color:var(--ink); font-size:12px; font-weight:600; min-height:40px;
@@ -1012,11 +1044,13 @@ html[data-neg] .pagemore{color:#14120F}
 
 
 
-/* Read-along: keep-rolling opt-in. Matches the .togg group it sits beside — ink rule,
-   paper ground, no invented widget. */
+/* Read-along: keep-rolling opt-in. It sits directly beside the .togg group and has to match
+   it, which it did not: .togg comes out 42px (38px buttons inside a 2px rule) against this
+   one's 34, and the type was 10.5px against 10. Both now come from --ctl-h so the pair cannot
+   drift apart again. */
 .roll{display:inline-flex; align-items:center; gap:7px; border:var(--rule) solid var(--ink);
-  background:var(--paper); padding:5px 9px; min-height:34px; cursor:pointer;
-  font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; white-space:nowrap}
+  background:var(--paper); padding:5px 11px; min-height:var(--ctl-h); cursor:pointer;
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; white-space:nowrap}
 .roll:hover{background:var(--yellow)}
 html[data-neg] .roll:hover{color:#14120F}
 .roll input{appearance:none; width:14px; height:14px; margin:0; flex:0 0 auto;

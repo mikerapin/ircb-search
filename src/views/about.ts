@@ -35,7 +35,12 @@ export function eraCounts(episodes: EpisodeCore[]): {
  * Every figure here is computed from the same files the rest of the site reads, so the page
  * cannot drift from the data it describes. Nothing is written down as a literal.
  */
-export async function viewAbout(): Promise<{ html: string; after: () => void }> {
+/* Sections a link elsewhere can point at. The hash is the router, so an in-page anchor has
+   nowhere to live — the target is a query parameter and the view scrolls to it after paint,
+   which is also after setView's own scrollTo(0,0). */
+const SECTIONS: Record<string, string> = { names: "why-the-names" };
+
+export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; after: () => void }> {
   const data = await core();
   const men = await loadMentions();
   const s = data.stats;
@@ -127,7 +132,7 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
       </dl>
     </section>` +
 
-    `<section class="sec">
+    `<section class="sec" id="why-the-names">
       <div class="sec-head"><h2 class="disp">Why The Comic Names Look Like That</h2>
         <span class="note">${nf(s.uniqueComics)} written names &rarr; ${nf(s.series)} series</span></div>
       <p class="lead">We wrote a comic down however it came up on the show, so the same run shows up as
@@ -159,5 +164,16 @@ export async function viewAbout(): Promise<{ html: string; after: () => void }> 
 
     subscribeCoupon();
 
-  return { html, after: () => {} };
+  const target = SECTIONS[qs?.get("to") ?? ""];
+  return {
+    html,
+    after: () => {
+      if (!target) return;
+      /* rAF, not the same tick: the view has been assigned but not laid out, so an immediate
+         scroll measures the old page's geometry. scrollIntoView honours the reduced-motion
+         override on html{scroll-behavior}. */
+      requestAnimationFrame(() =>
+        document.getElementById(target)?.scrollIntoView({ block: "start" }));
+    },
+  };
 }

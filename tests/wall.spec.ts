@@ -136,11 +136,12 @@ test("a square opens the episode in the rail, and the rail closes cleanly", asyn
   await expect(page.locator("#railbody h2")).not.toBeEmpty();
   await expect(page.locator("#railbody a[href^='#/ep/']").first()).toBeVisible();
 
-  /* The close button has to actually be clickable. `.pricebox` is position:absolute, and the
-     rail rendered it with no positioned box to pin to, so it resolved against #rail and sat
-     exactly on top of this button — every click bounced off the runtime badge. Only showed
-     up once the newest year moved to the top, because the 2015 episodes it used to click
-     carry no runtime and so rendered no badge at all. */
+  /* The close button has to actually be clickable. The runtime used to render as a
+     position:absolute badge on the cover, and the rail had no positioned box to pin it to,
+     so it resolved against #rail and sat exactly on top of this button — every click bounced
+     off it. Only showed up once the newest year moved to the top, because the 2015 episodes
+     it used to click carry no runtime and so rendered no badge at all. The badge is gone
+     now; the click is still worth guarding. */
   await page.locator("#rail-x").click({ timeout: 5000 });
   await expect(page.locator("#rail")).toBeHidden();
   // Hiding a container that holds focus strands the reader on <body>.

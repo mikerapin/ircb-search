@@ -143,7 +143,14 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
 
   const html = crumb() +
     `<section class="sec"><div class="credit-head">
-      <div class="por">${roster ? `<img src="${esc(roster.photo)}" alt="Portrait of ${esc(roster.display)}">` : `<div style="aspect-ratio:1/1"></div>`}</div>
+      <div class="por">${roster
+        ? `<img src="${esc(roster.photo)}" alt="Portrait of ${esc(roster.display)}">`
+        /* Guests get no portrait — the roster is the only set of faces we have rights to. An
+           empty box read as a failed image, so the space wears the show's own badge, blurred
+           past recognition and under the same dot screen the roster blocks sit on. It stands
+           in for a photo rather than saying anything, so it is hidden from assistive tech:
+           the heading beside it already names who this is. */
+        : `<div class="noface" aria-hidden="true"></div>`}</div>
       <div class="info">
         <div class="micro">${roster ? "Credits" : "Guest credits"}</div>
         <h1 class="disp">${esc(roster?.display ?? name)}</h1>

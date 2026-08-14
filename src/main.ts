@@ -62,7 +62,7 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       return [v.html, "The Index", v.after];
     }
     case "about": {
-      const v = await viewAbout();
+      const v = await viewAbout(r.qs);
       return [v.html, "About the Data", v.after];
     }
     case "subscribe": {

@@ -29,6 +29,11 @@
   --gc-red:#F04A3F;
   --dot:rgba(143,184,216,.55);
   --rule:2px;
+  /* Outer height of a small control — the read-along layout group, the keep-rolling box, and
+     anything else that has to sit level beside them. Those two were 42px and 34px, which is
+     visible the moment they are side by side. A control that sets its own height is how the
+     pair drifted apart, so it comes from here. Includes the rule, since box-sizing is border-box. */
+  --ctl-h:42px;
   --gut:12px;
   --pad:14px;
   --sec:34px;         /* air between sections — R1's #1 complaint */

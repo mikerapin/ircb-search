@@ -5,7 +5,7 @@ import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
 import { subscribeCoupon } from "./blocks";
-import { emptyState, episodePanel, priceBox, sfx } from "./components";
+import { emptyState, episodePanel, sfx } from "./components";
 import { blankVariant, fitPlates } from "./cover";
 import { raToggle, readAlong, rollToggle, wireReadAlong } from "./readalong";
 
@@ -103,7 +103,7 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   `</dl></div>`;
 
   const art = ep.artwork
-    ? `<div class="art"><img src="${esc(ep.artwork)}" alt="Episode artwork">${priceBox(ep)}${colophon}</div>`
+    ? `<div class="art"><img src="${esc(ep.artwork)}" alt="Episode artwork">${colophon}</div>`
     : `<div class="art" style="container-type:inline-size;background:var(--paper)">${blankVariant(ep)}${colophon}</div>`;
 
   /* A whole episode deserves a way to start it, not just a jump into somebody else's minute.

@@ -78,7 +78,7 @@ export async function viewSeries(name: string): Promise<{ html: string; after: (
     </div></section>` +
     (also.length
       ? `<section class="sec"><div class="sec-head"><h2 class="disp">See Also</h2>
-          <span class="note">Separate works that share the name<br><a href="${href("/about")}">Why they&rsquo;re shelved apart →</a></span></div>
+          <span class="note">Separate works that share the name<br><a href="${href("/about", { to: "names" })}">Why they&rsquo;re shelved apart →</a></span></div>
           <div class="chips">${also.map(r =>
             `<a class="chip" href="${href("/series/" + encodeURIComponent(r.name))}">${esc(r.name)}<span class="n">${nf(r.mentions)}</span></a>`).join("")}</div></section>`
       : "") +

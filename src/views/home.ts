@@ -1,10 +1,10 @@
 import { core, mentions as loadMentions } from "../data/load";
 import type { EpisodeCore } from "../data/types";
-import { esc, fmtDate, nf, pl } from "../lib/html";
+import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { patreonAd, panelGrid, shuffle, spinnerRack, statement, subscribeCoupon } from "./blocks";
 import { feedNumbers } from "../data/numbering";
-import { byDateDesc, epHref, episodeBadge, episodePanel, priceBox, sfx } from "./components";
+import { byDateDesc, epHref, episodeBadge, episodePanel, sfx } from "./components";
 import { fitPlates } from "./cover";
 
 /** Measure after the browser has laid the grid out, not in the same tick we injected it. */
@@ -16,10 +16,14 @@ function hero(e: EpisodeCore, feedNo: number | undefined): string {
   const badge = episodeBadge(e, feedNo);
   return `<section class="sec">
     <div class="cover-hero">
+      ${/* Both of these used to be pinned on top of the artwork. The flag sat over the
+            bottom-left corner, which is where Mike's covers print their price, and the
+            runtime box over the top-right. The cover is the one thing on this page nobody
+            needs help reading, so the flag is a band under it and the runtime has joined the
+            metadata line beside the title with the rest of the facts. */""}
       <div class="hero-art">
-        <span class="hero-flag">This week's episode</span>
         ${e.artwork ? `<img src="${esc(e.artwork)}" alt="Episode artwork for ${esc(e.title)}">` : ""}
-        ${priceBox(e)}
+        <span class="hero-flag">This week's episode</span>
       </div>
       <div class="hero-side">
         ${/* The number was inside the micro line, set at 10px between the date and the comic
@@ -27,7 +31,9 @@ function hero(e: EpisodeCore, feedNo: number | undefined): string {
               It is the episode's name, so it is now the first thing on the plate and reads
               as a number rather than as metadata. */
           badge ? `<div class="hero-no">${badge}</div>` : ""}
-        <div class="micro">${esc(fmtDate(e.date))} · ${e.mentionCount} comic${pl(e.mentionCount)} indexed</div>
+        <div class="micro">${esc(fmtDate(e.date))}${
+          e.runtimeSecs ? " · " + esc(fmtRuntime(e.runtimeSecs)) : ""
+        } · ${e.mentionCount} comic${pl(e.mentionCount)} indexed</div>
         <h1 class="hero-title disp"><a href="${epHref(e)}" style="color:inherit">${esc(e.title)}</a></h1>
         <div class="credits">${esc(e.people.join(", "))}</div>
         <a class="big-play" href="${epHref(e)}"><span aria-hidden="true">▶</span> Read &amp; listen</a>

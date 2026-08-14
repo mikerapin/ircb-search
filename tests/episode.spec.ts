@@ -17,7 +17,9 @@ async function openNewestEpisode(page: Page) {
 test("episode page shows artwork, credits, notes and read-along", async ({ page }) => {
   await openNewestEpisode(page);
   await expect(page.locator(".issue-head .art img")).toBeVisible();
-  await expect(page.locator(".issue-head .pricebox")).toContainText(/\d+:\d\d/);
+  // The colophon already carried Runtime while a badge said it again over the artwork.
+  await expect(page.locator(".issue-head .colo")).toContainText(/\d+:\d\d/);
+  await expect(page.locator(".issue-head .pricebox")).toHaveCount(0);
   await expect(page.locator(".crew a").first()).toHaveAttribute("href", /#\/who\//);
   await expect(page.locator(".notes")).not.toBeEmpty();
   await expect(page.locator("#dressno")).toHaveText("The Episode");
