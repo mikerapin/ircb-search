@@ -90,7 +90,9 @@ test("patreon house ad lists the bonus runs with real collection links", async (
 test("coupon carries the locked wording", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".coupon")).toContainText(
-    "New episode every Wednesday since 2015. Three people, a stack of comics, one hour — all catalogued in this index.");
+    "New episode every Wednesday since 2015. Three people and a stack of comics, an hour at a time.");
+  /* The site speaks as "we" everywhere else, and this heading was the one place it did not. */
+  await expect(page.locator(".coupon")).toContainText("Next Wednesday, we do it again.");
 });
 
 test("rack and shuffle hydrate after first paint", async ({ page }) => {

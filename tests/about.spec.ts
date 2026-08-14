@@ -51,7 +51,7 @@ test("every figure on the page matches the data", async ({ page }) => {
   expect(text).toContain(nf(noMinute));
   // The jumpable figure must be the jumpable count, not merely the with-a-minute count —
   // those differ, and the page is claiming what the play controls actually honour.
-  expect(text).toMatch(new RegExp(`${nf(canJump)} can actually be jumped into`));
+  expect(text).toMatch(new RegExp(`${nf(canJump)} can be jumped into`));
   expect(text).toContain(`${nf(s.indexedEpisodes)} episodes indexed`);
 });
 

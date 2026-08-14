@@ -110,13 +110,14 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
     </section>` +
 
     `<section class="sec">
-      <div class="sec-head"><h2 class="disp">What&rsquo;s Missing</h2>
-        <span class="note">We&rsquo;d rather tell you</span></div>
+      ${/* The note read "We'd rather tell you" — the section is the honesty, and announcing
+            it is the page congratulating itself for having written it. */""}
+      <div class="sec-head"><h2 class="disp">What&rsquo;s Missing</h2></div>
       <dl class="kv">
         <div><dt>Minutes</dt><dd><b>${nf(noMinute)} of our ${nf(men.length)} logged comics have no timestamp.</b>
           Mostly somebody caught the book but not the minute; ${nf(tagged)} came from an episode&rsquo;s tags,
           which never had a minute to catch. Those show <b>&mdash;:&mdash;&mdash;</b> and link to the
-          episode rather than fake a play button. ${nf(canJump)} can actually be jumped into.</dd></div>
+          episode. ${nf(canJump)} can be jumped into.</dd></div>
         <div><dt>Dates</dt><dd>${nf(undated)} episodes have no recoverable air date, so they sort last and sit
           outside every calendar.</dd></div>
         <div><dt>Blank spots</dt><dd>${nf(noMention)} episodes have no comic data at all. That&rsquo;s why we say
@@ -125,7 +126,7 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
           past the end of its own episode, which is a typo in the notes. We don&rsquo;t offer those as
           jumps.</dd></div>` : ""}
         ${noTitle ? `<div><dt>No title</dt><dd>${nf(noTitle)} record${pl(noTitle)} has no title at all. It still
-          gets a page, because it still happened.</dd></div>` : ""}
+          gets a page.</dd></div>` : ""}
         <div><dt>Names</dt><dd>${nf(ALIASED_REGULARS)} of our regulars turn up under a short name in some episodes,
           usually a first name. Every spelling resolves to one person so nobody&rsquo;s episode count gets split in
           half. Guests are whoever showed up in the credits and isn&rsquo;t on the roster.</dd></div>
@@ -146,7 +147,7 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
           and <i>Star Wars Visions</i> land on one page, and so do <i>Dead Dog&rsquo;s Bite</i> and
           <i>Dead Dogs Bite</i>. Each run shows up under whichever spelling we wrote most often.</dd></div>
         <div><dt>We don&rsquo;t fold</dt><dd>Anything that differs by a letter or a word. Merging <i>Monster</i>
-          with <i>Monsters</i> would quietly lie about which episode discussed which book, so those near-misses
+          with <i>Monsters</i> would put episodes under a book they never discussed, so those near-misses
           get a <b>See Also</b> instead.</dd></div>
         <div><dt>Volume years</dt><dd>A year in brackets usually gets dropped. We keep it when the same title
           turns up under two of them, which is how <i>Mister Miracle (1971)</i> and <i>Mister Miracle (2017)</i>

@@ -92,7 +92,7 @@ export function patreonAd(core: CoreData): string {
     <div class="hh"><span class="k">Only on Patreon</span>
       <span class="s">${runs.length} runs · ${nf(total)} episodes · house ad</span></div>
     <div class="hb">
-      <p>Some episodes are only available to those willing to toss a few bucks to us, all on Patreon.</p>
+      <p>Some episodes only go to the people who toss us a few bucks on Patreon.</p>
       <div class="adgrid">${runs.map(p =>
         `<a class="adslot" href="${esc(p.url)}" style="container-type:inline-size">` +
           cover(p.name, "", p.name, "PAT") +
@@ -109,8 +109,11 @@ export function subscribeCoupon(line?: string): string {
   return `<section class="sec"><div class="coupon">
     <span class="scissors" aria-hidden="true">✂</span>
     <div class="in">
-      <h2 class="disp">Next Wednesday, they do it again.</h2>
-      <p style="margin:0;max-width:58ch">${esc(line ?? "New episode every Wednesday since 2015. Three people, a stack of comics, one hour — all catalogued in this index.")}</p>
+      ${/* "they", once — the only third-person line on a site that says "we logged", "our
+            show notes" and "toss a few bucks to us" everywhere else. And the body told the
+            reader they were standing in an index while they were standing in it. */""}
+      <h2 class="disp">Next Wednesday, we do it again.</h2>
+      <p style="margin:0;max-width:58ch">${esc(line ?? "New episode every Wednesday since 2015. Three people and a stack of comics, an hour at a time.")}</p>
       <div class="subs">
         <a href="${SUBSCRIBE.apple}">Apple Podcasts</a>
         <a href="${SUBSCRIBE.spotify}">Spotify</a>
@@ -151,7 +154,9 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
 
   return `<section class="sec">
     <div class="sec-head"><h2 class="disp">The Shuffle</h2>
-      <span class="note">Three we pulled at random<br>Reload if you want three more</span></div>
+      ${/* Second line was "Reload if you want three more" — the same fault the Spinner Rack
+            note was cut for, describing a control the reader already has. */""}
+      <span class="note">Three we pulled at random</span></div>
     <div class="threeup">
 
       <div class="sh"><div class="shh">A panelist<span class="dice">${die(5)}</span></div>

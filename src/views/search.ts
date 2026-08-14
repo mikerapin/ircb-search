@@ -218,7 +218,7 @@ export async function viewSearch(qs: URLSearchParams): Promise<{ html: string; w
 
   if (!res.mentionTotal && !eps.length) {
     return { wire: () => { /* nothing paged on the empty state */ },
-      html: head + `<div class="empty"><b>No panel for that.</b> Nothing in the index matches. Try one of these:</div>` +
+      html: head + `<div class="empty"><b>No panel for that.</b> Try one of these:</div>` +
       `<div class="chips" style="padding-top:14px">${SUGGESTIONS.map(t =>
         `<a class="chip" href="${href("/search", { q: t })}">${esc(t)}</a>`).join("")}</div>` };
   }

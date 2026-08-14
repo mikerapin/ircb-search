@@ -182,7 +182,9 @@ function wire(data: CoreData, state: WallState): void {
     const label = state.q || state.who;
     resline.innerHTML = lit === null
       ? `<div class="m">${nf(grid.querySelectorAll(".cell").length)} episodes on the wall</div>` +
-        `<div class="s">Search or pick a panelist to light it up. Every square opens that episode.</div>`
+        /* "Every square opens that episode" described what a link does. Cut for the same
+           reason the Spinner Rack's second line went. */
+        `<div class="s">Search or pick a panelist to light it up.</div>`
       : `<div class="m"><span class="lit">${nf(hits)}</span> episode${pl(hits)} match ${esc(label)}</div>` +
         `<div class="s">${men ? "Searched titles, panels and every logged comic." : "Searching titles and panels — the comic index is still loading."}</div>`;
   };
