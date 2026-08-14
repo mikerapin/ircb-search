@@ -535,13 +535,19 @@ test("the lock screen is told what is playing, and told when it stops", async ({
      Both halves are read in ONE evaluate on purpose. Reading the session and then the element
      in two round-trips compares two different moments of a tape that is moving, and under CI
      load the gap is wide enough for playback to flip between them — this assertion failed
-     that way on bf9e3dd and again on b5f64e8, passing in isolation both times. The invariant
-     is that the pair agrees at an instant, so the pair has to be sampled at one. */
-  const shown = await page.evaluate(() => ({
-    state: navigator.mediaSession.playbackState,
-    paused: (document.getElementById("au") as HTMLAudioElement).paused,
-  }));
-  expect(shown.state).toBe(shown.paused ? "paused" : "playing");
+     that way on bf9e3dd and again on b5f64e8, passing in isolation both times.
+
+     Sampling together is necessary but not sufficient: agreement is eventual, not
+     instantaneous. `au.paused` flips the moment play() is called, while playbackState is
+     written by paintBar on the resulting `play` event, which is a task later — so a single
+     sample can legitimately land in between. That window was invisible until the stub's
+     runtime was fixed, because a seek clamped past the end left the tape paused and both
+     halves read "paused" in agreement by accident. Poll the pair until it agrees; the
+     guarantee the engine offers is that the OS is told promptly, not synchronously. */
+  await expect.poll(async () => page.evaluate(() => {
+    const a = document.getElementById("au") as HTMLAudioElement;
+    return `session=${navigator.mediaSession.playbackState} element=${a.paused ? "paused" : "playing"}`;
+  }), { timeout: 10000 }).toMatch(/session=(\w+) element=\1/);
   /* The episode title and panel are the second line — read from core.json, not the heading,
      which the stylesheet renders uppercase and innerText returns transformed. */
   expect(on.artist).toContain(ep!.title);
