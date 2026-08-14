@@ -3,6 +3,7 @@ import { ROSTER, panelistNames } from "../data/roster";
 import type { CoreData, EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
+import { feedNumbers } from "../data/numbering";
 import { readAlong } from "./readalong";
 
 /**
@@ -53,7 +54,17 @@ function cell(e: EpisodeCore): string {
 /** Shared with the panelist mini-wall, which passes `only`. */
 export function wallGrid(episodes: EpisodeCore[], opts?: { only?: Set<string>; mini?: boolean }): string {
   const rows = yearRows(episodes);
-  const cols = rows.reduce((m, r) => Math.max(m, r.eps.length), 1);
+  /* One column per episode, capped, so a busy year wraps onto a second and third line
+     instead of stretching every row thinner.
+
+     The grid was built when a year meant the public feed — 63 episodes at the very most,
+     which is why 63 is the stylesheet's own fallback. Folding in the Patreon shelf took 2020
+     to 135, and because the track count is the busiest year every other row was drawn at half
+     the cell size and left trailing off into whitespace. The narrow breakpoint has always
+     capped at 13 and wrapped; this is the same idea at the width where it was never needed
+     before. Column N is still week N of that year, so the years still line up. */
+  const WEEKS = 63;
+  const cols = Math.min(WEEKS, rows.reduce((m, r) => Math.max(m, r.eps.length), 1));
   const only = opts?.only;
   const undated = episodes.filter(e => !e.date).length;
 
@@ -207,7 +218,7 @@ function wire(data: CoreData, state: WallState): void {
   view.addEventListener("click", ev => {
     const t = ev.target as HTMLElement;
     const c = t.closest<HTMLElement>(".cell");
-    if (c) { openRail(c.dataset["cell"] ?? "", byKey, () => men, gap); return; }
+    if (c) { openRail(c.dataset["cell"] ?? "", byKey, () => men, gap, state); return; }
     const hit = t.closest<HTMLElement>("[data-act]");
     if (!hit) return;
     const act = hit.dataset["act"];
@@ -258,6 +269,10 @@ function openRail(
   byKey: Map<string, EpisodeCore>,
   men: () => Mention[] | null,
   gap: { episodes: number; indexed: number },
+  /* What lit the square the reader just clicked. The wall says an episode matched; without
+     this the rail then showed a list of twenty comics with no sign of which one it was, or a
+     panel line with no sign of which name. */
+  focus?: { q: string; who: string },
 ): void {
   const rail = document.getElementById("rail");
   const body = document.getElementById("railbody");
@@ -268,7 +283,14 @@ function openRail(
 
   const list = men();
   const mine = list ? list.filter(m => m.epKey === key) : [];
-  if (label) label.textContent = e.date ? fmtDate(e.date) : "Undated";
+  /* The number first: it is what the show calls this episode, and the rail was the one place
+     you could open an episode without being told which one it is. Episodes with no number —
+     the pre-feed catalogue and the Patreon shelf — just get the date, as before. */
+  const no = feedNumbers([...byKey.values()]).get(e.key);
+  if (label) {
+    label.textContent = [no ? `EP. ${nf(no)}` : "", e.date ? fmtDate(e.date) : "Undated"]
+      .filter(Boolean).join(" · ");
+  }
 
   const epLink = href("/ep/" + encodeURIComponent(e.key));
   /* The rail has always read the runtime as text rather than as a badge on the cover, and
@@ -276,13 +298,31 @@ function openRail(
      artwork; here there was no artwork to pin to, so it resolved against #rail itself and
      landed on the close button, swallowing every click on it. */
   const runtime = fmtRuntime(e.runtimeSecs);
+  /* A panelist filter names someone exactly; a text query can also land on a person, since
+     the wall's search reads titles, panels and comics alike. Either way the name that did it
+     gets marked rather than left for the reader to find. */
+  const term = (focus?.q ?? "").trim().toLowerCase();
+  const markName = (name: string): string =>
+    (focus?.who && name === focus.who) || (term && name.toLowerCase().includes(term))
+      ? `<mark>${esc(name)}</mark>` : esc(name);
   body.innerHTML =
     `<h2 class="disp" style="margin:0"><a href="${epLink}">${esc(e.title || "Untitled episode")}</a></h2>
-     <div class="credits">${esc([...e.people, runtime].filter(Boolean).join(" · "))}</div>
+     <div class="credits">${e.people.map(markName).join(" · ")}</div>
+     ${runtime ? `<div class="micro raildur">${esc(runtime)}</div>` : ""}
      ${list === null
         ? `<p class="lead">Loading the comics for this one…</p>`
         : readAlong(mine, byKey, gap, { mode: "list", withDate: false })}
      <p style="margin:0"><a href="${epLink}">Open the full episode →</a></p>`;
+
+  /* After the innerHTML, not woven into readAlong: which row matched is a fact about this
+     rail's own query and nothing the read-along should have to carry through three callers. */
+  if (term) {
+    for (const row of body.querySelectorAll<HTMLElement>(".rawrap")) {
+      const hit = [...row.querySelectorAll(".cm")]
+        .some(c => (c.textContent ?? "").toLowerCase().includes(term));
+      row.classList.toggle("qhit", hit);
+    }
+  }
 
   rail.hidden = false;
   if (scrim) scrim.hidden = false;
