@@ -151,14 +151,64 @@ test("timestamp rows are honest about what cannot be played", async ({ page }) =
   await page.getByRole("button", { name: "Timestamps" }).click();
   const rows = page.locator("#readalong .ra-row");
   await expect(rows.first()).toBeVisible();
-  // Every row either offers a real minute or says plainly that it has none.
+  /* Every row either offers a real minute or says plainly that it has none — and on this
+     page a row that has none offers nothing at all. It used to carry an "Open" cue pointing
+     at the episode the reader was already on, so the link did nothing when clicked. */
   const bad = await rows.evaluateAll(els => els.filter(el => {
     const t = el.querySelector<HTMLElement>(".t")?.textContent ?? "";
     const cue = el.querySelector<HTMLElement>(".cue")?.textContent ?? "";
     const playable = /\d+:\d\d/.test(t);
-    return playable ? !cue.includes("Play") : !(t.includes("—") && cue.includes("Open"));
+    return playable ? !cue.includes("Play") : !(t.includes("—") && cue === "");
   }).length);
   expect(bad).toBe(0);
+});
+
+/**
+ * The show notes stamp a segment once and then list what was discussed under it, so one minute
+ * routinely carries a pile of books — 19 on the Superman episode, 47 on the worst, and about a
+ * quarter of every stamped row in the archive sits in such a pile. A row each meant a screen of
+ * identical timestamps offering identical jumps to the same second.
+ *
+ * The episode is chosen out of the data rather than pinned, so this keeps working as the
+ * archive grows, and the expected count comes from the mention list rather than from the
+ * markup — a count read off the page could only ever agree with whatever the page did.
+ */
+test("comics sharing a minute are one row, not one row each", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+  const pick = await page.evaluate(async () => {
+    const [core, men] = await Promise.all([
+      fetch("d/core.json").then(r => r.json() as Promise<CoreData>),
+      fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>),
+    ]);
+    const withAudio = new Set(core.episodes.filter(e => e.enclosure).map(e => e.key));
+    const byEp = new Map<string, Mention[]>();
+    for (const m of men) {
+      if (m.secs == null || !withAudio.has(m.epKey)) continue;
+      if (!byEp.has(m.epKey)) byEp.set(m.epKey, []);
+      byEp.get(m.epKey)!.push(m);
+    }
+    for (const [key, list] of byEp) {
+      const tally = new Map<number, number>();
+      for (const m of list) tally.set(m.secs!, (tally.get(m.secs!) ?? 0) + 1);
+      const [secs, n] = [...tally].sort((a, b) => b[1] - a[1])[0]!;
+      if (n >= 3) return { key, secs, n, stamps: tally.size };
+    }
+    return null;
+  });
+  expect(pick, "no episode stamps three comics at one minute").not.toBeNull();
+
+  await page.goto("/#/ep/" + encodeURIComponent(pick!.key));
+  await page.getByRole("button", { name: "Timestamps" }).click();
+  await page.waitForSelector("#readalong .ra-row");
+
+  // One row per distinct logged minute, not one per comic.
+  const stamped = page.locator("#readalong .rawrap.panel");
+  await expect(stamped).toHaveCount(pick!.stamps);
+
+  // And the busiest of them carries every comic logged at that minute.
+  const titles = await page.locator(`#readalong .rawrap[data-secs="${pick!.secs}"] .cm`).count();
+  expect(titles).toBe(pick!.n);
 });
 
 test("the strip scrolls itself and never the page", async ({ page }) => {
@@ -307,8 +357,11 @@ test("a read-along row with no logged minute refuses honestly", async ({ page })
   expect(dead.length).toBeGreaterThan(0);
   for (const r of dead) {
     expect(r.stamp).toContain("—");          // no invented timestamp
-    expect(r.cue).toContain("Open");         // and no play cue it cannot honour
-    expect(r.href).toMatch(/^#\/ep\//);      // links to the episode, never off-site
+    expect(r.cue).toBe("");                  // and no cue it cannot honour
+    /* Not a link either. On this episode's own read-along the only place an "Open" could
+       point is the page already on screen, so the row stopped being an anchor rather than
+       offering a click that does nothing. */
+    expect(r.href).toBeNull();
   }
   // ...and the playable ones really are buttons, not links.
   for (const r of rows.filter(r => r.playable)) expect(r.stamp).toMatch(/\d+:\d\d/);

@@ -119,7 +119,7 @@ export function firstNames(people: string[]): string {
 }
 
 /** Shared by search results and the episode read-along. */
-export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { until?: number | null }): string {
+export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { until?: number | null; here?: boolean }): string {
   const yr = ep?.date ? ep.date.slice(0, 4) : null;
   const no = num(m.comic, null);
   const noLab = no === "—" && yr ? yr : null;
@@ -145,7 +145,7 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { u
       (m.segment ? `<span class="seg" title="${esc(m.segment)}">${esc(m.segment)}</span>` : "") +
       `<div class="spacer"></div>` +
       `<div class="cutslot"></div>` +
-      playAffordance(m, ep) +
+      playAffordance(m, ep, { here: opts?.here }) +
     `</div>` +
   `</article>`;
 }
@@ -167,7 +167,7 @@ export function emptyState(title: string, message: string, linkHref: string, lin
  * The one place a play affordance is built. Every read-along layout and every search plate
  * goes through it, so changing how playback is offered is one function, not a sweep.
  */
-export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: { label?: string }): string {
+export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: { label?: string; here?: boolean }): string {
   const epLink = href("/ep/" + encodeURIComponent(m.epKey));
   const label = opts?.label ?? "Jump";
   /* One guard, not two. jumpable() already requires an enclosure, so the "no audio, link
@@ -180,6 +180,10 @@ export function playAffordance(m: Mention, ep: EpisodeCore | undefined, opts?: {
     const why = !ep?.enclosure ? "No audio on file"
       : m.secs == null ? "No minute logged"
       : "Timestamp out of range";
+    /* `here` means this card is on that episode's own page, where "Open" pointed at the page
+       the reader was already on and did nothing when clicked. The refusal is the whole
+       message there, so it stops being a link. */
+    if (opts?.here) return `<span class="ts dead">${why}</span>`;
     return `<a class="ts dead" href="${epLink}">${why}<span class="lab">Open</span></a>`;
   }
   /* Plays in the page. The engine seeks with currentTime and never touches the enclosure

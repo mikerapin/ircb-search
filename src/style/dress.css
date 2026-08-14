@@ -574,6 +574,10 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 .ra-row .cm{display:block; font-size:15px; font-weight:600; line-height:1.3; overflow-wrap:anywhere}
 .ra-row .mt{display:block; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; margin-top:3px; color:color-mix(in srgb, currentColor 62%, transparent)}
 .ra-row .cue{font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:color-mix(in srgb, var(--ink) 72%, transparent); white-space:nowrap}
+/* A row on the episode's own page that cannot be played is not a link, so it must not offer
+   the hover a link gets. .ra-row:hover matches any element, div included. */
+.ra-row.static{cursor:default}
+.ra-row.static:hover{background:transparent; color:inherit}
 .ra-row:hover{background:var(--yellow); color:#14120F; text-decoration:none}
 /* .mt joins them: at .62 its 10.5px inherited #14120F over the fixed yellow hover ground
    measured 4.38:1, just under the 4.5:1 floor, on both plates. */
