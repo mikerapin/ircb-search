@@ -100,8 +100,8 @@ export async function viewWall(qs: URLSearchParams): Promise<{ html: string; aft
 
   const html =
     `<div class="pagehead"><div class="eyebrow">The whole run at once</div><h1 class="disp">The Wall</h1>
-      <p>All ${nf(data.stats.episodes)} of our episodes, ${nf(dated)} of them as squares. Search lights it up,
-      a panelist filters it, and any square opens that episode right where you are.</p></div>` +
+      <p>All ${nf(data.stats.episodes)} of our episodes as squares. Search and see the distribution of a topic or comic.
+       Filter by panelist. Click a square to play an episode right on this page.</p></div>` +
 
     `<section class="sec"><div class="wallwrap">
       <div class="wallctl">
@@ -110,13 +110,13 @@ export async function viewWall(qs: URLSearchParams): Promise<{ html: string; aft
           aria-label="Search the wall"><button class="x" type="button" data-act="wclear">Clear</button></div>
       </div>
       <div class="ribbon" role="group" aria-label="Filter the wall by panelist">${ROSTER.map(p =>
-        `<button class="pface" type="button" data-act="wwho" data-who="${esc(p.name)}"` +
-          ` aria-pressed="${who === p.name}" title="${esc(p.tagline)}">` +
-          `<img src="${esc(p.photo)}" alt="" loading="lazy"><span>${esc(p.display.split(" ")[0] ?? p.display)}</span></button>`
-        ).join("")}</div>
+      `<button class="pface" type="button" data-act="wwho" data-who="${esc(p.name)}"` +
+      ` aria-pressed="${who === p.name}" title="${esc(p.tagline)}">` +
+      `<img src="${esc(p.photo)}" alt="" loading="lazy"><span>${esc(p.display.split(" ")[0] ?? p.display)}</span></button>`
+    ).join("")}</div>
       <div class="wrack" id="wrack" style="margin:12px 0 16px"></div>
       <div class="resline" id="resline"></div>` +
-      wallGrid(data.episodes) +
+    wallGrid(data.episodes) +
     `</div></section>`;
 
   return { html, after: () => wire(data, { q, who, target }) };

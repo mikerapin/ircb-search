@@ -50,7 +50,7 @@ export function spinnerRack(mentions: Mention[]): string {
           reader being told something they can see. Now it says who and how many, and hands
           the rest of the shelf to anyone who wants it. */""}
     <div class="sec-head"><h2 class="disp">The Spinner Rack</h2>
-      <span class="note">The ${top.length} we talk about most<br>
+      <span class="note">The ${top.length} comics/topics we apparently talk about most<br>
         <a href="${href("/index")}">All ${nf(rows.length)} series →</a></span></div>
     <div class="rack">${top.map(t =>
       `<a class="slot" href="${href("/series/" + encodeURIComponent(t.name))}" style="container-type:inline-size" aria-label="${esc(t.name)}, ${t.mentions} mention${pl(t.mentions)}">` +
@@ -68,7 +68,7 @@ export function panelGrid(core: CoreData): string {
     .sort((a, b) => b.n - a.n);
   return `<section class="sec">
     <div class="sec-head"><h2 class="disp">The Panel</h2>
-      <span class="note">${ROSTER.length} regulars · ${nf(core.stats.people)} people have sat at this table<br>
+      <span class="note">${ROSTER.length} regulars · ${nf(core.stats.people)} guests in our backlog<br>
         <a href="${href("/panel")}">The full directory →</a></span></div>
     <div class="panelgrid">${rows.map(({ p, n }) =>
       `<a class="pblock" href="${href("/who/" + encodeURIComponent(p.name))}">` +
@@ -154,9 +154,7 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
 
   return `<section class="sec">
     <div class="sec-head"><h2 class="disp">The Shuffle</h2>
-      ${/* Second line was "Reload if you want three more" — the same fault the Spinner Rack
-            note was cut for, describing a control the reader already has. */""}
-      <span class="note">Three we pulled at random</span></div>
+      <span class="note">Random: A panelist. An episode. A marked segment.</span></div>
     <div class="threeup">
 
       <div class="sh"><div class="shh">A panelist<span class="dice">${die(5)}</span></div>

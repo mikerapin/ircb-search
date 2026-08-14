@@ -22,8 +22,8 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
 
   const html =
     `<div class="pagehead"><div class="eyebrow">Index</div><h1 class="disp">Panelists &amp; Guests</h1>
-      <p>${nf(ROSTER.length)} regulars, with portraits and taglines. Everyone else turned up in our credits at
-      least once: a creator who came on, a friend who filled a chair. Everybody gets a page.</p>
+      <p>${nf(ROSTER.length)} regulars plus anyone else who turned up in our credits at
+      least once: a comic creator, an industry expert, or a friend who filled a spot on an episode. Everybody gets a page.</p>
       <div class="statline" style="max-width:none"><b>${nf(data.stats.people)}</b> names in the archive ·
         <b>${nf(ROSTER.length)}</b> on the roster · <b>${nf(guests.length)}</b> guests</div></div>` +
 
@@ -44,8 +44,8 @@ export async function viewPanel(): Promise<{ html: string; after: () => void }> 
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">Guests</h2>
         <span class="note">${nf(guests.length)} who aren&rsquo;t regulars</span></div>
-      <p class="lead">Creators, friends of the show and one-off chairs, counted straight off the credits of
-      all ${nf(data.stats.episodes)} episodes. The number is how many times they sat in.</p>
+      <p class="lead">Creators, friends of the show and one-off guests, computed from the credits of
+      all ${nf(data.stats.episodes)} episodes. The number is how many times they joined us.</p>
       <div class="azgrid">${buckets.map(b =>
         `<div class="azsec"><h3>${b.letter}<span>${nf(b.rows.length)}</span></h3>` +
           b.rows.map(name => {

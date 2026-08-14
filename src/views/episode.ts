@@ -143,14 +143,14 @@ export async function viewEpisode(key: string): Promise<{ html: string; after: (
   const raSection = (): string =>
     `<div class="sec-head"><h2 class="disp">Read Along</h2>
       <div class="tools">${raToggle()}${rollToggle()}</div>
-      <span class="note">In broadcast order · a jump stops at the next comic unless you let it roll</span></div>` +
+      <span class="note">In broadcast order · a timed segment stops at the next comic unless you let it roll</span></div>` +
     readAlong(mine, byKey, { episodes: data.stats.episodes, indexed: data.stats.indexedEpisodes });
 
   const html = head +
     `<section class="sec" id="readalong">${raSection()}</section>` +
     (rel.length
       ? `<section class="sec">
-          <div class="sec-head"><h2 class="disp">If You Liked This One</h2><span class="note">Shared books &amp; shared panel</span></div>
+          <div class="sec-head"><h2 class="disp">If You Liked This One</h2><span class="note">Shared books &amp; shared panelists</span></div>
           <div class="panels">${rel.map(e => episodePanel(e)).join("")}</div>
         </section>`
       : "") +

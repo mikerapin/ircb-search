@@ -72,22 +72,22 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
       <div class="sec-head"><h2 class="disp">Where All This Came From</h2></div>
       <dl class="kv">
         <div><dt>Comics</dt><dd>Most comics here were logged by hand from our show notes, and
-          <a href="https://github.com/sshugars/ircb">sshugars/ircb</a> keeps that data in the open.
-          We build the whole site off it: ${nf(s.mentions)} comics across ${nf(s.indexedEpisodes)} episodes.
+          <a href="https://github.com/sshugars/ircb">sshugars/ircb</a> crunched the data into something we could use
+          to build this whole site. All in all: ${nf(s.mentions)} comics across ${nf(s.indexedEpisodes)} episodes.
           ${nf(men.length - noMinute)} of them have a minute attached, which is what lets you jump straight to
           where we started talking.</dd></div>
-        <div><dt>Tags</dt><dd>${nf(tagged)} more came from the keywords we file each episode under,
+        <div><dt>Tags</dt><dd>${nf(tagged)} more book referecnes came from the keywords we file each episode under,
           for books the notes never listed. They only ever join a run already on the shelf &mdash; a tag
           can add an episode to one, never start one &mdash; and they carry no minute, because a tag records
           that a book came up and nothing about when. They&rsquo;re marked <b>Tagged</b> in a checklist.</dd></div>
         <div><dt>Episodes</dt><dd>The same repo has our episode table, with titles, air dates and who was on the
           panel for all ${nf(s.episodes)} records. Our <a href="https://feeds.simplecast.com/U93zjuSN">Simplecast
-          feed</a> fills in artwork, runtimes and audio for the ${nf(feedEps)} episodes that made it there.</dd></div>
+          feed</a> fills in artwork, the runtimes and the playable audio for the ${nf(feedEps)} episodes that made it there.</dd></div>
         <div><dt>Audio</dt><dd>When you hit play you&rsquo;re hearing our actual feed. Nothing is re-hosted, so
           listening here counts the same as listening anywhere else.</dd></div>
-        <div><dt>Faces</dt><dd>IRCB&rsquo;s roster is ${ROSTER.length} regulars. Guests don&rsquo;t get a portrait,
-          so their pages run on the record alone.</dd></div>
-        <div><dt>Covers</dt><dd>Every comic wears a generated cover for now. Real cover art is on our list, and
+        <div><dt>Faces</dt><dd>IRCB&rsquo;s roster is ${ROSTER.length} regulars. We don't have easy access to guest portraits,
+          so their pages live on the record alone.</dd></div>
+        <div><dt>Covers</dt><dd>Every comic shows a text-based cover for now. Real cover art is on our list, and
           when we get there it&rsquo;ll come from GCD and Metron with credit. Those images belong to their
           publishers, and we&rsquo;d only use them to show you which book we meant.</dd></div>
       </dl>
@@ -101,11 +101,11 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
           a number, artwork, a runtime and audio, and our comic index reaches
           ${nf(s.indexedEpisodes)} of them.</dd></div>
         <div><dt>Before the feed</dt><dd>${nf(backCatalogue)} came before it. ${nf(backCatalogueDated)} of those
-          have an air date. What&rsquo;s missing is the audio, so those pages don&rsquo;t offer a play button, and
+          have an air date but what&rsquo;s missing is the audio (due to podcast feed limits from the early 2020s). Those old episode pages don&rsquo;t offer a play button, and
           they never got a number.</dd></div>
-        <div><dt>The Patreon shelf</dt><dd>${nf(patreonShelf)} are bonus episodes we made for Patreon members.
-          They never hit the public feed and most have no recoverable air date, so they link to Patreon instead
-          of audio. All told, ${nf(noAudio)} records have no audio on file.</dd></div>
+        <div><dt>The Patreon shelf</dt><dd>${nf(patreonShelf)} are podcast episodes we made for Patreon members.
+          Most never hit the public feed, so they link to Patreon instead
+          of letting you play audio. All told, ${nf(noAudio)} records have no audio on file.</dd></div>
       </dl>
     </section>` +
 
@@ -115,28 +115,28 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
       <div class="sec-head"><h2 class="disp">What&rsquo;s Missing</h2></div>
       <dl class="kv">
         <div><dt>Minutes</dt><dd><b>${nf(noMinute)} of our ${nf(men.length)} logged comics have no timestamp.</b>
-          Mostly somebody caught the book but not the minute; ${nf(tagged)} came from an episode&rsquo;s tags,
-          which never had a minute to catch. Those show <b>&mdash;:&mdash;&mdash;</b> and link to the
-          episode. ${nf(canJump)} can be jumped into.</dd></div>
-        <div><dt>Dates</dt><dd>${nf(undated)} episodes have no recoverable air date, so they sort last and sit
-          outside every calendar.</dd></div>
-        <div><dt>Blank spots</dt><dd>${nf(noMention)} episodes have no comic data at all. That&rsquo;s why we say
+          What happened was: our notes referenced a comic but didn't include a timestamp; ${nf(tagged)} came from an episode&rsquo;s tags,
+          which would never have timestamp to reference. For these cases, we show <b>&mdash;:&mdash;&mdash;</b> and link to the
+          episode. ${nf(canJump)} tags <em>can</em> be jumped into.</dd></div>
+        <div><dt>Dates</dt><dd>${nf(undated)} episodes have no recoverable air date, so they sort last in search and sit
+          outside The Wall calendar.</dd></div>
+        <div><dt>Blank spots</dt><dd>${nf(noMention)} episodes have no comic to reference. That&rsquo;s why we say
           <b>${nf(s.indexedEpisodes)} episodes indexed</b> and not ${nf(s.episodes)} searchable.</dd></div>
         ${pastRuntime ? `<div><dt>Bad stamps</dt><dd>${nf(pastRuntime)} comic${pl(pastRuntime)} carries a timestamp
           past the end of its own episode, which is a typo in the notes. We don&rsquo;t offer those as
           jumps.</dd></div>` : ""}
-        ${noTitle ? `<div><dt>No title</dt><dd>${nf(noTitle)} record${pl(noTitle)} has no title at all. It still
+        ${noTitle ? `<div><dt>No title</dt><dd>${nf(noTitle)} record${pl(noTitle)} has no title at all, but it still
           gets a page.</dd></div>` : ""}
         <div><dt>Names</dt><dd>${nf(ALIASED_REGULARS)} of our regulars turn up under a short name in some episodes,
           usually a first name. Every spelling resolves to one person so nobody&rsquo;s episode count gets split in
-          half. Guests are whoever showed up in the credits and isn&rsquo;t on the roster.</dd></div>
+          half (<em>phew!</em>). Guests are whoever showed up in the credits and aren't on the regular panelist list.</dd></div>
       </dl>
     </section>` +
 
     `<section class="sec" id="why-the-names">
       <div class="sec-head"><h2 class="disp">Why The Comic Names Look Like That</h2>
         <span class="note">${nf(s.uniqueComics)} written names &rarr; ${nf(s.series)} series</span></div>
-      <p class="lead">We wrote a comic down however it came up on the show, so the same run shows up as
+      <p class="lead">We wrote the name of a comic in our notes however it came up on the show, so the same run shows up as
       <i>Saga</i>, <i>Saga #12</i> and <i>Saga Vol. 3</i>. To get one page per run, ${nf(folded)} of those
       ${nf(s.uniqueComics)} names fold into another.</p>
       <dl class="kv">
@@ -144,7 +144,7 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
           <b>Chapter 381</b>. Also <b>ft.</b> credits, and the stray HTML that rode in with some scraped show
           notes.</dd></div>
         <div><dt>We fold</dt><dd>Spellings that differ only in punctuation or capitals. <i>Star Wars: Visions</i>
-          and <i>Star Wars Visions</i> land on one page, and so do <i>Dead Dog&rsquo;s Bite</i> and
+          and <i>Star Wars Visions</i> end up on the same page, and so do <i>Dead Dog&rsquo;s Bite</i> and
           <i>Dead Dogs Bite</i>. Each run shows up under whichever spelling we wrote most often.</dd></div>
         <div><dt>We don&rsquo;t fold</dt><dd>Anything that differs by a letter or a word. Merging <i>Monster</i>
           with <i>Monsters</i> would put episodes under a book they never discussed, so those near-misses
@@ -157,8 +157,8 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
 
     `<section class="sec">
       <div class="sparse">
-        That&rsquo;s all ${nf(s.episodes)} of our episode records, every one of the ${nf(s.mentions)} comics we
-        logged, ${nf(s.series)} series and the ${nf(s.people)} people who have sat at the table.
+        That&rsquo;s all ${nf(s.episodes)} of our episode records. Every one of the ${nf(s.mentions)} comics we
+        logged, ${nf(s.series)} series, and the ${nf(s.people)} people who have sat at the table.
         <a href="${href("/index")}">Go browse the whole index &rarr;</a>
       </div>
     </section>` +
