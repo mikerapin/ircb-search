@@ -1,6 +1,7 @@
 import { core, mentions as loadMentions } from "../data/load";
 import { ROSTER_MAP, isRoster } from "../data/roster";
 import { seriesRows } from "../data/series-index";
+import { TAGGED } from "../data/shape";
 import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -54,6 +55,7 @@ export async function viewSeries(name: string): Promise<{ html: string; after: (
 
   const pat = data.patreonSeries.find(p => lc.includes(p.pattern.toLowerCase()));
   const total = mine.length, epCount = eps.size;
+  const nTagged = mine.filter(m => m.segment === TAGGED).length;
 
   const html =
     `<div class="crumb"><a href="${href("/")}">← The Cover</a> · <a href="${href("/index")}">The Index</a></div>` +
@@ -83,7 +85,13 @@ export async function viewSeries(name: string): Promise<{ html: string; after: (
     sfx(`${nf(total)} mention${pl(total)}`) +
     `<section class="sec">
       <div class="sec-head"><h2 class="disp">The Checklist</h2>
-        <span class="note">Oldest first · every time we wrote it exactly this way</span></div>
+        <span class="note">Oldest first · ${nTagged
+          /* The claim only holds for rows read out of the notes. A tagged row carries the
+             shelf's own name because that is all a keyword gives you, so a checklist holding
+             any has to say so rather than present them as our spelling on the day. */
+          ? `${nf(total - nTagged)} as we wrote ${total - nTagged === 1 ? "it" : "them"}, ` +
+            `${nf(nTagged)} from an episode&rsquo;s tags`
+          : "every time we wrote it exactly this way"}</span></div>
       <div class="checklist">
         <div class="hd"><span>Item &amp; where it came up</span><span class="r">${nf(rows.length)} row${pl(rows.length)}</span></div>
         ${rows.map(m => checklistRow(m, byKey.get(m.epKey))).join("")}
