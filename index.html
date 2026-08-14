@@ -22,7 +22,16 @@
       </a>
       <div class="dress-meta">
         <span class="micro" id="dressno"></span>
-        <button class="neg-toggle" id="neg" aria-pressed="false">Negative</button>
+        <!-- Phones only. The dress label names the page you are already looking at, which is
+             the one thing a reader does not need told; this puts the newest episode one tap
+             away instead. renderShell fills it, and it stays hidden until it has a target. -->
+        <a class="latest" id="latest" hidden></a>
+        <!-- The word is the label on anything wider than a small phone; below that the swatch
+             carries it alone and the text stays for assistive tech. aria-label rather than the
+             text node, so the accessible name does not change with the viewport. -->
+        <button class="neg-toggle" id="neg" aria-pressed="false" aria-label="Negative plate">
+          <span class="swatch" aria-hidden="true"></span><span class="lbl">Negative</span>
+        </button>
         <button class="upc" id="navbtn" aria-expanded="false" aria-controls="menu">
           <span class="bars" aria-hidden="true"></span>
           <span class="cr" aria-hidden="true">▾</span>

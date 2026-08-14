@@ -14,25 +14,49 @@ html[data-neg] .logo{color:#14120F}
   background-image:radial-gradient(var(--ink) 32%,transparent 34%); background-size:4px 4px}
 .logo-wm{font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; text-transform:uppercase;
   font-size:13px; line-height:.86; letter-spacing:.01em; max-width:6.2em}
-.dress-meta{flex:1 1 auto; display:flex; align-items:center; justify-content:flex-end; gap:12px; padding:0 10px; overflow:hidden}
+/* align-items:stretch, not center: the logo block sets the row height and the two controls
+   now fill it, so the masthead reads as three panels butted together rather than as a red
+   block with two small chips floating beside it. padding:0 keeps their borders touching. */
+.dress-meta{flex:1 1 auto; display:flex; align-items:stretch; justify-content:flex-end; gap:0; padding:0; overflow:hidden}
+.dress-meta .micro{display:flex; align-items:center; padding:0 12px}
 /* 10.5px, and the last element opacity on small text in this file. It measures fine where
    it sits, but the fade belongs in the colour: on any ground this label is later moved to,
    opacity is the version contrast.spec cannot see. */
 .dress-meta .micro{white-space:nowrap; color:color-mix(in srgb, currentColor 85%, transparent)}
-.neg-toggle{border:2px solid var(--ink); padding:4px 8px; font-size:10px; letter-spacing:.12em; font-weight:700; text-transform:uppercase; background:var(--paper)}
+/* Both controls are full-height panels in the masthead row, bordered on the left only so the
+   run of them reads as a strip of panels: logo | label | negative | barcode. They were
+   free-floating chips at 34px inside a 48px row, which is what made them read as incidental
+   next to the logo and the search button. */
+.neg-toggle,.upc{
+  border:0; border-left:var(--rule) solid var(--ink); background:var(--paper);
+  flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+}
+.neg-toggle{padding:0 14px; gap:7px; font-size:11px; letter-spacing:.12em; font-weight:700; text-transform:uppercase}
+/* Half-filled disc: the toggle's own two plates, drawn rather than typed for the same reason
+   the barcode's triangle is. It is the whole label on a small phone. */
+.neg-toggle .swatch{
+  width:14px; height:14px; border-radius:50%; border:2px solid currentColor; flex:0 0 auto;
+  background:linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
 .neg-toggle:hover{background:var(--ink); color:var(--paper)}
 html[data-neg] .neg-toggle:hover{color:#14120F}
+.neg-toggle[aria-pressed=true]{background:var(--ink); color:var(--paper)}
+html[data-neg] .neg-toggle[aria-pressed=true]{color:#14120F}
 
 /* the barcode IS the menu */
-.upc{
-  display:flex; align-items:center; gap:6px; border:2px solid var(--ink); background:var(--paper);
-  padding:4px 7px; flex:0 0 auto; min-height:34px;
-}
+.upc{gap:8px; padding:0 14px}
 .upc .bars{
-  width:42px; height:20px; display:block;
+  width:46px; height:24px; display:block;
   background-image:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 9px);
 }
-.upc .cr{font-size:9px; font-weight:800; letter-spacing:.08em}
+/* Was a 9px "▾" that read as dust. It is the only thing saying the barcode opens something,
+   so it is a real triangle at a real size — drawn in CSS so it cannot be a font's idea of a
+   glyph, which is what made it inconsistent across platforms. */
+.upc .cr{
+  width:0; height:0; font-size:0;
+  border-left:6px solid transparent; border-right:6px solid transparent;
+  border-top:8px solid currentColor;
+}
 .upc:hover,.upc[aria-expanded=true]{background:var(--yellow); color:#14120F}
 .upc:hover .bars,.upc[aria-expanded=true] .bars{background-image:repeating-linear-gradient(90deg,#14120F 0 2px,transparent 2px 4px,#14120F 4px 5px,transparent 5px 9px)}
 .menu{
@@ -66,7 +90,15 @@ html[data-neg] .menu .mh{color:#14120F}
   font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 700; font-size:16px;
   text-transform:uppercase; letter-spacing:.02em; color:#14120F;
 }
-.blurb input::placeholder{color:color-mix(in srgb, #14120F 70%, var(--yellow)); opacity:1}
+/* It read as a filled-in value because it was the same display face at the same weight as a
+   real query, so the weight is what separates them — 700 to 400. The colour does the rest,
+   and cannot do much: this is 16px, which is not large text, so it needs 4.5:1 on the yellow.
+   Measured against #FDC22D, 65% is 4.74:1 and the next step down is 4.36:1, so 65% is the
+   floor rather than a preference. Do not dim it further without dropping to a larger size. */
+.blurb input::placeholder{
+  color:color-mix(in srgb, #14120F 65%, var(--yellow)); opacity:1;
+  font-variation-settings:"wdth" 112,"wght" 400;
+}
 /* outline:0 removed the only focus cue on the site's main control; the tint left behind
    was 1.18:1. Ink, not blue: the ring sits on the yellow band. */
 .blurb input:focus{background:rgba(255,255,255,.35)}
@@ -85,6 +117,46 @@ html[data-neg] .blurb .go{background:#14120F; color:var(--yellow)}
 .slash{padding:0 10px; font-size:10px; letter-spacing:.1em; font-weight:700;
   color:color-mix(in srgb, #14120F 74%, var(--yellow)); white-space:nowrap}
 @media(max-width:640px){ .slash{display:none} }
+
+/* The dress label names the page you are on, which on a phone costs the width that a way
+   back to this week's episode could use. Below 760px they swap: label out, latest episode in.
+   Desktop keeps the label and hides the link — there the number in the label is already
+   doing the job of saying the archive is current. */
+.latest{
+  display:none; align-items:center; padding:0 12px; white-space:nowrap;
+  border-left:var(--rule) solid var(--ink); background:var(--yellow); color:#14120F;
+  font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 800;
+  text-transform:uppercase; font-size:12px; letter-spacing:.05em;
+}
+.latest[hidden]{display:none}
+.latest:hover{background:var(--ink); color:var(--paper); text-decoration:none}
+html[data-neg] .latest:hover{color:#14120F}
+@media(max-width:759px){
+  .dress-meta .micro{display:none}
+  .latest:not([hidden]){display:flex}
+  /* Three controls at desktop padding come to 288px beside a 139px logo, which does not fit
+     a 390px phone — and .dress-meta clips its overflow to the left, so it was the "EP." of
+     the latest-episode link that disappeared under the logo rather than anything visibly
+     breaking. Tighten the padding and the bars instead of dropping a control. */
+  .latest,.neg-toggle,.upc{padding:0 9px}
+  .upc{gap:6px}
+  .upc .bars{width:34px}
+  .latest,.neg-toggle{font-size:11px; letter-spacing:.06em}
+}
+/* Under ~430px even that does not fit, and the word "Negative" is the widest thing in the
+   row. The swatch says the same thing in 14px; the accessible name is on the button, so
+   nothing is lost to a screen reader. */
+@media(max-width:430px){
+  .neg-toggle .lbl{display:none}
+  .neg-toggle{padding:0 11px; gap:0}
+}
+/* 320px is the narrowest viewport worth supporting and it was still 14px over. The barcode
+   is the one element here that loses nothing by being narrower — it is a texture, not a
+   readable code. */
+@media(max-width:359px){
+  .latest,.upc{padding:0 7px}
+  .upc .bars{width:24px}
+}
 
 /* ---------- typeahead popover (A2 pattern, Indicia dress) ---------- */
 .ta{
@@ -252,7 +324,10 @@ html[data-neg] .ts:not(.dead){color:#14120F}
 /* :not(.dead) for the same reason as the rule above — .ts.dead keeps its paper-2 ground on
    hover (it is declared later), so this rule alone made the hovered dead row dark-on-dark. */
 html[data-neg] .ts:hover:not(.dead){color:#14120F}
-.ts .tri{font-size:11px}
+/* 11px, and these are the play/open glyphs on every jump control on the site. At that size
+   they were being zoomed into on a phone to work out what they were, so they go up to 15 and
+   stop shrinking with their label. */
+.ts .tri{font-size:15px; line-height:1; flex:0 0 auto}
 .ts .lab{margin-left:auto; font-size:10px; letter-spacing:.1em;
   color:color-mix(in srgb, currentColor 88%, transparent)}
 .ts.dead{background:var(--paper-2); color:color-mix(in srgb, var(--ink) 78%, var(--paper-2)); cursor:default}
@@ -315,6 +390,17 @@ html[data-neg] .player .pp{border-color:#14120F}
 }
 html[data-neg] .hero-flag{color:#14120F}
 .hero-side{padding:18px; display:flex; flex-direction:column; gap:13px; min-width:0; justify-content:center}
+/* The first question this page was asked was which episode it is, and the answer was set at
+   10px in the middle of a metadata line. It is the episode's name, so it gets named: display
+   face, red, on its own line above the title. gap:0 with the micro line under it so the two
+   read as one stacked block rather than as three evenly spaced things. */
+.hero-no{
+  font-family:var(--disp); font-variation-settings:"wdth" 125,"wght" 900; text-transform:uppercase;
+  font-size:clamp(22px,3.4vw,32px); line-height:.9; letter-spacing:.01em; color:var(--red-deep);
+  display:flex; align-items:center; gap:7px; margin-bottom:-7px;
+}
+.hero-no .pmark{width:20px; height:20px}
+.hero-no .pl{font-size:.62em}
 .hero-title{font-size:clamp(27px,6vw,50px); margin:0}
 /* episode badges: the Patreon mark and the bonus B sit on the micro line */
 .pmark{vertical-align:-1px; margin-right:3px}
@@ -355,7 +441,11 @@ html[data-neg] .rack .cnt{color:#14120F}
 .sh{border:var(--rule) solid var(--ink); display:flex; flex-direction:column; background:var(--paper); min-width:0}
 .sh .shh{background:var(--ink); color:var(--paper); padding:5px 10px; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:700; display:flex}
 html[data-neg] .sh .shh{color:#14120F}
-.sh .shh .dice{margin-left:auto; opacity:.7}
+/* The die is the only thing marking these three as the random picks, and it was set at the
+   header's 9.5px and faded on top of that. color-mix rather than opacity for the fade, per
+   the rule this file keeps re-learning: opacity is invisible to the contrast sweep. */
+.sh .shh .dice{margin-left:auto; display:flex; align-items:center;
+  color:color-mix(in srgb, currentColor 80%, transparent)}
 .sh .shb{padding:12px; display:flex; flex-direction:column; gap:9px; flex:1 1 auto; min-width:0}
 .sh .shb h3{margin:0; font-size:clamp(17px,2.4vw,22px)}
 .sh .por{width:78px; height:78px; flex:0 0 auto; border:var(--rule) solid var(--ink); background:var(--paper-2);
@@ -413,7 +503,7 @@ html[data-neg] .adslot .go{color:#14120F}
 /* h2: the coupon is a top-level block, and on /subscribe it follows the h1 directly —
    an h3 there skips a level. */
 .coupon h2{margin:0 0 8px; font-size:clamp(21px,5vw,34px)}
-.coupon .scissors{position:absolute; top:-13px; left:16px; background:var(--paper); padding:0 6px; font-size:15px}
+.coupon .scissors{position:absolute; top:-15px; left:16px; background:var(--paper); padding:0 6px; font-size:20px; line-height:1}
 .coupon .subs{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px}
 .coupon .subs a{
   border:var(--rule) solid var(--ink); background:var(--ink); color:var(--paper);
@@ -427,6 +517,16 @@ html[data-neg] .adslot .go{color:#14120F}
 .coupon .subs a:hover{background:var(--red-deep); text-decoration:none}
 .coupon .subs a.alt{background:var(--paper); color:var(--ink)}
 .coupon .subs a.alt:hover{background:var(--yellow); color:#14120F}
+/* Patreon is the only one of these that costs money and the only one that is ours, so it
+   stops being the fourth identical button in the row. --red-deep rather than --red: paper on
+   --red is 3.86:1 and fails AA at this size.
+   `var(--paper)`, never a literal: the negative plate keeps red a background but flips the
+   text on it to dark, so --red-deep becomes #FF4A3D and paper becomes #14120F. Shipping
+   #F4F1E8 here — reasoning that a literal would "survive" the flip — is exactly backwards
+   and measured 2.95:1 on nine routes. The token gives 5.16:1 light and 5.61:1 negative. */
+.coupon .subs a.pat{background:var(--red-deep); color:var(--paper); gap:9px}
+.coupon .subs a.pat:hover{background:var(--ink); color:var(--paper)}
+.coupon .subs a.pat .pmark{width:17px; height:17px}
 
 /* ---------- read-along, three states ---------- */
 .togg{display:flex; border:var(--rule) solid var(--ink)}
@@ -835,7 +935,7 @@ body.rail-open #rail{transform:translateY(0)}
 .railhead{display:flex; align-items:center; gap:10px; background:var(--ink); color:var(--paper); padding:8px 12px; flex:0 0 auto}
 html[data-neg] .railhead{color:#14120F}
 .railhead .k{font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:700}
-.railhead .x{margin-left:auto; border:2px solid var(--paper); padding:2px 9px; font-size:12px; font-weight:800}
+.railhead .x{margin-left:auto; border:2px solid var(--paper); padding:3px 10px; font-size:16px; line-height:1; font-weight:800}
 html[data-neg] .railhead .x{border-color:#14120F}
 .railbody{overflow:auto; padding:14px; display:flex; flex-direction:column; gap:13px; -webkit-overflow-scrolling:touch}
 
@@ -861,7 +961,7 @@ html[data-neg] #minibar.paused .pp{color:#14120F; border-color:#14120F}
 #minibar .cm:hover{text-decoration:underline}
 #minibar .clk{font-size:11px; font-weight:700; letter-spacing:.04em; font-feature-settings:"tnum"; flex:0 0 auto; color:color-mix(in srgb, currentColor 80%, transparent)}
 @media(max-width:520px){ #minibar .clk{display:none} }
-#minibar .x{flex:0 0 auto; border:2px solid currentColor; padding:3px 9px; font-size:11px; font-weight:800; color:color-mix(in srgb, currentColor 75%, transparent)}
+#minibar .x{flex:0 0 auto; border:2px solid currentColor; padding:4px 10px; font-size:15px; line-height:1; font-weight:800; color:color-mix(in srgb, currentColor 75%, transparent)}
 #minibar .x:hover{opacity:1; background:var(--red-deep); border-color:var(--red-deep); color:var(--paper)}
 
 /* ---------- indicia footer ---------- */

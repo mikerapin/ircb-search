@@ -17,6 +17,25 @@ let cached = new Map<string, number>();
  * bonus content — the show numbers its minisodes in a separate run — and giving them one is
  * the mistake this replaced.
  */
+/**
+ * The most recent episode that has a number, with it. Null before any data has a date.
+ *
+ * "Most recent" has to mean most recent *numbered*: the archive holds Patreon records and a
+ * pre-feed back catalogue that never had a number, and one of those sorting first would make
+ * the masthead name an episode nobody can call by a number.
+ */
+export function newestNumbered(
+  episodes: EpisodeCore[],
+): { episode: EpisodeCore; no: number } | null {
+  const nos = feedNumbers(episodes);
+  let best: EpisodeCore | null = null;
+  for (const e of episodes) {
+    if (e.date && nos.has(e.key) && (!best?.date || e.date > best.date)) best = e;
+  }
+  const no = best ? nos.get(best.key) : undefined;
+  return best && no !== undefined ? { episode: best, no } : null;
+}
+
 export function feedNumbers(episodes: EpisodeCore[]): Map<string, number> {
   if (cachedFor === episodes) return cached;
   cached = new Map(

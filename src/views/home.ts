@@ -22,7 +22,12 @@ function hero(e: EpisodeCore, feedNo: number | undefined): string {
         ${priceBox(e)}
       </div>
       <div class="hero-side">
-        <div class="micro">${badge ? badge + " · " : ""}${esc(fmtDate(e.date))} · ${e.mentionCount} comic${pl(e.mentionCount)} indexed</div>
+        ${/* The number was inside the micro line, set at 10px between the date and the comic
+              count, and the first thing a reader asked of this page was which episode it is.
+              It is the episode's name, so it is now the first thing on the plate and reads
+              as a number rather than as metadata. */
+          badge ? `<div class="hero-no">${badge}</div>` : ""}
+        <div class="micro">${esc(fmtDate(e.date))} · ${e.mentionCount} comic${pl(e.mentionCount)} indexed</div>
         <h1 class="hero-title disp"><a href="${epHref(e)}" style="color:inherit">${esc(e.title)}</a></h1>
         <div class="credits">${esc(e.people.join(", "))}</div>
         <a class="big-play" href="${epHref(e)}"><span aria-hidden="true">▶</span> Read &amp; listen</a>

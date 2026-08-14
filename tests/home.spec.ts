@@ -18,7 +18,11 @@ test("home shows hero and recent episodes from real data", async ({ page }) => {
 
 test("hero links to a real episode and counts are honest", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".hero-side .micro")).toContainText(/EP\. \d+ · \w{3} \d+, \d{4} · \d+ comics? indexed/);
+  // The number left the micro line for its own block: it was set at 10px between the date
+  // and the comic count, and the first thing a reader asked of this page was which episode
+  // it is. Both are still asserted, just where they now live.
+  await expect(page.locator(".hero-side .hero-no")).toContainText(/EP\. \d+/);
+  await expect(page.locator(".hero-side .micro")).toContainText(/\w{3} \d+, \d{4} · \d+ comics? indexed/);
   await expect(page.locator(".sfx")).toContainText(/[\d,]+ comics!/);
   await page.locator(".big-play").click();
   await expect(page).toHaveURL(/#\/ep\//);
@@ -183,12 +187,14 @@ test("the hero wears the show's own episode number, not a count of anything", as
   const newest = feed[feed.length - 1]!;
 
   expect(newest.ep).toBeGreaterThan(0);
-  const micro = await page.locator(".hero-side .micro").innerText();
-  expect(micro).toContain(`EP. ${newest.ep}`);
-  // Neither the record count (950) nor the feed-item count (568) is an episode number.
+  await expect(page.locator(".hero-side .hero-no")).toHaveText(`EP. ${newest.ep}`);
+  // Neither the record count (949) nor the feed-item count (569) is an episode number.
+  // Swept over the whole hero, not just the block holding the number, so a count reappearing
+  // anywhere in it fails — which is the mistake this test exists to catch.
+  const hero = await page.locator(".hero-side").innerText();
   expect(newest.ep).toBeLessThan(feed.length);
-  expect(micro).not.toContain(String(core.stats.episodes));
-  expect(micro).not.toContain(`EP. ${feed.length}`);
+  expect(hero).not.toContain(String(core.stats.episodes));
+  expect(hero).not.toContain(`EP. ${feed.length}`);
   await expect(page.locator("#dressno")).toHaveText(`EP. ${newest.ep!.toLocaleString("en-US")}`);
   expect(newest.key).toBe(await page.locator(".hero-title a").getAttribute("href")
     .then(h => decodeURIComponent((h ?? "").replace("#/ep/", ""))));

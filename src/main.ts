@@ -11,7 +11,7 @@ import "./style/dress.css";
 
 import { initAudio } from "./audio/engine";
 import { core } from "./data/load";
-import { feedNumbers } from "./data/numbering";
+import { newestNumbered } from "./data/numbering";
 import { viewAbout } from "./views/about";
 import { nf } from "./lib/html";
 import { go, href, onRoute, type Route } from "./router";
@@ -77,11 +77,8 @@ async function view(r: Route, data: CoreData): Promise<ViewResult> {
       const h = await viewHome();
       /* The newest episode's real feed number, not the record count. Many of the
          records were never numbered feed episodes. */
-      const nos = feedNumbers(data.episodes);
-      const newest = data.episodes.reduce<EpisodeCore | null>(
-        (best, e) => (e.date && nos.has(e.key) && (!best?.date || e.date > best.date) ? e : best), null);
-      const no = newest ? nos.get(newest.key) : undefined;
-      return [h.html, no ? "EP. " + nf(no) : "The Cover", h.after];
+      const newest = newestNumbered(data.episodes);
+      return [h.html, newest ? "EP. " + nf(newest.no) : "The Cover", h.after];
     }
   }
 }
@@ -144,7 +141,7 @@ core().then(data => {
     void view(r, data).then(([html, label, after]) => {
       if (mine !== token) return;
       setView(html, label);
-      renderShell(data.stats);
+      renderShell(data);
       after?.();
     }).catch((err: unknown) => {
       // A view whose lazy chunk failed must say so; without this the old page just sits

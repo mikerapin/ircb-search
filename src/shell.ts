@@ -1,4 +1,5 @@
-import type { Stats } from "./data/types";
+import type { CoreData, Stats } from "./data/types";
+import { newestNumbered } from "./data/numbering";
 import { esc, nf } from "./lib/html";
 import { href, parseHash } from "./router";
 
@@ -93,9 +94,23 @@ export function initChrome(): void {
 
 /* The menu's "you are here" marker reads the hash directly, so this takes no `active`
    argument — call it on every route and the highlight follows. */
-export function renderShell(stats: Stats): void {
+export function renderShell(data: CoreData): void {
+  const { stats } = data;
   initChrome();
   buildMenu(stats);
+
+  /* Phones get the newest episode here instead of the dress label. The label names the page
+     the reader is already on, which is the one fact they have; a way back to this week's
+     episode from anywhere in the archive is not. Desktop keeps the label — it has the room
+     for both, and the number there is what tells you the archive is current. */
+  const latest = el<HTMLAnchorElement>("latest");
+  const newest = newestNumbered(data.episodes);
+  if (newest) {
+    latest.href = href("/ep/" + encodeURIComponent(newest.episode.key));
+    latest.textContent = `EP. ${nf(newest.no)} →`;
+    latest.setAttribute("aria-label", `Latest episode, ${newest.episode.title}`);
+  }
+  latest.hidden = !newest;
   el("foot-legal").innerHTML =
     "I Read Comic Books Search, a search index of the podcast <em>I Read Comic Books</em>, " +
     `published weekly since 2015 by Mike Rapin. ${nf(stats.episodes)} episodes and ` +

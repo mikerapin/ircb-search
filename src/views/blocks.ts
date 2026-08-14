@@ -5,6 +5,7 @@ import type { CoreData, EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, fmtRuntime, fmtShortDate, nf, pl } from "../lib/html";
 import { href } from "../router";
 import { jumpable } from "../search/engine";
+import { die, PATREON_MARK } from "./components";
 import { cover } from "./cover";
 
 const SUBSCRIBE = {
@@ -38,11 +39,19 @@ export function statement(core: CoreData): string {
 /* ---------- The Spinner Rack ---------- */
 
 export function spinnerRack(mentions: Mention[]): string {
-  const top = seriesRows(mentions).slice(0, 18);
+  const rows = seriesRows(mentions);
+  const top = rows.slice(0, 18);
   if (!top.length) return "";
   return `<section class="sec">
-    <div class="sec-head screened"><h2 class="disp">The Spinner Rack</h2>
-      <span class="note">Most discussed on air<br>Tap a cover for the whole run</span></div>
+    ${/* Was `sec-head screened`. The dot field sat behind the heading and its note and made
+          both harder to read for a texture the covers below already supply. */""}
+    ${/* The note read "Most discussed on air / Tap a cover for the whole run" — nobody was
+          doing the discussing, and the second line explained what a link does, which is the
+          reader being told something they can see. Now it says who and how many, and hands
+          the rest of the shelf to anyone who wants it. */""}
+    <div class="sec-head"><h2 class="disp">The Spinner Rack</h2>
+      <span class="note">The ${top.length} we talk about most<br>
+        <a href="${href("/index")}">All ${nf(rows.length)} series →</a></span></div>
     <div class="rack">${top.map(t =>
       `<a class="slot" href="${href("/series/" + encodeURIComponent(t.name))}" style="container-type:inline-size" aria-label="${esc(t.name)}, ${t.mentions} mention${pl(t.mentions)}">` +
         cover(t.name, "tall", t.name, null) +
@@ -106,7 +115,10 @@ export function subscribeCoupon(line?: string): string {
         <a href="${SUBSCRIBE.apple}">Apple Podcasts</a>
         <a href="${SUBSCRIBE.spotify}">Spotify</a>
         <a class="alt" href="${SUBSCRIBE.rss}">RSS</a>
-        <a class="alt" href="${SUBSCRIBE.patreon}">Patreon</a>
+        ${/* Patreon is the one of these that costs money and the only one that is ours, so
+              it wears its own colour and mark rather than sitting fourth in a row of
+              identical buttons. Same mark the Patreon-shelf badge uses. */""}
+        <a class="pat" href="${SUBSCRIBE.patreon}">${PATREON_MARK}Patreon</a>
       </div>
     </div>
   </div></section>`;
@@ -142,7 +154,7 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
       <span class="note">Three we pulled at random<br>Reload if you want three more</span></div>
     <div class="threeup">
 
-      <div class="sh"><div class="shh">A panelist<span class="dice" aria-hidden="true">⚄</span></div>
+      <div class="sh"><div class="shh">A panelist<span class="dice">${die(5)}</span></div>
         <div class="shb"><div class="toprow">
           <span class="por"><img src="${esc(person.photo)}" alt="" loading="lazy"></span>
           <div style="min-width:0"><h3 class="disp"><a href="${href("/who/" + encodeURIComponent(person.name))}" style="color:inherit">${esc(person.display)}</a></h3>
@@ -153,7 +165,7 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
         <div class="credits">${esc(fmtShortDate(ps?.first ?? null))} → ${esc(fmtShortDate(ps?.latest ?? null))}</div>
       </div></div>
 
-      <div class="sh"><div class="shh">From the back catalogue<span class="dice" aria-hidden="true">⚅</span></div>
+      <div class="sh"><div class="shh">From the back catalogue<span class="dice">${die(6)}</span></div>
         <div class="shb">
           <div class="credits">${esc(fmtDate(ep.date))}${ep.runtimeSecs ? " · " + esc(fmtRuntime(ep.runtimeSecs)) : ""}</div>
           <h3 class="disp"><a href="${href("/ep/" + encodeURIComponent(ep.key))}" style="color:inherit">${esc(ep.title || "Untitled episode")}</a></h3>
@@ -162,7 +174,7 @@ export function shuffle(core: CoreData, mentions: Mention[]): string {
           <a class="ts dark" href="${href("/ep/" + encodeURIComponent(ep.key))}"><span class="tri">▤</span>Open the episode<span class="lab">${ep.mentionCount} comic${pl(ep.mentionCount)}</span></a>
         </div></div>
 
-      <div class="sh"><div class="shh">One comic, one minute<span class="dice" aria-hidden="true">⚂</span></div>
+      <div class="sh"><div class="shh">One comic, one minute<span class="dice">${die(3)}</span></div>
         <div class="shb">
           <h3 class="disp" style="font-size:19px"><a href="${href("/series/" + encodeURIComponent(men.series))}" style="color:inherit">${esc(men.comic)}</a></h3>
           <div class="credits">${esc(menEp.title)}</div>

@@ -62,7 +62,29 @@ export function episodePanel(e: EpisodeCore, opts?: { extra?: string }): string 
 /* Inline rather than an icon font: a whole font for one glyph, loaded at runtime from
    somewhere, against a spec that forbids third-party requests. currentColor means it
    inherits on both plates. */
-const PATREON_MARK =
+/**
+ * A die, drawn rather than typed.
+ *
+ * The Shuffle's headers used ⚄ ⚅ ⚂, and how big those come out is the font's decision — at
+ * 16px Inter draws the face about 11px wide with pips a fraction of that, which is what left
+ * a reader zooming in with accessibility tools to work out what the mark even was. It is the
+ * same fault the ▴/▾ toggle had before it became a drawn shape: a glyph's size inside its em
+ * is not something CSS can reach.
+ */
+export function die(pips: 2 | 3 | 5 | 6): string {
+  const at: Record<number, Array<[number, number]>> = {
+    2: [[6, 6], [18, 18]],
+    3: [[6, 6], [12, 12], [18, 18]],
+    5: [[6, 6], [18, 6], [12, 12], [6, 18], [18, 18]],
+    6: [[6, 6], [18, 6], [6, 12], [18, 12], [6, 18], [18, 18]],
+  };
+  return `<svg class="die" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">` +
+    `<rect x="1.5" y="1.5" width="21" height="21" rx="4" fill="none" stroke="currentColor" stroke-width="2.2"/>` +
+    (at[pips] ?? []).map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.3" fill="currentColor"/>`).join("") +
+  `</svg>`;
+}
+
+export const PATREON_MARK =
   `<svg class="pmark" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" focusable="false">` +
     `<circle cx="15.2" cy="9.4" r="6.6" fill="currentColor"/>` +
     `<rect x="2" y="2.8" width="3.6" height="18.4" fill="currentColor"/>` +
