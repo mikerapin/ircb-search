@@ -6,6 +6,7 @@ Run this whenever the source data is updated.
 Requirements: pip install pandas openpyxl
 """
 
+import csv
 import json
 import os
 import re
@@ -30,6 +31,7 @@ DATA_DIR.mkdir(exist_ok=True)
 
 COMICS_URL = "https://github.com/sshugars/ircb/raw/main/tables/public_feed_comics.xlsx"
 EPISODES_URL = "https://github.com/sshugars/ircb/raw/main/tables/all_episodes.xlsx"
+NUMBERS_CSV = DATA_DIR / "episode-numbers.csv"
 RSS_URL = "https://feeds.simplecast.com/U93zjuSN"
 
 COMIC_COLS = ["comic", "show_id", "segment", "timestamp", "direct_url"]
@@ -66,7 +68,10 @@ def build_rss_maps():
                "title": (item.findtext("title") or "").strip() or None,
                "date": item.findtext("pubDate"),
                "show_id": (item.findtext("guid") or "").strip() or None,
-               "keywords": item.findtext(f"{{{_ITUNES_NS}}}keywords")}
+               "keywords": item.findtext(f"{{{_ITUNES_NS}}}keywords"),
+               # Only a `full` item is ever expected to carry an episode number — minisodes
+               # are numbered in their own run and bonuses take none. See _report_unnumbered.
+               "episode_type": item.findtext(f"{{{_ITUNES_NS}}}episodeType")}
         # The credits block lives in <description>, not itunes:summary. Panel and Guest are
         # the only roles that put someone on the episode — Producer, Post Production,
         # Prooflistener and Editor are crew, and the prooflistener in particular is a
@@ -204,6 +209,53 @@ def _report_stale(stale):
             f.write(f"stale={len(stale)}\n")
 
 
+def _report_unnumbered(rss):
+    """Say when episodes have aired since data/episode-numbers.csv was last topped up.
+
+    Episode numbers exist in exactly one place: the private IRCB Schedule workbook. They are
+    not in the feed — there is no itunes:episode tag on any item — nor in the show notes, and
+    they cannot be counted out, because a handful of episodes since 2024 took no number at all.
+    So the CSV is refreshed by hand, and the only real risk is that nobody notices it needs
+    to be.
+
+    Nobody did. Numbers went missing from 2024-03 to 2026-08 and the site simply showed no
+    EP. line, which looks like a design decision rather than a fault.
+
+    Trailing episodes only, counted by air date rather than by key, so it measures the one
+    thing that matters — how many have aired since the newest row in the CSV. An episode that
+    legitimately takes no number sits *between* numbered ones, so it leaves the trailing set
+    as soon as the next episode is numbered. Two is the trigger because the longest run of
+    consecutive unnumbered `full` items since 2024 is one; two in a row has never happened
+    without the CSV being behind.
+    """
+    if not NUMBERS_CSV.exists():
+        return
+    rows = list(csv.DictReader(NUMBERS_CSV.open()))
+    if not rows:
+        return
+    newest = max(r["date"] for r in rows)
+    later = sorted(
+        aired for aired in (_airdate(rec["date"]) for rec in rss.values()
+                            if rec["episode_type"] == "full")
+        if aired and aired > newest)
+    print(f"  → {len(later)} episode(s) aired since the newest numbered one ({newest})")
+    if len(later) < 2:
+        return
+    print(f"  ! data/episode-numbers.csv is behind: {', '.join(later)}")
+    github_output = os.environ.get("GITHUB_OUTPUT")
+    if github_output:
+        with open(github_output, "a") as f:
+            f.write(f"unnumbered={len(later)}\n")
+
+
+def _airdate(pubdate):
+    """The RFC-2822 pubDate as a plain ISO date, comparable to the CSV's own date column."""
+    try:
+        return parsedate_to_datetime(pubdate).date().isoformat()
+    except (TypeError, ValueError):
+        return None
+
+
 def export_episodes():
     print("Fetching episodes data from GitHub...")
     df = pd.read_excel(EPISODES_URL, engine="openpyxl")
@@ -211,6 +263,7 @@ def export_episodes():
 
     rss = build_rss_maps()
     df = append_missing(df, rss)
+    _report_unnumbered(rss)
 
     def rss_field(url, field):
         if not url or isinstance(url, float):

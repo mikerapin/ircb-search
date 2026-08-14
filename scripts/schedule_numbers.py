@@ -10,9 +10,9 @@ Comic Books" is labelled EP. 543.
 The workbook has the real numbers. It records *recording* dates and the feed records *air*
 dates, and the titles carry no "Episode N |" prefix to join on (upstream strips it), so the
 join is a monotone alignment on date: each feed episode takes the latest unclaimed sheet row
-recorded no more than LAG_MAX days before it aired. 414 of 440 land at exactly 3 days and none
-lands past 4 — which is the check that matters, because a match drifting out toward the
-14-day limit is the shape a wrong match has.
+recorded no more than LAG_MAX days before it aired. Nearly all land at exactly 3 days, the
+Sunday-record/Wednesday-air gap. The lag spread is the check that matters, and `main()` prints
+it: a match drifting out toward the 14-day limit is the shape a wrong match has.
 
 Episodes that match no sheet row keep NO number. They are the separately-numbered minisodes
 and the untitled one-offs, and the sheet lists them with a blank `Ep` — inventing a number

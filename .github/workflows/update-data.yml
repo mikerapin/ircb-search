@@ -97,3 +97,15 @@ jobs:
         run: |
           echo "::error::sshugars/ircb has not indexed ${{ steps.export.outputs.stale }} public episode(s). The site is serving them from RSS, so nothing is missing from the listing — but they have no comics or timestamps until that table catches up. Check whether the weekly job ran."
           exit 1
+
+      # Same shape and for the same reason: last, non-blocking, and it exists because the
+      # silent version of this went unnoticed for five months. Episode numbers live only in
+      # the private IRCB Schedule workbook — there is no itunes:episode tag in the feed and
+      # they cannot be counted out — so data/episode-numbers.csv is topped up by hand and the
+      # real failure is forgetting to. An episode with no number just renders without an EP.
+      # line, which looks deliberate.
+      - name: Flag episode numbers that have fallen behind
+        if: always() && steps.export.outputs.unnumbered != ''
+        run: |
+          echo "::error::${{ steps.export.outputs.unnumbered }} episodes have aired since the newest row in data/episode-numbers.csv, so they ship with no EP. number. Pull the IRCB Schedule workbook from Drive as xlsx and run: python scripts/schedule_numbers.py <path>"
+          exit 1
