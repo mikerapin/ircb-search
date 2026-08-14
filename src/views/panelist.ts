@@ -168,9 +168,16 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
             `<a class="chip" href="${href("/series/" + encodeURIComponent(s))}">${esc(s)}<span class="n">${nf(n)}</span></a>`).join("")}</div></section>`
       : "");
 
-  /* What the page is for. One episode is one square; a whole grid for that is noise
-     (Round 2 note). */
+  /* What the page is for, in the order the question arrives: the newest nine as plates, then
+     the whole run. The recent block is a sample, so "every episode" reads as the answer to
+     what it raises rather than as a preamble to it (Mike, 2026-08-14).
+     One episode is one square; a whole grid for that is noise (Round 2 note). */
   const episodes =
+    (recent.length
+      ? `<section class="sec"><div class="sec-head"><h2 class="disp">On the Panel</h2>
+          <span class="note">Newest first · ${nf(nEps)} total</span></div>
+          <div class="panels">${recent.map(e => episodePanel(e)).join("")}</div></section>`
+      : "") +
     (nEps > 1
       ? `<section class="sec"><details class="acc"><summary>Every episode with ${esc(firstName(name))} · ${nf(nEps)}</summary>
           <div class="accb"><div class="ra-list">${theirs.map(e =>
@@ -183,11 +190,6 @@ export async function viewPanelist(rawName: string): Promise<{ html: string; aft
             ? `<p style="margin:12px 0 0;font-size:12px">${nf(nEps - dated.length)} of their episodes have no air date.</p>`
             : "") +
           `</div></details></section>`
-      : "") +
-    (recent.length
-      ? `<section class="sec"><div class="sec-head"><h2 class="disp">On the Panel</h2>
-          <span class="note">Newest first · ${nf(nEps)} total</span></div>
-          <div class="panels">${recent.map(e => episodePanel(e)).join("")}</div></section>`
       : "");
 
   const side = `<aside class="rail">

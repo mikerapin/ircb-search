@@ -868,8 +868,19 @@ details.acc .accb{padding:12px}
    occupied before this existed; the placement is explicit because auto-placement would run
    rail, extras, mainpane across the tracks in that order and put the episode list in the
    262px rail column. */
-.whopage .more{order:2; border:var(--rule) solid var(--ink); background:var(--paper)}
-.whopage .mainpane{order:1; min-width:0}
+/* DOM order is the narrow order: the fold sits straight under the hero as one collapsed bar,
+   then the episodes. Shut it costs a single row, so the episode list still opens on the first
+   screen — which is why it can lead the page rather than trail it.
+
+   Trailing air belongs to the grid, not to whatever happens to be last inside it. It used to
+   come from the final .sec's own margin, so when the fold was ordered last — a bare div with
+   no such margin — the button sat flush against the subscribe coupon. Now the container owns
+   the gap and the last section gives its own up, which holds whichever block ends the page,
+   including a guest whose single undated episode leaves the episode pane empty. */
+.whopage{margin-bottom:var(--sec)}
+.whopage .mainpane>.sec:last-child{margin-bottom:0}
+.whopage .more{border:var(--rule) solid var(--ink); background:var(--paper)}
+.whopage .mainpane{min-width:0}
 /* The button carries the accordion's summary styling (see the selector lists above); these
    are the parts a <button> needs that a <summary> gets for free. */
 .whopage .foldbtn{width:100%; border:0; color:inherit; text-align:left}

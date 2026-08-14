@@ -94,10 +94,18 @@ test.describe("the supporting material folds on a narrow screen", () => {
     await expect(btn).toBeVisible();
     await expect(btn).toHaveAttribute("aria-expanded", "false");
 
-    // The point of the change: episodes above the fold, not under three blocks of context.
-    const ep = await page.locator(".mainpane").boundingBox();
-    const more = await page.locator(".more").boundingBox();
-    expect(ep!.y).toBeLessThan(more!.y);
+    /* The fold leads, but shut it is one bar, so it costs the episodes almost nothing — that
+       is what lets it sit up here rather than at the bottom. Measured against the fold, not
+       against the viewport: the hero is ~590px tall at this width and is what actually
+       decides whether the episodes clear the fold line. */
+    const more = (await page.locator(".more").boundingBox())!;
+    const ep = (await page.locator(".mainpane").boundingBox())!;
+    expect(more.height).toBeLessThan(70);
+    expect(ep.y).toBeGreaterThan(more.y);
+    expect(ep.y - more.y).toBeLessThan(120);
+
+    // Real air between the bar and what follows it — this was 0 when the fold ran last.
+    expect(ep.y - (more.y + more.height)).toBeGreaterThanOrEqual(20);
 
     // Shut means shut — the tenure strip and the co-panelist grid are off the page.
     await expect(page.locator(".rail .tenure")).toBeHidden();
@@ -106,6 +114,23 @@ test.describe("the supporting material folds on a narrow screen", () => {
     await btn.click();
     await expect(btn).toHaveAttribute("aria-expanded", "true");
     await expect(page.locator(".rail .tenure")).toBeVisible();
+  });
+
+  test("narrow: the newest episodes come before the full list, and nothing runs flush", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/#/who/Mike%20Rapin");
+    await page.waitForSelector("body[data-ready]");
+
+    // A sample, then the whole run — "every episode" answers what the recent block raises.
+    const panel = (await page.locator(".mainpane .panels").boundingBox())!;
+    const every = (await page.locator(".mainpane details.acc").boundingBox())!;
+    expect(every.y).toBeGreaterThan(panel.y);
+
+    /* And the page cannot end flush again. The coupon used to butt straight up against the
+       last block because the gap came from that block's own margin. */
+    const last = (await page.locator(".whopage").boundingBox())!;
+    const coupon = (await page.locator(".coupon").boundingBox())!;
+    expect(coupon.y - (last.y + last.height)).toBeGreaterThanOrEqual(20);
   });
 
   test("wide: the fold dissolves back into two columns", async ({ page }) => {
