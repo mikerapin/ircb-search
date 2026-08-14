@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio";
+import { stubAudio, stampsInsideTape, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio";
 import type { Page } from "@playwright/test";
 import type { CoreData } from "../src/data/types";
 
@@ -17,6 +17,9 @@ async function openEpisode(page: Page) {
   await page.waitForSelector("body[data-ready]");
   await page.locator(".cover-hero .big-play").click();
   await page.waitForSelector("#readalong .panel");
+  /* Real stamps routinely sit past the end of the stub — see stampsInsideTape. Any spec that
+     re-renders the read-along (switching layout) has to call it again for the new DOM. */
+  await stampsInsideTape(page);
 }
 
 /**
@@ -299,8 +302,24 @@ test("the roll preference persists", async ({ page }) => {
   await expect(page.locator('#readalong [data-act="roll"]')).not.toBeChecked();
 });
 
-test("the stub is long enough for these seeks", () => {
-  expect(FAKE_AUDIO_SECONDS).toBeGreaterThan(60);
+/**
+ * The guard that was supposed to catch this, rewritten so it can.
+ *
+ * It read `expect(FAKE_AUDIO_SECONDS).toBeGreaterThan(60)` — a constant against a literal,
+ * which passes forever and says nothing about the seeks. Meanwhile the thing it is named for
+ * was false half the time: the stamps come from whatever episode is newest, and 48% of
+ * episodes reach their first comic after the tape ends.
+ *
+ * Compare the stamps the page actually carries against the tape they get seeked into.
+ */
+test("every stamp the suite clicks is inside the stub", async ({ page }) => {
+  await stubAudio(page);
+  await openEpisode(page);
+  const stamps = await stampsInsideTape(page);
+  expect(stamps.length).toBeGreaterThan(0);
+  expect(Math.max(...stamps)).toBeLessThan(FAKE_AUDIO_SECONDS);
+  // Ordered, because a segment boundary is the next mention's start.
+  expect([...stamps].sort((a, b) => a - b)).toEqual(stamps);
 });
 
 test("the last jump clicked is the one that plays", async ({ page }) => {
@@ -359,6 +378,8 @@ test("a timestamp row plays in place", async ({ page }) => {
   await page.getByRole("button", { name: "Timestamps" }).click();
   const row = page.locator("#readalong .rawrap.panel button.ra-row[data-act=cut]").first();
   await expect(row).toBeVisible();
+  // The layout switch re-rendered the read-along, so openEpisode's restamping is gone with it.
+  await stampsInsideTape(page);
 
   await recordSeeks(page);
   const want = Number(await row.locator("..").getAttribute("data-secs"));

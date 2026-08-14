@@ -42,6 +42,46 @@ export const FAKE_AUDIO_SECONDS = SECONDS;
 export const SILENT_WAV_URI = "data:audio/wav;base64," + silentWav(5).toString("base64");
 
 /**
+ * Pull every logged minute on the page inside the stub's runtime, keeping their order.
+ *
+ * The read-along stamps real data and this tape is four minutes long, so whether a click's
+ * target existed was decided by what time that week's hosts reached their first comic.
+ * Measured over the archive: 48% of episodes get there after 4:00 and the median is 3:16, so
+ * roughly half the time the newest episode — whatever the Wednesday data job last published —
+ * asks the player to seek past the end of the tape. Chromium clamps that seek to the
+ * duration, fires `seeked` at 240, plays nothing and pauses. Every wait then times out with
+ * no error anywhere: `play()` resolves, `readyState` is 4, `au.error` is null. It reads
+ * exactly like a broken player.
+ *
+ * That is why these specs went from intermittently red to permanently red with nobody
+ * touching the audio engine, and why they fail identically on CI — same data, same clamp.
+ *
+ * Restamping keeps what the specs are about, that a click seeks the tape to its own control's
+ * `data-secs`, and drops the dependency on which episode is newest. Spacing is derived from
+ * how many stamps are on the page so they always fit, and `until` moves with `secs` because
+ * one mention's boundary is the next one's start.
+ */
+export async function stampsInsideTape(page: Page): Promise<number[]> {
+  return page.evaluate(tape => {
+    const wraps = [...document.querySelectorAll<HTMLElement>("#readalong .panel, #readalong .rawrap")]
+      .filter(el => el.dataset["secs"]);
+    const step = Math.max(1, Math.floor((tape - 8) / (wraps.length + 1)));
+    const out: number[] = [];
+    wraps.forEach((el, i) => {
+      const secs = 2 + i * step;
+      el.dataset["secs"] = String(secs);
+      if (el.dataset["until"]) el.dataset["until"] = String(secs + step);
+      /* The click handler reads the control's own data-secs first where it has one, so the
+         two must not disagree. The Timestamps row carries none and reads the wrapper. */
+      const btn = el.querySelector<HTMLElement>("[data-act=cut]");
+      if (btn?.dataset["secs"]) btn.dataset["secs"] = String(secs);
+      out.push(secs);
+    });
+    return out;
+  }, SECONDS);
+}
+
+/**
  * Serves the silence with range support, and records every URL the page asked for.
  * Returns the recorder so a spec can assert the enclosure went out untouched.
  */

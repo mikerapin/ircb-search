@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio } from "./fake-audio";
+import { stubAudio, stampsInsideTape } from "./fake-audio";
 import type { Page } from "@playwright/test";
 import type { CoreData, Mention } from "../src/data/types";
 
@@ -17,6 +17,8 @@ async function openEpisode(page: Page) {
   await page.waitForSelector("body[data-ready]");
   await page.locator(".cover-hero .big-play").click();
   await page.waitForSelector("#readalong .panel");
+  // Real stamps routinely sit past the end of the stub — see stampsInsideTape.
+  await stampsInsideTape(page);
 }
 
 /* Compress the first two segments into the stub's runtime, the way audio.spec does. */
