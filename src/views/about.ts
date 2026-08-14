@@ -76,7 +76,7 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
           to build this whole site. All in all: ${nf(s.mentions)} comics across ${nf(s.indexedEpisodes)} episodes.
           ${nf(men.length - noMinute)} of them have a minute attached, which is what lets you jump straight to
           where we started talking.</dd></div>
-        <div><dt>Tags</dt><dd>${nf(tagged)} more book referecnes came from the keywords we file each episode under,
+        <div><dt>Tags</dt><dd>${nf(tagged)} more book references came from the keywords we file each episode under,
           for books the notes never listed. They only ever join a run already on the shelf &mdash; a tag
           can add an episode to one, never start one &mdash; and they carry no minute, because a tag records
           that a book came up and nothing about when. They&rsquo;re marked <b>Tagged</b> in a checklist.</dd></div>
@@ -101,7 +101,7 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
           a number, artwork, a runtime and audio, and our comic index reaches
           ${nf(s.indexedEpisodes)} of them.</dd></div>
         <div><dt>Before the feed</dt><dd>${nf(backCatalogue)} came before it. ${nf(backCatalogueDated)} of those
-          have an air date but what&rsquo;s missing is the audio (due to podcast feed limits from the early 2020s). Those old episode pages don&rsquo;t offer a play button, and
+          have an air date but what&rsquo;s missing is the audio (due to podcast feed limits). Those old episode pages don&rsquo;t offer a play button, and
           they never got a number.</dd></div>
         <div><dt>The Patreon shelf</dt><dd>${nf(patreonShelf)} are podcast episodes we made for Patreon members.
           Most never hit the public feed, so they link to Patreon instead
@@ -117,7 +117,7 @@ export async function viewAbout(qs?: URLSearchParams): Promise<{ html: string; a
         <div><dt>Minutes</dt><dd><b>${nf(noMinute)} of our ${nf(men.length)} logged comics have no timestamp.</b>
           What happened was: our notes referenced a comic but didn't include a timestamp; ${nf(tagged)} came from an episode&rsquo;s tags,
           which would never have timestamp to reference. For these cases, we show <b>&mdash;:&mdash;&mdash;</b> and link to the
-          episode. ${nf(canJump)} tags <em>can</em> be jumped into.</dd></div>
+          episode. ${nf(canJump)} comic references <em>can</em> be jumped into.</dd></div>
         <div><dt>Dates</dt><dd>${nf(undated)} episodes have no recoverable air date, so they sort last in search and sit
           outside The Wall calendar.</dd></div>
         <div><dt>Blank spots</dt><dd>${nf(noMention)} episodes have no comic to reference. That&rsquo;s why we say

@@ -68,7 +68,7 @@ export function panelGrid(core: CoreData): string {
     .sort((a, b) => b.n - a.n);
   return `<section class="sec">
     <div class="sec-head"><h2 class="disp">The Panel</h2>
-      <span class="note">${ROSTER.length} regulars · ${nf(core.stats.people)} guests in our backlog<br>
+      <span class="note">${ROSTER.length} regulars · ${nf(core.stats.people)} total people in our backlog<br>
         <a href="${href("/panel")}">The full directory →</a></span></div>
     <div class="panelgrid">${rows.map(({ p, n }) =>
       `<a class="pblock" href="${href("/who/" + encodeURIComponent(p.name))}">` +

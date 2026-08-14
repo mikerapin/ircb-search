@@ -93,7 +93,6 @@ export function wallGrid(episodes: EpisodeCore[], opts?: { only?: Set<string>; m
 
 export async function viewWall(qs: URLSearchParams): Promise<{ html: string; after: () => void }> {
   const data = await core();
-  const dated = data.episodes.filter(e => e.date).length;
   const q = qs.get("q") ?? "";
   const who = qs.get("who") ?? "";
   const target = qs.get("e") ?? "";

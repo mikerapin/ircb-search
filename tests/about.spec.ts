@@ -51,7 +51,11 @@ test("every figure on the page matches the data", async ({ page }) => {
   expect(text).toContain(nf(noMinute));
   // The jumpable figure must be the jumpable count, not merely the with-a-minute count —
   // those differ, and the page is claiming what the play controls actually honour.
-  expect(text).toMatch(new RegExp(`${nf(canJump)} can be jumped into`));
+  //
+  // The noun matters as much as the number. This read "N tags can be jumped into" for one
+  // commit, and tagged mentions carry no minute by construction — 0 of 319 have one — so the
+  // page was advertising 1,967 jumps into a set that offers none. Pin the whole clause.
+  expect(text).toMatch(new RegExp(`${nf(canJump)} comic references can be jumped into`));
   expect(text).toContain(`${nf(s.indexedEpisodes)} episodes indexed`);
 });
 
