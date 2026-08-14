@@ -3317,6 +3317,11 @@
   "episodes": 2,
   "series": "Fun Home"
  },
+ "futility": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
  "future shock": {
   "type": "series",
   "episodes": 1,
@@ -3480,6 +3485,7 @@
   "episodes": 2,
   "spans": [
    "Godzilla vs America: Chicago",
+   "Godzilla vs. The Marvel Universe",
    "Godzilla's Monsterpiece Theatre Presents: Godzilla's The Odyssey",
    "Godzilla: Aftershock",
    "Godzilla: Heist",
@@ -3496,6 +3502,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Godzilla vs America: Chicago"
+ },
+ "godzilla vs. the marvel universe": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Godzilla vs. The Marvel Universe"
  },
  "godzilla’s monsterpiece theatre": {
   "type": "series",
@@ -4406,13 +4417,18 @@
  },
  "justice league": {
   "type": "series",
-  "episodes": 2,
+  "episodes": 3,
   "series": "Justice League"
  },
  "justice league unlimited": {
   "type": "series",
   "episodes": 1,
   "series": "Justice League Unlimited"
+ },
+ "justice league vs. godzilla vs. kong": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Justice League vs. Godzilla vs. Kong"
  },
  "k manga": {
   "type": "topic",
@@ -5579,6 +5595,11 @@
   "episodes": 2,
   "series": "Nancy"
  },
+ "narrow rooms": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Narrow Rooms"
+ },
  "naruto": {
   "type": "series",
   "episodes": 2,
@@ -6403,6 +6424,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "regicide": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Regicide"
+ },
  "relics of youth": {
   "type": "series",
   "episodes": 1,
@@ -6732,6 +6758,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Serenity No Power in the Verse"
+ },
+ "serpentine": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Serpentine"
  },
  "sex criminals": {
   "type": "series",
@@ -8599,6 +8630,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Unnatural"
+ },
+ "until we meet again": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Until We Meet Again"
  },
  "usagi yojimbo": {
   "type": "series",

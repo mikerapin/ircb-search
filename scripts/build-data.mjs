@@ -4,6 +4,7 @@ import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 const vite = await createServer({ server: { middlewareMode: true } });
 const shape = await vite.ssrLoadModule("/src/data/shape.ts");
 const seriesIndex = await vite.ssrLoadModule("/src/data/series-index.ts");
+const tags = await vite.ssrLoadModule("/src/data/tags.ts");
 
 const epsRaw = JSON.parse(readFileSync("data/episodes.json", "utf8"));
 const det = shape.shapeDetails(epsRaw);
@@ -84,18 +85,34 @@ const men = [
 /* The show's own RSS keywords, for books the comic rows missed. Only terms the taxonomy typed
    as a series, and only onto runs the list above already holds — a tag adds an episode to a
    page, it never opens one. Both the mentions and the chips on the episode page go through the
-   same resolver, so a tag cannot link to one page and file itself under another. */
-const resolveTag = shape.tagSeriesResolver(
-  JSON.parse(readFileSync("data/tag-taxonomy.json", "utf8")),
-  Object.fromEntries(Object.entries(
-    JSON.parse(readFileSync("data/tag-seeds.json", "utf8")).aliases)
-    .filter(([k]) => !k.startsWith("_"))),
-  men);
+   same resolver, so a tag cannot link to one page and file itself under another.
+
+   Classified here rather than read from data/tag-taxonomy.json. That file is derived, and
+   reading it made the classification as old as the last time somebody remembered to run the
+   generator — a week after the last run, six of the newest episode's seven terms named books
+   already on the shelf and not one of them landed. `men` at this point is the logged mentions
+   only, which is also the right evidence: the file on disk contains the tagged mentions this
+   step produces, so reading it back fed each build its own output. */
+const seeds = JSON.parse(readFileSync("data/tag-seeds.json", "utf8"));
+const taxonomy = tags.buildTaxonomy(det, men, eps, seeds);
+const resolveTag = shape.tagSeriesResolver(taxonomy, tags.seedAliases(seeds), men);
 const tagged = shape.shapeTaggedMentions(det, resolveTag, men);
 men.push(...tagged);
 shape.attachTagSeries(det, resolveTag);
 console.log(`  tags: ${tagged.length} mentions added, ` +
             `${new Set(tagged.map(m => m.series)).size} series pages touched`);
+
+/* Written for a person to read and diff — the 261-row review was done off this file and the
+   next one will be. It is an output, never an input: the classification above is already in
+   memory, so this cannot disagree with what shipped, and it cannot be stale because every
+   build rewrites it. Correct a wrong call in data/tag-seeds.json, which is the curated half. */
+writeFileSync("data/tag-taxonomy.json", JSON.stringify(taxonomy, null, 1) + "\n");
+const toRead = Object.entries(taxonomy).filter(([, v]) => v.review).map(([k]) => k);
+if (toRead.length) {
+  console.log(`  tags: ${toRead.length} term(s) may be comics we never logged — ` +
+              `${toRead.slice(0, 6).join(", ")}${toRead.length > 6 ? ", …" : ""}`);
+  console.log(`        promote one by adding it to data/tag-seeds.json "comics"`);
+}
 
 shape.attachMentionCounts(eps, men);
 
