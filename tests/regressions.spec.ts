@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio, stampsInsideTape } from "./fake-audio";
+import { stubAudio, stampsInsideTape, pickEpisode } from "./fake-audio";
 import type { Page } from "@playwright/test";
 
 /**
@@ -12,9 +12,11 @@ import type { Page } from "@playwright/test";
  */
 
 async function openEpisode(page: Page) {
-  await page.goto("/");
-  await page.waitForSelector("body[data-ready]");
-  await page.locator(".cover-hero .big-play").click();
+  /* A chosen episode, not the home hero. The hero is whichever one aired last, so every spec
+     here used to run against a target the weekly data job replaced — see pickEpisode. "plain"
+     means no two comics share a minute, so each .panel below is its own jump target and the
+     indices these specs count on mean what they say. */
+  await page.goto("/#/ep/" + encodeURIComponent(await pickEpisode(page, "plain")));
   await page.waitForSelector("#readalong .panel");
   // Real stamps routinely sit past the end of the stub — see stampsInsideTape.
   await stampsInsideTape(page);

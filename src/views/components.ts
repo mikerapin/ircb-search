@@ -119,7 +119,15 @@ export function firstNames(people: string[]): string {
 }
 
 /** Shared by search results and the episode read-along. */
-export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { until?: number | null; here?: boolean }): string {
+/**
+ * `inMoment` is a card that shares its logged minute with others, so the moment above it owns
+ * the jump. It keeps data-ep/data-secs/data-comic — identity rides on every card whether or
+ * not it is a target — and gives up the cutslot, which is the engine's own test for what can
+ * be handed the tape (paintPlayhead and the segment handover both filter on it). Dropping the
+ * slot is therefore the whole mechanism: the marker and the handover land on the moment, and
+ * the cards below it are covers.
+ */
+export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { until?: number | null; here?: boolean; inMoment?: boolean }): string {
   const yr = ep?.date ? ep.date.slice(0, 4) : null;
   const no = num(m.comic, null);
   const noLab = no === "—" && yr ? yr : null;
@@ -144,8 +152,7 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { u
         `${ep?.people.length ? " · " + esc(firstNames(ep.people)) : ""}</div>` +
       (m.segment ? `<span class="seg" title="${esc(m.segment)}">${esc(m.segment)}</span>` : "") +
       `<div class="spacer"></div>` +
-      `<div class="cutslot"></div>` +
-      playAffordance(m, ep, { here: opts?.here }) +
+      (opts?.inMoment ? "" : `<div class="cutslot"></div>` + playAffordance(m, ep, { here: opts?.here })) +
     `</div>` +
   `</article>`;
 }

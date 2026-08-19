@@ -160,8 +160,50 @@ export function readAlong(
     }).join("")}</div>`;
   }
   const cls = mode === "stack" ? "ra-stack" : "ra-strip";
-  return `<div class="${cls}">${ordered.map((m, i) =>
-    mentionPanel(m, byKey.get(m.epKey), { until: boundary(ordered, i), here: true })).join("")}</div>`;
+  /* Same grouping the Timestamps view uses, so the three layouts cannot disagree about what
+     counts as one moment. Boundaries come off the group heads rather than the flat list: a
+     pile shares one second, so the flat version measured every card in it against its own
+     neighbours and handed back the same second as the segment's end. */
+  const groups = byStamp(ordered);
+  const heads = groups.map(g => g[0]!);
+  return `<div class="${cls}">${groups.map((g, i) => {
+    const head = g[0];
+    if (!head) return "";
+    const until = boundary(heads, i);
+    /* A comic that had its minute to itself keeps the card it always had. A header above a
+       single cover is chrome standing in for nothing — the repetition is the complaint, and
+       one card cannot repeat. Unstamped mentions land here too: byStamp never joins them, so
+       they stay separate books that nobody timed rather than a moment they never shared. */
+    if (g.length < 2) return mentionPanel(head, byKey.get(head.epKey), { until, here: true });
+    return raMoment(g, byKey.get(head.epKey), until) +
+      g.map(m => mentionPanel(m, byKey.get(m.epKey), { here: true, inMoment: true })).join("");
+  }).join("")}</div>`;
+}
+
+/**
+ * The header for a minute that carries more than one comic.
+ *
+ * It is a `.panel` on purpose. The engine finds a playable row by looking for `[data-secs]`
+ * containing a `.cutslot` and never asks what kind of element it is, so carrying both makes
+ * this the jump target, the playhead marker and the segment-handover step for the whole
+ * group — with no change to the engine at all. Being a `.panel` also inherits `.now` and
+ * `.playing`, which already paint the states this needs.
+ *
+ * Deliberately not merged into one card the way the Timestamps view merges rows. A row is
+ * text and merging it costs nothing; a card is a cover. One episode logs 43 comics at a
+ * single second, and one plate standing in for 43 books is a worse page than a repeated
+ * stamp was.
+ */
+function raMoment(g: Mention[], ep: EpisodeCore | undefined, until: number | null): string {
+  const head = g[0]!;
+  return `<div class="panel ra-moment" data-ep="${esc(head.epKey)}" data-secs="${head.secs ?? ""}"` +
+    ` data-comic="${esc(head.comic)}"${until != null ? ` data-until="${until}"` : ""}>` +
+    `<div class="ra-moment-head">` +
+      playAffordance(head, ep, { here: true }) +
+      `<span class="ra-moment-n">${nf(g.length)} comics</span>` +
+    `</div>` +
+    `<div class="cutslot"></div>` +
+  `</div>`;
 }
 
 /**

@@ -115,3 +115,48 @@ export async function stubAudio(page: Page) {
   });
   return requested;
 }
+
+/**
+ * Episode keys chosen from the data, for specs that need a particular shape of read-along.
+ *
+ * `openEpisode` used to click the home hero, which is whichever episode aired last — so every
+ * audio spec ran against a target that changed every Wednesday. That is how a 240-second stub
+ * came to be tested against a first stamp at 443s for weeks: the property was a coin flip
+ * re-tossed by the data job. Grouping raises the stakes, because 71 of 541 episodes log two or
+ * more comics at the same second, so about one week in eight the hero would page in moment
+ * headers and the panel indices below would mean something else.
+ *
+ * `plain` wants audio and at least three logged minutes with no two comics sharing one, so
+ * every card is its own jump target. `pile` wants the opposite: a minute carrying three or
+ * more comics, which is what the moment header exists for.
+ */
+export async function pickEpisode(page: Page, shape: "plain" | "pile"): Promise<string> {
+  await page.goto("/");
+  await page.waitForSelector("body[data-ready]");
+  const key = await page.evaluate(async (want) => {
+    const [core, men] = await Promise.all([
+      fetch("d/core.json").then(r => r.json()),
+      fetch("d/mentions.json").then(r => r.json()),
+    ]) as [{ episodes: Array<{ key: string; enclosure: string | null }> }, Array<{ epKey: string; secs: number | null }>];
+    const per = new Map<string, number[]>();
+    for (const m of men) {
+      if (m.secs == null) continue;
+      const at = per.get(m.epKey) ?? [];
+      at.push(m.secs);
+      per.set(m.epKey, at);
+    }
+    for (const e of core.episodes) {
+      if (!e.enclosure) continue;
+      const stamps = per.get(e.key);
+      if (!stamps) continue;
+      const counts = new Map<number, number>();
+      for (const s of stamps) counts.set(s, (counts.get(s) ?? 0) + 1);
+      const biggest = Math.max(...counts.values());
+      if (want === "plain" && counts.size >= 3 && biggest === 1) return e.key;
+      if (want === "pile" && biggest >= 3) return e.key;
+    }
+    return null;
+  }, shape);
+  if (!key) throw new Error(`no ${shape} episode in the index — the picker, not the test, is what broke`);
+  return key;
+}

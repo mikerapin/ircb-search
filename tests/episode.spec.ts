@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import type { CoreData, EpisodeDetail, Mention } from "../src/data/types";
+import { pickEpisode } from "./fake-audio";
 
 // Real classes from the prototype: .issue-head / .art / .meta / .crew / .notes / .tags,
 // and .togg / .ra-list / .ra-row for the read-along.
@@ -366,3 +367,48 @@ test("a read-along row with no logged minute refuses honestly", async ({ page })
   // ...and the playable ones really are buttons, not links.
   for (const r of rows.filter(r => r.playable)) expect(r.stamp).toMatch(/\d+:\d\d/);
 });
+
+/**
+ * The Timestamps view was grouped in August and Strip and Stacked were not, so an episode
+ * that logs a pile of comics at one second rendered a card each: 19 identical stamps on the
+ * Superman episode, 47 on the worst, and a jump button on every one of them all seeking to
+ * the same place. 51 episodes are in that state and 984 of their cards belong to 152 moments.
+ *
+ * Not fixed by merging the cards. A row is text and Timestamps could fold nineteen titles
+ * into one; a card is a cover, and the episode that logs 43 comics at a single second would
+ * have become one plate standing in for 43 books. The moment owns the jump, the covers stay.
+ */
+for (const mode of ["strip", "stack"] as const) {
+  test(`${mode}: comics logged at the same minute share one moment, and keep their covers`, async ({ page }) => {
+    const key = await pickEpisode(page, "pile");
+    await page.evaluate(m => localStorage.setItem("ircb.readalong", m), mode);
+    await page.goto("/#/ep/" + encodeURIComponent(key));
+    await page.waitForSelector("#readalong .panel");
+
+    const shape = await page.evaluate(() => {
+      const host = document.getElementById("readalong")!;
+      const moments = [...host.querySelectorAll<HTMLElement>(".ra-moment")];
+      return {
+        moments: moments.length,
+        /* What the engine looks for. Exactly one per moment is the whole point: the pile used
+           to offer one of these per comic. */
+        cuts: host.querySelectorAll("[data-act=cut]").length,
+        slots: host.querySelectorAll(".cutslot").length,
+        covers: host.querySelectorAll(".panel:not(.ra-moment) .gcwrap").length,
+        /* Every comic in the group is still on the page under its own name. */
+        comics: new Set([...host.querySelectorAll<HTMLElement>(".panel:not(.ra-moment)")]
+          .map(p => p.dataset["comic"] ?? "")).size,
+        biggest: Math.max(...moments.map(m => Number(m.querySelector(".ra-moment-n")?.textContent?.split(" ")[0] ?? 0))),
+      };
+    });
+
+    expect(shape.moments).toBeGreaterThan(0);
+    expect(shape.biggest).toBeGreaterThanOrEqual(3);
+    /* A cover for every comic — nothing was folded away to buy the tidier stamp column. */
+    expect(shape.covers).toBe(shape.comics);
+    /* One jump per moment plus one per lone comic, never one per comic in a pile. A cutslot
+       is what the engine will hand the tape to, so the two counts must agree. */
+    expect(shape.slots).toBe(shape.cuts);
+    expect(shape.cuts).toBeLessThan(shape.comics);
+  });
+}

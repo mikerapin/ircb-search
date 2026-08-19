@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { stubAudio, stampsInsideTape, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio";
+import { stubAudio, stampsInsideTape, pickEpisode, FAKE_AUDIO_SECONDS, SILENT_WAV_URI } from "./fake-audio";
 import type { Page } from "@playwright/test";
 import type { CoreData } from "../src/data/types";
 
@@ -13,9 +13,11 @@ import type { CoreData } from "../src/data/types";
  */
 
 async function openEpisode(page: Page) {
-  await page.goto("/");
-  await page.waitForSelector("body[data-ready]");
-  await page.locator(".cover-hero .big-play").click();
+  /* A chosen episode, not the home hero. The hero is whichever one aired last, so every spec
+     here used to run against a target the weekly data job replaced — see pickEpisode. "plain"
+     means no two comics share a minute, so each .panel below is its own jump target and the
+     indices these specs count on mean what they say. */
+  await page.goto("/#/ep/" + encodeURIComponent(await pickEpisode(page, "plain")));
   await page.waitForSelector("#readalong .panel");
   /* Real stamps routinely sit past the end of the stub — see stampsInsideTape. Any spec that
      re-renders the read-along (switching layout) has to call it again for the new DOM. */

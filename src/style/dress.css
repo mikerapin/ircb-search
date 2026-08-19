@@ -551,6 +551,27 @@ html[data-neg] .togg button[aria-pressed=true]{color:#14120F}
 .ra-stack{display:grid; grid-template-columns:1fr; gap:var(--gut); padding:0 var(--pad)}
 @media(min-width:700px){ .ra-stack{grid-template-columns:repeat(2,1fr)} }
 @media(min-width:1100px){ .ra-stack{grid-template-columns:repeat(3,1fr)} }
+/* ---------- a minute that carries more than one comic ---------- */
+/* The header owns the jump for its group; the cards under it are covers. It is a .panel, so
+   the border, the red offset hover and the .now / .playing states all come for free — only
+   the box it occupies has to be said here, and it differs per layout. */
+.ra-moment{padding:10px 12px; gap:10px}
+.ra-moment-head{display:flex; align-items:center; gap:12px}
+/* The affordance is the whole control, so let it take the room rather than sizing to text. */
+.ra-moment-head .ts{flex:1 1 auto; width:auto}
+.ra-moment-n{font-family:var(--disp); font-variation-settings:"wdth" 112,"wght" 700;
+  text-transform:uppercase; font-size:12px; letter-spacing:.05em; white-space:nowrap; opacity:.8}
+/* Spans the grid so its comics read as sitting under it rather than beside it. */
+.ra-stack .ra-moment{grid-column:1 / -1}
+/* In the scroller it is a marker between runs of covers, not another 200px card. It does not
+   snap: snapping to the label would park the reader on the divider instead of on a comic. */
+/* align-self so it takes the height of its own content. Stretched to the row it read as an
+   empty card with a button floating at the top, which is the opposite of a divider. */
+.ra-strip .ra-moment{flex:0 0 auto; max-width:200px; scroll-snap-align:none; align-self:start}
+/* The strip is one flex row, so a full-width header is impossible — the count would be the
+   only thing distinguishing it from a cover at a glance. Stack it instead. */
+.ra-strip .ra-moment-head{flex-direction:column; align-items:stretch; gap:8px}
+
 /* 3px to match the section-head rule weight — the 2px version read as an accident next to it */
 .ra-list{margin:0 var(--pad); border:3px solid var(--ink)}
 .rawrap{border-top:var(--rule) solid var(--ink); position:relative}
