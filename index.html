@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Assembled in vite.config.ts, including the hash of the inline script below — see the
+     comment on csp() for why the hash is computed rather than typed, and why style-src and
+     media-src are the two loose ones. -->
+<meta http-equiv="Content-Security-Policy" content="%CSP%">
 <title>I Read Comic Books — Search the Archive</title>
 <!-- %YEARS% is filled in at build from the newest episode in the data — see archiveYears()
      in vite.config.ts. Typed as a literal it read "11 years", right the day it was written

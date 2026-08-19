@@ -76,6 +76,52 @@ async function axeSweep(page: Page, routes: Route[]) {
   return failures;
 }
 
+/**
+ * The CSP has to be watched directly, because nothing else here sees it.
+ *
+ * That was measured, not assumed: dropping the script hash from the policy and re-running
+ * this file left "every route is axe clean and free of console errors" green. It listens on
+ * `pageerror`, which carries uncaught exceptions — Chromium reports a CSP refusal on a
+ * channel Playwright's page listeners never receive. The only test that went red was the
+ * negative-plate sweep, and by accident: the blocked script is the one that restores
+ * data-neg, so <html> lost the attribute and an unrelated assertion noticed.
+ *
+ * Which is the dangerous shape. A future card pulling artwork from a host the policy does
+ * not name would simply not paint, and every test here would still pass. `securitypolicyviolation`
+ * is the event the browser actually fires, so listen for that and let the route list carry it.
+ */
+test("no route trips the content security policy", async ({ page }) => {
+  /* Registered before any page script — including the pre-paint plate restore, which is the
+     one inline script the policy hashes and therefore the one most likely to be refused. */
+  await page.addInitScript(() => {
+    (window as Window & { __csp?: string[] }).__csp = [];
+    document.addEventListener("securitypolicyviolation", (e: SecurityPolicyViolationEvent) => {
+      (window as Window & { __csp?: string[] }).__csp?.push(
+        `${e.violatedDirective} refused ${e.blockedURI || "an inline source"}`);
+    });
+  });
+  const routes = routeList(await sampleKeys(page));
+  const hits: string[] = [];
+  for (const [name, path] of routes) {
+    await gotoRoute(page, path);
+    /* No settling wait. A refusal is decided when the URL is checked against the policy,
+       which is when the fetch starts, not when it would have come back — so gotoRoute
+       having seen painted text means every source in that paint has already been ruled on.
+       Waiting on document.images instead hangs forever: below-the-fold artwork is
+       loading="lazy" and never begins, so `complete` never turns true. */
+    /* Read and clear: a hash-only navigation keeps the same document, so anything left
+       behind would be reported again under the next route's name. */
+    const seen = await page.evaluate(() => {
+      const w = window as Window & { __csp?: string[] };
+      const out = w.__csp ?? [];
+      w.__csp = [];
+      return out;
+    });
+    for (const v of seen) hits.push(`${name}: ${v}`);
+  }
+  expect(hits).toEqual([]);
+});
+
 test("every route is axe clean and free of console errors", async ({ page }) => {
   /* Genuinely long: axe analyses 19 routes, twice over for the two plates. ~15s on this
      machine and past the 30s default on a GitHub runner, where both of these timed out the
