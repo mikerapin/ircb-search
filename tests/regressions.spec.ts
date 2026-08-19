@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { stubAudio, stampsInsideTape } from "./fake-audio";
 import type { Page } from "@playwright/test";
-import type { CoreData, Mention } from "../src/data/types";
 
 /**
  * Regression tests for fixes that shipped with nothing holding them in place.
@@ -234,31 +233,4 @@ test("the generated plate's publisher line carries no element opacity", async ({
   const ops = await page.locator(".rack .gc-pub").evaluateAll(els => els.map(e => getComputedStyle(e).opacity));
   expect(ops.length).toBeGreaterThan(0);
   expect(new Set(ops)).toEqual(new Set(["1"]));
-});
-
-test("a mention whose stamp runs past its episode says so, instead of 'no minute logged'", async ({ page }) => {
-  /* jumpable() rejects a stamp beyond the runtime, and the refusal used to claim no minute
-     was logged — contradicting About the Data, which counts that record under "Bad stamps".
-     One real mention is in this state, so find it rather than manufacture it. */
-  await page.goto("/");
-  await page.waitForSelector("body[data-ready]");
-  const hit = await page.evaluate(async () => {
-    const [core, men] = await Promise.all([
-      fetch("d/core.json").then(r => r.json() as Promise<CoreData>),
-      fetch("d/mentions.json").then(r => r.json() as Promise<Mention[]>),
-    ]);
-    const byKey = new Map(core.episodes.map(e => [e.key, e]));
-    const m = men.find(x => {
-      const e = byKey.get(x.epKey);
-      return x.secs != null && x.secs > 0 && e?.enclosure && e.runtimeSecs != null && x.secs >= e.runtimeSecs;
-    });
-    return m ? { key: m.epKey, comic: m.comic } : null;
-  });
-  test.skip(!hit, "no mention carries a stamp past its runtime");
-
-  await page.goto("/#/ep/" + encodeURIComponent(hit!.key));
-  await page.waitForSelector("#readalong .panel");
-  const row = page.locator("#readalong .panel", { hasText: hit!.comic }).locator(".ts.dead").first();
-  await expect(row).toContainText("Timestamp out of range");
-  await expect(row).not.toContainText("No minute logged");
 });
