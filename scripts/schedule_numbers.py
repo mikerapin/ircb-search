@@ -18,8 +18,14 @@ Episodes that match no sheet row keep NO number. They are the separately-numbere
 and the untitled one-offs, and the sheet lists them with a blank `Ep` — inventing a number
 for them is what the current code already does wrong.
 
-The workbook is not public. Pull it from Drive as xlsx (its native export truncates and
-silently drops rows) and pass the path:
+The workbook is not public, and there are two ways to read it. CI passes the URL of the
+Apps Script web app in scripts/schedule-webapp.gs, which serves the same cells as JSON:
+
+    python scripts/schedule_numbers.py "$SCHEDULE_WEBAPP_URL"
+
+By hand, pull it from Drive as xlsx (its native export truncates and silently drops rows)
+and pass the path. This still works when the web app does not, which is the point of keeping
+it:
 
     python scripts/schedule_numbers.py ~/Downloads/schedule.xlsx
 
@@ -62,7 +68,53 @@ def _ep(v):
     return int(f), f == int(f)
 
 
-def read_sheet(xlsx):
+def _as_date(v):
+    """A cell's date, or None when the walk has to reconstruct it.
+
+    openpyxl hands back a datetime; the web app hands back "2020-01-05" already formatted in
+    the spreadsheet's timezone. Everything else -- "Done", blank, None -- is a cell with no
+    date in it, which is a fact the walk needs rather than an error.
+    """
+    if isinstance(v, datetime):
+        return v
+    try:
+        return datetime.fromisoformat(str(v).strip()[:10])
+    except ValueError:
+        return None
+
+
+def _rows_from_xlsx(xlsx):
+    """(tab, ep, rec, topic) in sheet order."""
+    wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)
+    out = []
+    for tab, datecol in TABS:
+        ws = wb[tab]
+        it = ws.iter_rows(values_only=True)
+        hdr = [str(c).strip() if c is not None else "" for c in next(it)]
+        for raw in it:
+            if all(c is None or str(c).strip() == "" for c in raw):
+                continue
+            r = dict(zip(hdr, raw))
+            out.append((tab, r.get("Ep"), r.get(datecol), r.get("Topic")))
+    return out
+
+
+def _rows_from_webapp(url):
+    """The same rows from scripts/schedule-webapp.gs.
+
+    An Apps Script web app cannot set an HTTP status, so a refused token or a lost share
+    arrives as a 200 carrying {"error": ...}. Reading that as a sheet with no rows in it
+    would write an empty CSV and drop every episode number the site has, so it stops here.
+    """
+    import urllib.request
+    with urllib.request.urlopen(url, timeout=60) as resp:
+        payload = json.loads(resp.read())
+    if "error" in payload:
+        raise SystemExit(f"schedule web app: {payload['error']}")
+    return [(r["tab"], r["ep"], r["rec"], r["topic"]) for r in payload["rows"]]
+
+
+def read_sheet(src):
     """One row per week in order, ascending by episode number.
 
     `Rec. Date` is overwritten with "Done"/"DONE" once a recording is in the can, so the date
@@ -77,32 +129,30 @@ def read_sheet(xlsx):
     but twice — one June 2024 stretch that shifted a day. The alignment window is 14 days, so a
     reconstruction has to be a fortnight wrong before it can pick the wrong episode.
     """
-    wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)
-    rows = {}
-    for tab, datecol in TABS:
-        ws = wb[tab]
-        it = ws.iter_rows(values_only=True)
-        hdr = [str(c).strip() if c is not None else "" for c in next(it)]
-        week = None
-        for raw in it:
-            if all(c is None or str(c).strip() == "" for c in raw):
-                continue
-            r = dict(zip(hdr, raw))
-            ep, is_episode = _ep(r.get("Ep"))
-            if ep is None:
-                continue
-            rec = r.get(datecol)
-            if isinstance(rec, datetime):
-                week = rec
-            elif week is None:
-                continue                      # nothing to count from yet
-            else:
-                week = rec = week + timedelta(days=7)
-            if not is_episode:
-                continue                      # a skipped week holds its place and nothing else
-            # Four numbers appear twice, rescheduled. The later row is the one that happened.
-            if ep not in rows or rec > rows[ep]["rec"]:
-                rows[ep] = {"ep": ep, "rec": rec, "topic": r.get("Topic")}
+    return _walk(_rows_from_webapp(src) if str(src).startswith("http") else _rows_from_xlsx(src))
+
+
+def _walk(raw):
+    """The weekly timeline, over rows from either reader. `selfcheck` covers both."""
+    rows, tab_seen, week = {}, None, None
+    for tab, ep_raw, rec_raw, topic in raw:
+        if tab != tab_seen:
+            tab_seen, week = tab, None        # each tab is its own timeline
+        ep, is_episode = _ep(ep_raw)
+        if ep is None:
+            continue
+        rec = _as_date(rec_raw)
+        if rec is not None:
+            week = rec
+        elif week is None:
+            continue                          # nothing to count from yet
+        else:
+            week = rec = week + timedelta(days=7)
+        if not is_episode:
+            continue                          # a skipped week holds its place and nothing else
+        # Four numbers appear twice, rescheduled. The later row is the one that happened.
+        if ep not in rows or rec > rows[ep]["rec"]:
+            rows[ep] = {"ep": ep, "rec": rec, "topic": topic}
     return [rows[k] for k in sorted(rows)]
 
 
@@ -164,11 +214,11 @@ def _titlekey(t):
     return re.sub(r"[^a-z0-9]+", "", t.lower())
 
 
-def main(xlsx):
+def main(src):
     core = json.loads(CORE.read_text())
     feed = sorted([e for e in core["episodes"] if e.get("showId") and e.get("date")],
                   key=lambda e: e["date"])
-    sheet = read_sheet(xlsx)
+    sheet = read_sheet(src)
     matched = align(sheet, feed)
     check(matched)
 
@@ -223,14 +273,15 @@ def selfcheck():
     ws = wb.active
     ws.title = TABS[0][0]
     ws.append(["Ep", TABS[0][1], "Topic"])
-    for row in [
+    sheet_rows = [
         [100, datetime(2020, 1, 5), "dated"],
         [101, "DONE", "recorded, date overwritten"],     # -> 2020-01-12, one week on
         [102, datetime(2020, 1, 19), "dated again"],     # a real date always wins
         [103, datetime(2020, 1, 26), "dated"],
         ["103.1", datetime(2020, 2, 2), None],           # a skipped week, not episode 103
         [104, "Done", "after the skipped week"],         # -> 2020-02-09, counting past it
-    ]:
+    ]
+    for row in sheet_rows:
         ws.append(row)
     wb.create_sheet(TABS[1][0]).append(["Ep", TABS[1][1], "Topic"])
 
@@ -244,6 +295,15 @@ def selfcheck():
     assert got[103] == "2020-01-26", f"103.1 is a skipped week, not 103's date, got {got[103]}"
     assert got[104] == "2020-02-09", f"the skipped week still costs a week, got {got[104]}"
     assert sorted(got) == [100, 101, 102, 103, 104], f"103.1 is not an episode: {sorted(got)}"
+
+    # Same cells over the web app's wire format, where a date is already a "2020-01-05"
+    # string. Two readers feeding one walk is only safe while they agree, and CI uses the
+    # one with no test of its own.
+    served = _walk([(TABS[0][0], ep,
+                     rec.date().isoformat() if isinstance(rec, datetime) else rec,
+                     topic or "") for ep, rec, topic in sheet_rows])
+    assert {r["ep"]: r["rec"].date().isoformat() for r in served} == got, \
+        "the web app JSON and the workbook must read the same timeline"
     print("selfcheck ok")
 
 

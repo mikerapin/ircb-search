@@ -299,6 +299,13 @@ def export_episodes():
 
 
 if __name__ == "__main__":
-    export_comics()
-    export_episodes()
-    print("\nDone. Commit data/comics.json and data/episodes.json.")
+    # The update job refreshes data/episode-numbers.csv from the schedule web app *after*
+    # the export, so the count the export printed is already out of date by the time the
+    # job decides whether to complain. This re-reads the CSV against the same feed, so the
+    # flag at the end of update-data.yml judges the numbers as they will be committed.
+    if "--check-numbers" in sys.argv:
+        _report_unnumbered(build_rss_maps())
+    else:
+        export_comics()
+        export_episodes()
+        print("\nDone. Commit data/comics.json and data/episodes.json.")

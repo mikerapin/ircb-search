@@ -54,12 +54,61 @@ jobs:
             python fetch_patreon.py
           fi
 
+      # schedule_numbers.py aligns the workbook against public/d/core.json, which is a build
+      # artifact and not in the tree. So the numbering needs a build on each side of it: one
+      # to give it the feed to align against, one so the rows it writes actually attach to
+      # the data this job commits.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install node dependencies
+        run: npm ci
+
+      - name: Build data
+        run: node scripts/build-data.mjs
+
+      # Episode numbers live only in the private IRCB Schedule workbook, and this is the one
+      # automated way in: an Apps Script web app in its owner's account (see
+      # scripts/schedule-webapp.gs) serving the numbering columns as JSON. It replaces a
+      # by-hand xlsx download that had to happen every fortnight, and that nobody remembered
+      # to do for 29 months.
+      #
+      # Never fatal, for the same reason the flags at the bottom of this file run last: a CSV
+      # that is a fortnight stale still numbers every episode but the newest one or two, and
+      # failing here would discard an otherwise good refresh over it. If it really is behind,
+      # "Flag episode numbers that have fallen behind" is the step that says so.
+      - name: Refresh episode numbers
+        env:
+          SCHEDULE_WEBAPP_URL: ${{ secrets.SCHEDULE_WEBAPP_URL }}
+        run: |
+          if [ -z "$SCHEDULE_WEBAPP_URL" ]; then
+            echo "SCHEDULE_WEBAPP_URL is not set — keeping the committed data/episode-numbers.csv"
+          elif python scripts/schedule_numbers.py "$SCHEDULE_WEBAPP_URL"; then
+            node scripts/build-data.mjs
+          else
+            # csv.DictWriter truncates on open, so a crash partway through leaves a short
+            # file. Put the committed one back rather than commit a CSV missing 400 rows.
+            echo "::warning::the schedule web app did not answer — data/episode-numbers.csv is unchanged"
+            git checkout -- data/episode-numbers.csv
+          fi
+
+      # Re-count after the refresh, not before it. "Export data" printed a count taken
+      # against the CSV as it arrived from the last commit, so a run that has just topped the
+      # CSV up would still fail on it. Runs whether or not the refresh did, so a fork without
+      # the secret keeps the warning it always had.
+      - name: Recheck episode numbers
+        id: numbers
+        run: python export_data.py --check-numbers
+
       - name: Commit updated data
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/comics.json data/episodes.json data/patreon.json
+          git add data/comics.json data/episodes.json data/patreon.json \
+                  data/episode-numbers.csv data/tag-taxonomy.json
           # NO [skip ci] HERE. It was correct when the site was "deploy from a branch" and the
           # raw files in the repo *were* the site, so a data commit updated it with no build.
           # The site is a Vite build now: `npm run build` runs scripts/build-data.mjs, and
@@ -105,7 +154,7 @@ jobs:
       # real failure is forgetting to. An episode with no number just renders without an EP.
       # line, which looks deliberate.
       - name: Flag episode numbers that have fallen behind
-        if: always() && steps.export.outputs.unnumbered != ''
+        if: always() && steps.numbers.outputs.unnumbered != ''
         run: |
-          echo "::error::${{ steps.export.outputs.unnumbered }} episodes have aired since the newest row in data/episode-numbers.csv, so they ship with no EP. number. Pull the IRCB Schedule workbook from Drive as xlsx and run: python scripts/schedule_numbers.py <path>"
+          echo "::error::${{ steps.numbers.outputs.unnumbered }} episodes have aired since the newest row in data/episode-numbers.csv, so they ship with no EP. number. The refresh runs automatically now, so this means the IRCB Schedule workbook itself has no row for them, or the web app could not be reached — check the workbook first, then the SCHEDULE_WEBAPP_URL secret against scripts/schedule-webapp.gs. By hand: python scripts/schedule_numbers.py <workbook.xlsx>"
           exit 1
