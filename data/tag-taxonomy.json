@@ -25,6 +25,11 @@
   "type": "publisher",
   "episodes": 1
  },
+ "13 demons dead": {
+  "type": "series",
+  "episodes": 1,
+  "series": "13 Demons Dead."
+ },
  "13th moon": {
   "type": "series",
   "episodes": 1,
@@ -149,6 +154,11 @@
  "abbot: 1979": {
   "type": "topic",
   "episodes": 1
+ },
+ "abbott": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Abbott"
  },
  "absolute batman": {
   "type": "series",
@@ -2055,6 +2065,11 @@
   "type": "topic",
   "episodes": 2
  },
+ "crowbound #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Crowbound"
+ },
  "crowded": {
   "type": "series",
   "episodes": 2,
@@ -3422,6 +3437,11 @@
   "episodes": 3,
   "series": "Giant Days"
  },
+ "giant robot hellboy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Giant Robot Hellboy"
+ },
  "gideon falls": {
   "type": "series",
   "episodes": 3,
@@ -3484,6 +3504,7 @@
   "type": "franchise",
   "episodes": 2,
   "spans": [
+   "Godzilla Monsterpiece Theater: Roar of the Worlds",
    "Godzilla vs America: Chicago",
    "Godzilla vs. The Marvel Universe",
    "Godzilla's Monsterpiece Theatre Presents: Godzilla's The Odyssey",
@@ -3610,6 +3631,10 @@
  },
  "greg rucka": {
   "type": "creator",
+  "episodes": 1
+ },
+ "grendel: devil’s crucible - sedition #1": {
+  "type": "topic",
   "episodes": 1
  },
  "grim": {
@@ -3943,6 +3968,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "house of lowther vol. 3": {
+  "type": "series",
+  "episodes": 1,
+  "series": "House of Lowther"
+ },
  "house of m": {
   "type": "topic",
   "episodes": 1
@@ -4045,7 +4075,7 @@
  },
  "idw": {
   "type": "publisher",
-  "episodes": 4
+  "episodes": 5
  },
  "if destruction be our lot": {
   "type": "series",
@@ -5933,6 +5963,11 @@
   "type": "creator",
   "episodes": 1
  },
+ "other ever afters: new queer fairy tales": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Other Ever Afters: New Queer Fairy Tales"
+ },
  "otherworldly izakaya nobu": {
   "type": "series",
   "episodes": 1,
@@ -7059,6 +7094,11 @@
   "episodes": 1,
   "series": "Space Opera XANADAX Across the Unknown Dimensions of the Galaxy"
  },
+ "space riders vol. 3": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Space Riders"
+ },
  "spawn": {
   "type": "series",
   "episodes": 3,
@@ -8139,6 +8179,11 @@
   "episodes": 1,
   "series": "The Smart Division"
  },
+ "the smart division #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Smart Division"
+ },
  "the smell of starving boys": {
   "type": "series",
   "episodes": 1,
@@ -8877,6 +8922,11 @@
   "episodes": 2,
   "series": "What's the Furthest Place from Here"
  },
+ "whatever happened to the crimson justice?": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Whatever Happened to the Crimson Justice?"
+ },
  "when i lay my vengeance upon thee": {
   "type": "series",
   "episodes": 1,
@@ -8968,6 +9018,10 @@
   "type": "series",
   "episodes": 2,
   "series": "Witchy"
+ },
+ "wolvering and the x-men": {
+  "type": "topic",
+  "episodes": 1
  },
  "wolves": {
   "type": "topic",
@@ -9073,7 +9127,7 @@
  },
  "x-men": {
   "type": "series",
-  "episodes": 29,
+  "episodes": 30,
   "series": "X-Men"
  },
  "x-men '97": {
