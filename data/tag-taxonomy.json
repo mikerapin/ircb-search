@@ -653,7 +653,7 @@
  },
  "assorted crisis events": {
   "type": "series",
-  "episodes": 3,
+  "episodes": 4,
   "series": "Assorted Crisis Events"
  },
  "aster of pan": {
@@ -1721,6 +1721,11 @@
   "episodes": 2,
   "series": "Coda"
  },
+ "code of honor and other stories": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Code of Honor and Other Stories"
+ },
  "cogman": {
   "type": "topic",
   "episodes": 1
@@ -2512,8 +2517,9 @@
   "series": "Descender"
  },
  "destination kill": {
-  "type": "topic",
-  "episodes": 1
+  "type": "series",
+  "episodes": 2,
+  "series": "Destination Kill"
  },
  "destroy all monsters": {
   "type": "series",
@@ -2958,6 +2964,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Euthanauts"
+ },
+ "event horizon: dark descent": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Event Horizon: Dark Descent"
  },
  "everyday hero machine boy": {
   "type": "series",
@@ -5954,6 +5965,11 @@
   "episodes": 2,
   "series": "Orcs in Space"
  },
+ "orion": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Orion"
+ },
  "orlando": {
   "type": "series",
   "episodes": 1,
@@ -7236,6 +7252,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Star Trek: Lower Decks"
+ },
+ "star trek: redshirts": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Trek: Redshirts"
  },
  "star wars": {
   "type": "series",
