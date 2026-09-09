@@ -984,6 +984,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "berserk": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Berserk"
+ },
  "bes of 2021": {
   "type": "topic",
   "episodes": 1
@@ -2156,6 +2161,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "d. gray-man": {
+  "type": "series",
+  "episodes": 1,
+  "series": "D. Gray Man"
+ },
  "d&d": {
   "type": "topic",
   "episodes": 1
@@ -2231,6 +2241,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Dark Knights of Steel"
+ },
+ "dark night: a true batman story": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dark Night: A True Batman Story"
  },
  "dark patterns": {
   "type": "topic",
@@ -3338,6 +3353,11 @@
   "episodes": 1,
   "series": "Frontier"
  },
+ "fullmetal alchemist": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
+ },
  "fun home": {
   "type": "series",
   "episodes": 2,
@@ -4347,6 +4367,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "john carpenter’s cathedral": {
+  "type": "series",
+  "episodes": 1,
+  "series": "John Carpenter’s Cathedral"
+ },
  "john constantine": {
   "type": "franchise",
   "episodes": 1,
@@ -4577,6 +4602,11 @@
   "type": "series",
   "episodes": 1,
   "series": "King of the Comics: 100 Years of Kings Features Syndicate"
+ },
+ "kingdom": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kingdom"
  },
  "kingdom hearts": {
   "type": "franchise",
@@ -5092,7 +5122,7 @@
  },
  "manga": {
   "type": "topic",
-  "episodes": 36
+  "episodes": 37
  },
  "manga discussion": {
   "type": "topic",
@@ -5488,7 +5518,7 @@
  },
  "mosely": {
   "type": "series",
-  "episodes": 1,
+  "episodes": 2,
   "series": "Mosely"
  },
  "mother's day": {
@@ -8962,6 +8992,11 @@
   "type": "series",
   "episodes": 1,
   "series": "White Ash"
+ },
+ "white sky": {
+  "type": "topic",
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
  },
  "whitney cogar": {
   "type": "topic",
