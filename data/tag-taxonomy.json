@@ -41,7 +41,7 @@
  },
  "2000ad": {
   "type": "publisher",
-  "episodes": 7
+  "episodes": 8
  },
  "2000s": {
   "type": "topic",
@@ -3075,11 +3075,11 @@
  },
  "fantagraphics": {
   "type": "publisher",
-  "episodes": 7
+  "episodes": 8
  },
  "fantastic four": {
   "type": "series",
-  "episodes": 9,
+  "episodes": 10,
   "series": "Fantastic Four"
  },
  "fantasy comics": {
@@ -3142,7 +3142,7 @@
  },
  "feral": {
   "type": "series",
-  "episodes": 1,
+  "episodes": 2,
   "series": "Feral"
  },
  "ff": {
@@ -5001,6 +5001,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Lovelace and Babbage"
+ },
+ "lovers of the empire": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lovers of the Empire"
  },
  "loving ohio": {
   "type": "series",
@@ -7080,6 +7085,11 @@
   "episodes": 1,
   "series": "Solo: A Star Wars Story"
  },
+ "somali and the forest spirit": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Somali and the Forest Spirit"
+ },
  "something epic": {
   "type": "series",
   "episodes": 1,
@@ -7853,6 +7863,11 @@
   "type": "series",
   "episodes": 1,
   "series": "The Florida Hippopotamus Cocaine Massacre"
+ },
+ "the forever home": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Forever Home"
  },
  "the forged": {
   "type": "series",
