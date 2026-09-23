@@ -2322,6 +2322,11 @@
   "episodes": 2,
   "series": "Dawnrunner"
  },
+ "daystar": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Daystar"
+ },
  "daytripper": {
   "type": "series",
   "episodes": 2,
@@ -4196,6 +4201,11 @@
   "episodes": 1,
   "series": "Infinity Wars"
  },
+ "inglorious x-force": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Inglorious X-Force"
+ },
  "inner workings": {
   "type": "series",
   "episodes": 1,
@@ -4246,6 +4256,11 @@
  "iron or after the was": {
   "type": "topic",
   "episodes": 1
+ },
+ "islands in the sky: a people’s history of hurricane helene": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Islands in the Sky: A People’s History of Hurricane Helene"
  },
  "isola": {
   "type": "series",
@@ -4562,7 +4577,8 @@
  },
  "kickstarter": {
   "type": "topic",
-  "episodes": 34
+  "episodes": 35,
+  "review": "may be a comic — a mention string starts with this"
  },
  "kid lobotomy": {
   "type": "series",
@@ -5111,6 +5127,11 @@
   "type": "creator",
   "episodes": 1
  },
+ "malaya: filipino anticolonial dark fantasy": {
+  "type": "series",
+  "episodes": 1,
+  "series": "MALAYA: Filipino Anticolonial Dark Fantasy"
+ },
  "man of steel": {
   "type": "series",
   "episodes": 1,
@@ -5647,6 +5668,11 @@
   "type": "series",
   "episodes": 1,
   "series": "My Lesbian Experience with Loneliness"
+ },
+ "my neighbor necromancer": {
+  "type": "series",
+  "episodes": 1,
+  "series": "My Neighbor Necromancer"
  },
  "my neighbor totoro": {
   "type": "series",
@@ -9030,6 +9056,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Why She Wrote"
+ },
+ "wickerson: tales from the grove": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wickerson: Tales from the Grove"
  },
  "wild's end": {
   "type": "series",
