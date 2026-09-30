@@ -863,6 +863,11 @@
   "episodes": 1,
   "series": "Batman: City of Madness"
  },
+ "batman: gargoyle of gotham": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman: Gargoyle of Gotham"
+ },
  "batman: off world": {
   "type": "series",
   "episodes": 1,
@@ -4181,6 +4186,11 @@
   "type": "topic",
   "episodes": 7
  },
+ "indigenous peoples’ history of the united states: a graphic interpretation": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Indigenous Peoples’ History of the United States: A Graphic Interpretation"
+ },
  "infidel": {
   "type": "series",
   "episodes": 1,
@@ -4256,6 +4266,11 @@
  "iron or after the was": {
   "type": "topic",
   "episodes": 1
+ },
+ "is ted okay?": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Is Ted Okay?"
  },
  "islands in the sky: a people’s history of hurricane helene": {
   "type": "series",
@@ -5347,6 +5362,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Memoirs of Giselle"
+ },
+ "memories of giselle": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Memories of Giselle"
  },
  "mental illness": {
   "type": "topic",
@@ -8213,6 +8233,7 @@
   "episodes": 2,
   "spans": [
    "The Rocketeer Breaks Free",
+   "The Rocketeer: Infiltrator",
    "The Rocketeer: The Great Race",
    "The Rocketeer: The Island"
   ]
@@ -8221,6 +8242,11 @@
   "type": "series",
   "episodes": 1,
   "series": "The Rocketeer Breaks Free"
+ },
+ "the rocketeer: infiltrator #1": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Rocketeer: Infiltrator"
  },
  "the rocketeer: the great race": {
   "type": "series",
@@ -9264,6 +9290,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Yokohama Kaidashi Kikou"
+ },
+ "you and a bike and a road": {
+  "type": "series",
+  "episodes": 1,
+  "series": "You And A Bike And A Road"
  },
  "you can try again": {
   "type": "series",
