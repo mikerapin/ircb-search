@@ -168,6 +168,11 @@ python scripts/schedule_numbers.py ~/Downloads/schedule.xlsx
 Both paths feed one timeline reader, and `--selfcheck` asserts they agree — two readers that
 drift apart would show up as episode numbers landing on the wrong episodes.
 
+Rows with a **Release** date (every row from EP. 532 on) are matched to the feed on that exact
+date. Older rows have none and are matched on recording date instead: the newest row recorded
+no more than 14 days before the episode aired. Banked episodes are why Release wins: one
+recorded a month ahead breaks the recording-date rule at any window size.
+
 The script joins the workbook to the feed by date, since the sheet records *recording* dates
 and the feed records *air* dates and there is no shared key. Two things about the sheet drive
 the parsing, and both were once silent faults: `Rec. Date` is overwritten with `"Done"` once a

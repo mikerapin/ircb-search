@@ -39,7 +39,7 @@
 const SHEET_ID = '1MQE7ivVPbnxXWWi_N3SszNK12z6ZRKfje7QXkWvzvyw';
 
 // Must match TABS in scripts/schedule_numbers.py: [tab name, its recording-date column].
-const TABS = [['Old Recording Dates', 'Recording Date'], ['Schedule', 'Rec. Date']];
+const TABS = [['Old Recording Dates', 'Rec. Date'], ['Schedule', 'Rec. Date']];
 
 function doGet(e) {
   const want = PropertiesService.getScriptProperties().getProperty('TOKEN');
@@ -66,6 +66,7 @@ function doGet(e) {
       const iEp = header.indexOf('Ep');
       const iRec = header.indexOf(datecol);
       const iTopic = header.indexOf('Topic');
+      const iRelease = header.indexOf('Release');   // optional: older rows have none
       if (iEp < 0 || iRec < 0) return json({error: 'no Ep/' + datecol + ' column in ' + tab});
 
       for (let r = 1; r < values.length; r++) {
@@ -75,11 +76,13 @@ function doGet(e) {
         const row = values[r];
         const ep = cell(row, iEp);
         const rec = cell(row, iRec);
+        const release = cell(row, iRelease);
         rows.push({
           tab: tab,
           ep: ep === '' ? null : ep,
           rec: typeof rec === 'number' ? serialToDate(rec) : String(rec),
           topic: String(cell(row, iTopic)),
+          release: typeof release === 'number' ? serialToDate(release) : String(release),
         });
       }
     }
