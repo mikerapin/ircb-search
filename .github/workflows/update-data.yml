@@ -90,7 +90,7 @@ jobs:
           else
             # csv.DictWriter truncates on open, so a crash partway through leaves a short
             # file. Put the committed one back rather than commit a CSV missing 400 rows.
-            echo "::warning::the schedule web app did not answer — data/episode-numbers.csv is unchanged"
+            echo "::warning::the schedule refresh failed, see the error above — data/episode-numbers.csv is unchanged"
             git checkout -- data/episode-numbers.csv
           fi
 

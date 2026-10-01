@@ -103,7 +103,7 @@ Each episode carries `<itunes:keywords>`. `src/data/tags.ts` types every distinc
 `series`, `publisher`, `creator`, `topic`, and a few show-specific kinds — and the build runs
 it in memory against the episodes and mentions it has just shaped.
 
-`data/tag-seeds.json` is the curated half and a real input; the 261-row review fed it, and a
+`data/tag-seeds.json` is the curated half and a real input; a one-time review fed it, and a
 wrong call is corrected there. `data/tag-taxonomy.json` is an **output**, rewritten on every
 build so a person can read and diff the classification. Nothing reads it back.
 
@@ -123,8 +123,8 @@ mentions, so an episode that both logged and tagged a book keeps the logged row 
 may carry a timestamp.
 
 **The tags are not a complete index and nothing may present them as one.** They record what
-an episode was filed under, not what it discussed: measured when this shipped, `batman` was
-tagged on 23 episodes and named in the comic rows of 111. That is why there are no
+an episode was filed under, not what it discussed: `batman`, for one, is tagged on well under
+half of the episodes whose comic rows name it. That is why there are no
 `/publisher` or `/creator` browse pages — a reader landing on one would reasonably read it as
 the whole story. Tags surface as chips on the episode page, linking to the series page where
 the term names a shelved run and to a search otherwise.
@@ -168,40 +168,59 @@ python scripts/schedule_numbers.py ~/Downloads/schedule.xlsx
 Both paths feed one timeline reader, and `--selfcheck` asserts they agree — two readers that
 drift apart would show up as episode numbers landing on the wrong episodes.
 
-Rows with a **Release** date (every row from EP. 532 on) are matched to the feed on that exact
-date. Older rows have none and are matched on recording date instead: the newest row recorded
-no more than 14 days before the episode aired. Banked episodes are why Release wins: one
-recorded a month ahead breaks the recording-date rule at any window size.
+The web app finds its columns by header name, so the workbook's layout is part of the
+contract. The **Old Recording Dates** and **Schedule** tabs both need `Ep` and `Rec. Date` in
+row 1; `Topic` and `Release` are read when present. Renaming a required header stops the
+refresh, which is what failed the job on 2026-09-30 after `Recording Date` became `Rec. Date`.
+A header change means editing `TABS` in both `scripts/schedule_numbers.py` and
+`scripts/schedule-webapp.gs`, then redeploying the web app: **Deploy** > **Manage
+deployments**, edit the existing deployment, and choose **New version**. That keeps the
+`/exec` URL, so the secret does not change. Until you redeploy, the URL serves the old code.
 
-The script joins the workbook to the feed by date, since the sheet records *recording* dates
-and the feed records *air* dates and there is no shared key. Two things about the sheet drive
-the parsing, and both were once silent faults: `Rec. Date` is overwritten with `"Done"` once a
-recording is in the can, and a fractional `Ep` (`475.1`) marks a **skipped week**, not an
-episode. Rows are therefore read as a weekly timeline — an undated row counts seven days on
-from the last dated one. `--selfcheck` covers both rules.
+The script joins the workbook to the feed by date, in one of two ways:
+
+- **Rows with a `Release` date** (every row from EP. 532 on) match the episode that aired on
+  that exact date. Release is the *planned* date and is filled in well ahead, so an episode
+  that slips needs its Release cell moved. If a Release date passes with no episode on it, the
+  script stops and names the row instead of shifting every later number by one.
+- **Older rows** have no Release and match on recording date: each episode takes the newest
+  unclaimed row recorded no more than 14 days before it aired. Banked episodes are why Release
+  takes priority where it exists. EP. 534 was recorded four weeks before it aired, and no
+  window size numbers that correctly.
+
+Two things about the older rows drive the parsing, and both were once silent faults:
+`Rec. Date` used to be overwritten with `"Done"` once a recording was in the can (the sheet
+has a separate **Done** column now), and a fractional `Ep` (`475.1`) marks a **skipped week**,
+not an episode. Rows are therefore read as a weekly timeline: an undated row counts seven days
+on from the last dated one. `--selfcheck` covers both rules, plus a banked episode and a
+slipped one.
 
 Where the show's own RSS title still states a number, that number always wins, and it is also
 the only independent check on the join. `main()` prints how many the two sources disagree on;
 it should be zero.
 
 `export_data.py --check-numbers` counts the episodes that have aired since the CSV's newest
-row and fails the update job at two or more. It runs *after* the refresh, so it now reports
-the one thing automation cannot fix: the workbook has no row for an episode that has already
-aired. One trailing episode is normal and stays silent, because an episode that legitimately
-takes no number sits between numbered ones.
+row and fails the update job at two or more. It runs *after* the refresh, so it catches every
+way the refresh can come up short: the workbook has no row for an episode that has aired, the
+web app does not answer or rejects the layout, or the script stopped on a passed Release date.
+In each case the refresh step logs a warning and keeps the committed CSV. One trailing
+episode is normal and stays silent, because an episode that legitimately takes no number sits
+between numbered ones. That also means a broken refresh can go a week before the job turns
+red, as it did from 2026-09-23 to 2026-09-30.
 
-That guard is the whole safety net. An episode with no number simply renders without an `EP.`
-line, which looks deliberate rather than broken — that is how the numbers stayed missing from
-March to August 2026.
+This count is the safety net for *missing* numbers; the Release check above is the one for
+*wrong* ones. An episode with no number simply renders without an `EP.` line, which looks
+deliberate rather than broken — that is how the numbers stayed missing from March to August
+2026.
 
 ### The Patreon half
 
 `fetch_patreon.py` needs `PATREON_RSS_URL` — in the environment, in a gitignored `.env`, or as
 a repository secret in CI. The feed URL is per-patron, so it is a credential.
 
-The feed carries 742 items, but 442 are the public episodes served ad-free. Those already
-arrive from Simplecast, so only the 300 Patreon-only ones are kept. They replace the 146
-hand-typed rows the upstream table used to hold, which had no date, no link and no comics.
+Most of the feed's items are the public episodes served ad-free. Those already arrive from
+Simplecast, so only the Patreon-only ones are kept. They replace the hand-typed rows the
+upstream table used to hold, which had no date, no link and no comics.
 
 **Its `<enclosure>` never ships.** The URL embeds a per-patron signature
 (`/api/rss/u/<token>/e/<id>.mp3?sig=…`) and publishing one would hand a private feed to anyone
