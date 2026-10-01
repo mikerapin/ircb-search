@@ -60,10 +60,15 @@ export const SILENT_WAV_URI = "data:audio/wav;base64," + silentWav(5).toString("
  * `data-secs`, and drops the dependency on which episode is newest. Spacing is derived from
  * how many stamps are on the page so they always fit, and `until` moves with `secs` because
  * one mention's boundary is the next one's start.
+ *
+ * `rows` picks which list to restamp: the read-along by default, or search's mention cards,
+ * which render the same rows and failed the same way on 2026-10-01.
  */
-export async function stampsInsideTape(page: Page): Promise<number[]> {
-  return page.evaluate(tape => {
-    const wraps = [...document.querySelectorAll<HTMLElement>("#readalong .panel, #readalong .rawrap")]
+export async function stampsInsideTape(
+  page: Page, rows = "#readalong .panel, #readalong .rawrap",
+): Promise<number[]> {
+  return page.evaluate(([tape, sel]) => {
+    const wraps = [...document.querySelectorAll<HTMLElement>(sel)]
       .filter(el => el.dataset["secs"]);
     const step = Math.max(1, Math.floor((tape - 8) / (wraps.length + 1)));
     const out: number[] = [];
@@ -78,7 +83,7 @@ export async function stampsInsideTape(page: Page): Promise<number[]> {
       out.push(secs);
     });
     return out;
-  }, SECONDS);
+  }, [SECONDS, rows] as const);
 }
 
 /**

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { stubAudio } from "./fake-audio";
+import { stubAudio, stampsInsideTape } from "./fake-audio";
 import type { Page } from "@playwright/test";
 import type { CoreData } from "../src/data/types";
 
@@ -195,6 +195,8 @@ test("a matched comic plays inside its own card", async ({ page }) => {
   await page.goto("/#/search?q=batman");
   const row = page.locator(".sec.mentions .epcard .rawrap.panel button.ra-row[data-act=cut]").first();
   await expect(row).toBeVisible();
+  // The newest batman mention sat at 35:36 on a 4:00 tape — see stampsInsideTape.
+  await stampsInsideTape(page, ".sec.mentions .rawrap");
   await row.click();
   await expect(page.locator("#au")).toHaveJSProperty("paused", false);
   // The player opens in the row that was clicked, not somewhere else on the page.
