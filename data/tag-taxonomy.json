@@ -1319,6 +1319,10 @@
   "episodes": 2,
   "series": "Booster Gold"
  },
+ "bowling with corpses and other strange tales from lands unknown": {
+  "type": "topic",
+  "episodes": 1
+ },
  "box brown": {
   "type": "creator",
   "episodes": 1
@@ -2550,6 +2554,10 @@
   "type": "series",
   "episodes": 1,
   "series": "Destroy All Monsters"
+ },
+ "detective beans: adventures in cat town": {
+  "type": "topic",
+  "episodes": 1
  },
  "detective comics": {
   "type": "series",
@@ -6108,6 +6116,10 @@
   "type": "topic",
   "episodes": 1
  },
+ "over my dead body": {
+  "type": "topic",
+  "episodes": 1
+ },
  "over the garden wall": {
   "type": "series",
   "episodes": 1,
@@ -7160,6 +7172,10 @@
   "episodes": 2,
   "series": "Soul Plumber"
  },
+ "soulmates": {
+  "type": "topic",
+  "episodes": 1
+ },
  "sound effects": {
   "type": "topic",
   "episodes": 1
@@ -7210,6 +7226,10 @@
   "type": "series",
   "episodes": 1,
   "series": "Speak"
+ },
+ "speak of the devil": {
+  "type": "topic",
+  "episodes": 1
  },
  "special edition comics": {
   "type": "topic",
@@ -9285,6 +9305,10 @@
   "type": "series",
   "episodes": 1,
   "series": "X-Men Red"
+ },
+ "ya comics": {
+  "type": "topic",
+  "episodes": 1
  },
  "yokohama kaidashi kikou": {
   "type": "series",
