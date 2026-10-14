@@ -790,7 +790,7 @@
  },
  "batman": {
   "type": "series",
-  "episodes": 23,
+  "episodes": 24,
   "series": "Batman"
  },
  "batman / deadpool": {
@@ -802,6 +802,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Batman/Dylan Dog"
+ },
+ "batman / green arrow / the question: arcadia": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Batman / Green Arrow / The Question: Arcadia"
  },
  "batman & robin: year one": {
   "type": "series",
@@ -1320,8 +1325,9 @@
   "series": "Booster Gold"
  },
  "bowling with corpses and other strange tales from lands unknown": {
-  "type": "topic",
-  "episodes": 1
+  "type": "series",
+  "episodes": 1,
+  "series": "Bowling with Corpses and Other Strange Tales from Lands Unknown"
  },
  "box brown": {
   "type": "creator",
@@ -2556,8 +2562,9 @@
   "series": "Destroy All Monsters"
  },
  "detective beans: adventures in cat town": {
-  "type": "topic",
-  "episodes": 1
+  "type": "series",
+  "episodes": 1,
+  "series": "Detective Beans: Adventures in Cat Town"
  },
  "detective comics": {
   "type": "series",
@@ -4423,6 +4430,10 @@
   "episodes": 1,
   "series": "John Constantine: Hellblazer"
  },
+ "john cusack": {
+  "type": "topic",
+  "episodes": 1
+ },
  "john nyberg": {
   "type": "topic",
   "episodes": 1
@@ -5513,6 +5524,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "momo": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Momo"
+ },
  "money shot": {
   "type": "series",
   "episodes": 1,
@@ -6118,7 +6134,8 @@
  },
  "over my dead body": {
   "type": "topic",
-  "episodes": 1
+  "episodes": 1,
+  "review": "may be a comic — a mention string starts with this"
  },
  "over the garden wall": {
   "type": "series",
@@ -6748,6 +6765,11 @@
   "episodes": 1,
   "series": "Sabretooth"
  },
+ "sabrina the teenage witch": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Sabrina the Teenage Witch"
+ },
  "saga": {
   "type": "series",
   "episodes": 5,
@@ -7053,6 +7075,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "skate ali": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Skate Ali"
+ },
  "sketchy": {
   "type": "series",
   "episodes": 1,
@@ -7173,8 +7200,9 @@
   "series": "Soul Plumber"
  },
  "soulmates": {
-  "type": "topic",
-  "episodes": 1
+  "type": "series",
+  "episodes": 1,
+  "series": "Soulmates"
  },
  "sound effects": {
   "type": "topic",
@@ -7853,6 +7881,11 @@
   "episodes": 1,
   "series": "The Cursed Earth Unsensored"
  },
+ "the cutting garden": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Cutting Garden"
+ },
  "the day the law died": {
   "type": "series",
   "episodes": 1,
@@ -8108,6 +8141,11 @@
   "type": "series",
   "episodes": 2,
   "series": "The me you love in the Dark"
+ },
+ "the mess": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Mess"
  },
  "the midnight": {
   "type": "series",
@@ -9166,6 +9204,11 @@
   "type": "series",
   "episodes": 2,
   "series": "Witchy"
+ },
+ "wolverine: paradise": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Wolverine: Paradise"
  },
  "wolvering and the x-men": {
   "type": "topic",
