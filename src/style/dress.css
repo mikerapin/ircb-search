@@ -1006,13 +1006,6 @@ html[data-neg] .wchip:hover,html[data-neg] .wchip[aria-pressed=true]{color:#1412
 .walllegend .s2{background:color-mix(in srgb,var(--ink-block) 45%,var(--paper))}
 .walllegend .s4{background:var(--ink-block)}
 .walllegend .sh{background:var(--red)}
-/* mini-wall on a panelist page */
-.mini .ycells{grid-template-columns:repeat(var(--cols,63),minmax(0,1fr)); gap:1.5px}
-.mini .yrow{grid-template-columns:2.4rem minmax(0,1fr); margin-bottom:3px}
-.mini .ylab{font-size:10px}
-.mini .ylab .cnt{display:none}
-@media(max-width:820px){ .mini .ycells{grid-template-columns:repeat(13,minmax(0,1fr))} }
-
 /* episode rail / bottom sheet */
 .scrim{position:fixed; inset:0; background:rgba(20,18,16,.55); z-index:90; opacity:0; pointer-events:none; transition:opacity .16s}
 body.rail-open .scrim{opacity:1; pointer-events:auto}

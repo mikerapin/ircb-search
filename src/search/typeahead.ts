@@ -1,5 +1,6 @@
 import { core, details, mentions as loadMentions } from "../data/load";
 import { ROSTER, isRoster } from "../data/roster";
+import { seriesRows, type SeriesRow } from "../data/series-index";
 import type { EpisodeCore, Mention } from "../data/types";
 import { esc, fmtDate, nf, pl } from "../lib/html";
 import { href } from "../router";
@@ -15,23 +16,13 @@ const BROWSE: Array<[path: string, label: string, sub: string]> = [
   ["/subscribe", "Subscribe", "&amp; Patreon"],
 ];
 
-interface SeriesRow { name: string; mentions: number; episodes: number }
-
 let data: SearchData | null = null;
 let seriesIndex: SeriesRow[] = [];
 let guests: Array<{ name: string; n: number }> = [];
 let loading: Promise<void> | null = null;
 
 function buildIndexes(d: SearchData): void {
-  const byName = new Map<string, { mentions: number; eps: Set<string> }>();
-  for (const m of d.mentions) {
-    let row = byName.get(m.series);
-    if (!row) byName.set(m.series, (row = { mentions: 0, eps: new Set() }));
-    row.mentions++;
-    row.eps.add(m.epKey);
-  }
-  seriesIndex = [...byName].map(([name, r]) => ({ name, mentions: r.mentions, episodes: r.eps.size }))
-    .sort((a, b) => b.mentions - a.mentions);
+  seriesIndex = seriesRows(d.mentions);
 
   const counts = new Map<string, number>();
   for (const e of d.core.episodes) for (const p of e.people) if (!isRoster(p)) counts.set(p, (counts.get(p) ?? 0) + 1);

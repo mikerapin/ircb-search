@@ -102,9 +102,6 @@ if (box instanceof HTMLInputElement) initTypeahead(box);
 /* Generated plates size their own titles to fit, so the measurement has to happen with the
    real font metrics and a settled layout — measuring once at paint time sized them against
    fallback metrics and broke long words mid-word ("FANTASTI / C FOUR"). */
-export function refitPlates(root: ParentNode = document): void {
-  requestAnimationFrame(() => fitPlates(root));
-}
 if (document.fonts) void document.fonts.ready.then(() => fitPlates(document));
 
 /* Anything else that sticks has to sit flush under the header, and the header's height

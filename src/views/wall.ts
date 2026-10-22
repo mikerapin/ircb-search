@@ -51,8 +51,7 @@ function cell(e: EpisodeCore): string {
     ` aria-label="${esc(`${when}. ${title}. ${what}.${who}`)}"></button>`;
 }
 
-/** Shared with the panelist mini-wall, which passes `only`. */
-export function wallGrid(episodes: EpisodeCore[], opts?: { only?: Set<string>; mini?: boolean }): string {
+function wallGrid(episodes: EpisodeCore[]): string {
   const rows = yearRows(episodes);
   /* One column per episode, capped, so a busy year wraps onto a second and third line
      instead of stretching every row thinner.
@@ -65,16 +64,13 @@ export function wallGrid(episodes: EpisodeCore[], opts?: { only?: Set<string>; m
      before. Column N is still week N of that year, so the years still line up. */
   const WEEKS = 63;
   const cols = Math.min(WEEKS, rows.reduce((m, r) => Math.max(m, r.eps.length), 1));
-  const only = opts?.only;
   const undated = episodes.filter(e => !e.date).length;
 
-  const body = rows.map(r => {
-    const eps = only ? r.eps.filter(e => only.has(e.key)) : r.eps;
-    if (only && !eps.length) return "";
-    return `<div class="yrow"><div class="ylab">${r.year}` +
-      `<span class="cnt">${eps.length}${only ? "" : ` ep${pl(eps.length)}`}</span></div>` +
-      `<div class="ycells">${eps.map(cell).join("")}</div></div>`;
-  }).join("");
+  const body = rows.map(r =>
+    `<div class="yrow"><div class="ylab">${r.year}` +
+    `<span class="cnt">${r.eps.length} ep${pl(r.eps.length)}</span></div>` +
+    `<div class="ycells">${r.eps.map(cell).join("")}</div></div>`,
+  ).join("");
 
   /* Since the Patreon feed replaced the undated shelf every episode has an air date, so this
      note would read "0 episodes carry no air date" — a sentence about something that does not
@@ -83,12 +79,12 @@ export function wallGrid(episodes: EpisodeCore[], opts?: { only?: Set<string>; m
     `<span style="margin-left:auto">${nf(undated)} episode${pl(undated)} carry no air date, so they have ` +
     `no square here. They&rsquo;re all still in <a href="${href("/search")}">search</a>.</span>`;
 
-  const legend = opts?.mini ? "" :
+  const legend =
     `<div class="walllegend"><span><i class="s0"></i>Not logged</span>` +
     `<span><i class="s2"></i>Some comics</span><span><i class="s4"></i>A full pull list</span>` +
     `<span><i class="sh"></i>Matches your search</span>${missing}</div>`;
 
-  return `<div class="${opts?.mini ? "wall mini" : "wall"}" id="wall" style="--cols:${cols}">${body}${legend}</div>`;
+  return `<div class="wall" id="wall" style="--cols:${cols}">${body}${legend}</div>`;
 }
 
 export async function viewWall(qs: URLSearchParams): Promise<{ html: string; after: () => void }> {

@@ -157,10 +157,6 @@ export function mentionPanel(m: Mention, ep: EpisodeCore | undefined, opts?: { u
   `</article>`;
 }
 
-export function fmtStamp(secs: number | null): string {
-  return secs == null ? "" : fmtRuntime(secs);
-}
-
 /**
  * The honest not-found state. Carries its own h1 so the page has a heading, and its link
  * is underlined — blue on paper is not distinguishable from body text by hue alone.
