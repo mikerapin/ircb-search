@@ -26,7 +26,13 @@ jobs:
       contents: write
       actions: write        # to dispatch deploy.yml — see "Deploy the new data" below
     steps:
+      # Take the branch tip at job start, not github.sha. A scheduled run pins github.sha
+      # when it is *created*, and GitHub has queued these for as long as 16 hours — on
+      # 2026-10-22 the Wednesday run started after the Thursday backstop had already pushed,
+      # committed onto the SHA it was pinned to, and lost the push as a non-fast-forward.
       - uses: actions/checkout@v6
+        with:
+          ref: main
 
       - uses: actions/setup-python@v6
         with:
