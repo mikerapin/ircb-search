@@ -333,6 +333,11 @@
   "type": "topic",
   "episodes": 2
  },
+ "alien vs. x-men": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Alien vs. X-Men"
+ },
  "alien: black white and blood": {
   "type": "series",
   "episodes": 1,
@@ -932,7 +937,7 @@
  },
  "batwoman": {
   "type": "series",
-  "episodes": 1,
+  "episodes": 2,
   "series": "Batwoman"
  },
  "beast of boriken": {
@@ -2107,7 +2112,7 @@
  },
  "cruel kingdom": {
   "type": "series",
-  "episodes": 1,
+  "episodes": 2,
   "series": "Cruel Kingdom"
  },
  "cruel universe": {
@@ -2820,6 +2825,11 @@
  "dungeon cralwer carl": {
   "type": "topic",
   "episodes": 1
+ },
+ "dungeon crawler carl": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dungeon Crawler Carl"
  },
  "dust to dust": {
   "type": "series",
@@ -4094,6 +4104,11 @@
   "type": "series",
   "episodes": 1,
   "series": "I Can Sell You A Body"
+ },
+ "i can't stop thinking about horses and sex": {
+  "type": "series",
+  "episodes": 1,
+  "series": "I Can't Stop Thinking About Horses and Sex"
  },
  "i hate this place": {
   "type": "series",
@@ -7379,8 +7394,13 @@
  },
  "star trek": {
   "type": "series",
-  "episodes": 3,
+  "episodes": 4,
   "series": "Star Trek"
+ },
+ "star trek: holo-ween ii": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Star Trek: Holo-ween II"
  },
  "star trek: lower decks": {
   "type": "series",
