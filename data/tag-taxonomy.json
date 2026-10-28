@@ -990,6 +990,16 @@
   "type": "creator",
   "episodes": 1
  },
+ "beneath the trees where nobody sees": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beneath the Trees Where Nobody Sees"
+ },
+ "beneath the trees where nobody sees: halloween special": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Beneath The Trees Where Nobody Sees: Halloween Special"
+ },
  "beneath the trees where nobody sees: rites of spring": {
   "type": "series",
   "episodes": 1,
@@ -2430,6 +2440,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Dead Dog’s Bite"
+ },
+ "dead teenagers": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dead Teenagers"
  },
  "dead x-menf": {
   "type": "topic",
@@ -4223,7 +4238,7 @@
  },
  "infidel": {
   "type": "series",
-  "episodes": 1,
+  "episodes": 2,
   "series": "Infidel"
  },
  "infinite frontier": {
@@ -4749,6 +4764,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "kurosagi corpse delivery service": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Kurosagi Corpse Delivery Service"
+ },
  "kwanza osajyefo": {
   "type": "creator",
   "episodes": 1
@@ -4766,6 +4786,11 @@
   "type": "series",
   "episodes": 2,
   "series": "Lady Mechanika"
+ },
+ "lake yellowwood slaughter": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Lake Yellowwood Slaughter"
  },
  "lampblack": {
   "type": "series",
@@ -4846,6 +4871,11 @@
   "type": "series",
   "episodes": 2,
   "series": "Legacy of Vader - The Reign of Kylo Ren"
+ },
+ "legion of super-heroes": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Legion of Super-Heroes"
  },
  "legion x": {
   "type": "topic",
@@ -5197,7 +5227,7 @@
  },
  "manga": {
   "type": "topic",
-  "episodes": 37
+  "episodes": 38
  },
  "manga discussion": {
   "type": "topic",
@@ -6342,6 +6372,11 @@
   "episodes": 1,
   "series": "Plume"
  },
+ "plunge": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Plunge"
+ },
  "politics in comics": {
   "type": "topic",
   "episodes": 1
@@ -6735,8 +6770,9 @@
   "series": "Rogues"
  },
  "roman ritual": {
-  "type": "topic",
-  "episodes": 1
+  "type": "series",
+  "episodes": 2,
+  "series": "Roman Ritual"
  },
  "romance": {
   "type": "topic",
@@ -8694,7 +8730,7 @@
  },
  "trese": {
   "type": "series",
-  "episodes": 1,
+  "episodes": 2,
   "series": "Trese"
  },
  "trickster: native american tales a graphic collection": {
