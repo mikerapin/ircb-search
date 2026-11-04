@@ -2303,6 +2303,10 @@
   "type": "topic",
   "episodes": 1
  },
+ "darkness": {
+  "type": "topic",
+  "episodes": 1
+ },
  "darling": {
   "type": "series",
   "episodes": 1,
@@ -2783,6 +2787,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "dragon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Dragon"
+ },
  "dragon ball": {
   "type": "series",
   "episodes": 1,
@@ -3018,6 +3027,10 @@
   "episodes": 1
  },
  "ethics": {
+  "type": "topic",
+  "episodes": 1
+ },
+ "etrigan": {
   "type": "topic",
   "episodes": 1
  },
@@ -3889,7 +3902,7 @@
  },
  "hellboy": {
   "type": "series",
-  "episodes": 10,
+  "episodes": 11,
   "series": "Hellboy"
  },
  "hellboy and the bprd": {
@@ -4348,7 +4361,7 @@
  },
  "jack kirby": {
   "type": "creator",
-  "episodes": 3
+  "episodes": 4
  },
  "jacob phillips": {
   "type": "topic",
@@ -6850,6 +6863,10 @@
   "episodes": 1,
   "series": "Sakamoto Days"
  },
+ "saladin ahmed": {
+  "type": "topic",
+  "episodes": 1
+ },
  "salt magic": {
   "type": "series",
   "episodes": 1,
@@ -7956,6 +7973,11 @@
   "type": "series",
   "episodes": 1,
   "series": "The Deep Dark"
+ },
+ "the demon": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Demon"
  },
  "the demon: hell's hitman": {
   "type": "series",
