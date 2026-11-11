@@ -3836,6 +3836,11 @@
   "episodes": 1,
   "series": "Hard-Boiled Cop and Dolphin"
  },
+ "harley and ivy and betty and veronica": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Harley and Ivy and Betty and Veronica"
+ },
  "harley quinn": {
   "type": "series",
   "episodes": 2,
@@ -4654,7 +4659,7 @@
  },
  "kickstarter": {
   "type": "topic",
-  "episodes": 35,
+  "episodes": 36,
   "review": "may be a comic — a mention string starts with this"
  },
  "kid lobotomy": {
@@ -7069,6 +7074,11 @@
   "type": "topic",
   "episodes": 1
  },
+ "shock suspenstories": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Shock SuspenStories"
+ },
  "shojo": {
   "type": "topic",
   "episodes": 1
@@ -7522,6 +7532,11 @@
   "type": "series",
   "episodes": 1,
   "series": "Starfinder"
+ },
+ "starkid666: the eggs of hope": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Starkid666: The Eggs of Hope"
  },
  "starman (1988-1992) #1": {
   "type": "series",
@@ -8162,6 +8177,11 @@
   "type": "series",
   "episodes": 1,
   "series": "The Jellyfish"
+ },
+ "the karmen blade": {
+  "type": "series",
+  "episodes": 1,
+  "series": "The Karmen Blade"
  },
  "the kryptonite spectrum": {
   "type": "topic",
@@ -8951,7 +8971,7 @@
  },
  "valiant comics": {
   "type": "topic",
-  "episodes": 1
+  "episodes": 2
  },
  "vampires": {
   "type": "topic",
@@ -9486,6 +9506,11 @@
   "type": "series",
   "episodes": 2,
   "series": "Zatanna"
+ },
+ "zatanna & the ripper": {
+  "type": "series",
+  "episodes": 1,
+  "series": "Zatanna & The Ripper"
  },
  "zelda twilight princess": {
   "type": "series",
